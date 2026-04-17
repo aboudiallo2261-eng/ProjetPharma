@@ -1,0 +1,387 @@
+/* Palette de couleurs Premium :
+   Primary: #2C3E50 (Dark Blue)
+   Secondary: #18BC9C (Teal/Green)
+   Background: #ECF0F1 (Light Gray)
+   Surface: #FFFFFF
+   Text: #34495E
+   Error: #E74C3C
+*/
+
+.root {
+    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-background-color: #ECF0F1;
+}
+
+.login-container {
+    -fx-background-color: #FFFFFF;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 40;
+}
+
+.title-text {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2C3E50;
+}
+
+.text-field, .password-field {
+    -fx-font-size: 14px;
+    -fx-padding: 10;
+    -fx-background-radius: 4;
+    -fx-border-color: #BDC3C7;
+    -fx-border-radius: 4;
+    -fx-background-color: #FFFFFF;
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #18BC9C;
+    -fx-border-width: 2px;
+}
+
+.button-primary {
+    -fx-background-color: #18BC9C;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.button-primary:hover {
+    -fx-background-color: #128f76;
+}
+
+.error-label {
+    -fx-text-fill: #E74C3C;
+    -fx-font-size: 12px;
+}
+
+.menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 12;
+    -fx-cursor: hand;
+}
+
+.menu-button:hover {
+    -fx-background-color: #34495E;
+}
+
+/* =====================================================================
+   DASHBOARD PREMIUM UI
+   ===================================================================== */
+
+/* Conteneurs principaux types 'Cartes' (KPIs et Graphiques) */
+.card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 8, 0, 0, 4);
+}
+
+/* Effet interactif au survol des cartes */
+.card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.12), 12, 0, 0, 6);
+}
+
+/* Barre de filtres */
+.filter-bar {
+    -fx-background-color: #FFFFFF;
+    -fx-padding: 12 15;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 4, 0, 0, 2);
+}
+
+/* Boutons de la barre de filtres */
+.btn-apply {
+    -fx-background-color: #27ae60;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-radius: 4;
+}
+.btn-apply:hover {
+    -fx-background-color: #219653;
+}
+
+.btn-reset {
+    -fx-background-color: #95a5a6;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+    -fx-background-radius: 4;
+}
+.btn-reset:hover {
+    -fx-background-color: #7f8c8d;
+}
+
+/* Typographie des titres */
+.dashboard-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2C3E50;
+}
+
+.section-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2C3E50;
+}
+
+/* Typographie KPI (Cartes Métriques) */
+.kpi-box {
+    -fx-padding: 18;
+    -fx-alignment: CENTER;
+}
+
+.kpi-title {
+    -fx-text-fill: #7f8c8d;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.kpi-value {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+/* Couleurs sémantiques des KPIs */
+.kpi-green  { -fx-text-fill: #27ae60; }
+.kpi-blue   { -fx-text-fill: #2980b9; }
+.kpi-purple { -fx-text-fill: #8e44ad; }
+.kpi-red    { -fx-text-fill: #e74c3c; }
+.kpi-teal   { -fx-text-fill: #16a085; }
+.kpi-orange { -fx-text-fill: #e67e22; }
+
+/* Conteneurs pour Graphiques */
+.chart-box {
+    -fx-padding: 20;
+}
+
+/* =====================================================================
+   COMPOSANTS PREMIUM (Dialogs, Toasts, Tickets)
+   ===================================================================== */
+
+.premium-dialog {
+    -fx-background-color: #ECF0F1;
+}
+
+.ticket-container {
+    -fx-background-color: white;
+    -fx-padding: 25;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);
+    -fx-border-color: transparent;
+}
+
+.ticket-header {
+    -fx-font-family: 'Segoe UI', 'Roboto', sans-serif;
+    -fx-font-size: 18px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #2C3E50;
+}
+
+.btn-premium-primary {
+    -fx-background-color: #2980B9;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+.btn-premium-primary:hover {
+    -fx-background-color: #2471A3;
+}
+
+.btn-premium-secondary {
+    -fx-background-color: #BDC3C7;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+.btn-premium-secondary:hover {
+    -fx-background-color: #A6ACAF;
+}
+
+/* =====================================================================
+   GLOBAL CONTROL STYLES
+   ===================================================================== */
+.button {
+    -fx-cursor: hand;
+}
+
+.combo-box {
+    -fx-cursor: hand;
+}
+
+/* =====================================================================
+   ÉTAT DU STOCK — Alertes visuelles via Pseudo-Classes CSS
+   (Compatible avec la sélection native JavaFX)
+   ===================================================================== */
+
+/* Ligne Expirée : fond rouge clair mais très lisible */
+.table-row-cell:expire {
+    -fx-background-color: #FADBD8;
+}
+/* Ligne En Alerte (Stock Bas) : fond jaune clair/alerte */
+.table-row-cell:alerte {
+    -fx-background-color: #FCF3CF;
+}
+
+/* Quand une ligne expirée EST SÉLECTIONNÉE :
+   Le bleu de sélection écrase le rouge pour une lisibilité totale */
+.table-row-cell:expire:selected {
+    -fx-background-color: #2980B9;
+    -fx-text-fill: white;
+}
+/* Quand une ligne en alerte EST SÉLECTIONNÉE */
+.table-row-cell:alerte:selected {
+    -fx-background-color: #2980B9;
+    -fx-text-fill: white;
+}
+/* Texte blanc sur sélection bleue pour toutes les cellules */
+.table-row-cell:expire:selected .table-cell,
+.table-row-cell:alerte:selected .table-cell {
+    -fx-text-fill: white;
+}
+
+/* =====================================================================
+   DESIGN SYSTEM — FILTRES UNIFIÉS (filter-card)
+   Utilisé dans : Achats, Stocks, Dashboard, Rapports
+   ===================================================================== */
+
+/* La "carte" blanche qui encapsule les filtres */
+.filter-card {
+    -fx-background-color: white;
+    -fx-padding: 15;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.10), 10, 0, 0, 5);
+}
+
+/* Label de section dans un filtre (ex: "Période :", "Agent :") */
+.filter-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #7f8c8d;
+    -fx-font-size: 13px;
+}
+
+/* Bouton vert "Filtrer / Appliquer" */
+.btn-filter {
+    -fx-background-color: #2ECC71;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4;
+    -fx-padding: 7 20;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+.btn-filter:hover {
+    -fx-background-color: #27ae60;
+}
+
+/* Bouton gris "Réinitialiser" discret */
+.btn-outline-reset {
+    -fx-background-color: transparent;
+    -fx-text-fill: #95a5a6;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 6 15;
+    -fx-cursor: hand;
+    -fx-font-size: 12px;
+}
+.btn-outline-reset:hover {
+    -fx-background-color: #ecf0f1;
+    -fx-text-fill: #7f8c8d;
+    -fx-border-color: #95a5a6;
+}
+
+/* =====================================================================
+   DESIGN SYSTEM — TABLEAUX (table-card)
+   ===================================================================== */
+
+/* VBox qui enveloppe un TableView */
+.table-card {
+    -fx-background-color: white;
+    -fx-padding: 20;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.10), 10, 0, 0, 5);
+}
+
+/* TableView standardisée */
+.table-card .table-view {
+    -fx-border-color: #BDC3C7;
+}
+
+/* Placeholder texte quand un tableau est vide */
+.table-placeholder-label {
+    -fx-text-fill: #95a5a6;
+    -fx-font-style: italic;
+    -fx-font-size: 14px;
+}
+
+/* =====================================================================
+   DESIGN SYSTEM — BOUTONS D'ACTION SOUS LES TABLEAUX
+   ===================================================================== */
+
+/* Bouton bleu "Voir Détails / Réimprimer" */
+.btn-action-blue {
+    -fx-background-color: #2980B9;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-padding: 6 14;
+}
+.btn-action-blue:hover { -fx-background-color: #2471A3; }
+.btn-action-blue:disabled { -fx-opacity: 0.4; }
+
+/* Bouton orange "Voir Détails" secondaires */
+.btn-action-orange {
+    -fx-background-color: #F39C12;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-padding: 6 14;
+}
+.btn-action-orange:hover { -fx-background-color: #D68910; }
+.btn-action-orange:disabled { -fx-opacity: 0.4; }
+
+/* Bouton PDF rouge */
+.btn-action-red {
+    -fx-background-color: #E74C3C;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-padding: 6 14;
+}
+.btn-action-red:hover { -fx-background-color: #CB4335; }
+.btn-action-red:disabled { -fx-opacity: 0.4; }
+
+/* Bouton vert CSV */
+.btn-action-green {
+    -fx-background-color: #27ae60;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-padding: 6 14;
+}
+.btn-action-green:hover { -fx-background-color: #1E8449; }
+.btn-action-green:disabled { -fx-opacity: 0.4; }
+
+/* Label "Total" sous les tableaux (montant en gras) */
+.total-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+.total-label-filtered {
+    -fx-text-fill: #E67E22;
+}

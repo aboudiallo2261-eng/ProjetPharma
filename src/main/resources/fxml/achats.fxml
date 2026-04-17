@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" styleClass="root" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pharmacie.controllers.AchatController">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="20">
+        <Label text="Approvisionnement &amp; Achats" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;"/>
+        <Region HBox.hgrow="ALWAYS" />
+        <Button text="🚨 Alertes d'approvisionnement" onAction="#showAlertesPopup" styleClass="btn-action-red"/>
+    </HBox>
+    
+    <TabPane VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE">
+        <!-- ===== ONGLET NOUVEL ACHAT ===== -->
+        <Tab text="Nouvel Achat (Réception)">
+            <HBox spacing="20" style="-fx-padding: 20 0 20 0;">
+                <!-- Panneau gauche : Formulaire -->
+                <VBox spacing="10" styleClass="table-card" minWidth="400">
+                    <Label text="Informations de l'achat" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                    <Separator />
+                    <ComboBox fx:id="cmbFournisseur" promptText="Sélectionner Fournisseur *" maxWidth="Infinity"/>
+                    <TextField fx:id="txtRefFacture" promptText="Numéro/Référence Facture"/>
+                    <DatePicker fx:id="dpDateAchat" promptText="Date d'achat *" maxWidth="Infinity"/>
+                    
+                    <Label text="Ajouter des produits à la commande" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 0 0 0;"/>
+                    <Separator />
+                    <ComboBox fx:id="cmbProduit" promptText="Sélectionner Produit *" maxWidth="Infinity"/>
+                    <HBox spacing="10">
+                        <TextField fx:id="txtNumLot" promptText="Numéro Lot *" HBox.hgrow="ALWAYS"/>
+                        <DatePicker fx:id="dpExpLot" promptText="Expiration" HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                    <HBox spacing="10">
+                        <TextField fx:id="txtQuantite" promptText="Quantité Achetée *" HBox.hgrow="ALWAYS"/>
+                        <TextField fx:id="txtPrixAchat" promptText="Prix d'Achat Unitaire *" HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                    
+                    <Button text="Ajouter au Panier" onAction="#addLigneAchat" styleClass="button-primary" maxWidth="Infinity"/>
+                    <Label fx:id="lblAchatError" styleClass="error-label" visible="false"/>
+                </VBox>
+
+                <!-- Panneau droite : Tableau du panier -->
+                <VBox spacing="10" HBox.hgrow="ALWAYS" styleClass="table-card">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="Produits Réceptionnés (Lignes d'Achat)" style="-fx-font-weight: bold; -fx-font-size: 16px;" HBox.hgrow="ALWAYS"/>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button fx:id="btnRetirerPanier" text="Retirer" onAction="#removeLigneAchat" styleClass="btn-premium-secondary"/>
+                    </HBox>
+                    <TableView fx:id="tableLignesPanier" VBox.vgrow="ALWAYS" styleClass="table-view" editable="true">
+                        <placeholder>
+                            <Label text="🛒 Le panier est vide. Ajoutez des produits." styleClass="table-placeholder-label"/>
+                        </placeholder>
+                        <columns>
+                            <TableColumn fx:id="colPanierProd" text="Produit" prefWidth="200"/>
+                            <TableColumn fx:id="colPanierLot" text="Lot" prefWidth="120"/>
+                            <TableColumn fx:id="colPanierQte" text="Qté" prefWidth="70"/>
+                            <TableColumn fx:id="colPanierPrix" text="Prix U." prefWidth="100"/>
+                            <TableColumn fx:id="colPanierSousTotal" text="Sous-Total" prefWidth="120"/>
+                        </columns>
+                    </TableView>
+                    <HBox alignment="CENTER_RIGHT" spacing="20">
+                        <Label text="Total Commande :" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                        <Label fx:id="lblTotalCommande" text="0 FCFA" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #18BC9C;"/>
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
+                        <Button fx:id="btnViderPanier" text="Vider" onAction="#clearPanier" styleClass="btn-premium-secondary"/>
+                        <CheckBox fx:id="chkImprimerBon" text="🖨 Imprimer Bon" selected="true" style="-fx-font-weight: bold; -fx-padding: 5 10 0 0;"/>
+                        <Button fx:id="btnValiderAchat" text="Valider l'Approvisionnement" onAction="#validerAchat" styleClass="button-primary"/>
+                    </HBox>
+                </VBox>
+            </HBox>
+        </Tab>
+
+        <!-- ===== ONGLET HISTORIQUE DES ACHATS ===== -->
+        <Tab text="Historique des Achats">
+            <VBox spacing="15" style="-fx-padding: 20 0 20 0;">
+
+                <!-- === CARTE FILTRES (Phase 1 : classes CSS sémantiques) === -->
+                <GridPane hgap="15" vgap="12" styleClass="filter-card">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="65" halignment="RIGHT"/>
+                        <ColumnConstraints minWidth="280" />
+                        <ColumnConstraints minWidth="65" halignment="RIGHT"/>
+                        <ColumnConstraints minWidth="200" />
+                        <ColumnConstraints hgrow="ALWAYS" />
+                        <ColumnConstraints minWidth="140" halignment="RIGHT"/>
+                    </columnConstraints>
+                    
+                    <!-- Ligne 1 : Période + Fournisseur + Bouton Filtrer -->
+                    <Label text="Période :" styleClass="filter-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <DatePicker fx:id="dpAchatDebut" promptText="Début" prefWidth="130" editable="false"/>
+                        <Label text="au" styleClass="filter-label"/>
+                        <DatePicker fx:id="dpAchatFin" promptText="Fin" prefWidth="130" editable="false"/>
+                    </HBox>
+
+                    <Label text="Forns. :" styleClass="filter-label" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                    <ComboBox fx:id="cmbFiltreAchatFournisseur" promptText="Tous les fournisseurs" maxWidth="Infinity"
+                              GridPane.columnIndex="3" GridPane.rowIndex="0" onAction="#filtrerHistoriqueAchats"/>
+                    
+                    <Button text="🔍 Filtrer" onAction="#filtrerHistoriqueAchats" styleClass="btn-filter"
+                            GridPane.columnIndex="5" GridPane.rowIndex="0"/>
+
+                    <!-- Ligne 2 : Produit + Réf texte + Bouton Réinitialiser -->
+                    <Label text="Produit :" styleClass="filter-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <ComboBox fx:id="cmbFiltreAchatProduit" promptText="Tous les produits" maxWidth="Infinity"
+                              GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#filtrerHistoriqueAchats"/>
+
+                    <Label text="Réf :" styleClass="filter-label" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                    <!-- Phase 2 : TextField live-filtering géré dans AchatController (listener debounce) -->
+                    <TextField fx:id="txtSearchAchat" promptText="Rechercher réf. facture..." maxWidth="Infinity"
+                               GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.columnSpan="2"/>
+                    
+                    <Button text="🔄 Réinitialiser" onAction="#resetFiltresHistorique" styleClass="btn-outline-reset"
+                            GridPane.columnIndex="5" GridPane.rowIndex="1"/>
+                </GridPane>
+
+                <VBox VBox.vgrow="ALWAYS" styleClass="table-card">
+                    <TableView fx:id="tableHistorique" VBox.vgrow="ALWAYS" styleClass="table-view">
+                        <placeholder>
+                            <Label text="📦 Aucun achat ne correspond à vos filtres." styleClass="table-placeholder-label"/>
+                        </placeholder>
+                        <columns>
+                            <TableColumn fx:id="colHistId" text="ID" prefWidth="55"/>
+                            <TableColumn fx:id="colHistDate" text="Date" prefWidth="115"/>
+                            <TableColumn fx:id="colHistFournisseur" text="Fournisseur" prefWidth="180"/>
+                            <TableColumn fx:id="colHistRef" text="Réf Facture" prefWidth="135"/>
+                            <TableColumn fx:id="colHistNbLignes" text="Nb Produits" prefWidth="90"/>
+                            <TableColumn fx:id="colHistMontant" text="Montant (FCFA)" prefWidth="145"/>
+                        </columns>
+                    </TableView>
+                    <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 10 0 0 0;">
+                        <!-- Phase 5 : Boutons action désactivés par défaut, activés par sélection de ligne -->
+                        <Button fx:id="btnImprimerBonCmd" text="🖨 Imprimer Bon (PDF)" onAction="#imprimerBonDeCommande"
+                                disable="true" styleClass="btn-action-blue"/>
+                        <Button fx:id="btnVoirDetailsAchat" text="👁️ Voir Détails" onAction="#showSelectedAchatDetail"
+                                disable="true" styleClass="btn-action-orange"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="lblTotalAchats" text="Total : 0 FCFA" styleClass="total-label, total-label-filtered"/>
+                        <Button text="🖨 Récapitulatif" onAction="#imprimerRecapitulatifAchats" styleClass="btn-action-blue"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </Tab>
+    </TabPane>
+</VBox>
+

@@ -1,0 +1,44 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------< com.pharmacie:vet-pharmacy >---------------------
+[INFO] Building vet-pharmacy 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ vet-pharmacy ---
+[INFO] Deleting C:\projetjavasout\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ vet-pharmacy ---
+[INFO] Copying 12 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ vet-pharmacy ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 47 source files with javac [debug target 17] to target\classes
+[INFO] /C:/projetjavasout/src/main/java/com/pharmacie/controllers/VenteController.java: Some input files use unchecked or unsafe operations.
+[INFO] /C:/projetjavasout/src/main/java/com/pharmacie/controllers/VenteController.java: Recompile with -Xlint:unchecked for details.
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /C:/projetjavasout/src/main/java/com/pharmacie/controllers/AlerteStockController.java:[79,19] cannot find symbol
+  symbol:   method getDatePeremption()
+  location: variable l of type com.pharmacie.models.Lot
+[INFO] 1 error
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  13.550 s
+[INFO] Finished at: 2026-04-08T12:37:02Z
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project vet-pharmacy: Compilation failure
+[ERROR] /C:/projetjavasout/src/main/java/com/pharmacie/controllers/AlerteStockController.java:[79,19] cannot find symbol
+[ERROR]   symbol:   method getDatePeremption()
+[ERROR]   location: variable l of type com.pharmacie.models.Lot
+[ERROR] 
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

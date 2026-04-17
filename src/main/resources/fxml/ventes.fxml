@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox styleClass="root" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pharmacie.controllers.VenteController">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Ventes &amp; Caisse" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;"/>
+
+    <TabPane VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE" style="-fx-padding: 10 0 0 0;">
+
+        <!-- ===== ONGLET CAISSE ===== -->
+        <Tab text="Caisse (Point de Vente)">
+            <BorderPane>
+                <top>
+                    <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: #ECF0F1; -fx-background-radius: 8;">
+                        <Label fx:id="lblStatutSession" text="Caisse: FERMÉE" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #E74C3C;"/>
+                        <Button fx:id="btnOuvrirCaisse" text="🔑 Ouvrir" onAction="#ouvrirCaisse"
+                                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 12;"/>
+                        <Button fx:id="btnCloturerCaisse" text="🔒 Clôturer (Z)" onAction="#cloturerCaisse" visible="false" managed="false"
+                                style="-fx-background-color: #E74C3C; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 12;"/>
+                        <Button fx:id="btnVerrouiller" text="🔐 Verrouil." onAction="#verrouillerSession" visible="false" managed="false"
+                                style="-fx-background-color: #8E44AD; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 12;"/>
+                        <Button fx:id="btnTicketsEnAttente" text="⏸ Attente (0)" onAction="#voirTicketsEnAttente" visible="false" managed="false"
+                                style="-fx-background-color: #F39C12; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 12;"/>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label fx:id="lblCaisseUser" text="Agent:" style="-fx-font-size: 13px; -fx-text-fill: #7f8c8d;"/>
+                    </HBox>
+                </top>
+                <center>
+                    <StackPane style="-fx-padding: 10 0 0 0;">
+                        <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: transparent; -fx-padding: 0; -fx-border-width: 0;">
+                            <HBox fx:id="boxVenteMain" spacing="20">
+                                <!-- Zone Produits -->
+                            <VBox spacing="10" maxHeight="Infinity" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                            <Label text="Rechercher un produit à vendre" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                            <!-- Barre de recherche texte -->
+                            <HBox spacing="8">
+                                <TextField fx:id="txtRechercheProduit" promptText="🔍 Nom du produit..." HBox.hgrow="ALWAYS"/>
+                                <Button text="🗵 Tout" onAction="#reinitialiserFiltres" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                            </HBox>
+                            <!-- Filtres par Catégorie et Espèce -->
+                            <HBox spacing="8" alignment="CENTER_LEFT">
+                                <Label text="Catég. :" style="-fx-font-weight: bold;"/>
+                                <ComboBox fx:id="cmbFiltreCategorie" HBox.hgrow="ALWAYS" maxWidth="Infinity" promptText="Toutes les catégories"/>
+                                <Label text="Espèce :" style="-fx-font-weight: bold;"/>
+                                <ComboBox fx:id="cmbFiltreEspece" HBox.hgrow="ALWAYS" maxWidth="Infinity" promptText="Toutes les espèces"/>
+                            </HBox>
+                            <TableView fx:id="tableStock" VBox.vgrow="ALWAYS" style="-fx-border-color: #BDC3C7;">
+                                <placeholder>
+                                    <Label text="🔍 Aucun produit trouvé ou disponible" style="-fx-text-fill: #95a5a6; -fx-font-style: italic; -fx-font-size: 14px;" />
+                                </placeholder>
+                                <columns>
+                                    <TableColumn fx:id="colStkNom" text="Produit" prefWidth="200" />
+                                    <TableColumn fx:id="colStkPrix" text="Prix (Boîte)" prefWidth="90" />
+                                    <TableColumn fx:id="colStkPrixDetail" text="Prix (Détail)" prefWidth="90" />
+                                    <TableColumn fx:id="colStkQte" text="Stock (Unités min)" prefWidth="120" />
+                                </columns>
+                            </TableView>
+                            <HBox spacing="8" alignment="CENTER_LEFT" style="-fx-padding: 8 0 0 0;">
+                                <Label text="Qté :" />
+                                <ComboBox fx:id="cmbQuantite" editable="true" prefWidth="75"/>
+                                <ComboBox fx:id="cmbUniteType" prefWidth="130" promptText="Type Unité"/>
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Button text="➕ Ajouter" onAction="#ajouterAuPanier" styleClass="button-primary"/>
+                            </HBox>
+                            <Label fx:id="lblVenteError" styleClass="error-label" visible="false"/>
+                        </VBox>
+
+                        <!-- Zone Panier -->
+                        <VBox spacing="8" minWidth="460" maxHeight="Infinity" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                            <Label text="Panier Client" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                            <TableView fx:id="tablePanierVente" VBox.vgrow="ALWAYS" style="-fx-border-color: #BDC3C7;">
+                                <placeholder>
+                                    <Label text="🛒 Le panier est vide pour le moment" style="-fx-text-fill: #95a5a6; -fx-font-style: italic; -fx-font-size: 14px;" />
+                                </placeholder>
+                                <columns>
+                                    <TableColumn fx:id="colPanVenteProd" text="Produit" prefWidth="200" />
+                                    <TableColumn fx:id="colPanVenteQte" text="Qté" prefWidth="50" />
+                                    <TableColumn fx:id="colPanVenteType" text="Type" prefWidth="80" />
+                                    <TableColumn fx:id="colPanVenteTotal" text="Total" prefWidth="100" />
+                                </columns>
+                            </TableView>
+                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                <Label text="Total :" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                                <Label fx:id="lblTotalVente" text="0 FCFA" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #18BC9C;"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Button fx:id="btnMettreEnAttente" text="⏸ Attente" onAction="#mettreEnAttente"
+                                        style="-fx-background-color: #F39C12; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 4 8; -fx-background-radius: 6; -fx-font-size: 12px;"/>
+                                <Button fx:id="btnRetirerDuPanier" text="🗑 Retirer" onAction="#retirerDuPanier"
+                                        style="-fx-background-color: #BDC3C7; -fx-text-fill: white; -fx-padding: 4 8; -fx-font-size: 12px; -fx-background-radius: 6;"/>
+                            </HBox>
+                            
+                            <VBox spacing="6" style="-fx-background-color: #ECF0F1; -fx-padding: 10; -fx-background-radius: 8;">
+                                <!-- Ligne 1: Mode paiement + checkbox imprimante -->
+                                <HBox spacing="8" alignment="CENTER_LEFT">
+                                    <Label text="Paiement :" prefWidth="72" style="-fx-font-weight:bold;"/>
+                                    <ComboBox fx:id="cmbModePaiement" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                                    <CheckBox fx:id="chkImprimerRecu" text="Imprimer" selected="false" style="-fx-font-size:11px;"/>
+                                </HBox>
+                                <!-- Ligne 2: Montant reçu Simple -->
+                                <HBox fx:id="boxPaiementSimple" spacing="8" alignment="CENTER_LEFT">
+                                    <Label text="Reçu :" prefWidth="72" style="-fx-font-weight:bold;"/>
+                                    <TextField fx:id="txtMontantRecu" HBox.hgrow="ALWAYS" maxWidth="Infinity" promptText="0 FCFA"/>
+                                </HBox>
+                                <!-- Ligne 2 bis: Montant reçu Mixte -->
+                                <HBox fx:id="boxPaiementMixte" spacing="10" alignment="CENTER_LEFT" visible="false" managed="false">
+                                    <Label text="Cash:" minWidth="-Infinity" style="-fx-font-weight:bold; -fx-text-fill: #2c3e50;"/>
+                                    <TextField fx:id="txtMontantEspeces" HBox.hgrow="ALWAYS" promptText="0" style="-fx-font-size: 13px; -fx-font-weight: bold;"/>
+                                    <Region prefWidth="5" />
+                                    <Label text="Mob:" minWidth="-Infinity" style="-fx-font-weight:bold; -fx-text-fill: #2c3e50;"/>
+                                    <TextField fx:id="txtMontantMobile" HBox.hgrow="ALWAYS" promptText="0" style="-fx-font-size: 13px; -fx-font-weight: bold;"/>
+                                </HBox>
+                                <!-- Ligne 3: Monnaie à rendre -->
+                                <HBox spacing="8" alignment="CENTER_LEFT">
+                                    <Label text="Monnaie :" prefWidth="72" style="-fx-font-weight:bold;"/>
+                                    <Label fx:id="lblMonnaieRendre" text="0 FCFA" style="-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:#E74C3C;"/>
+                                </HBox>
+                                <!-- Ligne 4: Boutons Annuler / Valider -->
+                                <HBox spacing="10" alignment="CENTER_RIGHT">
+                                    <Button fx:id="btnAnnulerVente" text="✖ Annuler" onAction="#annulerVente"
+                                            style="-fx-background-color:#95a5a6; -fx-text-fill:white; -fx-font-weight:bold; -fx-padding: 7 18; -fx-background-radius:5;"/>
+                                    <Button fx:id="btnValiderVente" text="✔ Valider" onAction="#validerVente"
+                                            style="-fx-background-color:#27ae60; -fx-text-fill:white; -fx-font-size:13px; -fx-font-weight:bold; -fx-padding: 7 22; -fx-background-radius:5;"/>
+                                </HBox>
+                            </VBox>
+                        </VBox>
+                    </HBox>
+                </ScrollPane>
+                        
+                            <!-- Overlay Bloquant de Caisse Fermée -->
+                            <VBox fx:id="overlayCaisseFermee" alignment="CENTER" spacing="15" style="-fx-background-color: rgba(255,255,255,0.90); -fx-background-radius: 8;">
+                                <Label text="🔒" style="-fx-font-size: 50px;"/>
+                                <Label text="LA CAISSE EST FERMÉE" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #E74C3C;"/>
+                                <Label text="Veuillez cliquer sur 'Ouvrir Caisse' pour imputer de nouvelles ventes." style="-fx-font-size: 16px; -fx-text-fill: #34495E;"/>
+                            </VBox>
+
+                            <!-- Overlay Session Verrouillée -->
+                        <VBox fx:id="overlaySessionVerrouillee" alignment="CENTER" spacing="20" visible="false" managed="false"
+                               style="-fx-background-color: rgba(44,62,80,0.95); -fx-background-radius: 8;">
+                             <Label text="🔐" style="-fx-font-size: 60px;"/>
+                             <Label text="SESSION VERROUILLÉE" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                             <Label fx:id="lblVerrouilleAgent" text="Agent : ---" style="-fx-font-size: 16px; -fx-text-fill: #BDC3C7;"/>
+                             <VBox alignment="CENTER" spacing="10" style="-fx-background-color: rgba(255,255,255,0.1); -fx-padding: 20; -fx-background-radius: 8; -fx-min-width: 350;">
+                                 <Label text="Entrez votre mot de passe pour reprendre votre session :" style="-fx-text-fill: #ECF0F1; -fx-font-size: 14px;" wrapText="true"/>
+                                 <PasswordField fx:id="txtPinDeverrouillage" promptText="Mot de passe..."
+                                               style="-fx-font-size: 18px; -fx-padding: 10; -fx-pref-width: 300;"/>
+                                 <Label fx:id="lblVerrouilleErreur" text="Mot de passe incorrect !" style="-fx-text-fill: #E74C3C; -fx-font-weight: bold;" visible="false" managed="false"/>
+                                 <Button text="🔓 Déverrouiller" onAction="#deverrouillerSession"
+                                         style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10 30; -fx-background-radius: 6; -fx-cursor: hand;"/>
+                             </VBox>
+                         </VBox>
+                     </StackPane>
+                 </center>
+            </BorderPane>
+        </Tab>
+
+        <!-- ===== ONGLET HISTORIQUE DES VENTES ===== -->
+        <Tab text="Historique des Ventes">
+            <VBox spacing="10" style="-fx-padding: 20 0 0 0;">
+                <!-- Barre de filtre aérée (2 lignes max) -->
+                <GridPane hgap="15" vgap="12" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="65" halignment="RIGHT"/>
+                        <ColumnConstraints minWidth="280" />
+                        <ColumnConstraints minWidth="75" halignment="RIGHT"/>
+                        <ColumnConstraints minWidth="180" />
+                        <ColumnConstraints hgrow="ALWAYS" /> <!-- Espace flexible -->
+                        <ColumnConstraints minWidth="140" halignment="RIGHT"/>
+                    </columnConstraints>
+                    
+                    <!-- Ligne 1 -->
+                    <Label text="Période :" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-weight: bold; -fx-text-fill: #7f8c8d;"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <DatePicker fx:id="dpHistoDebut" promptText="Début" prefWidth="130"/>
+                        <Label text="au" style="-fx-text-fill: #7f8c8d;"/>
+                        <DatePicker fx:id="dpHistoFin" promptText="Fin" prefWidth="130"/>
+                    </HBox>
+
+                    <Label text="Produit :" GridPane.columnIndex="2" GridPane.rowIndex="0" style="-fx-font-weight: bold; -fx-text-fill: #7f8c8d;"/>
+                    <ComboBox fx:id="cmbFiltreVenteProduit" promptText="Tous les produits" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                    <Button text="🔍 Filtrer" onAction="#filtrerHistorique" styleClass="button-primary" style="-fx-padding: 8 25; -fx-font-size: 13px;" GridPane.columnIndex="5" GridPane.rowIndex="0"/>
+
+                    <!-- Ligne 2 -->
+                    <Label text="Agent :" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-font-weight: bold; -fx-text-fill: #7f8c8d;"/>
+                    <ComboBox fx:id="cmbFiltreVenteAgent" promptText="Tous les agents" prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="LEFT"/>
+
+                    <Label text="Paiement :" GridPane.columnIndex="2" GridPane.rowIndex="1" style="-fx-font-weight: bold; -fx-text-fill: #7f8c8d;"/>
+                    <ComboBox fx:id="cmbFiltreVenteMode" promptText="Tous moyens" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                    <Button text="🔄 Réinitialiser" onAction="#resetHistoriqueFiltres" style="-fx-background-color: transparent; -fx-text-fill: #95a5a6; -fx-border-color: #bdc3c7; -fx-border-radius: 4; -fx-padding: 6 15;" GridPane.columnIndex="5" GridPane.rowIndex="1"/>
+                </GridPane>
+
+                <!-- Tableau Historique -->
+                <VBox VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                    <TableView fx:id="tableHistoriqueVentes" VBox.vgrow="ALWAYS" style="-fx-border-color: #BDC3C7;">
+                        <placeholder>
+                            <Label text="📭 Aucune vente enregistrée pour cette période." style="-fx-text-fill: #95a5a6; -fx-font-style: italic; -fx-font-size: 14px;" />
+                        </placeholder>
+                        <columns>
+                            <TableColumn fx:id="colHistVenteId" text="ID" prefWidth="60"/>
+                            <TableColumn fx:id="colHistVenteDate" text="Date &amp; Heure" prefWidth="150"/>
+                            <TableColumn fx:id="colHistVenteAgent" text="Agent" prefWidth="150"/>
+                            <TableColumn fx:id="colHistVenteNbProd" text="Nb Produits" prefWidth="100"/>
+                            <TableColumn fx:id="colHistVenteMode" text="Mode Paiement" prefWidth="130"/>
+                            <TableColumn fx:id="colHistVenteTotal" text="Total (FCFA)" prefWidth="120"/>
+                        </columns>
+                    </TableView>
+                    <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 10 0 0 0;">
+                        <Button fx:id="btnReimprimerRecu" text="🖨 Réimprimer le Reçu" onAction="#reimprimerRecuHistorique" disable="true"
+                                style="-fx-background-color: #2980B9; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6;"/>
+                        <Button fx:id="btnVoirDetailsVente" text="👁️ Voir Détails" onAction="#showSelectedVenteDetail" disable="true" style="-fx-background-color: #F39C12; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label text="Total : " style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                        <Label fx:id="lblTotalHistorique" text="0 FCFA" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #18BC9C;"/>
+                        <Button text="🖨 Imprimer Récapitulatif PDF" onAction="#imprimerHistoriquePdf" style="-fx-background-color: #8E44AD; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6;"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </Tab>
+
+    </TabPane>
+</VBox>
+
+

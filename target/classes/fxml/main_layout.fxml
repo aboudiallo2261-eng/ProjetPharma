@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane styleClass="root" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pharmacie.controllers.MainController">
+    <left>
+        <VBox spacing="10" style="-fx-background-color: #2C3E50; -fx-padding: 20;" minWidth="250">
+            <Label text="Menu Principal" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <Separator />
+            <Button fx:id="btnDashboard" text="Tableau de Bord" onAction="#showDashboard" maxWidth="Infinity" styleClass="menu-button"/>
+            <Button fx:id="btnVentes" text="Ventes &amp; Caisse" onAction="#showSales" maxWidth="Infinity" styleClass="menu-button"/>
+            <Button fx:id="btnProduits" text="Produits &amp; Stock" onAction="#showProducts" maxWidth="Infinity" styleClass="menu-button"/>
+            <Button fx:id="btnAchats" text="Approvisionnement" onAction="#showPurchases" maxWidth="Infinity" styleClass="menu-button"/>
+            <Button fx:id="btnFournisseurs" text="Fournisseurs" onAction="#showFournisseurs" maxWidth="Infinity" styleClass="menu-button"/>
+            <Button fx:id="btnRapports" text="Rapports d'Activité" onAction="#showReports" maxWidth="Infinity" styleClass="menu-button"/>
+            <Button fx:id="btnUsers" text="Sécurité &amp; Accès" onAction="#showUsers" maxWidth="Infinity" styleClass="menu-button"/>
+            <Region VBox.vgrow="ALWAYS" />
+            <Button text="Déconnexion" onAction="#handleLogout" maxWidth="Infinity" style="-fx-background-color: #E74C3C; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10;"/>
+        </VBox>
+    </left>
+    <center>
+        <StackPane fx:id="contentArea" style="-fx-background-color: #ECF0F1; -fx-padding: 20;">
+            <Label text="Bienvenue dans votre système de gestion !" style="-fx-font-size: 24px; -fx-text-fill: #bdc3c7;"/>
+        </StackPane>
+    </center>
+</BorderPane>
+

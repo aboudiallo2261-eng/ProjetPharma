@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fitToWidth="true" style="-fx-background-color: transparent;" stylesheets="@/css/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pharmacie.controllers.DashboardController">
+    <VBox spacing="20" styleClass="root">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- HEADER & FILTRES                                            -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <VBox spacing="15">
+            <!-- TITRE -->
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="Tableau de Bord Analytique" styleClass="dashboard-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <ProgressIndicator fx:id="progressIndicator" prefWidth="28" prefHeight="28" visible="false" managed="false"/>
+            </HBox>
+            
+            <!-- Barre de filtre - classes CSS sémantiques -->
+            <GridPane hgap="15" vgap="12" styleClass="filter-card">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="65" halignment="RIGHT"/>
+                    <ColumnConstraints minWidth="160" />
+                    <ColumnConstraints minWidth="40" halignment="RIGHT"/>
+                    <ColumnConstraints minWidth="280" />
+                    <ColumnConstraints hgrow="ALWAYS" />
+                    <ColumnConstraints minWidth="240" halignment="RIGHT"/>
+                </columnConstraints>
+                
+                <Label text="Période :" styleClass="filter-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <ComboBox fx:id="cmbPeriode" prefWidth="160" onAction="#onPeriodeChange" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                
+                <Label text="De :" styleClass="filter-label" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                <HBox spacing="10" alignment="CENTER_LEFT" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                    <DatePicker fx:id="dpDebut" promptText="Début" prefWidth="130"/>
+                    <Label text="au" styleClass="filter-label"/>
+                    <DatePicker fx:id="dpFin" promptText="Fin" prefWidth="130"/>
+                </HBox>
+                
+                <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.columnIndex="5" GridPane.rowIndex="0">
+                    <Button text="🔄 Réinitialiser" onAction="#reinitialiserPlage" styleClass="btn-outline-reset"/>
+                    <Button text="🔍 Appliquer" onAction="#chargerDonnees" styleClass="btn-filter"/>
+                </HBox>
+            </GridPane>
+        </VBox>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- ROW 1 : KPI CARDS — CA, Bénéfice, Volume, Alertes          -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <HBox spacing="15">
+            <!-- CA -->
+            <VBox HBox.hgrow="ALWAYS" styleClass="card, kpi-box">
+                <Label text="Chiffre d'Affaires" styleClass="kpi-title"/>
+                <Label fx:id="lblCA" text="— FCFA" styleClass="kpi-value, kpi-green"/>
+            </VBox>
+            <!-- BÉNÉFICE -->
+            <VBox HBox.hgrow="ALWAYS" styleClass="card, kpi-box">
+                <Label text="Bénéfice Net Estimé" styleClass="kpi-title"/>
+                <Label fx:id="lblBenefice" text="— FCFA" styleClass="kpi-value, kpi-blue"/>
+            </VBox>
+            <!-- VOLUME -->
+            <VBox HBox.hgrow="ALWAYS" styleClass="card, kpi-box">
+                <Label text="Nombre de Ventes" styleClass="kpi-title"/>
+                <Label fx:id="lblVolume" text="—" styleClass="kpi-value, kpi-purple"/>
+            </VBox>
+            <!-- ALERTES -->
+            <VBox HBox.hgrow="ALWAYS" styleClass="card, kpi-box">
+                <Label text="Alerte Stock / Expirés" styleClass="kpi-title"/>
+                <Label fx:id="lblAlertes" text="— / —" styleClass="kpi-value, kpi-red"/>
+            </VBox>
+        </HBox>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- ROW 2 : KPI CARDS — Valeur Stock, Espèces, Mobile Money    -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <HBox spacing="15">
+            <!-- VALEUR STOCK -->
+            <VBox HBox.hgrow="ALWAYS" styleClass="card, kpi-box">
+                <Label text="Valeur Totale du Stock" styleClass="kpi-title"/>
+                <Label fx:id="lblValeurStock" text="— FCFA" styleClass="kpi-value, kpi-teal"/>
+            </VBox>
+            <!-- ESPÈCES -->
+            <VBox HBox.hgrow="ALWAYS" styleClass="card, kpi-box">
+                <Label text="Recettes Espèces" styleClass="kpi-title"/>
+                <Label fx:id="lblEspeces" text="— FCFA" styleClass="kpi-value, kpi-orange"/>
+            </VBox>
+            <!-- MOBILE MONEY -->
+            <VBox HBox.hgrow="ALWAYS" styleClass="card, kpi-box">
+                <Label text="Recettes Mobile Money" styleClass="kpi-title"/>
+                <Label fx:id="lblMobile" text="— FCFA" styleClass="kpi-value, kpi-purple"/>
+            </VBox>
+        </HBox>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- EVOLUTION CA + COURBE ACHATS (2 séries superposées)        -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <VBox styleClass="card, chart-box">
+            <Label text="Évolution CA vs Coût des Achats" styleClass="section-title"/>
+            <LineChart fx:id="chartEvolution" prefHeight="260" animated="false">
+                <xAxis><CategoryAxis label="Période"/></xAxis>
+                <yAxis><NumberAxis label="Montant (FCFA)"/></yAxis>
+            </LineChart>
+        </VBox>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- BAR CHARTS : CA par Catégorie & CA par Espèce              -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <HBox spacing="15">
+            <VBox HBox.hgrow="ALWAYS" styleClass="card, chart-box">
+                <Label text="CA par Catégorie" styleClass="section-title"/>
+                <BarChart fx:id="barCategorie" prefHeight="230" animated="true">
+                    <xAxis><CategoryAxis label="Catégorie"/></xAxis>
+                    <yAxis><NumberAxis label="CA (FCFA)"/></yAxis>
+                </BarChart>
+            </VBox>
+            <VBox HBox.hgrow="ALWAYS" styleClass="card, chart-box">
+                <Label text="CA par Espèce" styleClass="section-title"/>
+                <BarChart fx:id="barEspece" prefHeight="230" animated="true">
+                    <xAxis><CategoryAxis label="Espèce"/></xAxis>
+                    <yAxis><NumberAxis label="CA (FCFA)"/></yAxis>
+                </BarChart>
+            </VBox>
+        </HBox>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- TOP 10 PRODUITS (Table + PieChart)                         -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <HBox spacing="15">
+            <VBox HBox.hgrow="ALWAYS" styleClass="card, chart-box">
+                <Label text="Top 10 Produits — Volume Vendu" styleClass="section-title"/>
+                <TableView fx:id="tableTopProduits" VBox.vgrow="ALWAYS" prefHeight="240">
+                    <columns>
+                        <TableColumn fx:id="colTopNom" text="Produit"  prefWidth="260"/>
+                        <TableColumn fx:id="colTopQte" text="Unités"   prefWidth="110"/>
+                    </columns>
+                </TableView>
+            </VBox>
+            <VBox HBox.hgrow="ALWAYS" styleClass="card, chart-box">
+                <Label text="Top 5 Produits — Parts de Volume" styleClass="section-title"/>
+                <PieChart fx:id="pieTopProduits" prefHeight="240" animated="true"/>
+            </VBox>
+        </HBox>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- PERTES & AJUSTEMENTS PAR MOTIF                             -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <VBox styleClass="card, chart-box">
+            <Label text="Pertes &amp; Ajustements par Motif" styleClass="section-title"/>
+            <BarChart fx:id="barPertes" prefHeight="220" animated="true">
+                <xAxis><CategoryAxis label="Motif"/></xAxis>
+                <yAxis><NumberAxis label="Unités retirées"/></yAxis>
+            </BarChart>
+        </VBox>
+
+    </VBox>
+</ScrollPane>
+

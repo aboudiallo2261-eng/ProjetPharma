@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane styleClass="root" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pharmacie.controllers.LoginController">
+    <VBox alignment="CENTER" maxWidth="400" maxHeight="350" spacing="20" styleClass="login-container">
+        <Label text="Pharmacie Vétérinaire" styleClass="title-text"/>
+        <Label text="Veuillez vous connecter pour continuer" textFill="#7f8c8d"/>
+        
+        <VBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="Identifiant" />
+            <TextField fx:id="identifiantField" promptText="Saisissez votre identifiant..." maxWidth="Infinity"/>
+        </VBox>
+        
+        <VBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="Mot de passe" />
+            <PasswordField fx:id="passwordField" promptText="Saisissez votre mot de passe..." maxWidth="Infinity"/>
+        </VBox>
+
+        <Label fx:id="errorLabel" styleClass="error-label" visible="false"/>
+        
+        <Button text="Se Connecter" onAction="#handleLogin" styleClass="button-primary" maxWidth="Infinity"/>
+    </VBox>
+</StackPane>
+

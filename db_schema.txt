@@ -1,0 +1,7 @@
+id | bigint | NO | null
+email | varchar(255) | YES | null
+identifiant | varchar(255) | NO | null
+motDePasseHash | varchar(255) | NO | null
+nom | varchar(255) | NO | null
+role | enum('ADMIN','AGENT') | NO | null
+profil_id | bigint | YES | null

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: transparent;" styleClass="root" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pharmacie.controllers.FournisseurController">
+    <VBox spacing="20">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Gestion des Fournisseurs" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;"/>
+    
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+        <!-- Formulaire à gauche -->
+        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);" minWidth="300">
+            <Label text="Ajouter / Modifier un fournisseur" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+            <Separator />
+            
+            <Label text="Nom de l'entreprise *" />
+            <TextField fx:id="txtNom" promptText="Obligatoire"/>
+            
+            <Label text="Personne de contact" />
+            <TextField fx:id="txtContact" promptText="Nom du représentant"/>
+            
+            <Label text="Téléphone" />
+            <TextField fx:id="txtTelephone" />
+            
+            <Label text="Email" />
+            <TextField fx:id="txtEmail" />
+
+            <Label text="Adresse" />
+            <TextField fx:id="txtAdresse" />
+
+            <Label text="Conditions de paiement" />
+            <TextArea fx:id="txtConditions" prefRowCount="3" wrapText="true"/>
+
+            <Label fx:id="lblErrorText" styleClass="error-label" visible="false"/>
+
+            <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 20 0 0 0;">
+                <Button text="Réinitialiser" onAction="#handleReset" style="-fx-background-color: #BDC3C7; -fx-text-fill: white;"/>
+                <Button fx:id="btnSave" text="Enregistrer" onAction="#handleSave" styleClass="button-primary"/>
+            </HBox>
+        </VBox>
+
+        <!-- Liste à droite -->
+        <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Liste des fournisseurs" style="-fx-font-weight: bold; -fx-font-size: 16px;" HBox.hgrow="ALWAYS"/>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="Supprimer sélection" onAction="#handleDelete" style="-fx-background-color: #E74C3C; -fx-text-fill: white;"/>
+            </HBox>
+            <Separator />
+            <TableView fx:id="tableFournisseurs" VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-border-color: #BDC3C7;">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="50" />
+                    <TableColumn fx:id="colNom" text="Entreprise" prefWidth="150" />
+                    <TableColumn fx:id="colContact" text="Contact" prefWidth="100" />
+                    <TableColumn fx:id="colTelephone" text="Téléphone" prefWidth="100" />
+                    <TableColumn fx:id="colEmail" text="Email" prefWidth="150" />
+                </columns>
+            </TableView>
+        </VBox>
+    </HBox>
+    </VBox>
+</ScrollPane>
+

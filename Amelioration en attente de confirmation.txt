@@ -1,0 +1,29 @@
+========================================================================
+AMELIORATION EN ATTENTE DE CONFIRMATION : MODULE FINANCES / FOURNISSEURS
+========================================================================
+
+CONTEXTE METIER :
+Lors de l'analyse des besoins, il a été établi que le flux d'approvisionnement se fait ainsi : 
+1. Commande téléphonique informelle pour vérifier la disponibilité.
+2. Livraison physique = Enregistrement immédiat dans le logiciel (Module Approvisionnement).
+3. Paiement différé = Le fournisseur est payé APRÈS la livraison par virement bancaire.
+
+DESCRIPTION DU BESOIN :
+Actuellement, lors de la réception, le "Montant Total" de la facture est traçable, mais le logiciel ne sait pas si la clinique a déjà effectué le virement bancaire ou si cet argent est encore dû au fournisseur.
+
+PISTES D'IMPLEMENTATION TECHNIQUE :
+1. Base de données (Modèle 'Achat') :
+   - Ajouter un champ `statutPaiement` de type Enum (ex: EN_ATTENTE, PAYE).
+   - Ajouter un champ `datePaiement` pour la traçabilité comptable.
+   - Ajouter un champ `referenceVirement` (Optionnel) pour lier le paiement bancaire à la facture du logiciel.
+
+2. Interface Utilisateur (UI) :
+   - Dans l'historique des Achats : Ajouter une colonne "Statut" avec des badges visuels (Rouge = En Attente, Vert = Payé).
+   - Ajouter un bouton ou une option "Marquer comme Payée" lors d'un clic-droit sur une facture en attente.
+   - (Optionnel) Créer un onglet dédié "Échéancier / Dettes Fournisseurs" pour centraliser tout ce qui reste à payer à la fin du mois.
+
+IMPORTANCE METIER :
+Cette fonctionnalité est vitale pour la santé financière de la clinique. Elle permet de :
+- Ne jamais oublier de payer un fournisseur (prévention des ruptures de stock pour non-paiement).
+- Ne jamais payer la même facture deux fois par erreur.
+- Donner une vision claire au manager sur les sorties d'argent programmées pour la fin du mois (gestion de la trésorerie).

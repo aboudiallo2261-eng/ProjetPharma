@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fitToWidth="true" styleClass="root" style="-fx-background-color: #ECF0F1;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pharmacie.controllers.UserController">
+    <content>
+        <VBox spacing="20" style="-fx-background-color: transparent;">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Sécurité &amp; Accès" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;"/>
+    
+    <TabPane VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE">
+        <!-- ONGLET 1 : PROFILS -->
+        <Tab text="Profils &amp; Habilitations">
+            <HBox spacing="20" style="-fx-padding: 20 0 0 0;">
+                <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);" minWidth="300">
+                    <Label text="Créer/Modifier un Profil" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                    <Separator/>
+                    <Label text="Nom du profil *"/>
+                    <TextField fx:id="txtProfilNom" promptText="Ex: Docteur, Vendeur..."/>
+                    <Label text="Description"/>
+                    <TextField fx:id="txtProfilDesc" />
+                    
+                    <Label text="Autorisations (Cochez pour autoriser) :" style="-fx-font-weight:bold; -fx-padding: 10 0 0 0;"/>
+                    <CheckBox fx:id="chkDashboard" text="Accès Tableau de Bord (Finances)"/>
+                    <CheckBox fx:id="chkVentes" text="Accès Ventes &amp; Caisse"/>
+                    <CheckBox fx:id="chkStock" text="Accès Produits &amp; Démarque Inconnue"/>
+                    <CheckBox fx:id="chkAchats" text="Accès Approvisionnement"/>
+                    <CheckBox fx:id="chkFournisseurs" text="Accès Fournisseurs"/>
+                    <CheckBox fx:id="chkRapports" text="Accès Rapports &amp; Exports"/>
+                    <CheckBox fx:id="chkParametres" text="Accès Paramètres (Ce Menu)"/>
+                    
+                    <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 20 0 0 0;">
+                        <Button text="Réinitialiser" onAction="#resetProfilForm" style="-fx-background-color: #BDC3C7; -fx-text-fill: white;"/>
+                        <Button text="Enregistrer Profil" fx:id="btnSaveProfil" onAction="#saveProfil" styleClass="button-primary"/>
+                    </HBox>
+                </VBox>
+                
+                <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                    <HBox alignment="CENTER_LEFT">
+                        <Label text="Liste des Profils d'accès" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Supprimer Profil" onAction="#deleteProfil" style="-fx-background-color: #E74C3C; -fx-text-fill: white;"/>
+                    </HBox>
+                    <TableView fx:id="tableProfils" VBox.vgrow="ALWAYS" style="-fx-border-color: #BDC3C7;">
+                        <columns>
+                            <TableColumn fx:id="colProfilNom" text="Titre du Profil" prefWidth="200"/>
+                            <TableColumn fx:id="colProfilDesc" text="Description" prefWidth="300"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </HBox>
+        </Tab>
+        
+        <!-- ONGLET 2 : UTILISATEURS -->
+        <Tab text="Comptes Utilisateurs">
+            <HBox spacing="20" style="-fx-padding: 20 0 0 0;">
+                <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);" minWidth="300">
+                    <Label text="Informations de l'employé" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                    <Separator/>
+                    <Label text="Nom complet *"/>
+                    <TextField fx:id="txtNom" promptText="Sera imprimé sur les factures"/>
+                    <Label text="Identifiant Connexion *"/>
+                    <TextField fx:id="txtIdentifiant" promptText="Nom d'utilisateur (sans espace)"/>
+                    <Label text="Email"/>
+                    <TextField fx:id="txtEmail" />
+                    <Label text="Mot de passe *"/>
+                    <PasswordField fx:id="txtMotDePasse" promptText="Laisser vide si pas de changement"/>
+                    <Label text="Profil d'accès *"/>
+                    <ComboBox fx:id="cmbProfil" promptText="Sélectionner le Rôle" prefWidth="300"/>
+                    
+                    <Label fx:id="lblErrorText" styleClass="error-label" visible="false"/>
+                    <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 20 0 0 0;">
+                        <Button text="Nouveau" onAction="#handleReset" style="-fx-background-color: #BDC3C7; -fx-text-fill: white;"/>
+                        <Button fx:id="btnSaveUser" text="Enregistrer l'agent" onAction="#handleSave" styleClass="button-primary"/>
+                    </HBox>
+                </VBox>
+                
+                <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                    <HBox alignment="CENTER_LEFT">
+                        <Label text="Liste des connexions (Agents)" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Désactiver l'accès (Supprimer)" onAction="#handleDelete" style="-fx-background-color: #E74C3C; -fx-text-fill: white;"/>
+                    </HBox>
+                    <TableView fx:id="tableUsers" VBox.vgrow="ALWAYS" style="-fx-border-color: #BDC3C7;">
+                        <columns>
+                            <TableColumn fx:id="colNom" text="Identité" prefWidth="200" />
+                            <TableColumn fx:id="colIdentifiant" text="Login" prefWidth="150" />
+                            <TableColumn fx:id="colEmail" text="Email" prefWidth="150" />
+                            <TableColumn fx:id="colRole" text="Profil Assigné" prefWidth="150" />
+                        </columns>
+                    </TableView>
+                </VBox>
+            </HBox>
+        </Tab>
+        <!-- ONGLET 3 : INFOS PHARMACIE -->
+        <Tab text="Paramètres de l'Établissement">
+            <VBox spacing="20" style="-fx-padding: 30; -fx-background-color: white; -fx-background-radius: 8;" alignment="TOP_CENTER" maxWidth="700">
+                <Label text="Identité de la Pharmacie (Apparaîtra sur PDF et Tickets)" style="-fx-font-weight: bold; -fx-font-size: 18px;"/>
+                <Separator/>
+                
+                <GridPane hgap="15" vgap="25" alignment="CENTER">
+                    <Label text="Nom de la structure :" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="txtInfoNom" promptText="Ex: PHARMACIE DU CENTRE" prefWidth="350" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    
+                    <Label text="Adresse :" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="txtInfoAdresse" promptText="Ex: Quartier, Ville" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    
+                    <Label text="Téléphone :" GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="txtInfoPhone" promptText="Ex: +221 77 000 00 00" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                    
+                    <Label text="Email / Infos légales :" GridPane.columnIndex="0" GridPane.rowIndex="3" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="txtInfoEmail" promptText="Email ou N.I.N.E.A" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                    
+                    <Label text="Pied de Ticket :" GridPane.columnIndex="0" GridPane.rowIndex="4" style="-fx-font-weight: bold;"/>
+                    <TextArea fx:id="txtInfoMessage" promptText="Message affiché au bas des reçus imprimés" prefHeight="80" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                </GridPane>
+                
+                <Label fx:id="lblInfoMsg" style="-fx-text-fill: green; -fx-font-weight: bold;" visible="false"/>
+                <Button text="Sauvegarder les Paramètres" onAction="#savePharmacieInfo" styleClass="button-primary" style="-fx-padding: 10 30; -fx-font-size: 14px;"/>
+            </VBox>
+        </Tab>
+        <!-- ONGLET 4 : SAUVEGARDE DB -->
+        <Tab text="Sauvegarde &amp; Données">
+            <VBox spacing="25" style="-fx-padding: 30; -fx-background-color: white; -fx-background-radius: 8;" alignment="TOP_CENTER" maxWidth="700">
+                <Label text="Sauvegarde de Securité de la Base de Données" style="-fx-font-weight: bold; -fx-font-size: 18px;"/>
+                <Separator/>
+                <Label text="Il est impératif de sauvegarder régulièrement l'intégralité de vos données (Clients, Ventes, Stock) sur un disque dur externe ou une clé USB." wrapText="true" textAlignment="CENTER" style="-fx-font-size: 14px; -fx-text-fill: #34495E;"/>
+                <Label text="Si l'ordinateur principal tombe en panne, ce fichier .sql permettra de restaurer le système." wrapText="true" textAlignment="CENTER" style="-fx-font-size: 14px; -fx-text-fill: #7F8C8D; -fx-font-style: italic;"/>
+                
+                <Button text="Exporter la Base de Données (.sql)" onAction="#handleBackupDB" styleClass="button-primary" style="-fx-padding: 15 40; -fx-font-size: 16px; -fx-background-color: #2980B9; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"/>
+            </VBox>
+        </Tab>
+        </TabPane>
+        </VBox>
+    </content>
+</ScrollPane>
+

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" styleClass="root" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pharmacie.controllers.ProduitController">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Gestion du Catalogue (Produits, Catégories, Espèces)" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;"/>
+    
+    <TabPane VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE">
+        <!-- TAB PRODUITS -->
+        <Tab text="Produits">
+            <HBox spacing="20" style="-fx-padding: 20 0 0 0;">
+                <!-- Formulaire Produit -->
+                <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);" minWidth="350">
+                    <Label text="Produit" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                    <Separator />
+                    <TextField fx:id="txtProdNom" promptText="Nom du produit *"/>
+                    
+                    <HBox spacing="8">
+                        <!-- Catégorie + bouton ajout rapide -->
+                        <HBox spacing="4" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT">
+                            <ComboBox fx:id="cmbProdCategorie" promptText="Catégorie *" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                            <Button text="➕" onAction="#quickAddCategorie" style="-fx-background-color: #18BC9C; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 6 9; -fx-background-radius: 4; -fx-cursor: hand;"/>
+                        </HBox>
+                        <!-- Espèce + bouton ajout rapide -->
+                        <HBox spacing="4" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT">
+                            <ComboBox fx:id="cmbProdEspece" promptText="Espèce *" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                            <Button text="➕" onAction="#quickAddEspece" style="-fx-background-color: #18BC9C; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 6 9; -fx-background-radius: 4; -fx-cursor: hand;"/>
+                        </HBox>
+                    </HBox>
+                    
+                    <HBox spacing="10">
+                        <TextField fx:id="txtProdPrixVente" promptText="Prix Vente (Boîte) *" HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                    
+                    <CheckBox fx:id="chkDeconditionnable" text="Vendable au détail (Déconditionnable)" />
+                    
+                    <HBox spacing="10" fx:id="boxDeconditionnement" disable="true">
+                        <TextField fx:id="txtProdUnites" promptText="Unités / boîte" HBox.hgrow="ALWAYS"/>
+                        <TextField fx:id="txtProdPrixUnite" promptText="Prix Détail" HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                    
+                    <TextField fx:id="txtProdSeuil" promptText="Seuil d'alerte (Qte min)"/>
+                    
+                    <Label fx:id="lblProdError" styleClass="error-label" visible="false"/>
+                    
+                    <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
+                        <Button text="Réinitialiser" onAction="#resetProdForm" style="-fx-background-color: #BDC3C7; -fx-text-fill: white;"/>
+                        <Button fx:id="btnSaveProd" text="Enregistrer" onAction="#saveProduit" styleClass="button-primary"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Liste Produits -->
+                <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <TextField fx:id="txtSearchProd" promptText="Rechercher un produit (saisie dynamique)..." HBox.hgrow="ALWAYS"/>
+                        <Button text="Rechercher" onAction="#searchProduit" styleClass="button-primary"/>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button text="Supprimer" onAction="#deleteProduit" style="-fx-background-color: #E74C3C; -fx-text-fill: white;"/>
+                    </HBox>
+                    <TableView fx:id="tableProduits" VBox.vgrow="ALWAYS" style="-fx-border-color: #BDC3C7;">
+                        <columns>
+                            <TableColumn fx:id="colProdId" text="ID" prefWidth="50" />
+                            <TableColumn fx:id="colProdNom" text="Nom" prefWidth="200" />
+                            <TableColumn fx:id="colProdCat" text="Catégorie" prefWidth="100" />
+                            <TableColumn fx:id="colProdEsp" text="Espèce" prefWidth="100" />
+                            <TableColumn fx:id="colProdPrixVente" text="P. Vente" prefWidth="80" />
+                        </columns>
+                    </TableView>
+                </VBox>
+            </HBox>
+        </Tab>
+        
+        <!-- TAB CATEGORIES -->
+        <Tab text="Catégories">
+            <HBox spacing="20" style="-fx-padding: 20 0 0 0;">
+                <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);" minWidth="300">
+                    <Label text="Catégorie" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                    <TextField fx:id="txtCatNom" promptText="Nom de la catégorie *"/>
+                    <Label fx:id="lblCatError" styleClass="error-label" visible="false"/>
+                    <HBox spacing="10" alignment="CENTER_RIGHT">
+                        <Button text="Annuler" onAction="#resetCatForm" style="-fx-background-color: #BDC3C7; -fx-text-fill: white;"/>
+                        <Button fx:id="btnSaveCat" text="Enregistrer" onAction="#saveCategorie" styleClass="button-primary"/>
+                    </HBox>
+                </VBox>
+                <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                    <HBox alignment="CENTER_RIGHT">
+                        <Button text="Supprimer" onAction="#deleteCategorie" style="-fx-background-color: #E74C3C; -fx-text-fill: white;"/>
+                    </HBox>
+                    <TableView fx:id="tableCategories" VBox.vgrow="ALWAYS" style="-fx-border-color: #BDC3C7;">
+                        <columns>
+                            <TableColumn fx:id="colCatId" text="ID" prefWidth="50" />
+                            <TableColumn fx:id="colCatNom" text="Nom" prefWidth="200" />
+                        </columns>
+                    </TableView>
+                </VBox>
+            </HBox>
+        </Tab>
+
+        <!-- TAB ESPECES -->
+        <Tab text="Espèces">
+             <HBox spacing="20" style="-fx-padding: 20 0 0 0;">
+                <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);" minWidth="300">
+                    <Label text="Espèce Animale" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                    <TextField fx:id="txtEspNom" promptText="Nom de l'espèce *"/>
+                    <Label fx:id="lblEspError" styleClass="error-label" visible="false"/>
+                    <HBox spacing="10" alignment="CENTER_RIGHT">
+                        <Button text="Annuler" onAction="#resetEspForm" style="-fx-background-color: #BDC3C7; -fx-text-fill: white;"/>
+                        <Button fx:id="btnSaveEsp" text="Enregistrer" onAction="#saveEspece" styleClass="button-primary"/>
+                    </HBox>
+                </VBox>
+                <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                    <HBox alignment="CENTER_RIGHT">
+                        <Button text="Supprimer" onAction="#deleteEspece" style="-fx-background-color: #E74C3C; -fx-text-fill: white;"/>
+                    </HBox>
+                    <TableView fx:id="tableEspeces" VBox.vgrow="ALWAYS" style="-fx-border-color: #BDC3C7;">
+                        <columns>
+                            <TableColumn fx:id="colEspId" text="ID" prefWidth="50" />
+                            <TableColumn fx:id="colEspNom" text="Nom" prefWidth="200" />
+                        </columns>
+                    </TableView>
+                </VBox>
+            </HBox>
+        </Tab>
+        
+        <!-- TAB ETAT DU STOCK -->
+        <Tab text="État du Stock">
+            <VBox spacing="10" style="-fx-padding: 20 0 0 0; -fx-background-color: white; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+                
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Inventaire par Lot" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                </HBox>
+
+                <!-- Barre de filtre - classes CSS sémantiques -->
+                <GridPane hgap="15" vgap="12" styleClass="filter-card" HBox.hgrow="ALWAYS">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="65" halignment="RIGHT"/>
+                        <ColumnConstraints minWidth="160" />
+                        <ColumnConstraints minWidth="65" halignment="RIGHT"/>
+                        <ColumnConstraints minWidth="160" />
+                        <ColumnConstraints hgrow="ALWAYS" />
+                        <ColumnConstraints minWidth="260" halignment="RIGHT"/>
+                    </columnConstraints>
+                    
+                    <!-- Ligne 1 -->
+                    <Label text="Catég. :" styleClass="filter-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <ComboBox fx:id="cmbFiltreStockCat" promptText="Toutes Catégories" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0" onAction="#filtrerStock"/>
+
+                    <Label text="Espèce :" styleClass="filter-label" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                    <ComboBox fx:id="cmbFiltreStockEsp" promptText="Toutes Espèces" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="0" onAction="#filtrerStock"/>
+
+                    <HBox alignment="CENTER_RIGHT" spacing="10" GridPane.columnIndex="5" GridPane.rowIndex="0">
+                        <!-- Phase 2 : live-filter géré dans ProduitController (listener debounce) -->
+                        <TextField fx:id="txtSearchStock" promptText="🔍 Produit/Lot..." prefWidth="180"/>
+                        <Button text="🔍 Filtrer" onAction="#filtrerStock" styleClass="btn-filter"/>
+                    </HBox>
+                    
+                    <!-- Ligne 2 -->
+                    <Label text="Statut :" styleClass="filter-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <ComboBox fx:id="cmbFiltreStockStatut" promptText="Tous Statuts" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#filtrerStock"/>
+
+                    <Label text="Expire :" styleClass="filter-label" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                    <DatePicker fx:id="dpFiltreExpAvant" promptText="Avant le..." maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="1" onAction="#filtrerStock"/>
+                    
+                    <HBox spacing="15" alignment="CENTER_RIGHT" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                        <CheckBox fx:id="chkInclureArchives" text="Inclure épuisés" onAction="#loadEtatStock" styleClass="filter-label"/>
+                        <Button text="🔄 Réinitialiser" onAction="#resetFiltresStock" styleClass="btn-outline-reset"/>
+                    </HBox>
+                </GridPane>
+                
+                <!-- Tableau État Stock avec prefWidth optimisés -->
+                <TableView fx:id="tableEtatStock" VBox.vgrow="ALWAYS" styleClass="table-view">
+                    <placeholder>
+                        <Label text="📦 Aucun produit ne correspond à vos filtres." styleClass="table-placeholder-label"/>
+                    </placeholder>
+                    <columns>
+                        <TableColumn fx:id="colStockProd" text="Produit" prefWidth="160"/>
+                        <TableColumn fx:id="colStockLot" text="N° Lot" prefWidth="110"/>
+                        <TableColumn fx:id="colStockExp" text="Expiration" prefWidth="100"/>
+                        <TableColumn fx:id="colStockJours" text="Jours Rest." prefWidth="90"/>
+                        <TableColumn fx:id="colStockQte" text="En Stock" prefWidth="155"/>
+                        <TableColumn fx:id="colStockSeuil" text="Seuil" prefWidth="55"/>
+                        <TableColumn fx:id="colStockVendus" text="Vendu" prefWidth="70"/>
+                        <TableColumn fx:id="colStockPrix" text="Prix U." prefWidth="75"/>
+                        <TableColumn fx:id="colStockValeur" text="Valeur" prefWidth="110"/>
+                    </columns>
+                </TableView>
+
+                <!-- KPI Valeur Totale du Stock -->
+                <Label fx:id="lblTotalStockValeur" text="Valeur totale du stock affiché : ---"
+                       style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #1E8449; -fx-padding: 4 0 0 2;"/>
+                
+                <!-- Légende des couleurs + Boutons d'action -->
+                <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 12 0 0 0;">
+                    <!-- Légende épurée -->
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <Label text="Légende :" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #7F8C8D;"/>
+                        <Label text="● Expiré (Stock non vendable)" style="-fx-text-fill: #C0392B; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                        <Label text="● Stock Critique (Alerte)" style="-fx-text-fill: #D35400; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    </HBox>
+
+                    <Region HBox.hgrow="ALWAYS"/>
+                    
+                    <!-- Phase 5 : Boutons désactivés par défaut, activés sur sélection de ligne -->
+                    <Button fx:id="btnVoirLot" text="🔎 Fiche Lot" disable="true"
+                            onAction="#onBtnVoirLotClick" styleClass="btn-action-blue"/>
+
+                    <Button fx:id="btnAjustementStock" text="⚖ Ajuster Stock" disable="true"
+                            onAction="#ajusterStock" styleClass="btn-action-blue"/>
+                    
+                    <!-- Bouton Action Primaire (Corporate Blue) -->
+                    <SplitMenuButton text="🖨 Exporter (PDF/Excel)" onAction="#imprimerEtatStockPdf"
+                                 style="-fx-background-color: #2980B9; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-cursor: hand;">
+                        <items>
+                            <MenuItem text="📄 Exporter en format PDF" onAction="#imprimerEtatStockPdf"/>
+                            <MenuItem text="📊 Exporter en format Excel/CSV" onAction="#exporterCsv"/>
+                        </items>
+                    </SplitMenuButton>
+                </HBox>
+            </VBox>
+        </Tab>
+    </TabPane>
+</VBox>
+
