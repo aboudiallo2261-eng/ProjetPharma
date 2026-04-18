@@ -101,7 +101,7 @@
         <!-- ═══════════════════════════════════════════════════════════ -->
         <VBox styleClass="card, chart-box">
             <Label text="Évolution CA vs Coût des Achats" styleClass="section-title"/>
-            <LineChart fx:id="chartEvolution" prefHeight="260" animated="false">
+            <LineChart fx:id="chartEvolution" prefHeight="260" animated="true">
                 <xAxis><CategoryAxis label="Période"/></xAxis>
                 <yAxis><NumberAxis label="Montant (FCFA)"/></yAxis>
             </LineChart>

@@ -80,6 +80,14 @@ public class DashboardController {
         dpDebut.setOnAction(loadEvent);
         dpFin.setOnAction(loadEvent);
 
+        // Correction chirurgicale du bug JavaFX (chevauchement des étiquettes Catégorie/Espèce/Motif) :
+        // On désactive l'animation sur l'axe X (qui ne gère pas asynchronement les tailles de texte long)
+        // tout en conservant animated="true" dans le FXML pour la montée fluide des barres de statistiques.
+        barCategorie.getXAxis().setAnimated(false);
+        barEspece.getXAxis().setAnimated(false);
+        barPertes.getXAxis().setAnimated(false);
+        chartEvolution.getXAxis().setAnimated(false);
+
         chargerDonnees();
     }
 
