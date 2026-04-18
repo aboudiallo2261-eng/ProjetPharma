@@ -15,9 +15,12 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PdfService {
 
+    private static final Logger logger = LoggerFactory.getLogger(PdfService.class);
     private static final float MARGIN = 50;
     private static final float PAGE_WIDTH = PDRectangle.A4.getWidth();
     private static final float PAGE_HEIGHT = PDRectangle.A4.getHeight();
@@ -203,7 +206,7 @@ public class PdfService {
             }
 
             document.save(fichier);
-            System.out.println("[PDF] Bon de commande sauvegardé : " + fichier.getAbsolutePath());
+            logger.info("Bon de commande sauvegardé : {}", fichier.getAbsolutePath());
 
             // Ouvrir le PDF automatiquement
             if (Desktop.isDesktopSupported()) {
@@ -211,8 +214,7 @@ public class PdfService {
             }
 
         } catch (IOException e) {
-            System.out.println("[Erreur PDF] " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Erreur lors de la génération du PDF", e);
         }
     }
 
@@ -307,13 +309,12 @@ public class PdfService {
             }
 
             document.save(fichier);
-            System.out.println("[PDF] Récap ventes sauvegardé : " + fichier.getAbsolutePath());
+            logger.info("Récap ventes sauvegardé : {}", fichier.getAbsolutePath());
             if (Desktop.isDesktopSupported()) {
                 Desktop.getDesktop().open(fichier);
             }
         } catch (IOException e) {
-            System.out.println("[Erreur PDF] " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Erreur PDF lors de la génération du récapitulatif ventes", e);
         }
     }
 
@@ -398,13 +399,12 @@ public class PdfService {
             }
 
             document.save(fichier);
-            System.out.println("[PDF] Récap achats sauvegardé : " + fichier.getAbsolutePath());
+            logger.info("Récap achats sauvegardé : {}", fichier.getAbsolutePath());
             if (Desktop.isDesktopSupported()) {
                 Desktop.getDesktop().open(fichier);
             }
         } catch (IOException e) {
-            System.out.println("[Erreur PDF] " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Erreur PDF lors de la génération du récapitulatif achats", e);
         }
     }
 
@@ -502,13 +502,12 @@ public class PdfService {
             }
 
             document.save(fichier);
-            System.out.println("[PDF] Etat du stock sauvegarde : " + fichier.getAbsolutePath());
+            logger.info("Etat du stock sauvegardé : {}", fichier.getAbsolutePath());
             if (Desktop.isDesktopSupported()) {
                 Desktop.getDesktop().open(fichier);
             }
         } catch (IOException e) {
-            System.out.println("[Erreur PDF] " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Erreur PDF lors de la génération de l'état du stock", e);
         }
     }
 
@@ -595,11 +594,12 @@ public class PdfService {
             }
 
             document.save(fichier);
+            logger.info("Rapport ajustements sauvegardé : {}", fichier.getAbsolutePath());
             if (Desktop.isDesktopSupported()) {
                 Desktop.getDesktop().open(fichier);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Erreur PDF lors de la génération des ajustements", e);
         }
     }
 
@@ -683,11 +683,12 @@ public class PdfService {
             }
 
             document.save(fichier);
+            logger.info("Journal détaillé ventes sauvegardé : {}", fichier.getAbsolutePath());
             if (Desktop.isDesktopSupported()) {
                 Desktop.getDesktop().open(fichier);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Erreur PDF lors de la génération du journal des ventes", e);
         }
     }
 
@@ -768,9 +769,10 @@ public class PdfService {
                 }
             }
             document.save(fichier);
+            logger.info("Rapport Audit sauvegardé : {}", fichier.getAbsolutePath());
             if (Desktop.isDesktopSupported()) Desktop.getDesktop().open(fichier);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Erreur PDF lors de l'audit", e);
         }
     }
 
@@ -846,9 +848,10 @@ public class PdfService {
                 }
             }
             document.save(fichier);
+            logger.info("Rapport Clôtures sauvegardé : {}", fichier.getAbsolutePath());
             if (Desktop.isDesktopSupported()) Desktop.getDesktop().open(fichier);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Erreur PDF lors de la génération du rapport de clôture", e);
         }
     }
 }

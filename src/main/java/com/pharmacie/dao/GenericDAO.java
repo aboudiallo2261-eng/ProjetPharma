@@ -5,14 +5,36 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * DAO générique paramétrique fournissant les opérations CRUD de base pour toutes les entités.
+ *
+ * <p>Chaque opération (save, update, delete) est encapsulée dans sa propre transaction
+ * Hibernate avec gestion automatique du rollback en cas d'erreur.</p>
+ *
+ * <p>Les DAOs spécialisés ({@link LigneVenteDAO}, {@link LotDAO}, etc.) étendent cette
+ * classe pour ajouter leurs requêtes HQL métier spécifiques.</p>
+ *
+ * @param <T> le type de l'entité JPA gérée
+ */
 public class GenericDAO<T> {
+    private static final Logger logger = LoggerFactory.getLogger(GenericDAO.class);
     private final Class<T> type;
 
+    /**
+     * @param type La classe de l'entité JPA gérée (ex: {@code Produit.class}).
+     */
     public GenericDAO(Class<T> type) {
         this.type = type;
     }
 
+    /**
+     * Persiste une nouvelle entité en base de données (INSERT).
+     * @param entity L'entité à sauvegarder. Son ID sera généré automatiquement
+     *               après persistance ({@code @GeneratedValue}).
+     */
     public void save(T entity) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -20,19 +42,21 @@ public class GenericDAO<T> {
             session.persist(entity);
             transaction.commit();
         } catch (Exception e) {
-            System.err.println("===== ERREUR SQL ROOT =====");
-            e.printStackTrace();
-            System.err.println("===========================");
+            logger.error("Erreur BDD (save) pour " + type.getSimpleName(), e);
             if (transaction != null) {
                 try {
                     transaction.rollback();
                 } catch(Exception rbe) {
-                    System.err.println("Rollback exception (secondaire): " + rbe.getMessage());
+                    logger.error("Rollback exception (secondaire): " + rbe.getMessage());
                 }
             }
         }
     }
 
+    /**
+     * Met à jour une entité existante en base de données (UPDATE via Hibernate merge).
+     * @param entity L'entité détachée de la session Hibernate à re-rattacher et mettre à jour.
+     */
     public void update(T entity) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -40,8 +64,7 @@ public class GenericDAO<T> {
             session.merge(entity);
             transaction.commit();
         } catch (Exception e) {
-            System.err.println("===== ERREUR SQL ROOT =====");
-            e.printStackTrace();
+            logger.error("Erreur BDD (update) pour " + type.getSimpleName(), e);
             if (transaction != null) {
                 try {
                     transaction.rollback();
@@ -50,6 +73,13 @@ public class GenericDAO<T> {
         }
     }
 
+    /**
+     * Supprime une entité en base de données.
+     * En cas de violation de clé étrangère (ex: fournisseur lié à des achats),
+     * retourne {@code false} sans lever d'exception.
+     * @param entity L'entité à supprimer.
+     * @return {@code true} si supprimée, {@code false} si contràint (FK violation).
+     */
     public boolean delete(T entity) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -58,23 +88,33 @@ public class GenericDAO<T> {
             transaction.commit();
             return true;
         } catch (Exception e) {
-            System.err.println("===== ERREUR SQL ROOT =====");
-            e.printStackTrace();
+            logger.error("Erreur BDD (delete) pour " + type.getSimpleName(), e);
             if (transaction != null) {
                 try {
                     transaction.rollback();
-                } catch(Exception rbe){}
+                } catch(Exception rbe) { }
             }
             return false;
         }
     }
 
+    /**
+     * Recherche une entité par sa clé primaire.
+     * @param id L'identifiant unique de l'entité.
+     * @return L'entité trouvée ou {@code null} si aucun enregistrement ne correspond.
+     */
     public T findById(Long id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.get(type, id);
         }
     }
 
+    /**
+     * Récupère tous les enregistrements de l'entité.
+     * <p><b>⚠️ Attention :</b> à utiliser avec précaution sur les tables volumineuses.
+     * Préférez les DAOs spécialisés avec pagination ou filtrage HQL dédié.</p>
+     * @return La liste complète des entités ou une liste vide si la table est vide.
+     */
     public List<T> findAll() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Query<T> query = session.createQuery("from " + type.getName(), type);

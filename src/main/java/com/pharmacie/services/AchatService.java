@@ -13,9 +13,23 @@ import org.hibernate.Transaction;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * Service métier dédié aux Approvisionnements Fournisseurs.
+ *
+ * <p>Ce service orchestre l'enregistrement d'une commande complète en garantissant
+ * l'atomicité et la cohérence des données via une transaction Hibernate unique.
+ * Toute erreur déclenche un rollback intégral pour éviter tout état incohérent.</p>
+ *
+ * @see com.pharmacie.models.Achat
+ * @see com.pharmacie.models.Lot
+ * @see com.pharmacie.models.MouvementStock
+ */
 public class AchatService {
 
+    private static final Logger logger = LoggerFactory.getLogger(AchatService.class);
     private LotDAO lotDAO = new LotDAO();
 
     /**
@@ -28,6 +42,30 @@ public class AchatService {
      *  3. Créer les LignesAchat liées
      *  4. Enregistrer les MouvementStock (Audit Trail)
      *  5. Mettre à jour produit.prixAchat (référence pour la prochaine comparaison de marge)
+     */
+    /**
+     * Enregistre une commande fournisseur complète dans une transaction ACID stricte.
+     *
+     * <p>Opérations effectuées dans la même transaction :
+     * <ol>
+     *   <li><b>Achat</b> : Persist l'en-tête de commande (référence facture, date).</li>
+     *   <li><b>Lots</b> : Crée un nouveau lot OU réalimente un lot existant (merge intelligent).
+     *       Désarchive automatiquement un lot remis à zéro.</li>
+     *   <li><b>Déconditionnement</b> : Convertit les boîtes en unités selon {@code unitesParBoite}
+     *       si le produit est déconditionnable.</li>
+     *   <li><b>LignesAchat</b> : Lie chaque ligne à l'achat et au lot correspondant.</li>
+     *   <li><b>Audit Trail</b> : Enregistre un {@link com.pharmacie.models.MouvementStock}
+     *       de type {@code ACHAT} pour chaque lot touché.</li>
+     *   <li><b>Prix de référence</b> : Met à jour {@code produit.prixAchat} pour le suivi
+     *       de marge (sans modifier l'historique des lignes).</li>
+     * </ol>
+     *
+     * <p>En cas d'exception à n'importe quelle étape, un <b>rollback complet</b> est exécuté.
+     * Aucune donnée partielle ne peut rester en base.
+     *
+     * @param achat  L'entité {@link com.pharmacie.models.Achat} pré-remplie (fournisseur, date, référence).
+     * @param panier La liste des {@link com.pharmacie.models.LigneAchat} constituant la commande.
+     * @return {@code true} si toute la transaction s'est terminée avec succès, {@code false} sinon.
      */
     public boolean enregistrerCommandeTransactionnelle(Achat achat, List<LigneAchat> panier) {
         Transaction transaction = null;
@@ -103,7 +141,7 @@ public class AchatService {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            logger.error("Erreur Transaction ACID sur enregistrerCommandeTransactionnelle", e);
             return false;
         }
     }

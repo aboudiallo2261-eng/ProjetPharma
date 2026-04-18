@@ -821,15 +821,14 @@ public class ProduitController {
 
         tableEtatStock.setItems(FXCollections.observableArrayList(filtered));
 
-        // #7 : Calcul et affichage en vert de la valeur financière totale du stock visible
+        // #7 : Calcul et affichage de la valeur financière totale du stock visible (Alignement UX Ventes)
         if (lblTotalStockValeur != null) {
             double total = filtered.stream()
                     .mapToDouble(d -> d.getValeurFinanciere() != null ? d.getValeurFinanciere() : 0.0)
                     .sum();
             lblTotalStockValeur.setText(
-                    String.format(java.util.Locale.FRANCE, "Valeur totale du stock affiché : %,.0f FCFA", total));
-            lblTotalStockValeur.setStyle(
-                    "-fx-text-fill: #1E8449; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 4 0 0 2;");
+                    String.format(java.util.Locale.FRANCE, "%,.0f FCFA", total));
+            lblTotalStockValeur.setStyle("-fx-text-fill: #27ae60; -fx-font-size: 16px; -fx-font-weight: bold;");
         }
     }
 

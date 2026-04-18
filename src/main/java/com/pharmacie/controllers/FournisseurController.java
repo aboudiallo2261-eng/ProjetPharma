@@ -7,8 +7,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FournisseurController {
+    
+    private static final Logger logger = LoggerFactory.getLogger(FournisseurController.class);
 
     @FXML private TextField txtNom;
     @FXML private TextField txtContact;
@@ -51,7 +55,7 @@ public class FournisseurController {
             List<Fournisseur> list = fournisseurDAO.findAll();
             tableFournisseurs.setItems(FXCollections.observableArrayList(list));
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error("Erreur DAO loadFournisseurs", e);
         }
     }
 

@@ -9,8 +9,12 @@ import javax.print.attribute.PrintRequestAttributeSet;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.time.format.DateTimeFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PrinterService {
+
+    private static final Logger logger = LoggerFactory.getLogger(PrinterService.class);
 
     public static void imprimerTicket(Vente vente) {
         StringBuilder ticket = new StringBuilder();
@@ -91,8 +95,8 @@ public class PrinterService {
         ticket.append(msgFin).append("\n");
         ticket.append("\n\n\n\n\n").append(CUT);
 
-        // Garder une trace dans la console
-        System.out.println(ticket.toString());
+        // Garder une trace dans la console sans bloquer l'UI
+        logger.debug("Tentative d'impression de ticket :\n{}", ticket.toString());
         
         // Envoi réel vers le port USB/Imprimante par défaut
         envoyerAImprimante(ticket.toString());
@@ -103,11 +107,11 @@ public class PrinterService {
             // Recherche de l'imprimante physique configurée "Par défaut" dans Windows
             PrintService printer = PrintServiceLookup.lookupDefaultPrintService();
             if (printer == null) {
-                System.out.println("[Impression] Aucune imprimante physique par défaut n'est configurée sur Windows.");
+                logger.warn("Aucune imprimante physique par défaut n'est configurée sur Windows.");
                 return;
             }
             
-            System.out.println("[Impression] Envoi du ticket vers l'imprimante : " + printer.getName());
+            logger.info("Envoi du ticket vers l'imprimante : {}", printer.getName());
             
             DocPrintJob job = printer.createPrintJob();
             // Beaucoup d'imprimantes thermiques africaines/asiatiques utilisent CP858 ou ISO-8859-1 pour les accents
@@ -117,11 +121,10 @@ public class PrinterService {
             
             job.print(doc, pras);
             is.close();
-            System.out.println("[Impression] Succès ! Ticket imprimé physiquement.");
+            logger.info("Succès ! Ticket imprimé physiquement.");
             
         } catch (Exception e) {
-            System.out.println("[Erreur Impression] Le câble est-il bien branché ou l'imprimante allumée ? " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Le câble est-il bien branché ou l'imprimante allumée ?", e);
         }
     }
 }

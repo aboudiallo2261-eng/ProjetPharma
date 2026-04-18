@@ -1,8 +1,11 @@
 package com.pharmacie.dao;
 
 import com.pharmacie.models.Lot;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LotDAO extends GenericDAO<Lot> {
+    private static final Logger logger = LoggerFactory.getLogger(LotDAO.class);
     public LotDAO() {
         super(Lot.class);
     }
@@ -19,7 +22,7 @@ public class LotDAO extends GenericDAO<Lot> {
                 "ORDER BY l.dateExpiration ASC", Lot.class)
             .list();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erreur DAO findActiveLotsWithDetails", e);
             return java.util.Collections.emptyList();
         }
     }
@@ -35,7 +38,7 @@ public class LotDAO extends GenericDAO<Lot> {
             }
             return map;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erreur DAO getQuantitesVenduesParLot", e);
             return java.util.Collections.emptyMap();
         }
     }

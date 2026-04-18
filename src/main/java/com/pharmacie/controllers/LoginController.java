@@ -9,8 +9,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import org.mindrot.jbcrypt.BCrypt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LoginController {
+
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @FXML
     private TextField identifiantField;
@@ -53,7 +57,7 @@ public class LoginController {
                 admin = userDAO.findByIdentifiant("admin"); // Assure la récupération de l'ID généré
             }
             SessionManager.setCurrentUser(admin);
-            System.out.println("Connexion Setup Admin avec ID: " + admin.getId());
+            logger.info("Connexion Setup Admin avec ID: {}", admin.getId());
             MainApp.showMainLayout();
             return;
         }
@@ -62,7 +66,7 @@ public class LoginController {
         if (user != null) {
             if (BCrypt.checkpw(password, user.getMotDePasseHash())) {
                 SessionManager.setCurrentUser(user);
-                System.out.println("Connexion réussie: " + user.getNom());
+                logger.info("Connexion réussie: {}", user.getNom());
                 MainApp.showMainLayout();
             } else {
                 showError("Mot de passe incorrect.");

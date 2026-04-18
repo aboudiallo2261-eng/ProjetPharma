@@ -4,6 +4,7 @@ import com.pharmacie.dao.*;
 import com.pharmacie.models.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -18,14 +19,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ReportController {
+
+    private static final Logger log = LoggerFactory.getLogger(ReportController.class);
+
+    // --- Indicateurs de chargement asynchrone (un par onglet critique) ---
+    @FXML private ProgressIndicator progressRapport;
+    @FXML private ProgressIndicator progressAjust;
 
     @FXML private DatePicker dpDateDebut;
     @FXML private DatePicker dpDateFin;
     @FXML private ComboBox<User> cmbCaissier;
     @FXML private ComboBox<Categorie> cmbCategorie;
     @FXML private ComboBox<Espece> cmbEspece;
+    @FXML private ComboBox<Produit> cmbRapportProduit;
     @FXML private Label lblTotalFiltre;
     // Phase 5 : Boutons d'export
     @FXML private Button btnExportPdfVentes;
@@ -47,6 +57,7 @@ public class ReportController {
     @FXML private TableView<AjustementStock> tableAjustements;
     @FXML private TableColumn<AjustementStock, String> colAdjDate, colAdjProduit, colAdjLot, colAdjUser, colAdjMotif, colAdjObs;
     @FXML private TableColumn<AjustementStock, Integer> colAdjQte;
+    @FXML private Label lblTotalAjustements;
 
     // --- AUDIT DES STOCKS ---
     @FXML private DatePicker dpAuditDebut;
@@ -56,16 +67,22 @@ public class ReportController {
     @FXML private ComboBox<User> cmbAuditUser;
     @FXML private TableView<MouvementStock> tableAudit;
     @FXML private TableColumn<MouvementStock, String> colAuditDate, colAuditType, colAuditRapport, colAuditQte, colAuditRef, colAuditUser;
+    @FXML private Label lblTotalAudit;
 
     // --- REGISTRE DES CLOTURES (Z) ---
     @FXML private DatePicker dpClotureDebut;
     @FXML private DatePicker dpClotureFin;
     @FXML private ComboBox<User> cmbClotureUser;
+    @FXML private ComboBox<String> cmbClotureStatut;
+    @FXML private ComboBox<String> cmbClotureBilan;
     @FXML private TableView<SessionCaisse> tableClotures;
     @FXML private TableColumn<SessionCaisse, String> colZDate, colZAgent, colZStatut, colZTheorieEsp, colZTheorieMob;
     @FXML private TableColumn<SessionCaisse, Double> colZEcartEsp, colZEcartMob;
+    @FXML private Label lblTotalClotures;
 
-    private GenericDAO<LigneVente> ligneVenteDAO = new GenericDAO<>(LigneVente.class);
+    // LigneVenteDAO remplace le GenericDAO brut : fournit findAllWithDetails() avec
+    // JOIN FETCH qui évite la LazyInitializationException et le problème N+1.
+    private LigneVenteDAO ligneVenteDAO = new LigneVenteDAO();
     private AjustementStockDAO ajustementStockDAO = new AjustementStockDAO();
     private UserDAO userDAO = new UserDAO();
     private CategorieDAO catDAO = new CategorieDAO();
@@ -85,14 +102,30 @@ public class ReportController {
 
     @FXML
     public void initialize() {
-        dpDateDebut.setValue(LocalDate.now().withDayOfMonth(1));
-        dpDateFin.setValue(LocalDate.now());
+        // Verrou global pendant toute la phase d'initialisation.
+        // Empêche tout handler FXML-bound (onAction="#genererXxx") de déclencher un
+        // chargement de données AVANT que tous les composants soient prêts.
+        // Les verrous sont relâchés juste avant les 4 appels initiaux explicites.
+        isUpdatingRapportFiltres = true;
+        isUpdatingAjustFiltres   = true;
+        isUpdatingAuditFiltres   = true;
+        isUpdatingClotureFiltres = true;
+
+        // Initialisation standardisée "Date du Jour" pour tous les modules
+        // Un pharmacien consulte en priorité l'activité du jour en cours (UX prioritaire)
+        LocalDate today = LocalDate.now();
+
+        dpDateDebut.setValue(today);
+        dpDateFin.setValue(today);
         
-        dpAjustDebut.setValue(LocalDate.now().withDayOfMonth(1));
-        dpAjustFin.setValue(LocalDate.now());
+        dpAjustDebut.setValue(today);
+        dpAjustFin.setValue(today);
         
-        dpAuditDebut.setValue(LocalDate.now().minusDays(7));
-        dpAuditFin.setValue(LocalDate.now());
+        dpAuditDebut.setValue(today);
+        dpAuditFin.setValue(today);
+
+        dpClotureDebut.setValue(today);
+        dpClotureFin.setValue(today);
 
         com.pharmacie.utils.DateUtils.bindDateFilters(dpDateDebut, dpDateFin);
         com.pharmacie.utils.DateUtils.bindDateFilters(dpAjustDebut, dpAjustFin);
@@ -152,6 +185,13 @@ public class ReportController {
         
         // Phase 4 : Colonnes adaptatives (CONSTRAINED retiré pour privilégier les prefWidth FXML sur les grands tableaux)
 
+        // Relâchement des verrous : toutes les associations inter-composants sont en place.
+        // Les 4 chargements initiaux se déclenchent maintenant proprement.
+        isUpdatingRapportFiltres = false;
+        isUpdatingAjustFiltres   = false;
+        isUpdatingAuditFiltres   = false;
+        isUpdatingClotureFiltres = false;
+
         genererRapport();
         genererAjustements();
         genererAudit();
@@ -176,6 +216,11 @@ public class ReportController {
             public Espece fromString(String string) { return null; }
         };
         cmbEspece.setConverter(espConv);
+
+        if (cmbRapportProduit != null) {
+            cmbRapportProduit.getItems().add(null);
+            cmbRapportProduit.getItems().addAll(produitDAO.findAll());
+        }
         
         cmbAuditProduit.getItems().add(null);
         cmbAuditProduit.getItems().addAll(produitDAO.findAll());
@@ -187,6 +232,7 @@ public class ReportController {
             public Produit fromString(String string) { return null; }
         };
         cmbAuditProduit.setConverter(prodConv);
+        if (cmbRapportProduit != null) cmbRapportProduit.setConverter(prodConv);
 
         javafx.util.StringConverter<MouvementStock.TypeMouvement> typeConv = new javafx.util.StringConverter<>() {
             public String toString(MouvementStock.TypeMouvement v) { return v == null ? "Tous les mouvements" : v.name(); }
@@ -218,6 +264,20 @@ public class ReportController {
                 public MouvementStock.TypeMouvement fromString(String string) { return null; }
             });
             isUpdatingAjustFiltres = false; // Relâche le verrou après chargement complet
+        }
+
+        if (cmbClotureStatut != null) {
+            isUpdatingClotureFiltres = true;
+            cmbClotureStatut.getItems().addAll("Tous les statuts", "Fermées (Normal)", "Ouvertes (Anomalie)");
+            cmbClotureStatut.getSelectionModel().select(0);
+            isUpdatingClotureFiltres = false;
+        }
+
+        if (cmbClotureBilan != null) {
+            isUpdatingClotureFiltres = true;
+            cmbClotureBilan.getItems().addAll("Tous les bilans", "Avec Manquant (Écart négatif)", "Avec Excédent (Écart positif)");
+            cmbClotureBilan.getSelectionModel().select(0);
+            isUpdatingClotureFiltres = false;
         }
     }
 
@@ -463,11 +523,12 @@ public class ReportController {
     @FXML
     public void resetRapportVente() {
         isUpdatingRapportFiltres = true;
-        dpDateDebut.setValue(LocalDate.now().withDayOfMonth(1));
+        dpDateDebut.setValue(LocalDate.now());
         dpDateFin.setValue(LocalDate.now());
         cmbCaissier.getSelectionModel().select(0);
         cmbCategorie.getSelectionModel().select(0);
         cmbEspece.getSelectionModel().select(0);
+        if (cmbRapportProduit != null) cmbRapportProduit.getSelectionModel().select(0);
         isUpdatingRapportFiltres = false;
         genererRapport();
     }
@@ -475,7 +536,7 @@ public class ReportController {
     @FXML
     public void resetAudit() {
         isUpdatingAuditFiltres = true;
-        dpAuditDebut.setValue(LocalDate.now().withDayOfMonth(1));
+        dpAuditDebut.setValue(LocalDate.now());
         dpAuditFin.setValue(LocalDate.now());
         if (cmbAuditProduit != null) cmbAuditProduit.getSelectionModel().select(0);
         if (cmbAuditType != null) cmbAuditType.getSelectionModel().select(0);
@@ -487,7 +548,7 @@ public class ReportController {
     @FXML
     public void resetAjustements() {
         isUpdatingAjustFiltres = true;
-        dpAjustDebut.setValue(LocalDate.now().withDayOfMonth(1));
+        dpAjustDebut.setValue(LocalDate.now());
         dpAjustFin.setValue(LocalDate.now());
         if (cmbAjustProduit != null) cmbAjustProduit.getSelectionModel().select(0);
         if (cmbAjustUser != null) cmbAjustUser.getSelectionModel().select(0);
@@ -499,65 +560,160 @@ public class ReportController {
     @FXML
     public void resetClotures() {
         isUpdatingClotureFiltres = true;
-        dpClotureDebut.setValue(LocalDate.now().withDayOfMonth(1));
+        dpClotureDebut.setValue(LocalDate.now());
         dpClotureFin.setValue(LocalDate.now());
-        cmbClotureUser.getSelectionModel().select(0);
+        if (cmbClotureUser != null) cmbClotureUser.getSelectionModel().select(0);
+        if (cmbClotureStatut != null) cmbClotureStatut.getSelectionModel().select(0);
+        if (cmbClotureBilan != null) cmbClotureBilan.getSelectionModel().select(0);
         isUpdatingClotureFiltres = false;
         genererClotures();
     }
 
     @FXML
     public void genererRapport() {
+        // Guard : bloque les appels spurieux pendant l'initialisation (verrou global)
+        // et empêche le lancement de deux Tasks concurrents si l'utilisateur clique
+        // rapidement plusieurs fois sur "Filtrer".
+        if (isUpdatingRapportFiltres) return;
         if (dpDateDebut.getValue() == null || dpDateFin.getValue() == null) return;
-        LocalDateTime start = dpDateDebut.getValue().atStartOfDay();
-        LocalDateTime end = dpDateFin.getValue().plusDays(1).atStartOfDay();
-        User selUser = cmbCaissier.getValue();
-        Categorie selCat = cmbCategorie.getValue();
-        Espece selEsp = cmbEspece.getValue();
-        List<LigneVente> all = ligneVenteDAO.findAll();
-        currentPeriodLines = all.stream().filter(lv -> {
-            if(lv.getVente().getDateVente() == null) return false;
-            boolean qDate = !lv.getVente().getDateVente().isBefore(start) && lv.getVente().getDateVente().isBefore(end);
-            boolean qUser = selUser == null || lv.getVente().getUser().getId().equals(selUser.getId());
-            boolean qCat = selCat == null || lv.getProduit().getCategorie().getId().equals(selCat.getId());
-            boolean qEsp = selEsp == null || lv.getProduit().getEspece().getId().equals(selEsp.getId());
-            return qDate && qUser && qCat && qEsp;
-        }).collect(Collectors.toList());
-        double filteredCA = currentPeriodLines.stream().mapToDouble(LigneVente::getSousTotal).sum();
-        lblTotalFiltre.setText(String.format("%,.0f FCFA", filteredCA));
-        tableLignesVente.setItems(FXCollections.observableArrayList(currentPeriodLines));
-        // Phase 5 : Activer/désactiver les boutons export selon les données
-        boolean hasData = !currentPeriodLines.isEmpty();
-        if (btnExportPdfVentes != null) btnExportPdfVentes.setDisable(!hasData);
-        if (btnExportCsvVentes != null) btnExportCsvVentes.setDisable(!hasData);
+
+        // OBLIGATOIRE : les propriétés JavaFX ne sont accessibles que depuis l'UI Thread.
+        // On capture les valeurs AVANT de créer le Task background.
+        final LocalDateTime start   = dpDateDebut.getValue().atStartOfDay();
+        final LocalDateTime end     = dpDateFin.getValue().plusDays(1).atStartOfDay();
+        final User      selUser = cmbCaissier.getValue();
+        final Categorie selCat  = cmbCategorie.getValue();
+        final Espece    selEsp  = cmbEspece.getValue();
+        final Produit   selProd = cmbRapportProduit != null ? cmbRapportProduit.getValue() : null;
+
+        setRapportLoading(true);
+
+        Task<List<LigneVente>> task = new Task<>() {
+            @Override
+            protected List<LigneVente> call() {
+                Long userId = selUser != null ? selUser.getId() : null;
+                Long catId = selCat != null ? selCat.getId() : null;
+                Long espId = selEsp != null ? selEsp.getId() : null;
+                Long prodId = selProd != null ? selProd.getId() : null;
+                
+                // P2.C Scalabilité : Délégation de la recherche et du filtrage à la base de données via HQL.
+                // On évite un OutOfMemoryError en production car la base ne retourne que les objets ciblés.
+                return ligneVenteDAO.rechercherLignesVente(start, end, userId, catId, espId, prodId);
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            currentPeriodLines = task.getValue();
+            double filteredCA = currentPeriodLines.stream().mapToDouble(LigneVente::getSousTotal).sum();
+            lblTotalFiltre.setText(String.format("%,.0f FCFA", filteredCA));
+            tableLignesVente.setItems(FXCollections.observableArrayList(currentPeriodLines));
+            boolean hasData = !currentPeriodLines.isEmpty();
+            if (btnExportPdfVentes != null) btnExportPdfVentes.setDisable(!hasData);
+            if (btnExportCsvVentes != null) btnExportCsvVentes.setDisable(!hasData);
+            setRapportLoading(false);
+        });
+
+        task.setOnFailed(e -> {
+            log.error("[Rapports] Erreur chargement journal des ventes", task.getException());
+            setRapportLoading(false);
+        });
+
+        Thread t = new Thread(task);
+        t.setDaemon(true); // Le thread ne bloque pas la fermeture de l'application
+        t.start();
     }
-    
+
+    /**
+     * Active ou désactive le mode chargement de l'onglet Journal des Ventes.
+     * Affiche le spinner et désactive tous les contrôles de filtre pendant
+     * l'exécution du Task pour empêcher les requêtes concurrentes.
+     */
+    private void setRapportLoading(boolean loading) {
+        if (progressRapport != null) {
+            progressRapport.setVisible(loading);
+            progressRapport.setManaged(loading);
+        }
+        dpDateDebut.setDisable(loading);
+        dpDateFin.setDisable(loading);
+        cmbCaissier.setDisable(loading);
+        cmbCategorie.setDisable(loading);
+        cmbEspece.setDisable(loading);
+    }
+
     @FXML
     public void genererAjustements() {
-        // Bug #5 : Guard against spurious triggers fired by the FXML-bound onAction
-        // when items are added to cmbAjustType during loadFilters() initialization.
+        // Guard N°1 : déclenché par onAction FXML-bound de cmbAjustType pendant loadFilters().
+        // Guard N°2 : empêche deux Tasks concurrents.
         if (isUpdatingAjustFiltres) return;
         if (dpAjustDebut.getValue() == null || dpAjustFin.getValue() == null) return;
-        LocalDateTime start = dpAjustDebut.getValue().atStartOfDay();
-        LocalDateTime end = dpAjustFin.getValue().plusDays(1).atStartOfDay();
-        Produit selProd = cmbAjustProduit != null ? cmbAjustProduit.getValue() : null;
-        User selUser = cmbAjustUser != null ? cmbAjustUser.getValue() : null;
-        MouvementStock.TypeMouvement selType = cmbAjustType != null ? cmbAjustType.getValue() : null;
-        
-        List<AjustementStock> allAjustements = ajustementStockDAO.findAllWithDetails();
-        currentAjustements = allAjustements.stream()
-                .filter(a -> (!a.getDateAjustement().isBefore(start)) && a.getDateAjustement().isBefore(end))
-                .filter(a -> selProd == null || a.getLot().getProduit().getId().equals(selProd.getId()))
-                .filter(a -> selUser == null || a.getUser().getId().equals(selUser.getId()))
-                .filter(a -> {
-                    if (selType == null) return true;
-                    MouvementStock.TypeMouvement type = a.getTypeAjustement() != null ? a.getTypeAjustement() : MouvementStock.TypeMouvement.AJUSTEMENT_NEGATIF;
-                    return type == selType;
-                })
-                .collect(Collectors.toList());
-        tableAjustements.setItems(FXCollections.observableArrayList(currentAjustements));
-        // Phase 5 : Activer bouton PDF
-        if (btnExportPdfAjust != null) btnExportPdfAjust.setDisable(currentAjustements.isEmpty());
+
+        // Capture UI Thread → Task (thread-safety JavaFX).
+        final LocalDateTime start = dpAjustDebut.getValue().atStartOfDay();
+        final LocalDateTime end   = dpAjustFin.getValue().plusDays(1).atStartOfDay();
+        final Produit selProd = cmbAjustProduit != null ? cmbAjustProduit.getValue() : null;
+        final User    selUser = cmbAjustUser    != null ? cmbAjustUser.getValue()    : null;
+        final MouvementStock.TypeMouvement selType =
+                cmbAjustType != null ? cmbAjustType.getValue() : null;
+
+        setAjustLoading(true);
+
+        Task<List<AjustementStock>> task = new Task<>() {
+            @Override
+            protected List<AjustementStock> call() {
+                List<AjustementStock> allAjustements = ajustementStockDAO.findAllWithDetails();
+                return allAjustements.stream()
+                    .filter(a -> (!a.getDateAjustement().isBefore(start))
+                                && a.getDateAjustement().isBefore(end))
+                    .filter(a -> selProd == null
+                                || a.getLot().getProduit().getId().equals(selProd.getId()))
+                    .filter(a -> selUser == null
+                                || a.getUser().getId().equals(selUser.getId()))
+                    .filter(a -> {
+                        if (selType == null) return true;
+                        MouvementStock.TypeMouvement type = a.getTypeAjustement() != null
+                                ? a.getTypeAjustement()
+                                : MouvementStock.TypeMouvement.AJUSTEMENT_NEGATIF;
+                        return type == selType;
+                    })
+                    .collect(Collectors.toList());
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            currentAjustements = task.getValue();
+            tableAjustements.setItems(FXCollections.observableArrayList(currentAjustements));
+            // Mise à jour du compteur — même pattern que lblTotalFiltre du Journal des Ventes
+            if (lblTotalAjustements != null) {
+                int count = currentAjustements.size();
+                lblTotalAjustements.setText(count + (count > 1 ? " enregistrements" : " enregistrement"));
+            }
+            if (btnExportPdfAjust != null) btnExportPdfAjust.setDisable(currentAjustements.isEmpty());
+            setAjustLoading(false);
+        });
+
+        task.setOnFailed(e -> {
+            log.error("[Rapports] Erreur chargement historique ajustements", task.getException());
+            setAjustLoading(false);
+        });
+
+        Thread t = new Thread(task);
+        t.setDaemon(true);
+        t.start();
+    }
+
+    /**
+     * Active ou désactive le mode chargement de l'onglet Historique des Ajustements.
+     */
+    private void setAjustLoading(boolean loading) {
+        if (progressAjust != null) {
+            progressAjust.setVisible(loading);
+            progressAjust.setManaged(loading);
+        }
+        dpAjustDebut.setDisable(loading);
+        dpAjustFin.setDisable(loading);
+        if (cmbAjustProduit != null) cmbAjustProduit.setDisable(loading);
+        if (cmbAjustUser    != null) cmbAjustUser.setDisable(loading);
+        if (cmbAjustType    != null) cmbAjustType.setDisable(loading);
     }
 
     @FXML
@@ -570,22 +726,51 @@ public class ReportController {
         Long userId = cmbAuditUser.getValue() != null ? cmbAuditUser.getValue().getId() : null;
         List<MouvementStock> res = mouvementDAO.rechercher(debut, fin, prodId, type, userId);
         tableAudit.setItems(FXCollections.observableArrayList(res));
+        // Mise à jour du compteur dynamique — même pattern que les autres onglets
+        if (lblTotalAudit != null) {
+            int count = res.size();
+            lblTotalAudit.setText(count + (count > 1 ? " mouvements" : " mouvement"));
+        }
         // Phase 5 : Activer bouton PDF
         if (btnExportPdfAudit != null) btnExportPdfAudit.setDisable(res.isEmpty());
     }
 
     @FXML
     public void genererClotures() {
+        if (isUpdatingClotureFiltres) return;
+        
         LocalDate debut = dpClotureDebut.getValue() != null ? dpClotureDebut.getValue() : LocalDate.of(2000, 1, 1);
         LocalDate fin = dpClotureFin.getValue() != null ? dpClotureFin.getValue() : LocalDate.of(2100, 1, 1);
         User agentSelect = cmbClotureUser.getValue();
+        
+        String statutSelect = cmbClotureStatut != null ? cmbClotureStatut.getValue() : "Tous les statuts";
+        String bilanSelect = cmbClotureBilan != null ? cmbClotureBilan.getValue() : "Tous les bilans";
+
         List<SessionCaisse> list = sessionDAO.findAll();
         currentClotures = list.stream().filter(s -> {
             boolean dateOk = !s.getDateOuverture().toLocalDate().isBefore(debut) && !s.getDateOuverture().toLocalDate().isAfter(fin);
             boolean agentOk = (agentSelect == null) || s.getUser().getId().equals(agentSelect.getId());
-            return dateOk && agentOk;
+            
+            boolean statutOk = true;
+            if ("Fermées (Normal)".equals(statutSelect)) statutOk = s.getStatut() == com.pharmacie.models.SessionCaisse.StatutSession.FERMEE;
+            else if ("Ouvertes (Anomalie)".equals(statutSelect)) statutOk = s.getStatut() == com.pharmacie.models.SessionCaisse.StatutSession.OUVERTE;
+
+            boolean bilanOk = true;
+            if ("Avec Manquant (Écart négatif)".equals(bilanSelect)) {
+                bilanOk = (s.getEcartEspeces() != null && s.getEcartEspeces() < 0) || (s.getEcartMobile() != null && s.getEcartMobile() < 0);
+            } else if ("Avec Excédent (Écart positif)".equals(bilanSelect)) {
+                bilanOk = (s.getEcartEspeces() != null && s.getEcartEspeces() > 0) || (s.getEcartMobile() != null && s.getEcartMobile() > 0);
+            }
+
+            return dateOk && agentOk && statutOk && bilanOk;
         }).collect(Collectors.toList());
+        
         tableClotures.setItems(FXCollections.observableArrayList(currentClotures));
+        // Mise à jour du compteur de sessions — même pattern que les autres onglets
+        if (lblTotalClotures != null) {
+            int count = currentClotures.size();
+            lblTotalClotures.setText(count + (count > 1 ? " sessions" : " session"));
+        }
         // Phase 5 : Activer bouton PDF
         if (btnExportPdfCloture != null) btnExportPdfCloture.setDisable(currentClotures.isEmpty());
     }
@@ -620,9 +805,9 @@ public class ReportController {
                     );
                 }
             }
-            com.pharmacie.utils.AlertUtils.showPremiumAlert(javafx.scene.control.Alert.AlertType.INFORMATION, "Succès", "Export terminé", "Export Brut Excel (CSV) généré avec succès !");
+            com.pharmacie.utils.ToastService.showSuccess(tableLignesVente.getScene().getWindow(), "Export terminé", "Export Brut Excel (CSV) généré avec succès !");
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Erreur lors de l'export CSV", e);
             showError("Erreur lors de l'export CSV : " + e.getMessage());
         }
     }
@@ -668,7 +853,7 @@ public class ReportController {
             String periode = dpClotureDebut.getValue().toString() + " au " + dpClotureFin.getValue().toString();
             com.pharmacie.utils.PdfService.genererRapportClotures(currentClotures, periode, stage);
         } catch(Exception e) {
-            e.printStackTrace();
+            log.error("Erreur lors de la génération PDF", e);
             showError("Erreur lors de la génération PDF : " + e.getMessage());
         }
     }

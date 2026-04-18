@@ -2,8 +2,12 @@ package com.pharmacie.utils;
 
 import java.io.File;
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DatabaseBackupService {
+
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseBackupService.class);
 
     public static boolean exportDatabase(File destination) {
         String dbUser = "root";
@@ -23,7 +27,7 @@ public class DatabaseBackupService {
             
             return processComplete == 0;
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            logger.error("Erreur lors de la sauvegarde de la base", e);
             return false;
         }
     }

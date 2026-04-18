@@ -8,9 +8,13 @@ import org.hibernate.query.Query;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MouvementDAO extends GenericDAO<MouvementStock> {
 
+    private static final Logger logger = LoggerFactory.getLogger(MouvementDAO.class);
+    
     public MouvementDAO() {
         super(MouvementStock.class);
     }
@@ -60,7 +64,7 @@ public class MouvementDAO extends GenericDAO<MouvementStock> {
 
             return query.list();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erreur DAO rechercher", e);
             return Collections.emptyList();
         }
     }
@@ -76,7 +80,7 @@ public class MouvementDAO extends GenericDAO<MouvementStock> {
             .setParameter("lotId", lotId)
             .list();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erreur DAO findByLotId", e);
             return Collections.emptyList();
         }
     }

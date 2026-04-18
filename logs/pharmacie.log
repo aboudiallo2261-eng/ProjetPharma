@@ -78,3 +78,317 @@
 2026-04-17 15:28:41 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
 2026-04-17 15:52:10 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
 2026-04-17 15:52:11 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-17 17:03:15 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-17 17:03:16 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-17 17:25:11 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-17 17:25:12 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-17 17:34:48 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-17 17:34:49 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-17 17:47:33 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-17 17:47:33 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-17 17:47:42 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-17 17:47:42 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-17 17:47:42 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-17 17:47:49 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-17 17:52:41 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-17 17:52:41 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-17 17:52:41 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-17 17:54:32 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-17 17:55:13 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-17 17:55:14 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-17 17:55:22 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-17 17:55:22 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-17 17:55:22 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-17 17:55:41 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-17 18:00:24 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-17 18:05:33 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:21:58 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:25:22 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 09:25:22 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 09:25:22 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 09:30:33 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 09:30:33 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 09:30:33 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 09:35:22 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 09:35:22 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 09:35:22 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 09:40:32 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 09:45:33 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 09:45:33 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 09:45:33 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 09:50:22 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 09:50:22 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 09:50:22 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 09:55:22 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 09:55:22 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 09:55:22 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 09:58:30 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-18 09:59:21 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-18 09:59:22 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-18 09:59:28 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 09:59:28 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 09:59:28 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 09:59:42 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-18 10:04:27 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 10:09:40 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 10:09:40 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 10:09:40 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 10:10:03 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-18 10:10:44 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-18 10:10:46 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-18 10:11:03 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 10:11:03 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 10:11:03 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 10:11:07 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-18 10:16:06 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 10:21:03 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 10:21:03 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 10:21:03 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 10:26:03 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 10:26:03 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 10:26:03 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 10:26:09 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-18 10:27:12 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-18 10:27:13 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-18 10:27:21 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 10:27:21 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 10:27:21 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 10:27:34 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-18 10:32:32 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 10:32:32 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 10:32:32 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 10:37:33 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 10:37:33 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 10:37:33 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 10:40:40 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-18 10:41:24 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-18 10:41:25 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-18 10:41:33 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 10:41:33 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 10:41:33 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 10:41:44 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-18 10:46:44 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 10:46:44 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 10:46:44 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 10:51:44 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 10:51:44 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 10:51:44 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 10:56:44 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 10:56:44 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 10:56:44 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 11:01:25 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-18 11:02:08 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-18 11:02:08 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-18 11:02:27 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-18 11:02:27 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 11:02:27 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 11:02:27 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 11:07:27 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 11:07:27 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 11:07:27 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 11:12:27 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 11:12:27 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 11:12:27 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 11:15:52 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-18 11:16:31 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-18 11:16:32 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-18 11:16:50 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 11:16:50 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 11:16:50 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 11:17:05 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-18 11:21:39 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 11:21:39 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 11:21:39 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 11:25:57 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-18 11:26:54 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-18 11:26:55 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-18 11:27:14 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 11:27:14 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 11:27:14 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 11:27:14 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-18 11:32:14 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 11:32:14 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 11:32:14 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 11:32:14 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.

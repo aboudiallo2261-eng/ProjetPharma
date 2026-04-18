@@ -25,6 +25,8 @@ com\pharmacie\models\MouvementStock$TypeMouvement.class
 com\pharmacie\controllers\ReportController$1.class
 com\pharmacie\controllers\ReportController.class
 com\pharmacie\models\User.class
+com\pharmacie\utils\ToastService.class
+com\pharmacie\controllers\ReportController$15.class
 com\pharmacie\controllers\VenteController$5.class
 com\pharmacie\controllers\DashboardController$TopProduitDTO.class
 com\pharmacie\dao\StatistiquesDAO.class
@@ -38,6 +40,7 @@ com\pharmacie\controllers\ReportController$2.class
 com\pharmacie\controllers\ProduitController$5.class
 com\pharmacie\controllers\AchatController$4.class
 com\pharmacie\controllers\ReportController$9.class
+com\pharmacie\controllers\ReportController$14.class
 com\pharmacie\models\LigneVente.class
 com\pharmacie\controllers\AchatController$5.class
 com\pharmacie\controllers\UserController$1.class
@@ -62,11 +65,13 @@ com\pharmacie\dao\GenericDAO.class
 com\pharmacie\utils\DatabaseBackupService.class
 com\pharmacie\controllers\MainController.class
 com\pharmacie\controllers\DashboardController$DashboardData.class
+com\pharmacie\utils\AnimationUtils.class
 com\pharmacie\dao\MouvementDAO.class
 com\pharmacie\controllers\DashboardController$1.class
 com\pharmacie\TestInsertUtilisateur.class
 com\pharmacie\models\AjustementStock$MotifAjustement.class
 com\pharmacie\controllers\VenteController.class
+com\pharmacie\dao\LigneVenteDAO.class
 com\pharmacie\controllers\VenteController$9.class
 com\pharmacie\dao\PharmacieInfoDAO.class
 com\pharmacie\controllers\VenteController$3.class
@@ -104,6 +109,7 @@ com\pharmacie\controllers\AlerteStockController$AlerteModel.class
 com\pharmacie\controllers\VenteController$8.class
 com\pharmacie\controllers\AchatController$2.class
 com\pharmacie\controllers\ReportController$6.class
+com\pharmacie\utils\ToastService$ToastType.class
 com\pharmacie\controllers\ReportController$11.class
 com\pharmacie\controllers\VenteController$1.class
 com\pharmacie\controllers\DashboardController$3.class

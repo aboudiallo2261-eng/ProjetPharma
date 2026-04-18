@@ -146,8 +146,16 @@
                              <Label fx:id="lblVerrouilleAgent" text="Agent : ---" style="-fx-font-size: 16px; -fx-text-fill: #BDC3C7;"/>
                              <VBox alignment="CENTER" spacing="10" style="-fx-background-color: rgba(255,255,255,0.1); -fx-padding: 20; -fx-background-radius: 8; -fx-min-width: 350;">
                                  <Label text="Entrez votre mot de passe pour reprendre votre session :" style="-fx-text-fill: #ECF0F1; -fx-font-size: 14px;" wrapText="true"/>
-                                 <PasswordField fx:id="txtPinDeverrouillage" promptText="Mot de passe..."
-                                               style="-fx-font-size: 18px; -fx-padding: 10; -fx-pref-width: 300;"/>
+                                 <HBox alignment="CENTER" spacing="5">
+                                     <StackPane alignment="CENTER_RIGHT" prefWidth="300">
+                                         <PasswordField fx:id="txtPinDeverrouillage" promptText="Mot de passe..."
+                                                       style="-fx-font-size: 18px; -fx-padding: 10; -fx-pref-width: 300;"/>
+                                         <TextField fx:id="txtPinVisible" promptText="Mot de passe..." visible="false" managed="false"
+                                                       style="-fx-font-size: 18px; -fx-padding: 10; -fx-pref-width: 300;"/>
+                                         <Button fx:id="btnTogglePin" text="👁" onAction="#togglePasswordVisibility"
+                                                 style="-fx-background-color: transparent; -fx-text-fill: #7f8c8d; -fx-cursor: hand; -fx-font-size: 16px; -fx-padding: 0 10 0 0;" />
+                                     </StackPane>
+                                 </HBox>
                                  <Label fx:id="lblVerrouilleErreur" text="Mot de passe incorrect !" style="-fx-text-fill: #E74C3C; -fx-font-weight: bold;" visible="false" managed="false"/>
                                  <Button text="🔓 Déverrouiller" onAction="#deverrouillerSession"
                                          style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10 30; -fx-background-radius: 6; -fx-cursor: hand;"/>

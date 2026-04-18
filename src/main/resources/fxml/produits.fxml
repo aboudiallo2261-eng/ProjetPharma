@@ -129,17 +129,10 @@
         
         <!-- TAB ETAT DU STOCK -->
         <Tab text="État du Stock">
-            <VBox spacing="10" style="-fx-padding: 20 0 0 0; -fx-background-color: white; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
-                <padding>
-                    <Insets top="20" right="20" bottom="20" left="20"/>
-                </padding>
+            <VBox spacing="15" style="-fx-padding: 15 0 0 0;">
                 
-                <HBox alignment="CENTER_LEFT" spacing="10">
-                    <Label text="Inventaire par Lot" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
-                </HBox>
-
-                <!-- Barre de filtre - classes CSS sémantiques -->
-                <GridPane hgap="15" vgap="12" styleClass="filter-card" HBox.hgrow="ALWAYS">
+                <!-- 1. Barre de filtre (filter-card) -->
+                <GridPane hgap="15" vgap="12" styleClass="filter-card" VBox.vgrow="NEVER">
                     <columnConstraints>
                         <ColumnConstraints minWidth="65" halignment="RIGHT"/>
                         <ColumnConstraints minWidth="160" />
@@ -157,7 +150,6 @@
                     <ComboBox fx:id="cmbFiltreStockEsp" promptText="Toutes Espèces" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="0" onAction="#filtrerStock"/>
 
                     <HBox alignment="CENTER_RIGHT" spacing="10" GridPane.columnIndex="5" GridPane.rowIndex="0">
-                        <!-- Phase 2 : live-filter géré dans ProduitController (listener debounce) -->
                         <TextField fx:id="txtSearchStock" promptText="🔍 Produit/Lot..." prefWidth="180"/>
                         <Button text="🔍 Filtrer" onAction="#filtrerStock" styleClass="btn-filter"/>
                     </HBox>
@@ -170,60 +162,66 @@
                     <DatePicker fx:id="dpFiltreExpAvant" promptText="Avant le..." maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="1" onAction="#filtrerStock"/>
                     
                     <HBox spacing="15" alignment="CENTER_RIGHT" GridPane.columnIndex="5" GridPane.rowIndex="1">
-                        <CheckBox fx:id="chkInclureArchives" text="Inclure épuisés" onAction="#loadEtatStock" styleClass="filter-label"/>
+                        <CheckBox fx:id="chkInclureArchives" text="Inclure épuisés" onAction="#loadEtatStock" styleClass="filter-label" style="-fx-padding: 0 10 0 0;"/>
                         <Button text="🔄 Réinitialiser" onAction="#resetFiltresStock" styleClass="btn-outline-reset"/>
                     </HBox>
                 </GridPane>
                 
-                <!-- Tableau État Stock avec prefWidth optimisés -->
-                <TableView fx:id="tableEtatStock" VBox.vgrow="ALWAYS" styleClass="table-view">
-                    <placeholder>
-                        <Label text="📦 Aucun produit ne correspond à vos filtres." styleClass="table-placeholder-label"/>
-                    </placeholder>
-                    <columns>
-                        <TableColumn fx:id="colStockProd" text="Produit" prefWidth="160"/>
-                        <TableColumn fx:id="colStockLot" text="N° Lot" prefWidth="110"/>
-                        <TableColumn fx:id="colStockExp" text="Expiration" prefWidth="100"/>
-                        <TableColumn fx:id="colStockJours" text="Jours Rest." prefWidth="90"/>
-                        <TableColumn fx:id="colStockQte" text="En Stock" prefWidth="155"/>
-                        <TableColumn fx:id="colStockSeuil" text="Seuil" prefWidth="55"/>
-                        <TableColumn fx:id="colStockVendus" text="Vendu" prefWidth="70"/>
-                        <TableColumn fx:id="colStockPrix" text="Prix U." prefWidth="75"/>
-                        <TableColumn fx:id="colStockValeur" text="Valeur" prefWidth="110"/>
-                    </columns>
-                </TableView>
-
-                <!-- KPI Valeur Totale du Stock -->
-                <Label fx:id="lblTotalStockValeur" text="Valeur totale du stock affiché : ---"
-                       style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #1E8449; -fx-padding: 4 0 0 2;"/>
-                
-                <!-- Légende des couleurs + Boutons d'action -->
-                <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 12 0 0 0;">
-                    <!-- Légende épurée -->
-                    <HBox alignment="CENTER_LEFT" spacing="12">
-                        <Label text="Légende :" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #7F8C8D;"/>
-                        <Label text="● Expiré (Stock non vendable)" style="-fx-text-fill: #C0392B; -fx-font-size: 12px; -fx-font-weight: bold;"/>
-                        <Label text="● Stock Critique (Alerte)" style="-fx-text-fill: #D35400; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                <!-- 2. Conteneur principal du tableau (table-card) -->
+                <VBox spacing="10" VBox.vgrow="ALWAYS" styleClass="table-card">
+                    
+                    <!-- HEADER du tableau (KPI + Bouton d'export global) -->
+                    <HBox alignment="CENTER_LEFT" spacing="20">
+                        <Label text="Valeur du stock filtré :" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="lblTotalStockValeur" text="0 FCFA"
+                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <SplitMenuButton text="🖨 Exporter (PDF/Excel)" onAction="#imprimerEtatStockPdf"
+                                         style="-fx-background-color: #2980B9; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-cursor: hand;">
+                            <items>
+                                <MenuItem text="📄 Exporter en format PDF" onAction="#imprimerEtatStockPdf"/>
+                                <MenuItem text="📊 Exporter en format Excel/CSV" onAction="#exporterCsv"/>
+                            </items>
+                        </SplitMenuButton>
                     </HBox>
 
-                    <Region HBox.hgrow="ALWAYS"/>
-                    
-                    <!-- Phase 5 : Boutons désactivés par défaut, activés sur sélection de ligne -->
-                    <Button fx:id="btnVoirLot" text="🔎 Fiche Lot" disable="true"
-                            onAction="#onBtnVoirLotClick" styleClass="btn-action-blue"/>
+                    <!-- TABLEAU -->
+                    <TableView fx:id="tableEtatStock" VBox.vgrow="ALWAYS" styleClass="table-view">
+                        <placeholder>
+                            <Label text="📦 Aucun produit ne correspond à vos filtres." styleClass="table-placeholder-label"/>
+                        </placeholder>
+                        <columns>
+                            <TableColumn fx:id="colStockProd" text="Produit" prefWidth="160"/>
+                            <TableColumn fx:id="colStockLot" text="N° Lot" prefWidth="110"/>
+                            <TableColumn fx:id="colStockExp" text="Expiration" prefWidth="100"/>
+                            <TableColumn fx:id="colStockJours" text="Jours Rest." prefWidth="90"/>
+                            <TableColumn fx:id="colStockQte" text="En Stock" prefWidth="155"/>
+                            <TableColumn fx:id="colStockSeuil" text="Seuil" prefWidth="55"/>
+                            <TableColumn fx:id="colStockVendus" text="Vendu" prefWidth="70"/>
+                            <TableColumn fx:id="colStockPrix" text="Prix U." prefWidth="75"/>
+                            <TableColumn fx:id="colStockValeur" text="Valeur" prefWidth="110"/>
+                        </columns>
+                    </TableView>
 
-                    <Button fx:id="btnAjustementStock" text="⚖ Ajuster Stock" disable="true"
-                            onAction="#ajusterStock" styleClass="btn-action-blue"/>
-                    
-                    <!-- Bouton Action Primaire (Corporate Blue) -->
-                    <SplitMenuButton text="🖨 Exporter (PDF/Excel)" onAction="#imprimerEtatStockPdf"
-                                 style="-fx-background-color: #2980B9; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-cursor: hand;">
-                        <items>
-                            <MenuItem text="📄 Exporter en format PDF" onAction="#imprimerEtatStockPdf"/>
-                            <MenuItem text="📊 Exporter en format Excel/CSV" onAction="#exporterCsv"/>
-                        </items>
-                    </SplitMenuButton>
-                </HBox>
+                    <!-- FOOTER du tableau (Légende + Actions de ligne spécifiques) -->
+                    <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 4 0 0 0;">
+                        <!-- Légende -->
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label text="Légende :" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #7F8C8D;"/>
+                            <Label text="● Expiré (Stock non vendable)" style="-fx-text-fill: #C0392B; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                            <Label text="● Stock Critique (Alerte)" style="-fx-text-fill: #D35400; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                        </HBox>
+
+                        <Region HBox.hgrow="ALWAYS"/>
+                        
+                        <!-- Actions Locales sur Sélection -->
+                        <Button fx:id="btnVoirLot" text="🔎 Fiche Lot" disable="true"
+                                onAction="#onBtnVoirLotClick" styleClass="btn-action-blue"/>
+                        <Button fx:id="btnAjustementStock" text="⚖ Ajuster Stock" disable="true"
+                                onAction="#ajusterStock" styleClass="btn-action-blue"/>
+                    </HBox>
+
+                </VBox>
             </VBox>
         </Tab>
     </TabPane>

@@ -25,8 +25,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AchatController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AchatController.class);
 
     // --- FORMULAIRE ---
     @FXML private ComboBox<Fournisseur> cmbFournisseur;
@@ -302,7 +306,7 @@ public class AchatController {
             stage.centerOnScreen();
             stage.showAndWait();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Ouverture impossible du bon de commande", e);
             com.pharmacie.utils.AlertUtils.showPremiumAlert(javafx.scene.control.Alert.AlertType.ERROR, "Erreur", "Ouverture impossible", "Impossible de charger l'aperçu du bon.");
         }
     }
@@ -318,7 +322,7 @@ public class AchatController {
             
             loadHistorique();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erreur chargement donnees base achat", e);
         }
     }
 
@@ -540,7 +544,7 @@ public class AchatController {
             boolean success = achatService.enregistrerCommandeTransactionnelle(achat, new ArrayList<>(panier));
 
         if(success) {
-            com.pharmacie.utils.AlertUtils.showPremiumAlert(javafx.scene.control.Alert.AlertType.INFORMATION, "Achat Enregistré", "L'approvisionnement a été validé avec succès !", "Les stocks de la pharmacie ont été mis à jour.");
+            com.pharmacie.utils.ToastService.showSuccess(txtRefFacture.getScene().getWindow(), "Achat Enregistré", "L'approvisionnement a été validé avec succès !");
 
             // 2. Impression du bon
             if (chkImprimerBon != null && chkImprimerBon.isSelected()) {
@@ -558,8 +562,9 @@ public class AchatController {
             cmbProduit.setItems(javafx.collections.FXCollections.observableArrayList(produitDAO.findAll()));
             
             loadHistorique();
-            System.out.println("Achat validé avec succès (ACID).");
+            logger.info("Achat validé avec succès (ACID).");
         } else {
+            logger.error("L'achat n'a pas pu être enregistré, transaction annulée");
             com.pharmacie.utils.AlertUtils.showPremiumAlert(javafx.scene.control.Alert.AlertType.ERROR, "Erreur Critique BDD", "L'achat n'a pas pu être enregistré", "La transaction a été totalement annulée pour protéger vos données.");
         }
         } finally {
@@ -691,7 +696,7 @@ public class AchatController {
             stage.setScene(scene);
             stage.showAndWait();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erreur lors de l'ouverture des alertes", e);
             showError("Erreur lors de l'ouverture des alertes : " + e.getMessage());
         }
     }

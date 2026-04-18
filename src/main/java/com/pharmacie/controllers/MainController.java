@@ -7,7 +7,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MainController {
+
+    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
     @FXML
     private StackPane contentArea;
@@ -67,7 +72,7 @@ public class MainController {
             javafx.scene.Node view = loader.load();
             contentArea.getChildren().setAll(view);
         } catch (java.io.IOException e) {
-            e.printStackTrace();
+            logger.error("Erreur chargement d'une Vue (MainController)", e);
         }
     }
 

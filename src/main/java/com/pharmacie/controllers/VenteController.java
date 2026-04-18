@@ -30,8 +30,13 @@ import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.StringConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class VenteController {
+
+    private static final Logger logger = LoggerFactory.getLogger(VenteController.class);
 
     @FXML
     private Label lblCaisseUser;
@@ -51,12 +56,11 @@ public class VenteController {
     private javafx.scene.layout.VBox overlayCaisseFermee;
     @FXML
     private javafx.scene.layout.VBox overlaySessionVerrouillee;
-    @FXML
-    private javafx.scene.control.PasswordField txtPinDeverrouillage;
-    @FXML
-    private Label lblVerrouilleAgent;
-    @FXML
-    private Label lblVerrouilleErreur;
+    @FXML private javafx.scene.control.PasswordField txtPinDeverrouillage;
+    @FXML private javafx.scene.control.TextField txtPinVisible;
+    @FXML private javafx.scene.control.Button btnTogglePin;
+    @FXML private Label lblVerrouilleAgent;
+    @FXML private Label lblVerrouilleErreur;
     @FXML
     private javafx.scene.layout.HBox boxVenteMain;
 
@@ -522,6 +526,9 @@ public class VenteController {
             }
         });
 
+        // P2.A: Synchroniser les champs de mot de passe (caché et visible)
+        txtPinVisible.textProperty().bindBidirectional(txtPinDeverrouillage.textProperty());
+
         Platform.runLater(() -> txtRechercheProduit.requestFocus());
     }
 
@@ -589,6 +596,7 @@ public class VenteController {
         calculerTotalVente();
         mettreAJourBadgeTickets();
         txtMontantRecu.clear();
+        com.pharmacie.utils.ToastService.showInfo(boxVenteMain.getScene().getWindow(), "Ticket en Attente", "Le ticket a été mis de côté avec succès.");
         txtRechercheProduit.requestFocus();
     }
 
@@ -760,7 +768,36 @@ public class VenteController {
         btnCloturerCaisse.setManaged(false);
         btnVerrouiller.setVisible(false);
         btnVerrouiller.setManaged(false);
+        
+        // P2.A: Réinitialisation propre à la fermeture
+        if (txtPinVisible.isVisible()) {
+            togglePasswordVisibility(); // Repasser en mode caché par défaut
+        }
+        
         Platform.runLater(() -> txtPinDeverrouillage.requestFocus());
+    }
+
+    @FXML
+    public void togglePasswordVisibility() {
+        if (txtPinVisible.isVisible()) {
+            // Passer en mode caché
+            txtPinVisible.setVisible(false);
+            txtPinVisible.setManaged(false);
+            txtPinDeverrouillage.setVisible(true);
+            txtPinDeverrouillage.setManaged(true);
+            btnTogglePin.setText("👁");
+            txtPinDeverrouillage.requestFocus();
+            txtPinDeverrouillage.positionCaret(txtPinDeverrouillage.getText().length());
+        } else {
+            // Passer en mode visible
+            txtPinDeverrouillage.setVisible(false);
+            txtPinDeverrouillage.setManaged(false);
+            txtPinVisible.setVisible(true);
+            txtPinVisible.setManaged(true);
+            btnTogglePin.setText("👁‍🗨");
+            txtPinVisible.requestFocus();
+            txtPinVisible.positionCaret(txtPinVisible.getText().length());
+        }
     }
 
     @FXML
@@ -794,8 +831,15 @@ public class VenteController {
             lblVerrouilleErreur.setText("⚠️ Mot de passe incorrect. Réessayez.");
             lblVerrouilleErreur.setVisible(true);
             lblVerrouilleErreur.setManaged(true);
-            txtPinDeverrouillage.clear();
-            txtPinDeverrouillage.requestFocus();
+            
+            // P2.A: UX Haut de gamme (Ne PAS vider le champ, sélectionner + Shake animation)
+            txtPinDeverrouillage.selectAll();
+            if (txtPinVisible.isVisible()) {
+                txtPinVisible.selectAll();
+                com.pharmacie.utils.AnimationUtils.shake(txtPinVisible);
+            } else {
+                com.pharmacie.utils.AnimationUtils.shake(txtPinDeverrouillage);
+            }
         }
     }
 
@@ -846,11 +890,6 @@ public class VenteController {
         });
 
         dialog.showAndWait().ifPresent(fond -> {
-            if (fond < 0) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Le fond de caisse saisi est invalide !");
-                alert.show();
-                return;
-            }
             SessionCaisse session = new SessionCaisse();
             session.setUser(SessionManager.getCurrentUser());
             session.setDateOuverture(LocalDateTime.now());
@@ -859,7 +898,7 @@ public class VenteController {
             sessionDAO.save(session);
 
             checkSessionStatus();
-            System.out.println("Caisse ouverte avec un fond de " + fond);
+            logger.info("Caisse ouverte avec un fond de {}", fond);
         });
     }
 
@@ -1430,7 +1469,8 @@ public class VenteController {
             loadStockDispo();
             tableStock.refresh(); // Force column color update
             loadHistoriqueVentes(); // Mise à jour de l'onglet Historique
-            System.out.println("Vente validée et enregistrée via VenteService !");
+            com.pharmacie.utils.ToastService.showSuccess(boxVenteMain.getScene().getWindow(), "Vente Validée", "Le ticket a été encaissé et enregistré avec succès !");
+            logger.info("Vente (ID: {}) validée et enregistrée via VenteService !", vente.getId());
 
             txtRechercheProduit.requestFocus();
 

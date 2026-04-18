@@ -4,9 +4,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SyncService {
 
+    private static final Logger logger = LoggerFactory.getLogger(SyncService.class);
     private static final String REMOTE_API_URL = "https://api.pharmacie-veterinaire-cloud.com/sync";
     private Timer timer;
 
@@ -19,13 +22,13 @@ public class SyncService {
             public void run() {
                 try {
                     if (isInternetAvailable()) {
-                        System.out.println("[Sync] Internet détecté. Début de la synchronisation...");
+                        logger.info("Internet détecté. Début de la synchronisation...");
                         syncData();
                     } else {
-                        System.out.println("[Sync] Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.");
+                        logger.warn("Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.");
                     }
                 } catch (Exception e) {
-                    System.err.println("[Sync] Erreur lors du thread de synchronisation: " + e.getMessage());
+                    logger.error("Erreur lors du thread de synchronisation", e);
                 }
             }
         }, 10000, 300000);
@@ -34,7 +37,7 @@ public class SyncService {
     public void stopSyncDaemon() {
         if (timer != null) {
             timer.cancel();
-            System.out.println("[Sync] Service de synchronisation arrêté.");
+            logger.info("Service de synchronisation arrêté.");
         }
     }
 
@@ -56,10 +59,10 @@ public class SyncService {
         // 2. Parser la data en JSON et faire une requête POST (API Endpoint distant)
         // 3. A la réponse 200 OK -> Marquer les données locales comme synchronisées
         
-        System.out.println("[Sync] -> Simulation Extraction des ventes locales...");
-        System.out.println("[Sync] -> Simulation Extraction du statut actuel des stocks...");
-        System.out.println("[Sync] -> Envoi sécurisé des données vers le Cloud : " + REMOTE_API_URL);
+        logger.debug("Simulation Extraction des ventes locales...");
+        logger.debug("Simulation Extraction du statut actuel des stocks...");
+        logger.info("Envoi sécurisé des données vers le Cloud : {}", REMOTE_API_URL);
         
-        System.out.println("[Sync] Synchronisation vers le Cloud réussie avec succès !");
+        logger.info("Synchronisation vers le Cloud réussie avec succès !");
     }
 }
