@@ -1,0 +1,31 @@
+DOCUMENTATION D'INGÉNIERIE : MISE EN PLACE DU SYSTÈME DE LOGS (SLF4J / LOGBACK)
+=================================================================================
+
+Contexte :
+----------
+Avant cette implémentation, le logiciel s'appuyait sur des affichages consoles basiques temporels via `System.out.println()` ou `e.printStackTrace()`. Bien que fonctionnels en développement, ces appels ne laissent aucune trace persistante si l'application est exécutée chez un pharmacien (où la console n'est pas sauvegardée pui fermée avec l'application).
+L'objectif est d'implémenter un système d'auditabilité technique ("Logging") robuste sans perturber l'expérience utilisateur et en évitant toute surcharge du disque ou de la mémoire vive.
+
+Démarche Méthodologique (Point par Point) :
+-------------------------------------------
+
+1. Validation des Dépendances (Le Socle)
+   - L'analyse du fichier `pom.xml` a révélé que les librairies SLF4J (l'interface standard de log Java) et Logback (l'implémentation performante de Ceki Gülcü) étaient déjà importées dans les bonnes versions (respectivement 2.0.12 et 1.5.0). Aucune redondance de librairie n'a donc été nécessaire.
+
+2. Architecture du Fichier de Configuration (logback.xml)
+   - Création du fichier `src/main/resources/logback.xml` pour dicter la conduite du moteur de logs.
+   - J'ai configuré 3 stratifications (Appenders) :
+     a. L'Appender CONSOLE : Permet de préserver le confort du développeur en affichant l'activité courante dans l'IDE avec un horodatage précis (Format: `yyyy-MM-dd HH:mm:ss.SSS`).
+     b. L'Appender FILE (Le Cœur du système) : J'ai configuré un `RollingFileAppender`. Ce composant ne fait pas qu'écrire dans le fichier `logs/vet-pharmacy.log`. Il possède une intelligence temporelle et de taille : s'il dépasse 10 Mo, il s'archive. Il indexe les archives par date. Surtout, grâce à son `<maxHistory>30</maxHistory>`, il purge automatiquement les logs vieux de plus de 30 jours, empêchant ainsi le logiciel d'asphyxier silencieusement le disque dur du serveur du pharmacien.
+     c. L'Appender ASYNC_FILE (La Sécurité de l'UI JavaFX) : L'écriture sur un disque dur (I/O) peut être lente. Dans une application JavaFX (UI), si l'écriture d'un log prend du temps, toute l'application fige. J'ai enveloppé le `FILE` dans un `AsyncAppender` (taille de queue 512). Ainsi, le programme ordonne d'imprimer le log, passe instantanément à l'instruction suivante, et Logback écrit le fichier en tâche de fond.
+
+3. Refactorisation Métier (Traitement des Classes Critiques)
+   - J'ai modifié `HibernateUtil.java` (le composant vitale qui connecte la DB) et le point d'entrée principal `MainApp.java`.
+   - L'instanciation professionnelle du logger (`private static final Logger log = LoggerFactory.getLogger(...)`) a été placée en tête de classe.
+   - Les `printStackTrace()` (qui crachent des erreurs illisibles) ont été méticuleusement remplacés par `log.error("Message...", e)`.
+   - Enfin, j'ai ajouté des balises "Info" lors de l'ouverture et de la fermeture de l'application (`log.info("Démarrage...")`), permettant ainsi de traquer précisément l'activité d'une session.
+
+Résultat final :
+----------------
+Le logiciel possède dorénavant une "boîte noire" (comme un avion).
+Si le médecin ou le vendeur appelle pour un bug inexpliqué ou une lenteur, il n'y a plus de suppositions à faire. Il suffit d'ouvrir le dossier racine du logiciel, d'entrer dans `/logs`, et le fichier d'archive détaillera chaque seconde d'exécution jusqu'au plantage, le tout sans ralentir l'application d'une seule milliseconde lors de la vente.

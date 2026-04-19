@@ -12,7 +12,6 @@ com\pharmacie\controllers\AchatDetailsController.class
 com\pharmacie\controllers\VenteController$7.class
 com\pharmacie\controllers\ReportController$7.class
 com\pharmacie\utils\SyncService$1.class
-com\pharmacie\controllers\VenteController$TicketEnAttente.class
 com\pharmacie\controllers\LoginController.class
 com\pharmacie\dao\AchatDAO.class
 com\pharmacie\models\SessionCaisse.class
@@ -54,6 +53,7 @@ com\pharmacie\models\Produit.class
 com\pharmacie\TestLoad.class
 com\pharmacie\utils\SecuritySeeder.class
 com\pharmacie\controllers\ReportController$13.class
+com\pharmacie\models\TicketEnAttente.class
 com\pharmacie\controllers\ReportController$3.class
 com\pharmacie\controllers\ProduitController.class
 com\pharmacie\controllers\AlerteStockController$1.class

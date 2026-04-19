@@ -1,0 +1,46 @@
+RAPPORT D'INGÉNIERIE : PERSISTANCE DE L'ÉTAT DE CAISSE DANS JAVAFX
+===================================================================
+
+1. NATURE DU PROBLÈME (LE BUG DU "REFRESH" JAVAFX)
+--------------------------------------------------
+Symptôme : Lorsque l'agent verrouillait sa caisse ou mettait des ventes en file d'attente, puis cliquait sur un autre menu (ex: Tableau de bord) et revenait sur Ventes, la caisse se déverrouillait automatiquement et la file d'attente était vidée.
+
+Cause architecturale : L'application Vet-Pharmacy utilise `FXMLLoader` pour charger les vues de chaque menu. Chaque fois que l'agent cliquait sur "Ventes", JavaFX détruisait l'ancien `VenteController` et instanciait un *nouveau* contrôleur. 
+Le problème était que la mémoire de la file d'attente (la variable `ticketsEnAttente`) et du verrouillage étaient définies comme des variables *locales* de ce contrôleur. À chaque rechargement de la vue, ces variables étaient remises à zéro par le système (Garbage Collector).
+
+2. CHOIX DE LA SOLUTION (LA MÉTHODE SENIOR)
+-------------------------------------------
+Contrairement à une solution de contournement consistant à bidouiller le contrôleur principal, nous avons appliqué la "Solution 2" : remonter l'état de la caisse dans la session globale de l'utilisateur. 
+Ainsi, l'interface n'est qu'un "écran" qui affiche des données indépendantes, stockées dans le composant central métier (`SessionManager`). 
+
+Peu importe combien de fois le contrôleur graphique est détruit, la session, elle, demeure intacte en RAM pour toute la durée où l'agent est connecté.
+
+3. DÉTAILS DE L'IMPLÉMENTATION PAS À PAS
+----------------------------------------
+
+Étape 1 : Création du DTO de transport métier
+- Action : Extraction de la classe interne `TicketEnAttente` cachée dans `VenteController` vers un modèle Java public et autonome `com.pharmacie.models.TicketEnAttente`.
+- Impact : Ceci permet à n'importe quel composant de l'application de lire ou gérer un ticket mis en attente, posant les bases pour une future fonctionnalité de sauvegarde en base de données si nécessaire.
+
+Étape 2 : Sécurisation du singleton SessionManager
+- Action : Ajout des variables statiques `caisseVerrouillee` et de la liste `fileAttente` directement dans `SessionManager.java`.
+- Action : Modification de la méthode `clearSession()` (Déconnexion) pour purger explicitement la file d'attente et déverrouiller virtuellement la caisse afin que le prochain agent qui se connecte démarre d'une base neutre, garantissant la conformité de sécurité.
+
+Étape 3 : Raccordement (Plumbing) du VenteController
+- Action : Toutes les occurrences locales des ajouts/suppressions de ticket dans `VenteController` ont été commutées vers `SessionManager.getFileAttente().add/remove()`.
+- Action : Modification du cycle d'initialisation de l'interface graphique : 
+  Dans la fonction `initialize()` (qui se lance à chaque montage de la vue "Ventes"), nous avons injecté une vérification immédiate :
+  ```java
+  Platform.runLater(() -> {
+      mettreAJourBadgeTickets();
+      if (SessionManager.isCaisseVerrouillee()) {
+          verrouillerSession();
+      }
+  });
+  ```
+- Impact : Si la session globale dit que la caisse est sous PIN, l'overlay de verrou se plaque instantanément. L'agent ne peut plus contourner le cadenas en changeant de menu.
+
+4. CONCLUSION ET VÉRIFICATION POST-DÉPLOIEMENT
+----------------------------------------------
+L'isolation des responsabilités est désormais pure : le contrôleur s'occupe de l'aspect visuel (XML) et le gestionnaire s'occupe de la persistance en RAM (Modèle).
+Le bug est définitivement éradiqué et le build sous JDK 17 certifie l'entièreté de la recompilation sans avertissements sur ce module.

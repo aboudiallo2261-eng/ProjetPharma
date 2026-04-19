@@ -9,13 +9,18 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import com.pharmacie.utils.SyncService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MainApp extends Application {
 
+    private static final Logger log = LoggerFactory.getLogger(MainApp.class);
     private static Stage primaryStage;
     private static final SyncService syncService = new SyncService();
 
     @Override
     public void start(Stage stage) throws IOException {
+        log.info("Démarrage de l'application Vet-Pharmacy...");
         primaryStage = stage;
         primaryStage.setTitle("Pharmacie Vétérinaire - Gestion");
         
@@ -43,6 +48,7 @@ public class MainApp extends Application {
 
     @Override
     public void stop() throws Exception {
+        log.info("Fermeture de l'application Vet-Pharmacy...");
         syncService.stopSyncDaemon();
         super.stop();
     }
@@ -60,7 +66,7 @@ public class MainApp extends Application {
             primaryStage.centerOnScreen();
             primaryStage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Erreur critique lors du chargement de l'écran de connexion (login.fxml)", e);
         }
     }
 
@@ -75,7 +81,7 @@ public class MainApp extends Application {
             primaryStage.setMaximized(true);
             primaryStage.show(); 
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Erreur critique lors du chargement de l'interface principale (main_layout.fxml)", e);
         }
     }
 

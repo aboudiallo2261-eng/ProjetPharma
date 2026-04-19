@@ -42,14 +42,18 @@ public class GenericDAO<T> {
             session.persist(entity);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Erreur BDD (save) pour " + type.getSimpleName(), e);
+            // Toujours logger l'erreur complète pour l'auditabilité technique
+            logger.error("Erreur critique BDD (save) pour [{}] - Transaction annulée.", type.getSimpleName(), e);
             if (transaction != null) {
                 try {
                     transaction.rollback();
-                } catch(Exception rbe) {
-                    logger.error("Rollback exception (secondaire): " + rbe.getMessage());
+                } catch (Exception rbe) {
+                    logger.error("Erreur secondaire lors du rollback (save {}): {}", type.getSimpleName(), rbe.getMessage());
                 }
             }
+            // Propager l'exception pour que l'appelant (Service, Controller) sache que la sauvegarde a échoué.
+            // Sans ce re-throw, l'interface affichait un faux succès (toast vert) alors que la donnée n'est pas persistee.
+            throw new RuntimeException("Erreur de persistance [" + type.getSimpleName() + "] : " + e.getMessage(), e);
         }
     }
 
@@ -64,12 +68,15 @@ public class GenericDAO<T> {
             session.merge(entity);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Erreur BDD (update) pour " + type.getSimpleName(), e);
+            logger.error("Erreur critique BDD (update) pour [{}] - Transaction annulée.", type.getSimpleName(), e);
             if (transaction != null) {
                 try {
                     transaction.rollback();
-                } catch(Exception rbe) { }
+                } catch (Exception rbe) {
+                    logger.error("Erreur secondaire lors du rollback (update {}): {}", type.getSimpleName(), rbe.getMessage());
+                }
             }
+            throw new RuntimeException("Erreur de mise à jour [" + type.getSimpleName() + "] : " + e.getMessage(), e);
         }
     }
 

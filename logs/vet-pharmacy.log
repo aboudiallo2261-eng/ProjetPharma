@@ -1,0 +1,202 @@
+2026-04-19 00:02:11.208 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-19 00:02:11.208 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-19 00:02:11.208 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-19 00:07:12.011 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 00:12:00.025 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-19 00:12:00.025 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-19 00:12:00.025 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-19 00:17:14.504 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 00:21:59.462 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 00:27:11.472 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 00:32:03.625 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-19 00:32:03.625 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-19 00:32:03.625 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-19 00:37:12.339 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-19 00:37:12.339 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-19 00:37:12.339 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-19 05:51:19.157 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 71) validée et enregistrée via VenteService !
+2026-04-19 05:53:33.754 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.755 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.757 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.758 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.759 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.759 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.761 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.762 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.763 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.764 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.766 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.767 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.769 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.771 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.772 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.774 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.775 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.777 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.779 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.780 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.781 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.783 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.785 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.786 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.788 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.790 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.792 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.793 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.794 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.795 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.797 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.798 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.799 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.801 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.802 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.803 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.805 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.806 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.807 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.810 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.811 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.812 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.814 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.815 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.816 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.817 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.818 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.819 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.820 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.821 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.822 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.823 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.824 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.826 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.827 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.827 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.828 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.828 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.829 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.830 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.830 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.831 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:53:33.832 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:56:34.361 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 72) validée et enregistrée via VenteService !
+2026-04-19 05:57:11.480 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 05:59:37.637 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 73) validée et enregistrée via VenteService !
+2026-04-19 06:01:36.070 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 74) validée et enregistrée via VenteService !
+2026-04-19 06:02:11.500 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 06:04:52.177 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 75) validée et enregistrée via VenteService !
+2026-04-19 06:05:47.562 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 76) validée et enregistrée via VenteService !
+2026-04-19 06:07:12.161 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-19 06:07:12.162 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-19 06:07:12.162 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-19 06:12:14.488 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 06:14:56.307 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 77) validée et enregistrée via VenteService !
+2026-04-19 06:17:11.503 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 06:20:19.622 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 78) validée et enregistrée via VenteService !
+2026-04-19 06:22:11.486 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 06:24:12.430 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 79) validée et enregistrée via VenteService !
+2026-04-19 06:25:36.001 [JavaFX Application Thread] INFO  c.p.controllers.AchatController - Achat validé avec succès (ACID).
+2026-04-19 06:26:41.597 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 80) validée et enregistrée via VenteService !
+2026-04-19 06:26:59.451 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 06:27:24.003 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 81) validée et enregistrée via VenteService !
+2026-04-19 06:29:28.427 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 82) validée et enregistrée via VenteService !
+2026-04-19 06:30:21.552 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 83) validée et enregistrée via VenteService !
+2026-04-19 06:32:20.522 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-19 06:32:20.522 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-19 06:32:20.522 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-19 06:32:36.430 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 84) validée et enregistrée via VenteService !
+2026-04-19 06:33:25.861 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 85) validée et enregistrée via VenteService !
+2026-04-19 06:37:17.617 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-19 06:37:17.618 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-19 06:37:17.618 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-19 06:37:42.401 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 86) validée et enregistrée via VenteService !
+2026-04-19 06:39:39.181 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 87) validée et enregistrée via VenteService !
+2026-04-19 06:42:14.515 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 06:47:15.734 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-19 06:47:15.736 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-19 06:47:15.736 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-19 06:52:11.499 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 06:52:34.236 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Clôture Z : Espèces attendues=5816450 FCFA | Mobile attendu=87100 FCFA | Écart caisse=183550 FCFA
+2026-04-19 06:52:41.684 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Caisse ouverte avec un fond de 50.0
+2026-04-19 06:53:17.116 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 88) validée et enregistrée via VenteService !
+2026-04-19 06:53:28.686 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 89) validée et enregistrée via VenteService !
+2026-04-19 06:54:01.580 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 90) validée et enregistrée via VenteService !
+2026-04-19 06:57:11.482 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 07:01:59.451 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 07:07:11.502 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 07:08:47.502 [JavaFX Application Thread] INFO  c.p.controllers.AchatController - Achat validé avec succès (ACID).
+2026-04-19 07:10:13.941 [JavaFX Application Thread] INFO  c.p.controllers.AchatController - Achat validé avec succès (ACID).
+2026-04-19 07:12:11.485 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 07:16:59.450 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 07:18:16.857 [JavaFX Application Thread] INFO  c.p.controllers.AchatController - Achat validé avec succès (ACID).
+2026-04-19 07:22:11.485 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 07:26:59.450 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 07:32:11.471 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 07:37:11.481 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 07:41:10.299 [JavaFX Application Thread] INFO  c.p.controllers.AchatController - Achat validé avec succès (ACID).
+2026-04-19 07:42:11.482 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 07:46:27.869 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 91) validée et enregistrée via VenteService !
+2026-04-19 07:46:59.447 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 07:51:59.449 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 07:52:29.815 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 92) validée et enregistrée via VenteService !
+2026-04-19 07:56:59.447 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 07:59:39.541 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 93) validée et enregistrée via VenteService !
+2026-04-19 08:02:11.478 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 08:03:30.940 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 94) validée et enregistrée via VenteService !
+2026-04-19 08:06:59.448 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 08:09:14.487 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 95) validée et enregistrée via VenteService !
+2026-04-19 08:11:07.372 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 96) validée et enregistrée via VenteService !
+2026-04-19 08:11:59.448 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 08:14:45.193 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 97) validée et enregistrée via VenteService !
+2026-04-19 08:16:59.446 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 08:21:59.449 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 08:26:59.447 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 08:32:11.501 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 08:37:11.475 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 08:41:59.447 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 08:47:11.503 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 08:51:59.448 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 08:56:59.448 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 09:01:59.447 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 09:06:59.451 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 09:11:34.562 [JavaFX Application Thread] INFO  c.p.controllers.AchatController - Achat validé avec succès (ACID).
+2026-04-19 09:12:12.867 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-19 09:12:12.867 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-19 09:12:12.867 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-19 09:17:10.789 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 09:21:59.459 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 09:27:11.009 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 09:41:45.953 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-19 09:41:45.953 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-19 09:41:45.954 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-19 09:41:46.618 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-19 09:41:46.618 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-19 09:41:46.618 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-19 09:42:01.673 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-19 09:42:01.675 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-19 09:42:01.675 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-19 09:47:11.513 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-19 09:47:11.514 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-19 09:47:11.514 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-19 09:52:11.307 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-19 09:52:11.307 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-19 09:52:11.308 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-19 10:06:28.750 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 10:06:28.751 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 10:07:12.418 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-19 10:07:12.418 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-19 10:07:12.418 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-19 10:12:01.825 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-19 10:12:01.825 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-19 10:12:01.825 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-19 10:12:38.881 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Clôture Z : Espèces attendues=240250 FCFA | Mobile attendu=105000 FCFA | Écart caisse=2759750 FCFA
+2026-04-19 10:12:47.466 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-04-19 10:12:47.466 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-19 10:13:25.526 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-04-19 10:13:27.976 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-19 10:13:28.855 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-19 10:13:38.587 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-19 10:13:53.606 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-19 10:14:05.814 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Caisse ouverte avec un fond de 2000.0
+2026-04-19 10:16:40.148 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Clôture Z : Espèces attendues=2000 FCFA | Mobile attendu=0 FCFA | Écart caisse=-889 FCFA
+2026-04-19 10:16:42.266 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-04-19 10:16:42.267 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.

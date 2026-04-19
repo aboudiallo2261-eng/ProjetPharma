@@ -11,6 +11,7 @@ import com.pharmacie.models.MouvementStock;
 import com.pharmacie.models.SessionCaisse;
 import com.pharmacie.dao.SessionCaisseDAO;
 import com.pharmacie.utils.SessionManager;
+import com.pharmacie.models.TicketEnAttente;
 import com.pharmacie.dao.MouvementDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -186,31 +187,8 @@ public class VenteController {
     // table caisse
     private java.util.Map<Long, Integer> stockCache = new java.util.HashMap<>();
 
-    // --- TICKETS EN ATTENTE (en mémoire uniquement) ---
-    private final java.util.List<TicketEnAttente> ticketsEnAttente = new java.util.ArrayList<>();
-    private int ticketCounter = 1;
-
-    /** Représente un panier suspendu en attente de rappel */
-    private static class TicketEnAttente {
-        final int numero;
-        final java.time.LocalTime heure;
-        final java.util.List<LigneVente> lignes;
-        final double total;
-
-        TicketEnAttente(int num, java.util.List<LigneVente> lignes, double total) {
-            this.numero = num;
-            this.heure = java.time.LocalTime.now();
-            this.lignes = new java.util.ArrayList<>(lignes);
-            this.total = total;
-        }
-
-        @Override
-        public String toString() {
-            return String.format("Ticket #%d | %s | %.0f FCFA | %d article(s)",
-                    numero, heure.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm")),
-                    total, lignes.size());
-        }
-    }
+    // --- TICKETS EN ATTENTE ---
+    // GÉRÉ DÉSORMAIS PAR SESSIONMANAGER POUR LA PERSISTANCE
 
     @FXML
     public void initialize() {
@@ -248,14 +226,23 @@ public class VenteController {
             btnRetirerDuPanier.disableProperty().bind(
                 tablePanierVente.getSelectionModel().selectedItemProperty().isNull()
             );
-            tablePanierVente.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
-                if (newSel != null) {
-                    btnRetirerDuPanier.setStyle("-fx-background-color: #E74C3C; -fx-text-fill: white; -fx-padding: 4 8; -fx-font-size: 12px; -fx-background-radius: 6;");
-                } else {
-                    btnRetirerDuPanier.setStyle("-fx-background-color: #BDC3C7; -fx-text-fill: white; -fx-padding: 4 8; -fx-font-size: 12px; -fx-background-radius: 6;");
-                }
-            });
         }
+
+        // RESTAURATION DE L'ÉTAT GLOBOAL (SI RETOUR DE NAVIGATION)
+        Platform.runLater(() -> {
+            mettreAJourBadgeTickets();
+            if (SessionManager.isCaisseVerrouillee()) {
+                verrouillerSession();
+            }
+        });
+
+        tablePanierVente.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
+            if (newSel != null) {
+                btnRetirerDuPanier.setStyle("-fx-background-color: #E74C3C; -fx-text-fill: white; -fx-padding: 4 8; -fx-font-size: 12px; -fx-background-radius: 6;");
+            } else {
+                btnRetirerDuPanier.setStyle("-fx-background-color: #BDC3C7; -fx-text-fill: white; -fx-padding: 4 8; -fx-font-size: 12px; -fx-background-radius: 6;");
+            }
+        });
 
         btnAnnulerVente.setStyle("-fx-background-color: #BDC3C7; -fx-text-fill: white; -fx-padding: 8 15;");
         if (btnValiderVente != null)
@@ -590,8 +577,8 @@ public class VenteController {
             return;
         }
         double total = panier.stream().mapToDouble(LigneVente::getSousTotal).sum();
-        TicketEnAttente ticket = new TicketEnAttente(ticketCounter++, panier, total);
-        ticketsEnAttente.add(ticket);
+        TicketEnAttente ticket = new TicketEnAttente(SessionManager.getNextTicketNumber(), panier, total);
+        SessionManager.getFileAttente().add(ticket);
         panier.clear();
         calculerTotalVente();
         mettreAJourBadgeTickets();
@@ -602,7 +589,7 @@ public class VenteController {
 
     /** Met à jour le texte du bouton avec le nombre de tickets en attente */
     private void mettreAJourBadgeTickets() {
-        int nb = ticketsEnAttente.size();
+        int nb = SessionManager.getFileAttente().size();
         if (nb == 0) {
             btnTicketsEnAttente.setText("⏸ Tickets en Attente (0)");
             btnTicketsEnAttente.setStyle(
@@ -620,7 +607,7 @@ public class VenteController {
      */
     @FXML
     public void voirTicketsEnAttente() {
-        if (ticketsEnAttente.isEmpty()) {
+        if (SessionManager.getFileAttente().isEmpty()) {
             Alert a = new Alert(Alert.AlertType.INFORMATION, "Aucun ticket n'est en attente.");
             a.setHeaderText("⏸ File d'Attente");
             a.showAndWait();
@@ -630,7 +617,7 @@ public class VenteController {
         Dialog<TicketEnAttente> dialog = new Dialog<>();
         dialog.setTitle("File d'Attente — Tickets Suspendus");
         dialog.setHeaderText(
-                "⏸ « " + ticketsEnAttente.size() + " ticket(s) en attente » — Sélectionnez un ticket pour le rappeler");
+                "⏸ « " + SessionManager.getFileAttente().size() + " ticket(s) en attente » — Sélectionnez un ticket pour le rappeler");
 
         ButtonType btnRappeler = new ButtonType("Rappeler ce Ticket", ButtonBar.ButtonData.OK_DONE);
         ButtonType btnSupprimer = new ButtonType("🗑 Supprimer", ButtonBar.ButtonData.LEFT);
@@ -638,7 +625,7 @@ public class VenteController {
         dialog.getDialogPane().getButtonTypes().addAll(btnRappeler, btnSupprimer, btnFermer);
 
         javafx.scene.control.ListView<TicketEnAttente> listView = new javafx.scene.control.ListView<>();
-        listView.getItems().addAll(ticketsEnAttente);
+        listView.getItems().addAll(SessionManager.getFileAttente());
         listView.getSelectionModel().selectFirst();
         listView.setPrefHeight(200);
         listView.setStyle("-fx-font-size: 14px;");
@@ -681,7 +668,7 @@ public class VenteController {
                     java.util.List<LigneVente> lignesValables = new java.util.ArrayList<>();
                     java.util.Map<Long, Integer> qteDecompte = new java.util.HashMap<>();
 
-                    for (LigneVente lv : selected.lignes) {
+                    for (LigneVente lv : selected.getLignes()) {
                         Long pId = lv.getProduit().getId();
                         int dispoDB = calculerQteTotaleProduit(pId);
                         int dejaTraite = qteDecompte.getOrDefault(pId, 0);
@@ -730,7 +717,7 @@ public class VenteController {
 
                     panier.setAll(lignesValables);
                     calculerTotalVente();
-                    ticketsEnAttente.remove(selected);
+                    SessionManager.getFileAttente().remove(selected);
                     mettreAJourBadgeTickets();
                     txtRechercheProduit.requestFocus();
 
@@ -743,7 +730,7 @@ public class VenteController {
                     }
                 } else if (rep == s) {
                     // Suppression propre (pas d'impact stock)
-                    ticketsEnAttente.remove(selected);
+                    SessionManager.getFileAttente().remove(selected);
                     mettreAJourBadgeTickets();
                 }
             });
@@ -754,6 +741,7 @@ public class VenteController {
     public void verrouillerSession() {
         if (SessionManager.getCurrentUser() == null)
             return;
+        SessionManager.setCaisseVerrouillee(true);
         // Afficher l'overlay de verrouillage
         lblVerrouilleAgent.setText("Agent : " + SessionManager.getCurrentUser().getNom());
         lblVerrouilleErreur.setVisible(false);
@@ -813,6 +801,7 @@ public class VenteController {
         String hashBD = SessionManager.getCurrentUser().getMotDePasseHash();
         if (org.mindrot.jbcrypt.BCrypt.checkpw(motDePasse, hashBD)) {
             // Mot de passe correct : on déverrouille proprement la session
+            SessionManager.setCaisseVerrouillee(false);
             overlaySessionVerrouillee.setVisible(false);
             overlaySessionVerrouillee.setManaged(false);
             lblVerrouilleErreur.setVisible(false);
@@ -908,25 +897,42 @@ public class VenteController {
             return;
 
         // Faille 2 : Sécurité Caisse - Bloquer si tickets en mémoire
-        if (!ticketsEnAttente.isEmpty()) {
-            showError("IMPOSSIBLE DE CLÔTURER :\nVous avez " + ticketsEnAttente.size()
+        if (!SessionManager.getFileAttente().isEmpty()) {
+            showError("IMPOSSIBLE DE CLÔTURER :\nVous avez " + SessionManager.getFileAttente().size()
                     + " ticket(s) en attente.\nVeuillez les valider ou les supprimer avant de clôturer la caisse.");
             return;
         }
 
-        // Calcul du total Espèces de la session en cours
+        // Calcul rigoureux des encaissements de la session.
+        // Règle d'or : pour les ventes MIXTES, on décompose via les champs
+        // montantEspeces / montantMobile persistés en DB. Sans cela, l'argent mixte
+        // disparaît des totaux de clôture et crée des écarts fictifs.
         List<Vente> ventesSession = venteDAO.findAll().stream()
                 .filter(v -> v.getSessionCaisse() != null
                         && v.getSessionCaisse().getId().equals(currentSession.getId()))
                 .collect(Collectors.toList());
 
-        double totalEspeces = ventesSession.stream()
-                .filter(v -> v.getModePaiement() == Vente.ModePaiement.ESPECES)
-                .mapToDouble(Vente::getTotal).sum();
+        double totalEspeces = ventesSession.stream().mapToDouble(v -> {
+            if (v.getModePaiement() == Vente.ModePaiement.ESPECES) {
+                // Monopaiement Espèces : le montant net est le total de la vente
+                return v.getTotal() != null ? v.getTotal() : 0.0;
+            } else if (v.getModePaiement() == Vente.ModePaiement.MIXTE) {
+                // Paiement MIXTE : on récupère la part espèces exacte (normalisée à l'encaissement)
+                return v.getMontantEspeces() != null ? v.getMontantEspeces() : 0.0;
+            }
+            return 0.0; // MOBILE_MONEY ne rentre pas dans le tiroir physique
+        }).sum();
 
-        double totalMobile = ventesSession.stream()
-                .filter(v -> v.getModePaiement() == Vente.ModePaiement.MOBILE_MONEY)
-                .mapToDouble(Vente::getTotal).sum();
+        double totalMobile = ventesSession.stream().mapToDouble(v -> {
+            if (v.getModePaiement() == Vente.ModePaiement.MOBILE_MONEY) {
+                // Monopaiement Mobile : le montant net est le total de la vente
+                return v.getTotal() != null ? v.getTotal() : 0.0;
+            } else if (v.getModePaiement() == Vente.ModePaiement.MIXTE) {
+                // Paiement MIXTE : on récupère la part mobile exacte (normalisée à l'encaissement)
+                return v.getMontantMobile() != null ? v.getMontantMobile() : 0.0;
+            }
+            return 0.0;
+        }).sum();
 
         double theorieEspeces = currentSession.getFondDeCaisse() + totalEspeces;
 
@@ -950,20 +956,39 @@ public class VenteController {
         javafx.scene.layout.VBox vbox = new javafx.scene.layout.VBox(20);
         vbox.setPadding(new javafx.geometry.Insets(20));
 
-        // SECTION SUMMARY
+        // Compter les ventes MIXTES pour affichage informatif
+        long nbMixtes = ventesSession.stream()
+                .filter(v -> v.getModePaiement() == Vente.ModePaiement.MIXTE)
+                .count();
+        double totalMixtesEsp = ventesSession.stream()
+                .filter(v -> v.getModePaiement() == Vente.ModePaiement.MIXTE)
+                .mapToDouble(v -> v.getMontantEspeces() != null ? v.getMontantEspeces() : 0.0).sum();
+        double totalMixtesMob = ventesSession.stream()
+                .filter(v -> v.getModePaiement() == Vente.ModePaiement.MIXTE)
+                .mapToDouble(v -> v.getMontantMobile() != null ? v.getMontantMobile() : 0.0).sum();
+
         javafx.scene.layout.VBox summaryBox = new javafx.scene.layout.VBox(5);
         summaryBox.setStyle("-fx-background-color: #ECF0F1; -fx-padding: 15; -fx-background-radius: 5;");
+
         Label l1 = new Label(
                 "Fond de Caisse initial : " + String.format("%.0f", currentSession.getFondDeCaisse()) + " FCFA");
-        Label l2 = new Label("Ventes Espèces : " + String.format("%.0f", totalEspeces) + " FCFA");
+        Label l2 = new Label("Ventes Espèces (pures) : " + String.format("%.0f",
+                ventesSession.stream().filter(v -> v.getModePaiement() == Vente.ModePaiement.ESPECES)
+                        .mapToDouble(Vente::getTotal).sum()) + " FCFA");
 
-        Label l4 = new Label("Ventes Mobile Money : " + String.format("%.0f", totalMobile) + " FCFA");
+        Label lMixte = new Label(String.format("Ventes MIXTES (%d ticket(s)) : +%.0f Esp. / +%.0f Mobile",
+                nbMixtes, totalMixtesEsp, totalMixtesMob));
+        lMixte.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold;");
+
+        Label l4 = new Label("Ventes Mobile Money (pures) : " + String.format("%.0f",
+                ventesSession.stream().filter(v -> v.getModePaiement() == Vente.ModePaiement.MOBILE_MONEY)
+                        .mapToDouble(Vente::getTotal).sum()) + " FCFA");
         l4.setStyle("-fx-text-fill: #8e44ad; -fx-font-weight: bold;");
 
         Label l3 = new Label("MONTANT PHYSIQUE ATTENDU (Tiroir) : " + String.format("%.0f", theorieEspeces) + " FCFA");
         l3.setStyle("-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #2980b9; -fx-padding: 10 0 5 0;");
 
-        summaryBox.getChildren().addAll(l1, l2, l4, new javafx.scene.control.Separator(), l3);
+        summaryBox.getChildren().addAll(l1, l2, lMixte, l4, new javafx.scene.control.Separator(), l3);
 
         // SECTION INPUT
         javafx.scene.layout.GridPane inputGrid = new javafx.scene.layout.GridPane();
@@ -1039,6 +1064,10 @@ public class VenteController {
             msg.append("Le journal Z a été archivé dans l'historique.");
             info.setContentText(msg.toString());
             info.showAndWait();
+
+            logger.info("Clôture Z : Espèces attendues={} FCFA | Mobile attendu={} FCFA | Écart caisse={} FCFA",
+                    String.format("%.0f", theorieEspeces), String.format("%.0f", totalMobile),
+                    String.format("%.0f", result.especes - theorieEspeces));
 
             checkSessionStatus();
         });
@@ -1424,22 +1453,44 @@ public class VenteController {
                 return;
             }
 
-            // Re-calibration exacte pour le Z
+            // ─────────────────────────────────────────────────────────────────────
+            // NORMALISATION COMPTABLE (Règle d'or : montants persistés = montants NETS)
+            // Les champs montantEspeces et montantMobile en DB doivent refléter
+            // exactement ce qui entre dans le tiroir / dans le portefeuille mobile,
+            // sans la monnaie rendue. Cette normalisation est la clé de voûte de
+            // la fiabilité des rapports et de la clôture Z.
+            // ─────────────────────────────────────────────────────────────────────
             if (cmbModePaiement.getValue() == Vente.ModePaiement.ESPECES) {
+                // Monopaiement Espèces : on persist le montant NET = total dû (pas le brut reçu)
                 mEspeces = totalAPayer;
-                mMobile = 0.0;
+                mMobile  = 0.0;
             } else if (cmbModePaiement.getValue() == Vente.ModePaiement.MOBILE_MONEY) {
+                // Monopaiement Mobile : exact, car le virement est pour le montant exact
                 mEspeces = 0.0;
-                mMobile = totalAPayer;
+                mMobile  = totalAPayer;
             } else if (cmbModePaiement.getValue() == Vente.ModePaiement.MIXTE) {
-                // If they overpaid in mixte via cash, cash change is given. The base Mobile
-                // sits at exact.
-                if (recu > totalAPayer) {
-                    double overpay = recu - totalAPayer;
-                    mEspeces = Math.max(0, mEspeces - overpay);
-                    // if overpay exceeds cash given, business technically refunds via mobile or
-                    // it's an error. Usually cash is returned.
+                // Paiement MIXTE : la monnaie est TOUJOURS rendue depuis la part Espèces
+                // (on ne rembourse pas de Mobile Money). Règle physique universelle.
+                double overpay = recu - totalAPayer;
+                if (overpay > 0) {
+                    // On déduit le surplus uniquement du cash
+                    double cashNet = mEspeces - overpay;
+                    if (cashNet < 0) {
+                        // Cas pathologique : le surplus dépasse la mise de fonds en cash.
+                        // Impossible physiquement si la validation précédente a passé.
+                        // On le bloque par sécurité.
+                        showError("Incohérence de paiement MIXTE : le surplus (" +
+                                String.format("%.0f", overpay) + " FCFA) dépasse la part en espèces (" +
+                                String.format("%.0f", mEspeces) + " FCFA). Veuillez corriger les montants.");
+                        return;
+                    }
+                    mEspeces = cashNet;
+                    // mMobile reste intouché (le virement mobile est de montant exact)
                 }
+                // Assertion finale : mEspeces + mMobile doit être = totalAPayer
+                // En cas d'imprecision flottante, on recadre mEspeces
+                mEspeces = totalAPayer - mMobile;
+                if (mEspeces < 0) mEspeces = 0.0;
             }
 
         } catch (NumberFormatException e) {
@@ -1475,7 +1526,12 @@ public class VenteController {
             txtRechercheProduit.requestFocus();
 
         } catch (Exception e) {
-            showError(e.getMessage());
+            // Log complet pour traçabilité technique dans les fichiers logs
+            logger.error("Échec de la validation de la vente (mode: {}). Aucune donnée n'a été persistée.",
+                    cmbModePaiement.getValue(), e);
+            // Affichage d'un message explicite à l'utilisateur
+            String msg = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName() + " (voir logs pour détails)";
+            showError("Erreur lors de l'enregistrement de la vente :\n" + msg);
         }
     }
 

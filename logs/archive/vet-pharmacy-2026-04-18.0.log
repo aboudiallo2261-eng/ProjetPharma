@@ -1,0 +1,1034 @@
+2026-04-18 13:08:52.145 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-04-18 13:08:54.574 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-18 13:08:55.451 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-18 13:09:14.033 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 13:09:14.034 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 13:09:14.035 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 13:10:34.706 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-18 13:14:13.947 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 13:14:13.948 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 13:14:13.948 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 13:18:05.842 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Caisse ouverte avec un fond de 5000.0
+2026-04-18 13:19:13.977 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 13:19:13.978 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 13:19:13.979 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 13:22:14.100 [JavaFX Application Thread] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1265, SQLState: 01000
+2026-04-18 13:22:14.101 [JavaFX Application Thread] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Data truncated for column 'modePaiement' at row 1
+2026-04-18 13:22:14.114 [JavaFX Application Thread] ERROR com.pharmacie.dao.GenericDAO - Erreur BDD (save) pour Vente
+org.hibernate.exception.GenericJDBCException: could not execute statement [Data truncated for column 'modePaiement' at row 1] [insert into ventes (dateVente,modePaiement,monnaieRendue,montantEspeces,montantMobile,montantRecu,session_caisse_id,total,user_id) values (?,?,?,?,?,?,?,?,?)]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:63)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197)
+	at org.hibernate.id.insert.GetGeneratedKeysDelegate.performInsert(GetGeneratedKeysDelegate.java:107)
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorPostInsertSingleTable.execute(MutationExecutorPostInsertSingleTable.java:100)
+	at org.hibernate.persister.entity.mutation.InsertCoordinator.doStaticInserts(InsertCoordinator.java:175)
+	at org.hibernate.persister.entity.mutation.InsertCoordinator.coordinateInsert(InsertCoordinator.java:113)
+	at org.hibernate.persister.entity.AbstractEntityPersister.insert(AbstractEntityPersister.java:2868)
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:81)
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:670)
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:291)
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:272)
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:322)
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:386)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:300)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:219)
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:134)
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175)
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:754)
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:738)
+	at com.pharmacie.dao.GenericDAO.save(GenericDAO.java:42)
+	at com.pharmacie.services.VenteService.validerVente(VenteService.java:128)
+	at com.pharmacie.controllers.VenteController.validerVente(VenteController.java:1453)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1854)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: java.sql.SQLException: Data truncated for column 'modePaiement' at row 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:130)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:916)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1061)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1009)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1320)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:994)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:194)
+	... 93 common frames omitted
+2026-04-18 13:22:14.125 [JavaFX Application Thread] ERROR com.pharmacie.dao.GenericDAO - Rollback exception (secondaire): org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl@7c703237 is closed
+2026-04-18 13:22:14.234 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: null) validée et enregistrée via VenteService !
+2026-04-18 13:23:32.121 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 55) validée et enregistrée via VenteService !
+2026-04-18 13:24:14.156 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 13:24:14.156 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 13:24:14.156 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 13:29:13.998 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 13:29:13.998 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 13:29:13.998 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 13:29:25.409 [JavaFX Application Thread] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1265, SQLState: 01000
+2026-04-18 13:29:25.409 [JavaFX Application Thread] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Data truncated for column 'modePaiement' at row 1
+2026-04-18 13:29:25.410 [JavaFX Application Thread] ERROR com.pharmacie.dao.GenericDAO - Erreur BDD (save) pour Vente
+org.hibernate.exception.GenericJDBCException: could not execute statement [Data truncated for column 'modePaiement' at row 1] [insert into ventes (dateVente,modePaiement,monnaieRendue,montantEspeces,montantMobile,montantRecu,session_caisse_id,total,user_id) values (?,?,?,?,?,?,?,?,?)]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:63)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197)
+	at org.hibernate.id.insert.GetGeneratedKeysDelegate.performInsert(GetGeneratedKeysDelegate.java:107)
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorPostInsertSingleTable.execute(MutationExecutorPostInsertSingleTable.java:100)
+	at org.hibernate.persister.entity.mutation.InsertCoordinator.doStaticInserts(InsertCoordinator.java:175)
+	at org.hibernate.persister.entity.mutation.InsertCoordinator.coordinateInsert(InsertCoordinator.java:113)
+	at org.hibernate.persister.entity.AbstractEntityPersister.insert(AbstractEntityPersister.java:2868)
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:81)
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:670)
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:291)
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:272)
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:322)
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:386)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:300)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:219)
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:134)
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175)
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:754)
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:738)
+	at com.pharmacie.dao.GenericDAO.save(GenericDAO.java:42)
+	at com.pharmacie.services.VenteService.validerVente(VenteService.java:128)
+	at com.pharmacie.controllers.VenteController.validerVente(VenteController.java:1453)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1854)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: java.sql.SQLException: Data truncated for column 'modePaiement' at row 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:130)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:916)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1061)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1009)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1320)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:994)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:194)
+	... 93 common frames omitted
+2026-04-18 13:29:25.413 [JavaFX Application Thread] ERROR com.pharmacie.dao.GenericDAO - Rollback exception (secondaire): org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl@74683245 is closed
+2026-04-18 13:29:25.510 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: null) validée et enregistrée via VenteService !
+2026-04-18 13:30:04.062 [JavaFX Application Thread] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1265, SQLState: 01000
+2026-04-18 13:30:04.063 [JavaFX Application Thread] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Data truncated for column 'modePaiement' at row 1
+2026-04-18 13:30:04.064 [JavaFX Application Thread] ERROR com.pharmacie.dao.GenericDAO - Erreur BDD (save) pour Vente
+org.hibernate.exception.GenericJDBCException: could not execute statement [Data truncated for column 'modePaiement' at row 1] [insert into ventes (dateVente,modePaiement,monnaieRendue,montantEspeces,montantMobile,montantRecu,session_caisse_id,total,user_id) values (?,?,?,?,?,?,?,?,?)]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:63)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197)
+	at org.hibernate.id.insert.GetGeneratedKeysDelegate.performInsert(GetGeneratedKeysDelegate.java:107)
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorPostInsertSingleTable.execute(MutationExecutorPostInsertSingleTable.java:100)
+	at org.hibernate.persister.entity.mutation.InsertCoordinator.doStaticInserts(InsertCoordinator.java:175)
+	at org.hibernate.persister.entity.mutation.InsertCoordinator.coordinateInsert(InsertCoordinator.java:113)
+	at org.hibernate.persister.entity.AbstractEntityPersister.insert(AbstractEntityPersister.java:2868)
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:81)
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:670)
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:291)
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:272)
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:322)
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:386)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:300)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:219)
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:134)
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175)
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:754)
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:738)
+	at com.pharmacie.dao.GenericDAO.save(GenericDAO.java:42)
+	at com.pharmacie.services.VenteService.validerVente(VenteService.java:128)
+	at com.pharmacie.controllers.VenteController.validerVente(VenteController.java:1453)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1854)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: java.sql.SQLException: Data truncated for column 'modePaiement' at row 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:130)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:916)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1061)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1009)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1320)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:994)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:194)
+	... 93 common frames omitted
+2026-04-18 13:30:04.066 [JavaFX Application Thread] ERROR com.pharmacie.dao.GenericDAO - Rollback exception (secondaire): org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl@760ad393 is closed
+2026-04-18 13:30:04.145 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: null) validée et enregistrée via VenteService !
+2026-04-18 13:34:14.074 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 13:34:14.074 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 13:34:14.074 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 13:35:02.451 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Caisse ouverte avec un fond de 50000.0
+2026-04-18 13:35:36.501 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 56) validée et enregistrée via VenteService !
+2026-04-18 13:36:03.211 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 57) validée et enregistrée via VenteService !
+2026-04-18 13:39:14.000 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 13:39:14.000 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 13:39:14.000 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 13:40:03.658 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Caisse ouverte avec un fond de 3999.0
+2026-04-18 13:40:31.662 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 58) validée et enregistrée via VenteService !
+2026-04-18 13:40:43.448 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 59) validée et enregistrée via VenteService !
+2026-04-18 13:44:13.948 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 13:44:13.948 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 13:44:13.949 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 13:49:17.201 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 13:50:56.768 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Caisse ouverte avec un fond de 200.0
+2026-04-18 13:54:14.177 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.960 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.961 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.962 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.962 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.964 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.965 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.965 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.966 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.967 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.967 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.968 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.968 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.970 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.973 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.974 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.974 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.975 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.977 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.977 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.977 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.979 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.979 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.980 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.981 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.981 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.982 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.982 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.983 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.983 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.984 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.984 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.986 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.988 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.989 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.989 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.990 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.990 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.990 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.992 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.992 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.993 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.993 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.994 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.995 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.995 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.996 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.997 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:25.998 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.000 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.000 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.001 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.001 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.002 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.005 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.006 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.007 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.008 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.009 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.009 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.010 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.011 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.011 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.012 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.012 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.014 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.016 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.017 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.017 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.017 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.018 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.021 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.023 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.025 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.026 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.028 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.028 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.029 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.029 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.030 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.031 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.032 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.033 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:49:26.033 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:54:02.164 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 20:59:13.598 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 21:04:13.637 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 21:09:02.167 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 21:14:02.171 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 21:16:25.833 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-04-18 21:16:25.841 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-18 21:49:46.203 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-04-18 21:49:48.615 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-18 21:49:49.497 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-18 21:50:06.942 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-18 21:50:08.552 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 21:50:08.552 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 21:50:08.553 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 21:52:46.055 [JavaFX Application Thread] INFO  c.p.controllers.AchatController - Achat validé avec succès (ACID).
+2026-04-18 21:53:09.969 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Caisse ouverte avec un fond de 1000.0
+2026-04-18 21:54:21.390 [JavaFX Application Thread] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1265, SQLState: 01000
+2026-04-18 21:54:21.390 [JavaFX Application Thread] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Data truncated for column 'modePaiement' at row 1
+2026-04-18 21:54:21.403 [JavaFX Application Thread] ERROR com.pharmacie.dao.GenericDAO - Erreur BDD (save) pour Vente
+org.hibernate.exception.GenericJDBCException: could not execute statement [Data truncated for column 'modePaiement' at row 1] [insert into ventes (dateVente,modePaiement,monnaieRendue,montantEspeces,montantMobile,montantRecu,session_caisse_id,total,user_id) values (?,?,?,?,?,?,?,?,?)]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:63)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197)
+	at org.hibernate.id.insert.GetGeneratedKeysDelegate.performInsert(GetGeneratedKeysDelegate.java:107)
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorPostInsertSingleTable.execute(MutationExecutorPostInsertSingleTable.java:100)
+	at org.hibernate.persister.entity.mutation.InsertCoordinator.doStaticInserts(InsertCoordinator.java:175)
+	at org.hibernate.persister.entity.mutation.InsertCoordinator.coordinateInsert(InsertCoordinator.java:113)
+	at org.hibernate.persister.entity.AbstractEntityPersister.insert(AbstractEntityPersister.java:2868)
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:81)
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:670)
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:291)
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:272)
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:322)
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:386)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:300)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:219)
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:134)
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175)
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:754)
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:738)
+	at com.pharmacie.dao.GenericDAO.save(GenericDAO.java:42)
+	at com.pharmacie.services.VenteService.validerVente(VenteService.java:128)
+	at com.pharmacie.controllers.VenteController.validerVente(VenteController.java:1515)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1854)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: java.sql.SQLException: Data truncated for column 'modePaiement' at row 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:130)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:916)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1061)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1009)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1320)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:994)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:194)
+	... 93 common frames omitted
+2026-04-18 21:54:21.410 [JavaFX Application Thread] ERROR com.pharmacie.dao.GenericDAO - Rollback exception (secondaire): org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl@19a5c132 is closed
+2026-04-18 21:54:21.529 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: null) validée et enregistrée via VenteService !
+2026-04-18 21:55:08.364 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 21:55:08.365 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 21:55:08.365 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 21:55:45.427 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 60) validée et enregistrée via VenteService !
+2026-04-18 21:57:01.503 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Clôture Z : Espèces attendues=1000001000 FCFA | Mobile attendu=0 FCFA | Écart caisse=-1000 FCFA
+2026-04-18 21:57:03.328 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-04-18 21:57:03.328 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-18 21:57:42.468 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-04-18 21:57:44.715 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-18 21:57:45.522 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-18 21:58:02.588 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion réussie: Administrateur
+2026-04-18 21:58:04.673 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 21:58:04.674 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 21:58:04.674 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 21:58:16.250 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Caisse ouverte avec un fond de 2.0
+2026-04-18 21:59:25.262 [JavaFX Application Thread] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1265, SQLState: 01000
+2026-04-18 21:59:25.264 [JavaFX Application Thread] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Data truncated for column 'modePaiement' at row 1
+2026-04-18 21:59:25.275 [JavaFX Application Thread] ERROR com.pharmacie.dao.GenericDAO - Erreur BDD (save) pour Vente
+org.hibernate.exception.GenericJDBCException: could not execute statement [Data truncated for column 'modePaiement' at row 1] [insert into ventes (dateVente,modePaiement,monnaieRendue,montantEspeces,montantMobile,montantRecu,session_caisse_id,total,user_id) values (?,?,?,?,?,?,?,?,?)]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:63)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197)
+	at org.hibernate.id.insert.GetGeneratedKeysDelegate.performInsert(GetGeneratedKeysDelegate.java:107)
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorPostInsertSingleTable.execute(MutationExecutorPostInsertSingleTable.java:100)
+	at org.hibernate.persister.entity.mutation.InsertCoordinator.doStaticInserts(InsertCoordinator.java:175)
+	at org.hibernate.persister.entity.mutation.InsertCoordinator.coordinateInsert(InsertCoordinator.java:113)
+	at org.hibernate.persister.entity.AbstractEntityPersister.insert(AbstractEntityPersister.java:2868)
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:81)
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:670)
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:291)
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:272)
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:322)
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:386)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:300)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:219)
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:134)
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175)
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:754)
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:738)
+	at com.pharmacie.dao.GenericDAO.save(GenericDAO.java:42)
+	at com.pharmacie.services.VenteService.validerVente(VenteService.java:128)
+	at com.pharmacie.controllers.VenteController.validerVente(VenteController.java:1515)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1854)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: java.sql.SQLException: Data truncated for column 'modePaiement' at row 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:130)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:916)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1061)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1009)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1320)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:994)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:194)
+	... 93 common frames omitted
+2026-04-18 21:59:25.282 [JavaFX Application Thread] ERROR com.pharmacie.dao.GenericDAO - Rollback exception (secondaire): org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl@7c0c3225 is closed
+2026-04-18 21:59:25.436 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: null) validée et enregistrée via VenteService !
+2026-04-18 22:03:04.722 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 22:03:04.723 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 22:03:04.723 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 22:07:11.199 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Clôture Z : Espèces attendues=2 FCFA | Mobile attendu=0 FCFA | Écart caisse=5553 FCFA
+2026-04-18 22:07:12.918 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-04-18 22:07:12.920 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-18 22:07:49.111 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-04-18 22:07:51.301 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-18 22:07:52.116 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-18 22:08:11.314 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 22:08:11.315 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 22:08:11.315 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 22:08:12.379 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-18 22:08:57.018 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Caisse ouverte avec un fond de 11111.0
+2026-04-18 22:09:32.335 [JavaFX Application Thread] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1265, SQLState: 01000
+2026-04-18 22:09:32.337 [JavaFX Application Thread] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Data truncated for column 'modePaiement' at row 1
+2026-04-18 22:09:32.348 [JavaFX Application Thread] ERROR com.pharmacie.dao.GenericDAO - Erreur BDD (save) pour Vente
+org.hibernate.exception.GenericJDBCException: could not execute statement [Data truncated for column 'modePaiement' at row 1] [insert into ventes (dateVente,modePaiement,monnaieRendue,montantEspeces,montantMobile,montantRecu,session_caisse_id,total,user_id) values (?,?,?,?,?,?,?,?,?)]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:63)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197)
+	at org.hibernate.id.insert.GetGeneratedKeysDelegate.performInsert(GetGeneratedKeysDelegate.java:107)
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorPostInsertSingleTable.execute(MutationExecutorPostInsertSingleTable.java:100)
+	at org.hibernate.persister.entity.mutation.InsertCoordinator.doStaticInserts(InsertCoordinator.java:175)
+	at org.hibernate.persister.entity.mutation.InsertCoordinator.coordinateInsert(InsertCoordinator.java:113)
+	at org.hibernate.persister.entity.AbstractEntityPersister.insert(AbstractEntityPersister.java:2868)
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:81)
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:670)
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:291)
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:272)
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:322)
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:386)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:300)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:219)
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:134)
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175)
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:754)
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:738)
+	at com.pharmacie.dao.GenericDAO.save(GenericDAO.java:42)
+	at com.pharmacie.services.VenteService.validerVente(VenteService.java:128)
+	at com.pharmacie.controllers.VenteController.validerVente(VenteController.java:1515)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1854)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: java.sql.SQLException: Data truncated for column 'modePaiement' at row 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:130)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:916)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1061)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1009)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1320)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:994)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:194)
+	... 93 common frames omitted
+2026-04-18 22:09:32.357 [JavaFX Application Thread] ERROR com.pharmacie.dao.GenericDAO - Rollback exception (secondaire): org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl@1df5f55e is closed
+2026-04-18 22:09:32.495 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: null) validée et enregistrée via VenteService !
+2026-04-18 22:12:15.674 [JavaFX Application Thread] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1265, SQLState: 01000
+2026-04-18 22:12:15.675 [JavaFX Application Thread] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Data truncated for column 'modePaiement' at row 1
+2026-04-18 22:12:15.677 [JavaFX Application Thread] ERROR com.pharmacie.dao.GenericDAO - Erreur BDD (save) pour Vente
+org.hibernate.exception.GenericJDBCException: could not execute statement [Data truncated for column 'modePaiement' at row 1] [insert into ventes (dateVente,modePaiement,monnaieRendue,montantEspeces,montantMobile,montantRecu,session_caisse_id,total,user_id) values (?,?,?,?,?,?,?,?,?)]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:63)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197)
+	at org.hibernate.id.insert.GetGeneratedKeysDelegate.performInsert(GetGeneratedKeysDelegate.java:107)
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorPostInsertSingleTable.execute(MutationExecutorPostInsertSingleTable.java:100)
+	at org.hibernate.persister.entity.mutation.InsertCoordinator.doStaticInserts(InsertCoordinator.java:175)
+	at org.hibernate.persister.entity.mutation.InsertCoordinator.coordinateInsert(InsertCoordinator.java:113)
+	at org.hibernate.persister.entity.AbstractEntityPersister.insert(AbstractEntityPersister.java:2868)
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:81)
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:670)
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:291)
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:272)
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:322)
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:386)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:300)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:219)
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:134)
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175)
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:754)
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:738)
+	at com.pharmacie.dao.GenericDAO.save(GenericDAO.java:42)
+	at com.pharmacie.services.VenteService.validerVente(VenteService.java:128)
+	at com.pharmacie.controllers.VenteController.validerVente(VenteController.java:1515)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1854)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: java.sql.SQLException: Data truncated for column 'modePaiement' at row 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:130)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:916)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1061)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1009)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1320)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:994)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:194)
+	... 93 common frames omitted
+2026-04-18 22:12:15.679 [JavaFX Application Thread] ERROR com.pharmacie.dao.GenericDAO - Rollback exception (secondaire): org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl@14f79274 is closed
+2026-04-18 22:12:15.783 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: null) validée et enregistrée via VenteService !
+2026-04-18 22:13:11.348 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 22:13:11.350 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 22:13:11.350 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 22:18:11.192 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 22:23:12.066 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 22:23:12.067 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 22:23:12.069 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 22:28:00.154 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 22:28:00.155 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 22:28:00.155 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 22:33:11.171 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-18 22:38:00.397 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 22:38:00.398 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 22:38:00.399 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 22:43:11.405 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 22:43:11.405 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 22:43:11.405 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 22:48:11.544 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 22:48:11.546 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 22:48:11.547 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 22:51:16.301 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Clôture Z : Espèces attendues=11111 FCFA | Mobile attendu=0 FCFA | Écart caisse=2211111 FCFA
+2026-04-18 22:51:19.705 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-04-18 22:51:19.705 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-18 22:51:49.440 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-04-18 22:51:50.268 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-18 22:51:50.606 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-18 22:52:00.220 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 22:52:00.220 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 22:52:00.220 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 22:52:11.618 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-18 22:52:25.333 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Caisse ouverte avec un fond de 19099.0
+2026-04-18 22:53:43.514 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 61) validée et enregistrée via VenteService !
+2026-04-18 22:57:11.488 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 22:57:11.490 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 22:57:11.491 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 22:58:55.848 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 62) validée et enregistrée via VenteService !
+2026-04-18 23:02:11.553 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 23:02:11.554 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 23:02:11.554 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 23:04:27.450 [JavaFX Application Thread] INFO  c.p.controllers.AchatController - Achat validé avec succès (ACID).
+2026-04-18 23:06:16.989 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 63) validée et enregistrée via VenteService !
+2026-04-18 23:06:55.678 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 64) validée et enregistrée via VenteService !
+2026-04-18 23:07:11.490 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 23:07:11.490 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 23:07:11.490 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 23:09:56.390 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 65) validée et enregistrée via VenteService !
+2026-04-18 23:10:28.262 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 66) validée et enregistrée via VenteService !
+2026-04-18 23:10:53.202 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 67) validée et enregistrée via VenteService !
+2026-04-18 23:12:11.493 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 23:12:11.493 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 23:12:11.494 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 23:12:40.986 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Clôture Z : Espèces attendues=90021249 FCFA | Mobile attendu=10000600 FCFA | Écart caisse=89999909978751 FCFA
+2026-04-18 23:15:55.246 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Caisse ouverte avec un fond de 10000.0
+2026-04-18 23:16:54.754 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 68) validée et enregistrée via VenteService !
+2026-04-18 23:17:11.463 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 23:17:11.463 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 23:17:11.463 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 23:20:38.488 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 69) validée et enregistrée via VenteService !
+2026-04-18 23:21:16.985 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 70) validée et enregistrée via VenteService !
+2026-04-18 23:22:11.380 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 23:22:11.380 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 23:22:11.380 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 23:27:11.461 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 23:27:11.462 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 23:27:11.462 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 23:32:11.442 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 23:32:11.443 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 23:32:11.443 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 23:37:11.455 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 23:37:11.457 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 23:37:11.457 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 23:42:11.435 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 23:42:11.436 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 23:42:11.436 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 23:47:11.466 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 23:47:11.466 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 23:47:11.466 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 23:52:11.210 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 23:52:11.211 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 23:52:11.211 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-18 23:57:11.126 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-18 23:57:11.126 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-18 23:57:11.126 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
