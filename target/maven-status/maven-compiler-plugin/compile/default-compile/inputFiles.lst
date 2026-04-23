@@ -15,6 +15,7 @@ C:\projetjavasout\src\main\java\com\pharmacie\controllers\DashboardController.ja
 C:\projetjavasout\src\main\java\com\pharmacie\dao\StatistiquesDAO.java
 C:\projetjavasout\src\main\java\com\pharmacie\models\Achat.java
 C:\projetjavasout\src\main\java\com\pharmacie\dao\EspeceDAO.java
+C:\projetjavasout\src\main\java\com\pharmacie\debug\DebugDashboardQuery.java
 C:\projetjavasout\src\main\java\com\pharmacie\dao\PharmacieInfoDAO.java
 C:\projetjavasout\src\main\java\com\pharmacie\models\PharmacieInfo.java
 C:\projetjavasout\src\main\java\com\pharmacie\TestInsertUtilisateur.java
@@ -35,6 +36,7 @@ C:\projetjavasout\src\main\java\com\pharmacie\models\AjustementStock.java
 C:\projetjavasout\src\main\java\com\pharmacie\dao\LotDAO.java
 C:\projetjavasout\src\main\java\com\pharmacie\controllers\AlerteStockController.java
 C:\projetjavasout\src\main\java\com\pharmacie\models\Produit.java
+C:\projetjavasout\src\main\java\com\pharmacie\debug\DebugStock.java
 C:\projetjavasout\src\main\java\com\pharmacie\models\Profil.java
 C:\projetjavasout\src\main\java\com\pharmacie\controllers\VenteController.java
 C:\projetjavasout\src\main\java\com\pharmacie\dao\ProfilDAO.java
@@ -57,4 +59,5 @@ C:\projetjavasout\src\main\java\com\pharmacie\utils\SessionManager.java
 C:\projetjavasout\src\main\java\com\pharmacie\models\Espece.java
 C:\projetjavasout\src\main\java\com\pharmacie\controllers\AchatController.java
 C:\projetjavasout\src\main\java\com\pharmacie\utils\AlertUtils.java
+C:\projetjavasout\src\main\java\com\pharmacie\debug\DebugTaramine.java
 C:\projetjavasout\src\main\java\com\pharmacie\models\Vente.java

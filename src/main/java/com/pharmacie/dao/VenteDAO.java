@@ -25,17 +25,13 @@ public class VenteDAO extends GenericDAO<Vente> {
      * @param produitFilter Produit optionnel pour affiner (null si sans filtre)
      * @return Liste de ventes correspondant aux critères
      */
-    public List<Vente> findVentesByPeriode(LocalDateTime debut, LocalDateTime fin, Produit produitFilter, com.pharmacie.models.User agentFilter, com.pharmacie.models.Vente.ModePaiement modeFilter) {
+    public List<Vente> findVentesByPeriode(LocalDateTime debut, LocalDateTime fin, Long ticketIdFilter, com.pharmacie.models.User agentFilter, com.pharmacie.models.Vente.ModePaiement modeFilter) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            StringBuilder hql = new StringBuilder("SELECT DISTINCT v FROM Vente v ");
+            StringBuilder hql = new StringBuilder("SELECT DISTINCT v FROM Vente v WHERE v.dateVente BETWEEN :debut AND :fin ");
             
-            if (produitFilter != null) {
-                hql.append("JOIN v.lignesVente lv WHERE lv.produit.id = :produitId AND ");
-            } else {
-                hql.append("WHERE ");
+            if (ticketIdFilter != null) {
+                hql.append("AND v.id = :ticketId ");
             }
-            hql.append("v.dateVente BETWEEN :debut AND :fin ");
-            
             if (agentFilter != null) {
                 hql.append("AND v.user.id = :agentId ");
             }
@@ -49,8 +45,8 @@ public class VenteDAO extends GenericDAO<Vente> {
             query.setParameter("debut", debut);
             query.setParameter("fin", fin);
             
-            if (produitFilter != null) {
-                query.setParameter("produitId", produitFilter.getId());
+            if (ticketIdFilter != null) {
+                query.setParameter("ticketId", ticketIdFilter);
             }
             if (agentFilter != null) {
                 query.setParameter("agentId", agentFilter.getId());

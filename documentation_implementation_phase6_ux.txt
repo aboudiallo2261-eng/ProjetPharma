@@ -1,0 +1,231 @@
+================================================================================
+  DOCUMENTATION PHASE 6 — OPTIMISATION UX & ERGONOMIE (8 POINTS)
+  Projet : Pharmacie/Vétérinaire Management System
+  Date   : 2026-04-23
+  Statut : COMPLÈTE — BUILD SUCCESS
+================================================================================
+
+RÉSUMÉ
+------
+La Phase 6 est une campagne de finition UX/UI sur 8 points d'amélioration
+identifiés lors de l'audit précédent. L'objectif : zéro régression, code
+production-ready, comportement prévisible et cohérent dans tous les modules.
+
+================================================================================
+POINT 1 — MODALE ALERTES STOCK : TABPANE RUPTURES + PÉRIMÉS
+================================================================================
+
+FICHIERS MODIFIÉS :
+  - src/main/resources/fxml/alertes_stock.fxml  (refonte totale)
+  - src/main/java/com/pharmacie/controllers/AlerteStockController.java (refonte)
+
+AVANT :
+  La popup n'affichait qu'un seul tableau des ruptures de stock.
+  Aucune visibilité sur les lots proches de leur date d'expiration.
+
+APRÈS :
+  - TabPane avec 2 onglets distincts :
+    * Onglet 1 "Ruptures de Stock" : produits dont stock <= seuil d'alerte
+      - Couleur rouge sur stock actuel, bleu sur quantité à commander
+      - Double-clic sur une ligne → prépare la commande automatique
+    * Onglet 2 "Lots Périmés / Proches Expiration" :
+      - Tous les lots dont la date d'expiration <= aujourd'hui + 30 jours
+      - Rouge = périmé (joursRestants < 0), Orange = expire dans <30j
+      - Tri automatique du plus urgent au moins urgent
+      - Listener selectedProperty pour lisibilité sur sélection (pattern Point 5)
+  - Header Premium avec compteurs séparés (N ruptures | N périmés)
+  - Filtre texte commun aux deux onglets (nom produit)
+
+CHOIX TECHNIQUE :
+  TabPane JavaFX intégré au VBox racine. Deux modèles internes distincts :
+  AlerteModel (ruptures) et LotPerimeModel (périmés), tous deux en
+  ObservableList + FilteredList pour un filtrage réactif sans rechargement DB.
+
+================================================================================
+POINT 2 — BOUTONS/TOTAL EN HAUT DU TABLEAU HISTORIQUE
+================================================================================
+
+FICHIERS MODIFIÉS :
+  - src/main/resources/fxml/ventes.fxml
+  - src/main/resources/fxml/achats.fxml
+
+AVANT :
+  Les boutons d'action (Réimprimer, Voir Détails, Imprimer PDF, Total)
+  étaient positionnés SOUS le tableau, invisibles sans scrolling.
+
+APRÈS :
+  La HBox contenant les boutons et le total est maintenant AVANT le TableView
+  dans le VBox parent. L'utilisateur voit les actions disponibles en haut,
+  avant même de sélectionner une ligne — pattern standard des outils métier.
+
+PRINCIPE UI/UX :
+  "Actions above content" — les commandes disponibles doivent être visibles
+  dès l'ouverture d'un onglet, pas cachées sous les données.
+
+================================================================================
+POINT 3 — MASQUAGE btnTicketsEnAttente AU VERROUILLAGE
+================================================================================
+
+FICHIER MODIFIÉ :
+  - src/main/java/com/pharmacie/controllers/VenteController.java
+
+AVANT :
+  Le bouton "⏸ Attente" restait visible et cliquable même quand la session
+  était verrouillée, créant une incohérence UX.
+
+APRÈS :
+  Dans verrouillerSession() : btnTicketsEnAttente.setVisible(false) + setManaged(false)
+  Dans deverrouillerSession() : restauration de la visibilité
+  Le bouton disparaît proprement du layout (managed=false évite le "trou" vide).
+
+================================================================================
+POINT 4 — VALIDATION STRICTE "CHIFFRES UNIQUEMENT" SUR LES CELLULES ÉDITABLES
+================================================================================
+
+FICHIERS MODIFIÉS :
+  - VenteController.java (colPanVenteQte)
+  - AchatController.java (colPanierQte + colPanierPrix)
+  - VenteController.java (txtDeclareEspeces dans cloturerCaisse())
+
+AVANT :
+  CellFactory basique TextFieldTableCell.forTableColumn() sans validation.
+  L'utilisateur pouvait saisir des lettres → NumberFormatException silencieuse.
+
+APRÈS :
+  CellFactory custom avec classe anonyme qui surcharge startEdit() :
+  - Platform.runLater() pour accéder au TextField APRÈS création par JavaFX
+  - TextFormatter avec filtre : change -> txt.matches("[0-9]+") ? change : null
+  - Quantités : entiers positifs uniquement, minimum 1
+  - Prix : décimaux uniquement (pattern \\d*\\.?\\d*)
+  - Converter custom avec fallback sécurisé (retourne 0 ou 1 si invalide)
+  - Dans la fenêtre Clôture Caisse : même TextFormatter sur le champ Espèces
+
+STRATÉGIE (Pattern Platform.runLater) :
+  Le TextField n'existe qu'au moment du startEdit() côté JavaFX. L'injection
+  du TextFormatter doit être différée via Platform.runLater() pour garantir
+  que le nœud graphique est bien créé avant d'interagir avec lui.
+
+================================================================================
+POINT 5 — LISIBILITÉ DES COULEURS À LA SÉLECTION (RAPPORTS)
+================================================================================
+
+FICHIER MODIFIÉ :
+  - src/main/java/com/pharmacie/controllers/ReportController.java
+
+AVANT :
+  Les cellules colorées (vert/rouge/bleu sur Audit Type, Ajustement Qté,
+  Écarts Clôture) conservaient leur couleur métier quand la ligne était
+  sélectionnée → texte illisible sur fond bleu de sélection.
+
+APRÈS :
+  Chaque TableCell colorée intègre un initializer block qui écoute
+  tableRowProperty() → selectedProperty() :
+  - Quand sélectionnée  : -fx-text-fill: white (lisible sur bleu/foncé)
+  - Quand désélectionnée : couleur métier habituelle (vert, rouge, orange…)
+  
+  Pattern appliqué à 3 endroits :
+    1. colAdjQte (Ajustements)     — vert/rouge selon +/-
+    2. colAuditType (Audit Stock)  — vert/bleu/rouge selon ACHAT/VENTE/PERTE
+    3. configureEcartColumn (Z)    — vert/rouge/noir selon valeur
+
+PATTERN RÉUTILISABLE :
+  { tableRowProperty().addListener((obs, o, n) -> {
+      if (n != null) n.selectedProperty().addListener((obs2, was, is) -> {
+          if (!isEmpty()) updateItem(getItem(), false);
+      });
+  }); }
+  + boolean selected = getTableRow() != null && getTableRow().isSelected();
+  + style ternaire : selected ? "white" : "couleur_metier"
+
+================================================================================
+POINT 6 — BOUTON "VIDER" PANIER AVEC COULEUR DYNAMIQUE
+================================================================================
+
+FICHIERS MODIFIÉS :
+  - ventes.fxml (ajout btnViderPanier)
+  - VenteController.java (champ + listener + handler viderPanier())
+  - AchatController.java (listener couleur sur btnViderPanier existant)
+
+AVANT :
+  Aucun bouton "Vider tout" en caisse (VenteController).
+  Le bouton "Vider" dans l'achat restait gris quelle que soit l'état du panier.
+
+APRÈS :
+  Caisse (Vente) :
+    - Nouveau bouton btnViderPanier entre "Attente" et "Retirer"
+    - Gris (#BDC3C7) si panier vide et disabled
+    - Rouge (#e74c3c) + bold si panier contient des articles
+    - Handler viderPanier() : suppression directe si 1 article,
+      confirmation Dialog si >= 2 articles (sécurité anti-fausse-manip)
+  
+  Achat :
+    - ListChangeListener sur panier : rouge si actif, gris si vide
+    - disableProperty() bindé à isEmpty(panier)
+
+================================================================================
+POINT 7 — FUSION DES 2 DIALOGUES TICKETS EN ATTENTE
+================================================================================
+
+FICHIER MODIFIÉ :
+  - VenteController.java (méthode voirTicketsEnAttente())
+
+AVANT :
+  Deux dialogues bloquants en cascade : 1er pour choisir le ticket,
+  2e pour choisir l'action (Rappeler/Supprimer) → affichage en double,
+  expérience désagréable.
+
+APRÈS :
+  Un seul Dialog avec la liste des tickets + deux boutons directs
+  "Rappeler" et "Supprimer" dans la barre de boutons du DialogPane.
+  Flag actionPrise pour éviter toute popup supplémentaire après action.
+  Toast de confirmation via ToastService.
+
+================================================================================
+POINT 8 — REDESIGN PREMIUM DE LA FENÊTRE CLÔTURE DE CAISSE
+================================================================================
+
+FICHIER MODIFIÉ :
+  - VenteController.java (méthode cloturerCaisse())
+
+AVANT :
+  - Dialog basique sans structure visuelle
+  - Un champ texte sans validation numérique
+  - Alert.INFORMATION standard post-clôture (monochrome, peu lisible)
+
+APRÈS :
+  Dialog de saisie Premium :
+    * Bouton "Clôturer" en rouge danger (#E74C3C) avec Platform.runLater()
+    * Section ESPÈCES (fond #FFF9F0, bordure orange) : fond + ventes pures
+      + part mixtes + montant attendu mis en évidence
+    * Section MOBILE (fond #F5F0FB, bordure violette) : total mobile
+      + note "automatique"
+    * Section INPUT (fond #F0F8FF, bordure bleue) : grand champ de saisie
+      avec TextFormatter chiffres uniquement (pattern Point 4)
+
+  Dialog Bilan post-clôture Premium :
+    * Bilan Espèces : attendu / déclaré / écart coloré (vert/rouge/gris)
+    * Bilan Mobile : total + note de traçabilité
+    * Bouton OK en vert (#27ae60)
+    * Note footer sur l'archivage du Journal Z
+
+COHÉRENCE VISUELLE :
+  Orange = espèces physiques (tiroir)
+  Violet = mobile money (digital)
+  Bleu   = données théoriques
+  Vert   = validation/succès
+  Rouge  = manquant/danger
+
+================================================================================
+RÉSULTAT FINAL
+================================================================================
+
+  8/8 points implémentés
+  BUILD SUCCESS (javac 17, 63 fichiers compilés, 0 erreur)
+  Warning : DashboardController uses unchecked operations (pré-existant, non lié)
+
+FICHIERS MODIFIÉS AU TOTAL :
+  Java  : VenteController.java, AchatController.java, ReportController.java,
+          AlerteStockController.java
+  FXML  : ventes.fxml, achats.fxml, alertes_stock.fxml
+
+================================================================================

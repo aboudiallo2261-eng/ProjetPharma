@@ -163,6 +163,7 @@ public class UserController {
             newUser.setProfil(profil);
             newUser.setMotDePasseHash(BCrypt.hashpw(password, BCrypt.gensalt()));
             userDAO.save(newUser);
+            com.pharmacie.utils.ToastService.showSuccess(tableUsers.getScene().getWindow(), "Utilisateur Créé", "L'agent a été ajouté avec succès.");
         } else { // UPDATE
             if (!selectedUser.getIdentifiant().equalsIgnoreCase(identifiant) && 
                 userDAO.findAll().stream().anyMatch(u -> u.getIdentifiant().equalsIgnoreCase(identifiant))) {
@@ -177,6 +178,7 @@ public class UserController {
                 selectedUser.setMotDePasseHash(BCrypt.hashpw(password, BCrypt.gensalt()));
             }
             userDAO.update(selectedUser);
+            com.pharmacie.utils.ToastService.showSuccess(tableUsers.getScene().getWindow(), "Utilisateur Modifié", "Les accès de l'agent ont été mis à jour.");
             
             // Si on met à jour son propre compte, on met à jour le session manager
             if (SessionManager.getCurrentUser().getId().equals(selectedUser.getId())) {
@@ -198,12 +200,10 @@ public class UserController {
             }
             boolean success = userDAO.delete(selected);
             if (!success) {
-                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                alert.setTitle("Suppression Impossible");
-                alert.setHeaderText("Cet utilisateur ne peut pas être supprimé de la base.");
-                alert.setContentText("Il possède déjà un historique de ventes ou d'actions rattaché à son compte.\n\nAstuce : Pour bloquer son accès, modifiez son compte et attribuez-lui un profil factice sans aucune autorisation (ex: 'Profil Bloqué').");
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Impossible de supprimer l'utilisateur car il a effectué des ventes ou opérations.");
                 alert.showAndWait();
             } else {
+                com.pharmacie.utils.ToastService.showSuccess(tableUsers.getScene().getWindow(), "Utilisateur Supprimé", "L'agent a été révoqué et supprimé.");
                 handleReset();
                 loadUsers();
             }
@@ -271,6 +271,7 @@ public class UserController {
             p.setCanAccessRapports(chkRapports.isSelected());
             p.setCanAccessParametres(chkParametres.isSelected());
             profilDAO.save(p);
+            com.pharmacie.utils.ToastService.showSuccess(tableProfils.getScene().getWindow(), "Profil Créé", "Le nouveau rôle a été enregistré.");
         } else {
             selectedProfil.setNom(nom);
             selectedProfil.setDescription(txtProfilDesc.getText());
@@ -282,6 +283,7 @@ public class UserController {
             selectedProfil.setCanAccessRapports(chkRapports.isSelected());
             selectedProfil.setCanAccessParametres(chkParametres.isSelected());
             profilDAO.update(selectedProfil);
+            com.pharmacie.utils.ToastService.showSuccess(tableProfils.getScene().getWindow(), "Profil Modifié", "Les permissions du rôle ont été mises à jour.");
         }
         resetProfilForm();
         loadProfils();
@@ -301,6 +303,7 @@ public class UserController {
                 }
             }
             profilDAO.delete(p);
+            com.pharmacie.utils.ToastService.showSuccess(tableProfils.getScene().getWindow(), "Profil Supprimé", "Le profil a été retiré avec succès.");
             resetProfilForm();
             loadProfils();
         }
@@ -336,6 +339,7 @@ public class UserController {
             infoDAO.update(currentInfo);
         }
         
+        com.pharmacie.utils.ToastService.showSuccess(txtInfoNom.getScene().getWindow(), "Informations Sauvegardées", "Les paramètres de la pharmacie ont été mis à jour.");
         lblInfoMsg.setText("Informations enregistrées !");
         lblInfoMsg.setVisible(true);
         new java.util.Timer().schedule(new java.util.TimerTask() {
@@ -364,9 +368,7 @@ public class UserController {
         if (file != null) {
             boolean success = com.pharmacie.utils.DatabaseBackupService.exportDatabase(file);
             if (success) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Sauvegarde reussie avec succès !\nEmplacement : " + file.getAbsolutePath());
-                alert.setHeaderText("Backup Terminé");
-                alert.show();
+                com.pharmacie.utils.ToastService.showSuccess(txtInfoNom.getScene().getWindow(), "Sauvegarde Réussie", "Base de données exportée dans :\n" + file.getName());
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Erreur lors de la sauvegarde.\nVérifiez que mysqldump est installé et accessible sur ce PC.");
                 alert.setHeaderText("Echec du Backup");

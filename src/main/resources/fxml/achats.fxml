@@ -119,6 +119,16 @@
                 </GridPane>
 
                 <VBox VBox.vgrow="ALWAYS" styleClass="table-card">
+                    <!-- Point 2 : Barre d'actions EN HAUT du tableau (cohérence UI avec Historique Ventes) -->
+                    <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 0 0 10 0;">
+                        <Button fx:id="btnImprimerBonCmd" text="🖨 Imprimer Bon (PDF)" onAction="#imprimerBonDeCommande"
+                                disable="true" styleClass="btn-action-blue"/>
+                        <Button fx:id="btnVoirDetailsAchat" text="👁 Voir Détails" onAction="#showSelectedAchatDetail"
+                                disable="true" styleClass="btn-action-orange"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="lblTotalAchats" text="Total : 0 FCFA" styleClass="total-label, total-label-filtered"/>
+                        <Button text="🖨 Récapitulatif" onAction="#imprimerRecapitulatifAchats" styleClass="btn-action-blue"/>
+                    </HBox>
                     <TableView fx:id="tableHistorique" VBox.vgrow="ALWAYS" styleClass="table-view">
                         <placeholder>
                             <Label text="📦 Aucun achat ne correspond à vos filtres." styleClass="table-placeholder-label"/>
@@ -132,16 +142,6 @@
                             <TableColumn fx:id="colHistMontant" text="Montant (FCFA)" prefWidth="145"/>
                         </columns>
                     </TableView>
-                    <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 10 0 0 0;">
-                        <!-- Phase 5 : Boutons action désactivés par défaut, activés par sélection de ligne -->
-                        <Button fx:id="btnImprimerBonCmd" text="🖨 Imprimer Bon (PDF)" onAction="#imprimerBonDeCommande"
-                                disable="true" styleClass="btn-action-blue"/>
-                        <Button fx:id="btnVoirDetailsAchat" text="👁️ Voir Détails" onAction="#showSelectedAchatDetail"
-                                disable="true" styleClass="btn-action-orange"/>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Label fx:id="lblTotalAchats" text="Total : 0 FCFA" styleClass="total-label, total-label-filtered"/>
-                        <Button text="🖨 Récapitulatif" onAction="#imprimerRecapitulatifAchats" styleClass="btn-action-blue"/>
-                    </HBox>
                 </VBox>
             </VBox>
         </Tab>

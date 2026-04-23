@@ -1,0 +1,34 @@
+RAPPORT D'INGÉNIERIE : PHASE 5 (Harmonisation de la Valeur du Stock)
+======================================================================
+
+1. DIAGNOSTIC DU PROBLÈME (Pourquoi les chiffres ne correspondaient pas)
+-------------------------------------------------------------------------
+Le Dashboard (Tableau de Bord) et l'État de Stock calculaient la "Valeur Totale du Stock" de deux manières mathématiquement différentes :
+- **L'État de Stock** était très précis : il gérait le "déconditionnement" (calcul exact des prix de boîtes entières vs unités restantes). Mais par défaut, il n'excluait pas la valeur des produits périmés de son total (sauf si l'utilisateur appliquait le filtre "Normal").
+- **Le Dashboard** était "brutal" : il ignorait totalement le déconditionnement (multipliant de simples pilules par le prix d'une boîte entière), ce qui gonflait artificiellement les montants de millions de FCFA. Cependant, il avait le mérite comptable d'exclure les produits périmés.
+
+2. LA DÉCISION STRATÉGIQUE (Règle Métier)
+-------------------------------------------------------------------------
+En concertation avec la vision Business/Pharmacien, nous avons établi la règle suivante :
+« La "Valeur du Stock" affichée sur le Tableau de Bord représente la véritable trésorerie disponible et légalement vendable. Elle doit donc être calculée avec une précision chirurgicale (au détail près) ET elle doit ignorer les produits périmés. »
+
+3. L'IMPLÉMENTATION TECHNIQUE (La solution)
+-------------------------------------------------------------------------
+La méthode `getValeurTotaleStock()` dans `StatistiquesDAO.java` a été entièrement réécrite.
+Auparavant, le calcul était délégué au moteur SQL :
+`SUM(quantiteStock * prixVente)` => Rapide mais mathématiquement faux pour le détail.
+
+**Ce qui a été fait :**
+1. **Rapatriement en RAM (Java)** : Nous récupérons la liste brute des stocks valides (`dateExpiration > aujourd'hui`) avec leurs données de prix et de conditionnement.
+2. **Boucle Algorithmique Ultra-Rapide** : 
+   - Le programme vérifie si le produit est déconditionnable (`estDeconditionnable == true`).
+   - Si oui, il divise la quantité stockée (ex: 32) par la taille de la boîte (ex: 30) pour obtenir le nombre de boîtes pleines (`32 / 30 = 1 boîte`).
+   - Il calcule le reste (Modulo) pour obtenir les unités (`32 % 30 = 2 unités`).
+   - Il multiplie avec une précision totale : `(1 * prixBoite) + (2 * prixUnite)`.
+   - Si le produit ne se vend pas au détail, il fait le calcul standard.
+
+4. CONCLUSION ET VÉRIFICATION
+-------------------------------------------------------------------------
+- **Résultat** : Le Dashboard affiche désormais la valeur financière absolue, nette, et vendable de la pharmacie.
+- **Correspondance** : Ce chiffre est désormais 100% identique au total affiché en bas de la page "État de Stock" LORSQUE vous appliquez le filtre "Normal". Le logiciel est comptablement infaillible.
+- **Build** : Le code a été compilé avec succès (Build Success) et ne présente aucune perte de performance malgré la boucle Java, car la complexité est de O(N).

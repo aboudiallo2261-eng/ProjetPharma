@@ -148,7 +148,7 @@ public class VenteController {
     @FXML
     private Label lblTotalHistorique;
     @FXML
-    private ComboBox<Produit> cmbFiltreVenteProduit;
+    private javafx.scene.control.TextField txtFiltreVenteTicketId;
     @FXML
     private ComboBox<com.pharmacie.models.User> cmbFiltreVenteAgent;
     @FXML
@@ -228,13 +228,28 @@ public class VenteController {
             );
         }
 
-        // RESTAURATION DE L'ÉTAT GLOBOAL (SI RETOUR DE NAVIGATION)
+        // RESTAURATION DE L'ÉTAT GLOBAL (SI RETOUR DE NAVIGATION)
         Platform.runLater(() -> {
             mettreAJourBadgeTickets();
             if (SessionManager.isCaisseVerrouillee()) {
                 verrouillerSession();
             }
         });
+
+        // CHRONO: Purge automatique des tickets gelés > 30 min (Point 2)
+        javafx.animation.Timeline purgeChrono = new javafx.animation.Timeline(
+            new javafx.animation.KeyFrame(javafx.util.Duration.minutes(1), e -> {
+                java.time.LocalTime now = java.time.LocalTime.now();
+                boolean purged = SessionManager.getFileAttente().removeIf(t -> 
+                    java.time.temporal.ChronoUnit.MINUTES.between(t.getHeure(), now) > 30
+                );
+                if (purged) {
+                    mettreAJourBadgeTickets();
+                }
+            })
+        );
+        purgeChrono.setCycleCount(javafx.animation.Animation.INDEFINITE);
+        purgeChrono.play();
 
         tablePanierVente.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
             if (newSel != null) {
@@ -370,23 +385,13 @@ public class VenteController {
 
         checkSessionStatus();
 
-        // Charger les produits dans le filtre
-        javafx.collections.ObservableList<Produit> prods = FXCollections.observableArrayList();
-        prods.add(null);
-        prods.addAll(produitDAO.findAll());
-        cmbFiltreVenteProduit.setItems(prods);
-        cmbFiltreVenteProduit.setConverter(new javafx.util.StringConverter<Produit>() {
-            @Override
-            public String toString(Produit p) {
-                return p != null ? p.getNom() : "Tous les produits";
-            }
-
-            @Override
-            public Produit fromString(String s) {
-                return null;
-            }
-        });
-        com.pharmacie.utils.ComboBoxAutoComplete.setup(cmbFiltreVenteProduit);
+        // Charger les produits dans le filtre : REMPLACÉ PAR LA RECHERCHE TICKET ID (Point 3)
+        // L'UI utilisera txtFiltreVenteTicketId au lieu de cmbFiltreVenteProduit.
+        if (txtFiltreVenteTicketId != null) {
+            txtFiltreVenteTicketId.textProperty().addListener((obs, oldV, newV) -> {
+                if (!isUpdatingHistoriqueFiltres && !newV.equals(oldV)) filtrerHistorique();
+            });
+        }
 
         com.pharmacie.dao.UserDAO userFilterDAO = new com.pharmacie.dao.UserDAO();
         javafx.collections.ObservableList<com.pharmacie.models.User> agents = FXCollections.observableArrayList();
@@ -420,7 +425,7 @@ public class VenteController {
         javafx.event.EventHandler<javafx.event.ActionEvent> autoFilterEvent = e -> {
             if (!isUpdatingHistoriqueFiltres) filtrerHistorique();
         };
-        cmbFiltreVenteProduit.setOnAction(autoFilterEvent);
+        /* txtFiltreVenteTicketId a déjà un listener sur textProperty */
         cmbFiltreVenteAgent.setOnAction(autoFilterEvent);
         cmbFiltreVenteMode.setOnAction(autoFilterEvent);
         dpHistoDebut.setOnAction(autoFilterEvent);
@@ -602,140 +607,159 @@ public class VenteController {
     }
 
     /**
-     * Affiche la liste des tickets en attente et permet de les rappeler ou
-     * supprimer
+     * Affiche la liste des tickets en attente et permet de les rappeler ou supprimer.
+     * Point 7 : Un seul Dialog (plus de double popup) — les actions Rappeler/Supprimer
+     * sont directement dans le premier Dialog via un flag atomique.
      */
     @FXML
     public void voirTicketsEnAttente() {
         if (SessionManager.getFileAttente().isEmpty()) {
-            Alert a = new Alert(Alert.AlertType.INFORMATION, "Aucun ticket n'est en attente.");
-            a.setHeaderText("⏸ File d'Attente");
-            a.showAndWait();
+            com.pharmacie.utils.ToastService.showInfo(
+                boxVenteMain.getScene().getWindow(),
+                "File d'Attente",
+                "Aucun ticket n'est en attente."
+            );
             return;
         }
 
-        Dialog<TicketEnAttente> dialog = new Dialog<>();
-        dialog.setTitle("File d'Attente — Tickets Suspendus");
+        // --- Construction du Dialog unique ---
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("⏸ File d'Attente — Tickets Suspendus");
         dialog.setHeaderText(
-                "⏸ « " + SessionManager.getFileAttente().size() + " ticket(s) en attente » — Sélectionnez un ticket pour le rappeler");
+            SessionManager.getFileAttente().size() + " ticket(s) en attente  •  Sélectionnez puis choisissez une action");
 
-        ButtonType btnRappeler = new ButtonType("Rappeler ce Ticket", ButtonBar.ButtonData.OK_DONE);
+        // Boutons directs (pas de deuxième popup)
+        ButtonType btnRappeler  = new ButtonType("▶ Rappeler",  ButtonBar.ButtonData.OK_DONE);
         ButtonType btnSupprimer = new ButtonType("🗑 Supprimer", ButtonBar.ButtonData.LEFT);
-        ButtonType btnFermer = new ButtonType("Fermer", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType btnFermer    = new ButtonType("Fermer",       ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(btnRappeler, btnSupprimer, btnFermer);
 
+        // Style du bouton Supprimer en rouge pour le différencier visuellement
+        javafx.scene.Node nodeSupp = dialog.getDialogPane().lookupButton(btnSupprimer);
+        if (nodeSupp != null)
+            nodeSupp.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;");
+
+        // ListView stylisée
         javafx.scene.control.ListView<TicketEnAttente> listView = new javafx.scene.control.ListView<>();
         listView.getItems().addAll(SessionManager.getFileAttente());
         listView.getSelectionModel().selectFirst();
-        listView.setPrefHeight(200);
-        listView.setStyle("-fx-font-size: 14px;");
+        listView.setPrefHeight(220);
+        listView.setStyle("-fx-font-size: 14px; -fx-background-radius: 6;");
 
         dialog.getDialogPane().setContent(listView);
-        dialog.getDialogPane().setMinWidth(500);
+        dialog.getDialogPane().setMinWidth(520);
 
-        dialog.setResultConverter(btn -> {
-            if (btn == btnRappeler || btn == btnSupprimer)
-                return listView.getSelectionModel().getSelectedItem();
-            return null;
-        });
+        // Flag pour savoir quel bouton a été cliqué (évite le double popup)
+        final boolean[] doRappeler  = {false};
+        final boolean[] doSupprimer = {false};
 
-        dialog.showAndWait().ifPresent(selected -> {
-            if (selected == null)
-                return;
-            // Déterminer quel bouton a été cliqué via le type de bouton
-            // On réutilise l'implémentation via un deuxième dialogue simple
-            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-            confirm.setTitle("Ticket " + selected);
-            confirm.setHeaderText("Que voulez-vous faire avec ce ticket ?");
-            ButtonType r = new ButtonType("▶ Rappeler le ticket", ButtonBar.ButtonData.YES);
-            ButtonType s = new ButtonType("🗑 Supprimer (client absent)", ButtonBar.ButtonData.NO);
-            ButtonType c = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
-            confirm.getButtonTypes().setAll(r, s, c);
-            confirm.showAndWait().ifPresent(rep -> {
-                if (rep == r) {
-                    // Option 2 : Vérification à la volée du stock au moment du rappel
-                    if (!panier.isEmpty()) {
-                        Alert a = new Alert(Alert.AlertType.WARNING,
-                                "Votre panier actuel sera écrasé ! Voulez-vous continuer ?",
-                                ButtonType.OK, ButtonType.CANCEL);
-                        a.setHeaderText("Panier actuel non vide");
-                        if (a.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK)
-                            return;
+        dialog.getDialogPane().lookupButton(btnRappeler).addEventFilter(
+            javafx.event.ActionEvent.ACTION, e -> doRappeler[0]  = true
+        );
+        dialog.getDialogPane().lookupButton(btnSupprimer).addEventFilter(
+            javafx.event.ActionEvent.ACTION, e -> doSupprimer[0] = true
+        );
+
+        dialog.setResultConverter(btn -> null); // Void result — on utilise les flags
+
+        dialog.showAndWait();
+
+        TicketEnAttente selected = listView.getSelectionModel().getSelectedItem();
+        if (selected == null) return;
+
+        if (doRappeler[0]) {
+            // Vérification panier non vide → confirmation légère (1 seul dialog)
+            if (!panier.isEmpty()) {
+                Alert a = new Alert(Alert.AlertType.WARNING,
+                    "Votre panier actuel sera écrasé ! Voulez-vous continuer ?",
+                    ButtonType.OK, ButtonType.CANCEL);
+                a.setHeaderText("⚠️ Panier actuel non vide");
+                if (a.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) return;
+            }
+
+            // Vérification stock à la volée
+            boolean stockAjuste = false;
+            StringBuilder alertMsg = new StringBuilder();
+            java.util.List<LigneVente> lignesValables = new java.util.ArrayList<>();
+            java.util.Map<Long, Integer> qteDecompte = new java.util.HashMap<>();
+
+            for (LigneVente lv : selected.getLignes()) {
+                Long pId = lv.getProduit().getId();
+                int dispoDB     = calculerQteTotaleProduit(pId);
+                int dejaTraite  = qteDecompte.getOrDefault(pId, 0);
+                int dispoRestant = dispoDB - dejaTraite;
+
+                int baseReq = lv.getTypeUnite() == LigneVente.TypeUnite.BOITE_ENTIERE
+                        && lv.getProduit().getEstDeconditionnable() != null
+                        && lv.getProduit().getEstDeconditionnable()
+                                ? lv.getQuantiteVendue() * lv.getProduit().getUnitesParBoite()
+                                : lv.getQuantiteVendue();
+
+                if (baseReq > dispoRestant) {
+                    stockAjuste = true;
+                    if (dispoRestant <= 0) {
+                        alertMsg.append("- ").append(lv.getProduit().getNom())
+                                .append(" : en rupture (retiré).\n");
+                        continue;
                     }
 
-                    boolean stockAjuste = false;
-                    StringBuilder alertMsg = new StringBuilder();
-                    java.util.List<LigneVente> lignesValables = new java.util.ArrayList<>();
-                    java.util.Map<Long, Integer> qteDecompte = new java.util.HashMap<>();
+                    int newQte = lv.getTypeUnite() == LigneVente.TypeUnite.BOITE_ENTIERE
+                            && lv.getProduit().getEstDeconditionnable() != null
+                            && lv.getProduit().getEstDeconditionnable()
+                                    ? dispoRestant / lv.getProduit().getUnitesParBoite()
+                                    : dispoRestant;
 
-                    for (LigneVente lv : selected.getLignes()) {
-                        Long pId = lv.getProduit().getId();
-                        int dispoDB = calculerQteTotaleProduit(pId);
-                        int dejaTraite = qteDecompte.getOrDefault(pId, 0);
-                        int dispoRestant = dispoDB - dejaTraite;
-
-                        int baseReq = lv.getTypeUnite() == LigneVente.TypeUnite.BOITE_ENTIERE
-                                && lv.getProduit().getEstDeconditionnable() != null
-                                && lv.getProduit().getEstDeconditionnable()
-                                        ? lv.getQuantiteVendue() * lv.getProduit().getUnitesParBoite()
-                                        : lv.getQuantiteVendue();
-
-                        if (baseReq > dispoRestant) {
-                            stockAjuste = true;
-                            if (dispoRestant <= 0) {
-                                alertMsg.append("- ").append(lv.getProduit().getNom())
-                                        .append(" : en rupture (retiré).\n");
-                                continue;
-                            }
-
-                            // Ajustement à la baisse
-                            int newQte = lv.getTypeUnite() == LigneVente.TypeUnite.BOITE_ENTIERE
-                                    && lv.getProduit().getEstDeconditionnable() != null
-                                    && lv.getProduit().getEstDeconditionnable()
-                                            ? dispoRestant / lv.getProduit().getUnitesParBoite()
-                                            : dispoRestant;
-
-                            if (newQte <= 0) {
-                                alertMsg.append("- ").append(lv.getProduit().getNom())
-                                        .append(" : reste insuffisant pour 1 boîte (retiré).\n");
-                                continue;
-                            }
-
-                            lv.setQuantiteVendue(newQte);
-                            lv.setSousTotal(lv.getPrixUnitaire() * newQte);
-                            alertMsg.append("- ").append(lv.getProduit().getNom()).append(" : Qte réduite à ")
-                                    .append(newQte).append(".\n");
-                            baseReq = newQte * (lv.getTypeUnite() == LigneVente.TypeUnite.BOITE_ENTIERE
-                                    && lv.getProduit().getEstDeconditionnable() != null
-                                    && lv.getProduit().getEstDeconditionnable() ? lv.getProduit().getUnitesParBoite()
-                                            : 1);
-                        }
-
-                        qteDecompte.put(pId, dejaTraite + baseReq);
-                        lignesValables.add(lv);
+                    if (newQte <= 0) {
+                        alertMsg.append("- ").append(lv.getProduit().getNom())
+                                .append(" : reste insuffisant pour 1 boîte (retiré).\n");
+                        continue;
                     }
 
-                    panier.setAll(lignesValables);
-                    calculerTotalVente();
-                    SessionManager.getFileAttente().remove(selected);
-                    mettreAJourBadgeTickets();
-                    txtRechercheProduit.requestFocus();
-
-                    if (stockAjuste) {
-                        Alert aInfo = new Alert(Alert.AlertType.WARNING,
-                                "Certains stocks ont changé pendant l'attente du ticket :\n\n" + alertMsg.toString(),
-                                ButtonType.OK);
-                        aInfo.setHeaderText("Ajustement de stock nécessaire");
-                        aInfo.showAndWait();
-                    }
-                } else if (rep == s) {
-                    // Suppression propre (pas d'impact stock)
-                    SessionManager.getFileAttente().remove(selected);
-                    mettreAJourBadgeTickets();
+                    lv.setQuantiteVendue(newQte);
+                    lv.setSousTotal(lv.getPrixUnitaire() * newQte);
+                    alertMsg.append("- ").append(lv.getProduit().getNom())
+                            .append(" : Qte réduite à ").append(newQte).append(".\n");
+                    baseReq = newQte * (lv.getTypeUnite() == LigneVente.TypeUnite.BOITE_ENTIERE
+                            && lv.getProduit().getEstDeconditionnable() != null
+                            && lv.getProduit().getEstDeconditionnable()
+                                    ? lv.getProduit().getUnitesParBoite() : 1);
                 }
-            });
-        });
+
+                qteDecompte.put(pId, dejaTraite + baseReq);
+                lignesValables.add(lv);
+            }
+
+            panier.setAll(lignesValables);
+            calculerTotalVente();
+            SessionManager.getFileAttente().remove(selected);
+            mettreAJourBadgeTickets();
+            txtRechercheProduit.requestFocus();
+            com.pharmacie.utils.ToastService.showSuccess(
+                boxVenteMain.getScene().getWindow(),
+                "Ticket Rappelé",
+                "Le ticket a été restauré dans le panier."
+            );
+
+            if (stockAjuste) {
+                Alert aInfo = new Alert(Alert.AlertType.WARNING,
+                    "Certains stocks ont changé pendant l'attente :\n\n" + alertMsg,
+                    ButtonType.OK);
+                aInfo.setHeaderText("⚠️ Ajustement de stock nécessaire");
+                aInfo.showAndWait();
+            }
+
+        } else if (doSupprimer[0]) {
+            // Suppression propre — pas d'impact stock
+            SessionManager.getFileAttente().remove(selected);
+            mettreAJourBadgeTickets();
+            com.pharmacie.utils.ToastService.showInfo(
+                boxVenteMain.getScene().getWindow(),
+                "Ticket Supprimé",
+                "Le ticket a été retiré de la file d'attente."
+            );
+        }
     }
+
 
     @FXML
     public void verrouillerSession() {
@@ -756,6 +780,9 @@ public class VenteController {
         btnCloturerCaisse.setManaged(false);
         btnVerrouiller.setVisible(false);
         btnVerrouiller.setManaged(false);
+        // Point 3 : Masquer aussi les Tickets en Attente (inutile quand la caisse est verrouillée)
+        btnTicketsEnAttente.setVisible(false);
+        btnTicketsEnAttente.setManaged(false);
         
         // P2.A: Réinitialisation propre à la fermeture
         if (txtPinVisible.isVisible()) {
@@ -812,6 +839,9 @@ public class VenteController {
             btnCloturerCaisse.setManaged(true);
             btnVerrouiller.setVisible(true);
             btnVerrouiller.setManaged(true);
+            // Point 3 : Rétablir le bouton Tickets en Attente au déverrouillage
+            btnTicketsEnAttente.setVisible(true);
+            btnTicketsEnAttente.setManaged(true);
             lblStatutSession.setText("Caisse: OUVERTE");
             lblStatutSession.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #27ae60;");
             txtRechercheProduit.requestFocus();
@@ -948,15 +978,29 @@ public class VenteController {
 
         Dialog<ClotureResult> dialog = new Dialog<>();
         dialog.setTitle("Clôture de Caisse (Z)");
-        dialog.setHeaderText("🛑 Arrêt de la Caisse et Comptage Mixte");
+        // Point 8 : Header premium via DialogPane
+        dialog.getDialogPane().setStyle("-fx-background-color: white;");
 
-        ButtonType btnValider = new ButtonType("Clôturer Définitivement", ButtonBar.ButtonData.OK_DONE);
+        ButtonType btnValider = new ButtonType("Clôturer", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(btnValider, ButtonType.CANCEL);
+        // Couleur rouge danger pour le bouton de clôture
+        Platform.runLater(() -> {
+            javafx.scene.Node vBtn = dialog.getDialogPane().lookupButton(btnValider);
+            if (vBtn != null) vBtn.setStyle("-fx-background-color: #E74C3C; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 7 25; -fx-min-width: 120px;");
+        });
 
-        javafx.scene.layout.VBox vbox = new javafx.scene.layout.VBox(20);
+        javafx.scene.layout.VBox vbox = new javafx.scene.layout.VBox(16);
         vbox.setPadding(new javafx.geometry.Insets(20));
+        vbox.setMinWidth(480);
 
-        // Compter les ventes MIXTES pour affichage informatif
+        // Point 8 : Sections visuelles differenciees Especes / Mobile
+        double ventesPuresEsp = ventesSession.stream()
+                .filter(v -> v.getModePaiement() == Vente.ModePaiement.ESPECES)
+                .mapToDouble(Vente::getTotal).sum();
+        double ventesPuresMob = ventesSession.stream()
+                .filter(v -> v.getModePaiement() == Vente.ModePaiement.MOBILE_MONEY)
+                .mapToDouble(Vente::getTotal).sum();
+        // Variables MIXTES (réinjectées après refactoring)
         long nbMixtes = ventesSession.stream()
                 .filter(v -> v.getModePaiement() == Vente.ModePaiement.MIXTE)
                 .count();
@@ -967,50 +1011,73 @@ public class VenteController {
                 .filter(v -> v.getModePaiement() == Vente.ModePaiement.MIXTE)
                 .mapToDouble(v -> v.getMontantMobile() != null ? v.getMontantMobile() : 0.0).sum();
 
-        javafx.scene.layout.VBox summaryBox = new javafx.scene.layout.VBox(5);
-        summaryBox.setStyle("-fx-background-color: #ECF0F1; -fx-padding: 15; -fx-background-radius: 5;");
+        // SECTION ESPECES (fond orange)
+        javafx.scene.layout.VBox sectionEsp = new javafx.scene.layout.VBox(5);
+        sectionEsp.setStyle("-fx-background-color: #FFF9F0; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #e67e22; -fx-border-width: 1.5; -fx-border-radius: 8;");
+        Label espTitle = new Label("Tiroir Caisse - Especes");
+        espTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #e67e22;");
+        Label espFond = new Label(String.format("  Fond de caisse initial :     %,.0f FCFA", currentSession.getFondDeCaisse()));
+        Label espPures = new Label(String.format("  Ventes especes (pures) :    %,.0f FCFA", ventesPuresEsp));
+        Label espMixtes = new Label(String.format("  Part especes (%d mixtes) :  %,.0f FCFA", nbMixtes, totalMixtesEsp));
+        espMixtes.setStyle("-fx-text-fill: #d35400;");
+        Label espAttendu = new Label(String.format("  ATTENDU DANS LE TIROIR :   %,.0f FCFA", theorieEspeces));
+        espAttendu.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #2980b9;");
+        sectionEsp.getChildren().addAll(espTitle, espFond, espPures, espMixtes, new javafx.scene.control.Separator(), espAttendu);
 
-        Label l1 = new Label(
-                "Fond de Caisse initial : " + String.format("%.0f", currentSession.getFondDeCaisse()) + " FCFA");
-        Label l2 = new Label("Ventes Espèces (pures) : " + String.format("%.0f",
-                ventesSession.stream().filter(v -> v.getModePaiement() == Vente.ModePaiement.ESPECES)
-                        .mapToDouble(Vente::getTotal).sum()) + " FCFA");
+        // SECTION MOBILE (fond violet)
+        javafx.scene.layout.VBox sectionMob = new javafx.scene.layout.VBox(5);
+        sectionMob.setStyle("-fx-background-color: #F5F0FB; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #8e44ad; -fx-border-width: 1.5; -fx-border-radius: 8;");
+        Label mobTitle = new Label("Mobile Money - Digital");
+        mobTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #8e44ad;");
+        Label mobPures = new Label(String.format("  Ventes mobile (pures) :   %,.0f FCFA", ventesPuresMob));
+        Label mobMixtes = new Label(String.format("  Part mobile (%d mixtes) : %,.0f FCFA", nbMixtes, totalMixtesMob));
+        mobMixtes.setStyle("-fx-text-fill: #7d3c98;");
+        Label mobAttendu = new Label(String.format("  TOTAL MOBILE ENCAISSE :   %,.0f FCFA", totalMobile));
+        mobAttendu.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #8e44ad;");
+        Label mobAuto = new Label("  (Automatiquement valide - aucune saisie requise)");
+        mobAuto.setStyle("-fx-text-fill: #95a5a6; -fx-font-style: italic; -fx-font-size: 11px;");
+        sectionMob.getChildren().addAll(mobTitle, mobPures, mobMixtes, new javafx.scene.control.Separator(), mobAttendu, mobAuto);
 
-        Label lMixte = new Label(String.format("Ventes MIXTES (%d ticket(s)) : +%.0f Esp. / +%.0f Mobile",
-                nbMixtes, totalMixtesEsp, totalMixtesMob));
-        lMixte.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold;");
-
-        Label l4 = new Label("Ventes Mobile Money (pures) : " + String.format("%.0f",
-                ventesSession.stream().filter(v -> v.getModePaiement() == Vente.ModePaiement.MOBILE_MONEY)
-                        .mapToDouble(Vente::getTotal).sum()) + " FCFA");
-        l4.setStyle("-fx-text-fill: #8e44ad; -fx-font-weight: bold;");
-
-        Label l3 = new Label("MONTANT PHYSIQUE ATTENDU (Tiroir) : " + String.format("%.0f", theorieEspeces) + " FCFA");
-        l3.setStyle("-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #2980b9; -fx-padding: 10 0 5 0;");
-
-        summaryBox.getChildren().addAll(l1, l2, lMixte, l4, new javafx.scene.control.Separator(), l3);
-
-        // SECTION INPUT
-        javafx.scene.layout.GridPane inputGrid = new javafx.scene.layout.GridPane();
-        inputGrid.setHgap(15);
-        inputGrid.setVgap(15);
-
-        Label lblEspece = new Label("Argent Physique (Tiroir) :");
-        lblEspece.setStyle("-fx-font-weight: bold;");
+        // SECTION INPUT COMPTAGE PHYSIQUE
+        javafx.scene.layout.VBox sectionInput = new javafx.scene.layout.VBox(8);
+        sectionInput.setStyle("-fx-background-color: #F0F8FF; -fx-padding: 14; -fx-background-radius: 8; -fx-border-color: #2980b9; -fx-border-width: 1.5; -fx-border-radius: 8;");
+        Label inputTitle = new Label("Saisie du Comptage Physique");
+        inputTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #2980b9;");
+        Label inputHint = new Label("Comptez les billets et pieces du tiroir, puis entrez le total :");
+        inputHint.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 11px;");
         TextField txtDeclareEspeces = new TextField();
-        txtDeclareEspeces.setPromptText("Montant Réel Tiroir");
-        txtDeclareEspeces.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #e67e22;");
+        txtDeclareEspeces.setPromptText("Ex: 125000");
+        txtDeclareEspeces.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2C3E50; -fx-padding: 8 12; -fx-background-radius: 5;");
+        
+        Label lblDynamicEcart = new Label("");
+        lblDynamicEcart.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
 
-        // Force numeric inputs
-        txtDeclareEspeces.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal.matches("\\d*"))
-                txtDeclareEspeces.setText(newVal.replaceAll("[^\\d]", ""));
+        // Point 4 : TextFormatter - chiffres uniquement
+        txtDeclareEspeces.setTextFormatter(new javafx.scene.control.TextFormatter<>(change -> {
+            String txt = change.getText();
+            return (txt.isEmpty() || txt.matches("[0-9]+")) ? change : null;
+        }));
+
+        txtDeclareEspeces.textProperty().addListener((obs, oldV, newV) -> {
+            if (newV.isEmpty()) {
+                lblDynamicEcart.setText("");
+            } else {
+                try {
+                    double declare = Double.parseDouble(newV);
+                    double ecart = declare - theorieEspeces;
+                    String signe = ecart >= 0 ? "+" : "";
+                    String color = ecart == 0 ? "#27ae60" : (ecart > 0 ? "#2980b9" : "#c0392b");
+                    lblDynamicEcart.setText(String.format("Écart : %s%,.0f FCFA", signe, ecart));
+                    lblDynamicEcart.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: " + color + ";");
+                } catch (Exception e) {
+                    lblDynamicEcart.setText("");
+                }
+            }
         });
 
-        inputGrid.add(lblEspece, 0, 0);
-        inputGrid.add(txtDeclareEspeces, 1, 0);
+        sectionInput.getChildren().addAll(inputTitle, inputHint, txtDeclareEspeces, lblDynamicEcart);
 
-        vbox.getChildren().addAll(summaryBox, inputGrid);
+        vbox.getChildren().addAll(sectionEsp, sectionMob, sectionInput);
 
         dialog.getDialogPane().setContent(vbox);
         Platform.runLater(() -> txtDeclareEspeces.requestFocus());
@@ -1048,22 +1115,52 @@ public class VenteController {
 
             sessionDAO.update(currentSession);
 
-            Alert info = new Alert(Alert.AlertType.INFORMATION);
-            info.setTitle("Bilan de la Clôture");
-            info.setHeaderText("✅ Caisse Fermée avec succès !");
+            // Point 8 : BILAN PREMIUM post-cloture
+            Dialog<ButtonType> bilanDialog = new Dialog<>();
+            bilanDialog.setTitle("Bilan de Cloture - Journal Z");
+            javafx.scene.layout.VBox bilanContent = new javafx.scene.layout.VBox(14);
+            bilanContent.setPadding(new javafx.geometry.Insets(20));
+            bilanContent.setMinWidth(440);
 
-            StringBuilder msg = new StringBuilder();
-            msg.append("--- BILAN PHYSIQUE (TIROIR) ---\n");
-            msg.append("Déclaré : ").append(String.format("%.0f", result.especes)).append(" FCFA\n");
-            msg.append("Écart : ").append(String.format("%.0f", ecartEspeces)).append(" FCFA\n\n");
+            Label bilanHdr = new Label("Caisse Fermee avec Succes");
+            bilanHdr.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #27ae60;");
 
-            msg.append("--- BILAN MOBILE MONEY ---\n");
-            msg.append("Total encaissé numériquement : ").append(String.format("%.0f", totalMobile))
-                    .append(" FCFA\n\n");
+            // BILAN ESPECES
+            javafx.scene.layout.VBox bilanEsp = new javafx.scene.layout.VBox(5);
+            bilanEsp.setStyle("-fx-background-color: #FFF9F0; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #e67e22; -fx-border-width: 1.5; -fx-border-radius: 8;");
+            Label bilanEspTitle = new Label("Tiroir Caisse - Bilan Especes");
+            bilanEspTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: #e67e22;");
+            Label bilanAtt = new Label(String.format("  Theorique attendu :  %,.0f FCFA", theorieEspeces));
+            Label bilanDec = new Label(String.format("  Compte reellement :  %,.0f FCFA", result.especes));
+            bilanDec.setStyle("-fx-font-weight: bold;");
+            double ecartEsp = result.especes - theorieEspeces;
+            Label bilanEcart = new Label(String.format("  Ecart :              %s%,.0f FCFA", ecartEsp >= 0 ? "+" : "", ecartEsp));
+            bilanEcart.setStyle("-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: "
+                    + (ecartEsp < -0.5 ? "#c0392b" : ecartEsp > 0.5 ? "#27ae60" : "#7f8c8d") + ";");
+            bilanEsp.getChildren().addAll(bilanEspTitle, bilanAtt, bilanDec, new javafx.scene.control.Separator(), bilanEcart);
 
-            msg.append("Le journal Z a été archivé dans l'historique.");
-            info.setContentText(msg.toString());
-            info.showAndWait();
+            // BILAN MOBILE
+            javafx.scene.layout.VBox bilanMob = new javafx.scene.layout.VBox(5);
+            bilanMob.setStyle("-fx-background-color: #F5F0FB; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #8e44ad; -fx-border-width: 1.5; -fx-border-radius: 8;");
+            Label bilanMobTitle = new Label("Mobile Money - Bilan Digital");
+            bilanMobTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: #8e44ad;");
+            Label bilanMobAmt = new Label(String.format("  Total encaisse numeriquement :  %,.0f FCFA", totalMobile));
+            bilanMobAmt.setStyle("-fx-font-weight: bold;");
+            Label bilanMobOk = new Label("  Ecart : 0 FCFA  (Tracabilite digitale garantie)");
+            bilanMobOk.setStyle("-fx-text-fill: #27ae60; -fx-font-style: italic;");
+            bilanMob.getChildren().addAll(bilanMobTitle, bilanMobAmt, bilanMobOk);
+
+            Label bilanFooter = new Label("Journal Z archive dans Rapports > Historique des Clotures.");
+            bilanFooter.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 11px; -fx-font-style: italic;");
+
+            bilanContent.getChildren().addAll(bilanHdr, bilanEsp, bilanMob, bilanFooter);
+            bilanDialog.getDialogPane().setContent(bilanContent);
+            bilanDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+            Platform.runLater(() -> {
+                javafx.scene.Node okBtn = bilanDialog.getDialogPane().lookupButton(ButtonType.OK);
+                if (okBtn != null) okBtn.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 22;");
+            });
+            bilanDialog.showAndWait();
 
             logger.info("Clôture Z : Espèces attendues={} FCFA | Mobile attendu={} FCFA | Écart caisse={} FCFA",
                     String.format("%.0f", theorieEspeces), String.format("%.0f", totalMobile),
@@ -1125,8 +1222,32 @@ public class VenteController {
         colPanVenteProd.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getProduit().getNom()));
 
         colPanVenteQte.setCellValueFactory(new PropertyValueFactory<>("quantiteVendue"));
-        colPanVenteQte
-                .setCellFactory(TextFieldTableCell.forTableColumn(new javafx.util.converter.IntegerStringConverter()));
+        // Point 4 : CellFactory avec TextFormatter pour n'accepter QUE des chiffres positifs
+        colPanVenteQte.setCellFactory(col -> {
+            TextFieldTableCell<LigneVente, Integer> cell = new TextFieldTableCell<>(new javafx.util.converter.IntegerStringConverter() {
+                @Override public Integer fromString(String s) {
+                    if (s == null || s.isBlank()) return 0;
+                    try { return Math.max(0, Integer.parseInt(s.trim())); }
+                    catch (NumberFormatException e) { return 0; }
+                }
+            }) {
+                @Override
+                public void startEdit() {
+                    super.startEdit();
+                    // Appliquer le TextFormatter APRES que JavaFX a cree le TextField
+                    javafx.application.Platform.runLater(() -> {
+                        javafx.scene.Node g = getGraphic();
+                        if (g instanceof javafx.scene.control.TextField tf) {
+                            tf.setTextFormatter(new javafx.scene.control.TextFormatter<>(change -> {
+                                String txt = change.getText();
+                                return (txt.isEmpty() || txt.matches("[0-9]+")) ? change : null;
+                            }));
+                        }
+                    });
+                }
+            };
+            return cell;
+        });
         colPanVenteQte.setOnEditCommit(e -> {
             LigneVente ligne = e.getRowValue();
             int newQte = e.getNewValue();
@@ -1211,6 +1332,20 @@ public class VenteController {
     private void loadStockDispo() {
         tousLesProduitsCache = produitDAO.findAll();
         rebuildStockCache(); // 1 seule requête pour tout le stock
+        
+        // Point 7 (Phase 2): Tri intelligent (Disponibilité > 0 d'abord, puis Quantité décroissante, puis nom alphabétique)
+        tousLesProduitsCache.sort((p1, p2) -> {
+            int q1 = stockCache.getOrDefault(p1.getId(), 0);
+            int q2 = stockCache.getOrDefault(p2.getId(), 0);
+            boolean hasStock1 = q1 > 0;
+            boolean hasStock2 = q2 > 0;
+            
+            if (hasStock1 && !hasStock2) return -1;
+            if (!hasStock1 && hasStock2) return 1;
+            if (q1 != q2) return Integer.compare(q2, q1); // décroissant
+            return p1.getNom().compareToIgnoreCase(p2.getNom());
+        });
+        
         tableStock.setItems(FXCollections.observableArrayList(tousLesProduitsCache));
     }
 
@@ -1756,8 +1891,8 @@ public class VenteController {
             dpHistoDebut.setValue(java.time.LocalDate.now());
         if (dpHistoFin != null)
             dpHistoFin.setValue(java.time.LocalDate.now());
-        if (cmbFiltreVenteProduit != null)
-            cmbFiltreVenteProduit.getSelectionModel().select(0);
+        if (txtFiltreVenteTicketId != null)
+            txtFiltreVenteTicketId.clear();
         if (cmbFiltreVenteAgent != null)
             cmbFiltreVenteAgent.getSelectionModel().select(0);
         if (cmbFiltreVenteMode != null)
@@ -1779,7 +1914,14 @@ public class VenteController {
     public void filtrerHistorique() {
         LocalDate d = dpHistoDebut.getValue();
         LocalDate f = dpHistoFin.getValue();
-        Produit produitFiltre = cmbFiltreVenteProduit.getValue();
+        Long ticketId = null;
+        if (txtFiltreVenteTicketId != null && !txtFiltreVenteTicketId.getText().trim().isEmpty()) {
+            try {
+                ticketId = Long.parseLong(txtFiltreVenteTicketId.getText().trim());
+            } catch (NumberFormatException e) {
+                // Ignore and don't filter if it's not a valid number
+            }
+        }
         com.pharmacie.models.User agentFiltre = cmbFiltreVenteAgent.getValue();
         com.pharmacie.models.Vente.ModePaiement modeFiltre = cmbFiltreVenteMode.getValue();
 
@@ -1788,7 +1930,7 @@ public class VenteController {
         LocalDateTime fin = f != null ? f.atTime(23, 59, 59) : LocalDateTime.of(2100, 1, 1, 23, 59);
 
         // Recherche optimisée directement sur le Serveur de Base de données
-        List<Vente> filtered = venteDAO.findVentesByPeriode(debut, fin, produitFiltre, agentFiltre, modeFiltre);
+        List<Vente> filtered = venteDAO.findVentesByPeriode(debut, fin, ticketId, agentFiltre, modeFiltre);
 
         tableHistoriqueVentes.setItems(FXCollections.observableArrayList(filtered));
         mettreAJourTotalFiltre(filtered);

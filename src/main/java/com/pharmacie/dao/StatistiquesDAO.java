@@ -99,6 +99,21 @@ public class StatistiquesDAO {
         }
     }
 
+    /**
+     * Évolution horaire du Chiffre d'Affaires (pour la période "Aujourd'hui" ou sur une seule journée).
+     */
+    public List<Object[]> getEvolutionCAHoraire(LocalDateTime debut, LocalDateTime fin) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT hour(v.dateVente), SUM(v.total) FROM Vente v " +
+                         "WHERE v.dateVente BETWEEN :debut AND :fin " +
+                         "GROUP BY hour(v.dateVente) ORDER BY hour(v.dateVente) ASC";
+            Query<Object[]> query = session.createQuery(hql, Object[].class);
+            query.setParameter("debut", debut);
+            query.setParameter("fin", fin);
+            return query.list();
+        }
+    }
+
     public List<Object[]> getEvolutionCAMensuelle(LocalDateTime debut, LocalDateTime fin) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT year(v.dateVente), month(v.dateVente), SUM(v.total) FROM Vente v " +
@@ -161,13 +176,36 @@ public class StatistiquesDAO {
     public Double getValeurTotaleStock(LocalDate today) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql =
-                "SELECT SUM(l.quantiteStock * COALESCE(l.produit.prixVente, 0)) FROM Lot l " +
+                "SELECT l.quantiteStock, p.estDeconditionnable, p.unitesParBoite, p.prixVente, p.prixVenteUnite " +
+                "FROM Lot l JOIN l.produit p " +
                 "WHERE l.quantiteStock > 0 " +
-                "  AND (l.dateExpiration IS NULL OR l.dateExpiration > :today)";
-            Double res = session.createQuery(hql, Double.class)
+                "  AND (l.dateExpiration IS NULL OR l.dateExpiration >= :today)";
+            
+            List<Object[]> rows = session.createQuery(hql, Object[].class)
                 .setParameter("today", today)
-                .uniqueResult();
-            return res != null ? res : 0.0;
+                .list();
+                
+            double total = 0.0;
+            for (Object[] row : rows) {
+                Integer qte = (Integer) row[0];
+                Boolean decond = (Boolean) row[1];
+                Integer unitesParBoite = (Integer) row[2];
+                Double prixBoite = (Double) row[3];
+                Double prixUnite = (Double) row[4];
+                
+                if (qte == null) qte = 0;
+                if (prixBoite == null) prixBoite = 0.0;
+                if (prixUnite == null) prixUnite = 0.0;
+                
+                if (Boolean.TRUE.equals(decond) && unitesParBoite != null && unitesParBoite > 0) {
+                    int boites = qte / unitesParBoite;
+                    int unites = qte % unitesParBoite;
+                    total += (boites * prixBoite) + (unites * prixUnite);
+                } else {
+                    total += qte * prixBoite;
+                }
+            }
+            return total;
         }
     }
 
@@ -217,6 +255,23 @@ public class StatistiquesDAO {
                 "FROM LigneAchat la JOIN la.achat a " +
                 "WHERE a.dateAchat BETWEEN :debut AND :fin " +
                 "GROUP BY cast(a.dateAchat as date) ORDER BY cast(a.dateAchat as date) ASC";
+            return session.createQuery(hql, Object[].class)
+                .setParameter("debut", debut)
+                .setParameter("fin", fin)
+                .list();
+        }
+    }
+
+    /**
+     * Évolution horaire des coûts d'achats (pour la période "Aujourd'hui" ou sur une seule journée).
+     */
+    public List<Object[]> getEvolutionCoutsAchatsHoraire(LocalDateTime debut, LocalDateTime fin) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql =
+                "SELECT hour(a.dateAchat), SUM(la.prixUnitaire * la.quantiteAchetee) " +
+                "FROM LigneAchat la JOIN la.achat a " +
+                "WHERE a.dateAchat BETWEEN :debut AND :fin " +
+                "GROUP BY hour(a.dateAchat) ORDER BY hour(a.dateAchat) ASC";
             return session.createQuery(hql, Object[].class)
                 .setParameter("debut", debut)
                 .setParameter("fin", fin)

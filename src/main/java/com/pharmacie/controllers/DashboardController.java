@@ -176,9 +176,14 @@ public class DashboardController {
 
                 // ── Charts ──────────────────────────────────────────
                 data.mensuel = mensuel;
-                if (mensuel) {
+                data.horaire = !mensuel && debut.toLocalDate().isEqual(fin.toLocalDate());
+                
+                if (data.mensuel) {
                     data.evolutionCA     = statsDAO.getEvolutionCAMensuelle(debut, fin);
                     data.evolutionAchats = statsDAO.getEvolutionCoutsAchatsMensuelle(debut, fin);
+                } else if (data.horaire) {
+                    data.evolutionCA     = statsDAO.getEvolutionCAHoraire(debut, fin);
+                    data.evolutionAchats = statsDAO.getEvolutionCoutsAchatsHoraire(debut, fin);
                 } else {
                     data.evolutionCA     = statsDAO.getEvolutionCA(debut, fin);
                     data.evolutionAchats = statsDAO.getEvolutionCoutsAchats(debut, fin);
@@ -304,6 +309,15 @@ public class DashboardController {
                 String label = String.format("%02d/%d",
                     ((Number) row[1]).intValue(), ((Number) row[0]).intValue());
                 seriesAchats.getData().add(new XYChart.Data<>(label, (Number) row[2]));
+            }
+        } else if (data.horaire) {
+            for (Object[] row : data.evolutionCA) {
+                String label = String.format("%02dh", ((Number) row[0]).intValue());
+                seriesCA.getData().add(new XYChart.Data<>(label, (Number) row[1]));
+            }
+            for (Object[] row : data.evolutionAchats) {
+                String label = String.format("%02dh", ((Number) row[0]).intValue());
+                seriesAchats.getData().add(new XYChart.Data<>(label, (Number) row[1]));
             }
         } else {
             for (Object[] row : data.evolutionCA)
@@ -452,6 +466,7 @@ public class DashboardController {
         long[]          alertesKPI           = {0, 0};
         List<Object[]>  ventilationPaiement;
         boolean         mensuel;
+        boolean         horaire;
         List<Object[]>  evolutionCA, evolutionAchats;
         List<Object[]>  catData, espData, topData, pertesData;
     }

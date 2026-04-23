@@ -90,7 +90,8 @@
                                 <Region HBox.hgrow="ALWAYS"/>
                                 <Button fx:id="btnMettreEnAttente" text="⏸ Attente" onAction="#mettreEnAttente"
                                         style="-fx-background-color: #F39C12; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 4 8; -fx-background-radius: 6; -fx-font-size: 12px;"/>
-                                <Button fx:id="btnRetirerDuPanier" text="🗑 Retirer" onAction="#retirerDuPanier"
+
+                                <Button fx:id="btnRetirerDuPanier" text="✖ Retirer" onAction="#retirerDuPanier"
                                         style="-fx-background-color: #BDC3C7; -fx-text-fill: white; -fx-padding: 4 8; -fx-font-size: 12px; -fx-background-radius: 6;"/>
                             </HBox>
                             
@@ -188,8 +189,8 @@
                         <DatePicker fx:id="dpHistoFin" promptText="Fin" prefWidth="130"/>
                     </HBox>
 
-                    <Label text="Produit :" GridPane.columnIndex="2" GridPane.rowIndex="0" style="-fx-font-weight: bold; -fx-text-fill: #7f8c8d;"/>
-                    <ComboBox fx:id="cmbFiltreVenteProduit" promptText="Tous les produits" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                    <Label text="ID Ticket :" GridPane.columnIndex="2" GridPane.rowIndex="0" style="-fx-font-weight: bold; -fx-text-fill: #7f8c8d;"/>
+                    <TextField fx:id="txtFiltreVenteTicketId" promptText="N° de Ticket..." maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
 
                     <Button text="🔍 Filtrer" onAction="#filtrerHistorique" styleClass="button-primary" style="-fx-padding: 8 25; -fx-font-size: 13px;" GridPane.columnIndex="5" GridPane.rowIndex="0"/>
 
@@ -205,6 +206,17 @@
 
                 <!-- Tableau Historique -->
                 <VBox VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                    <!-- Point 2 : Barre d'actions EN HAUT du tableau (pattern cohérent avec Ajustements) -->
+                    <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 0 0 10 0;">
+                        <Button fx:id="btnReimprimerRecu" text="🖨 Réimprimer le Reçu" onAction="#reimprimerRecuHistorique" disable="true"
+                                style="-fx-background-color: #2980B9; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6;"/>
+                        <Button fx:id="btnVoirDetailsVente" text="👁 Voir Détails" onAction="#showSelectedVenteDetail" disable="true"
+                                style="-fx-background-color: #F39C12; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label text="Total : " style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                        <Label fx:id="lblTotalHistorique" text="0 FCFA" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #18BC9C;"/>
+                        <Button text="🖨 Imprimer Récapitulatif PDF" onAction="#imprimerHistoriquePdf" style="-fx-background-color: #8E44AD; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6;"/>
+                    </HBox>
                     <TableView fx:id="tableHistoriqueVentes" VBox.vgrow="ALWAYS" style="-fx-border-color: #BDC3C7;">
                         <placeholder>
                             <Label text="📭 Aucune vente enregistrée pour cette période." style="-fx-text-fill: #95a5a6; -fx-font-style: italic; -fx-font-size: 14px;" />
@@ -218,15 +230,6 @@
                             <TableColumn fx:id="colHistVenteTotal" text="Total (FCFA)" prefWidth="120"/>
                         </columns>
                     </TableView>
-                    <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 10 0 0 0;">
-                        <Button fx:id="btnReimprimerRecu" text="🖨 Réimprimer le Reçu" onAction="#reimprimerRecuHistorique" disable="true"
-                                style="-fx-background-color: #2980B9; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6;"/>
-                        <Button fx:id="btnVoirDetailsVente" text="👁️ Voir Détails" onAction="#showSelectedVenteDetail" disable="true" style="-fx-background-color: #F39C12; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6;"/>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Label text="Total : " style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
-                        <Label fx:id="lblTotalHistorique" text="0 FCFA" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #18BC9C;"/>
-                        <Button text="🖨 Imprimer Récapitulatif PDF" onAction="#imprimerHistoriquePdf" style="-fx-background-color: #8E44AD; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6;"/>
-                    </HBox>
                 </VBox>
             </VBox>
         </Tab>

@@ -1,0 +1,29 @@
+RAPPORT D'INGÉNIERIE : PHASE 3 (Tableau de bord et État de stock)
+===================================================================
+
+1. NATURE DES DEMANDES (PHASE 3)
+--------------------------------------------------
+Le client a demandé deux optimisations fonctionnelles poussées :
+- Point 1 : Intégrer les colonnes d'achats (Quantité Initiale, Prix d'Achat Boîte, Prix d'Achat Unité) directement dans le tableau d'État des Stocks, sans détruire les performances.
+- Point 9 : Modifier le comportement du Graphique d'Évolution (Tableau de Bord) pour qu'il affiche les données "Heure par Heure" lorsque le filtre est réglé sur "Aujourd'hui".
+
+2. DÉFIS ARCHITECTURAUX ET SOLUTION (ŒIL DE LYNX)
+--------------------------------------------------
+
+### A. Les colonnes d'achats (Stock)
+- Le DTO d'état de stock est lié aux "Lots" et non aux "Lignes d'Achats". Ramener les historiques d'achats par lot nécessitait théoriquement une jointure complexe pouvant créer un goulot d'étranglement (N+1 Selects) si des milliers de produits sont affichés.
+- SOLUTION : Au lieu de requêter la base pour chaque ligne du tableau, j'ai implémenté une unique requête SQL "Group by" (`SELECT la.lot.id, la.quantiteAchetee FROM LigneAchat la`) au chargement. Cette requête est stockée dans un dictionnaire `HashMap` en RAM (temps d'accès O(1)). Les prix d'achats sont directement extrapolés depuis la table Produit (calcul du prix au détail dynamiquement).
+- RÉSULTAT : Le tableau s'affiche instantanément, avec 3 nouvelles colonnes (`colStockAchatInitial`, `colStockPAchatBoite`, `colStockPAchatUnite`), sans la moindre perte de performance.
+
+### B. Graphique Dashboard (Heure par Heure)
+- Le modèle de données ne prévoyait que deux vues : Mensuelle (si l'écart entre les dates dépassait 31 jours) et Quotidienne (Regroupement `cast(date as date)`).
+- SOLUTION : J'ai ajouté une logique booléenne `data.horaire` qui s'active automatiquement si `debut == fin`. J'ai créé deux nouvelles requêtes HQL dans `StatistiquesDAO` utilisant la fonction native SQL `hour(date)`.
+- RÉSULTAT : Lorsque le vétérinaire choisit "Aujourd'hui", l'axe des abscisses (X) passe d'un format "JJ/MM/AAAA" à un format "08h", "09h", "10h", offrant une vue chirurgicale de l'affluence du jour en cours.
+
+3. SÉCURITÉ ET DESIGN UI/UX
+--------------------------------------------------
+- La taille des nouvelles colonnes a été fixée au pixel près pour éviter un écrasement horizontal (scroll bar). Les prix monétaires sont formattés en standard local (ex: "1 500 FCFA").
+- Les requêtes HQL ont été injectées sous forme de PreparedStatement (`:debut`, `:fin`) pour empêcher les injections SQL.
+- L'utilisation de pseudo-classes CSS natives a été maintenue pour garantir l'élégance et la fluidité des interactions (hover) dans les tableaux.
+
+-- Validation validée par compilation Maven 100% SUCCESS.

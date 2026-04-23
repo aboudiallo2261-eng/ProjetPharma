@@ -4,54 +4,104 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="20" style="-fx-padding: 20;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pharmacie.controllers.AlerteStockController">
-    
+<VBox spacing="15" style="-fx-padding: 20; -fx-background-color: #F4F6F9;"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.pharmacie.controllers.AlerteStockController">
+
     <!-- HEADER -->
-    <HBox alignment="CENTER_LEFT" spacing="15">
-        <Label text="⚠️ Alertes &amp; Approvisionnements" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #E74C3C;"/>
+    <HBox alignment="CENTER_LEFT" spacing="15"
+          style="-fx-background-color: white; -fx-padding: 14 18; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 6, 0, 0, 3);">
+        <Label text="Alertes Stock" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button text="🖨️ Imprimer la Liste d'Alerte" onAction="#imprimerListe"
-                style="-fx-background-color: #34495E; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 8 20; -fx-background-radius: 6;"/>
-    </HBox>
-
-    <Label text="Consultez cette liste avant d'appeler vos grossistes. Les produits affichés ont franchi leur seuil d'alerte."
-           style="-fx-font-size: 14px; -fx-text-fill: #7F8C8D;"/>
-
-    <!-- CONTROLS & FILTERS -->
-    <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 3);">
-        <Label text="🔍 Filtrer par Catégorie :" style="-fx-font-weight: bold;"/>
-        <ComboBox fx:id="cmbFiltreCategorie" prefWidth="250" promptText="Toutes les catégories" onAction="#filtrerAlertes"/>
-        
-        <Label text="Nom du produit :" style="-fx-font-weight: bold; -fx-padding: 0 0 0 20;"/>
-        <TextField fx:id="txtRecherche" promptText="Ex: Paracétamol..." prefWidth="250" />
-        
-        <Region HBox.hgrow="ALWAYS"/>
-        
-        <VBox alignment="CENTER_RIGHT">
-            <Label text="Total en Alerte :" style="-fx-font-size: 13px; -fx-text-fill: #95A5A6;"/>
-            <Label fx:id="lblTotalAlertes" text="0 Produit(s)" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #E74C3C;"/>
+        <!-- Compteurs globaux -->
+        <VBox alignment="CENTER_RIGHT" spacing="2">
+            <Label text="Ruptures" style="-fx-font-size: 11px; -fx-text-fill: #95A5A6;"/>
+            <Label fx:id="lblTotalAlertes" text="0" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #E74C3C;"/>
         </VBox>
+        <Separator orientation="VERTICAL" style="-fx-padding: 0 10;"/>
+        <VBox alignment="CENTER_RIGHT" spacing="2">
+            <Label text="Perim./Proches" style="-fx-font-size: 11px; -fx-text-fill: #95A5A6;"/>
+            <Label fx:id="lblTotalPerimes" text="0" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #8E44AD;"/>
+        </VBox>
+        <Separator orientation="VERTICAL" style="-fx-padding: 0 10;"/>
+        <Button text="Imprimer la Liste" onAction="#imprimerListe"
+                style="-fx-background-color: #34495E; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-padding: 7 16; -fx-background-radius: 6;"/>
     </HBox>
 
-    <!-- DATA TABLE -->
-    <VBox VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 3);">
-        <TableView fx:id="tableAlertes" VBox.vgrow="ALWAYS" style="-fx-border-color: #BDC3C7; -fx-font-size: 14px;">
-            <placeholder>
-                <VBox alignment="CENTER" spacing="10">
-                    <Label text="✅ Excellent ! Aucun produit n'est en rupture de stock." style="-fx-text-fill: #27AE60; -fx-font-size: 16px; -fx-font-weight: bold;" />
-                    <Label text="Votre inventaire actuel est sain." style="-fx-text-fill: #95A5A6;" />
-                </VBox>
-            </placeholder>
-            <columns>
-                <TableColumn fx:id="colRef" text="Réf." prefWidth="100"/>
-                <TableColumn fx:id="colNom" text="Nom du Produit" prefWidth="280"/>
-                <TableColumn fx:id="colCategorie" text="Catégorie" prefWidth="180"/>
-                <TableColumn fx:id="colStockActuel" text="Stock Actuel" prefWidth="120" style="-fx-alignment: CENTER-RIGHT; -fx-font-weight: bold; -fx-text-fill: #E74C3C;"/>
-                <TableColumn fx:id="colSeuil" text="Seuil d'Alerte" prefWidth="120" style="-fx-alignment: CENTER-RIGHT;"/>
-                <TableColumn fx:id="colQteSuggerable" text="Stock à Reconstituer" prefWidth="150" style="-fx-alignment: CENTER-RIGHT; -fx-font-weight: bold; -fx-text-fill: #3498DB;"/>
-            </columns>
-        </TableView>
-    </VBox>
-    
-</VBox>
+    <!-- FILTRES COMMUNS -->
+    <HBox spacing="10" alignment="CENTER_LEFT"
+          style="-fx-background-color: white; -fx-padding: 12; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 4, 0, 0, 2);">
+        <Label text="Categorie :" style="-fx-font-weight: bold; -fx-text-fill: #7f8c8d;"/>
+        <ComboBox fx:id="cmbFiltreCategorie" prefWidth="220" promptText="Toutes les categories" onAction="#filtrerAlertes"/>
+        <Label text="Nom produit :" style="-fx-font-weight: bold; -fx-text-fill: #7f8c8d; -fx-padding: 0 0 0 15;"/>
+        <TextField fx:id="txtRecherche" promptText="Rechercher..." prefWidth="220"/>
+    </HBox>
 
+    <!-- TABPANE : Ruptures | Perimés -->
+    <TabPane VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE"
+             style="-fx-background-color: transparent;">
+
+        <!-- ===== ONGLET 1 : RUPTURES DE STOCK ===== -->
+        <Tab text="Ruptures de Stock">
+            <VBox spacing="0" style="-fx-background-color: white; -fx-padding: 0; -fx-background-radius: 8;">
+                <Label text="Produits dont le stock actuel est inferieur ou egal au seuil d'alerte. Double-clic = preparer la commande."
+                       style="-fx-font-size: 12px; -fx-text-fill: #95A5A6; -fx-padding: 10 14 5 14;"/>
+                <TableView fx:id="tableAlertes" VBox.vgrow="ALWAYS"
+                           style="-fx-border-color: transparent; -fx-font-size: 13px;">
+                    <placeholder>
+                        <VBox alignment="CENTER" spacing="8">
+                            <Label text="Excellent ! Aucun produit en rupture de stock."
+                                   style="-fx-text-fill: #27AE60; -fx-font-size: 15px; -fx-font-weight: bold;"/>
+                            <Label text="Votre inventaire actuel est sain."
+                                   style="-fx-text-fill: #95A5A6; -fx-font-size: 13px;"/>
+                        </VBox>
+                    </placeholder>
+                    <columns>
+                        <TableColumn fx:id="colRef"            text="Ref."               prefWidth="80"/>
+                        <TableColumn fx:id="colNom"            text="Nom du Produit"      prefWidth="260"/>
+                        <TableColumn fx:id="colCategorie"      text="Categorie"           prefWidth="160"/>
+                        <TableColumn fx:id="colStockActuel"    text="Stock Actuel"        prefWidth="110"
+                                     style="-fx-alignment: CENTER-RIGHT; -fx-font-weight: bold;"/>
+                        <TableColumn fx:id="colSeuil"          text="Seuil Alerte"        prefWidth="110"
+                                     style="-fx-alignment: CENTER-RIGHT;"/>
+                        <TableColumn fx:id="colQteSuggerable"  text="A Commander"         prefWidth="130"
+                                     style="-fx-alignment: CENTER-RIGHT; -fx-font-weight: bold;"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+
+        <!-- ===== ONGLET 2 : LOTS PERIMÉS / PROCHES EXPIRATION ===== -->
+        <Tab text="Lots Perimes / Proches Expiration">
+            <VBox spacing="0" style="-fx-background-color: white; -fx-padding: 0; -fx-background-radius: 8;">
+                <Label text="Lots deja perimes (rouge) et lots expirant dans les 30 prochains jours (orange)."
+                       style="-fx-font-size: 12px; -fx-text-fill: #95A5A6; -fx-padding: 10 14 5 14;"/>
+                <TableView fx:id="tablePerimes" VBox.vgrow="ALWAYS"
+                           style="-fx-border-color: transparent; -fx-font-size: 13px;">
+                    <placeholder>
+                        <VBox alignment="CENTER" spacing="8">
+                            <Label text="Excellent ! Aucun lot perime ou proche de la date d'expiration."
+                                   style="-fx-text-fill: #27AE60; -fx-font-size: 15px; -fx-font-weight: bold;"/>
+                            <Label text="Tous vos lots ont une date d'expiration superieure a 30 jours."
+                                   style="-fx-text-fill: #95A5A6; -fx-font-size: 13px;"/>
+                        </VBox>
+                    </placeholder>
+                    <columns>
+                        <TableColumn fx:id="colPerimNom"       text="Nom du Produit"      prefWidth="250"/>
+                        <TableColumn fx:id="colPerimLot"       text="N Lot"               prefWidth="130"/>
+                        <TableColumn fx:id="colPerimExp"       text="Expiration"           prefWidth="120"
+                                     style="-fx-alignment: CENTER; -fx-font-weight: bold;"/>
+                        <TableColumn fx:id="colPerimQte"       text="Stock Lot"            prefWidth="110"
+                                     style="-fx-alignment: CENTER-RIGHT;"/>
+                        <TableColumn fx:id="colPerimStatut"    text="Statut"               prefWidth="130"
+                                     style="-fx-alignment: CENTER;"/>
+                        <TableColumn fx:id="colPerimJours"     text="Jours Restants"       prefWidth="120"
+                                     style="-fx-alignment: CENTER; -fx-font-weight: bold;"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+
+    </TabPane>
+
+</VBox>

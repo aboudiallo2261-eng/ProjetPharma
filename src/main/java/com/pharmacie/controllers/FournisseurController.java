@@ -99,9 +99,11 @@ public class FournisseurController {
             Fournisseur f = new Fournisseur();
             fillFournisseurDetails(f);
             fournisseurDAO.save(f);
+            com.pharmacie.utils.ToastService.showSuccess(tableFournisseurs.getScene().getWindow(), "Fournisseur Créé", "La fiche fournisseur a été ajoutée avec succès.");
         } else {
             fillFournisseurDetails(selectedFournisseur);
             fournisseurDAO.update(selectedFournisseur);
+            com.pharmacie.utils.ToastService.showSuccess(tableFournisseurs.getScene().getWindow(), "Fournisseur Modifié", "Les informations ont été mises à jour.");
         }
 
         handleReset();
@@ -130,6 +132,7 @@ public class FournisseurController {
                 alert.setContentText("Il possède déjà un historique d'achats rattaché dans la base comptable.\nPour ne pas briser la traçabilité des commandes, le système bloque la destruction stricte de sa fiche.");
                 alert.showAndWait();
             } else {
+                com.pharmacie.utils.ToastService.showSuccess(tableFournisseurs.getScene().getWindow(), "Fournisseur Supprimé", "La fiche fournisseur a été retirée du système.");
                 handleReset();
                 loadFournisseurs();
             }

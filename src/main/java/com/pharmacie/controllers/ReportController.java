@@ -348,21 +348,32 @@ public class ReportController {
 
         colAdjQte.setCellValueFactory(new PropertyValueFactory<>("quantite"));
         colAdjQte.setCellFactory(column -> new TableCell<AjustementStock, Integer>() {
+            {
+                // Point 5 : Listener sur la selection de la ligne parente
+                tableRowProperty().addListener((obs, oldRow, newRow) -> {
+                    if (newRow != null) {
+                        newRow.selectedProperty().addListener((obs2, was, isNow) -> {
+                            if (!isEmpty()) updateItem(getItem(), false);
+                        });
+                    }
+                });
+            }
             @Override
             protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setStyle("");
+                if (empty || item == null) { setText(null); setStyle(""); return; }
+                boolean selected = getTableRow() != null && getTableRow().isSelected();
+                AjustementStock adj = getTableView().getItems().get(getIndex());
+                if (adj != null && adj.getTypeAjustement() == MouvementStock.TypeMouvement.AJUSTEMENT_POSITIF) {
+                    setText("+ " + item);
+                    setStyle(selected
+                        ? "-fx-text-fill: white; -fx-alignment: CENTER; -fx-font-weight: bold;"
+                        : "-fx-text-fill: #27ae60; -fx-alignment: CENTER; -fx-font-weight: bold;");
                 } else {
-                    AjustementStock adj = getTableView().getItems().get(getIndex());
-                    if (adj != null && adj.getTypeAjustement() == MouvementStock.TypeMouvement.AJUSTEMENT_POSITIF) {
-                        setText("+ " + item);
-                        setStyle("-fx-text-fill: #27ae60; -fx-alignment: CENTER; -fx-font-weight: bold;");
-                    } else {
-                        setText("- " + item);
-                        setStyle("-fx-text-fill: #c0392b; -fx-alignment: CENTER; -fx-font-weight: bold;");
-                    }
+                    setText("- " + item);
+                    setStyle(selected
+                        ? "-fx-text-fill: white; -fx-alignment: CENTER; -fx-font-weight: bold;"
+                        : "-fx-text-fill: #c0392b; -fx-alignment: CENTER; -fx-font-weight: bold;");
                 }
             }
         });
@@ -409,33 +420,43 @@ public class ReportController {
         
         colAuditType.setCellValueFactory(v -> new SimpleStringProperty(v.getValue().getTypeMouvement().name()));
         colAuditType.setCellFactory(column -> new TableCell<MouvementStock, String>() {
+            {
+                // Point 5 : Re-render quand la ligne est (dé)sélectionnée
+                tableRowProperty().addListener((obs, oldRow, newRow) -> {
+                    if (newRow != null) {
+                        newRow.selectedProperty().addListener((obs2, was, isNow) -> {
+                            if (!isEmpty()) updateItem(getItem(), false);
+                        });
+                    }
+                });
+            }
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setStyle("");
-                } else {
-                    MouvementStock m = getTableView().getItems().get(getIndex());
-                    if (m != null) {
-                        switch (m.getTypeMouvement()) {
-                            case ACHAT:
-                                setText("Entrée (Achat)");
-                                setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
-                                break;
-                            case VENTE:
-                                setText("Sortie (Vente)");
-                                setStyle("-fx-text-fill: #2980b9; -fx-font-weight: bold;");
-                                break;
-                            case AJUSTEMENT_NEGATIF:
-                                setText("Perte / Retrait");
-                                setStyle("-fx-text-fill: #c0392b; -fx-font-weight: bold;");
-                                break;
-                            default:
-                                setText(m.getTypeMouvement().name());
-                                setStyle("-fx-text-fill: #34495e;");
-                                break;
-                        }
+                if (empty || item == null) { setText(null); setStyle(""); return; }
+                boolean selected = getTableRow() != null && getTableRow().isSelected();
+                MouvementStock m = getTableView().getItems().get(getIndex());
+                if (m != null) {
+                    switch (m.getTypeMouvement()) {
+                        case ACHAT:
+                            setText("Entrée (Achat)");
+                            setStyle(selected ? "-fx-text-fill: white; -fx-font-weight: bold;"
+                                             : "-fx-text-fill: #27ae60; -fx-font-weight: bold;");
+                            break;
+                        case VENTE:
+                            setText("Sortie (Vente)");
+                            setStyle(selected ? "-fx-text-fill: white; -fx-font-weight: bold;"
+                                             : "-fx-text-fill: #2980b9; -fx-font-weight: bold;");
+                            break;
+                        case AJUSTEMENT_NEGATIF:
+                            setText("Perte / Retrait");
+                            setStyle(selected ? "-fx-text-fill: white; -fx-font-weight: bold;"
+                                             : "-fx-text-fill: #c0392b; -fx-font-weight: bold;");
+                            break;
+                        default:
+                            setText(m.getTypeMouvement().name());
+                            setStyle(selected ? "-fx-text-fill: white;" : "-fx-text-fill: #34495e;");
+                            break;
                     }
                 }
             }
@@ -497,25 +518,35 @@ public class ReportController {
     
     private void configureEcartColumn(TableColumn<SessionCaisse, Double> col) {
         col.setCellFactory(column -> new TableCell<SessionCaisse, Double>() {
+            {
+                // Point 5 : Texte lisible sur fond bleu de selection
+                tableRowProperty().addListener((obs, oldRow, newRow) -> {
+                    if (newRow != null) {
+                        newRow.selectedProperty().addListener((obs2, was, isNow) -> {
+                            if (!isEmpty()) updateItem(getItem(), false);
+                        });
+                    }
+                });
+            }
             @Override
             protected void updateItem(Double item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) {
-                    setText(null);
-                    setStyle("");
+                if (empty) { setText(null); setStyle(""); return; }
+                boolean selected = getTableRow() != null && getTableRow().isSelected();
+                double val = item != null ? item : 0.0;
+                setText(String.format("%,.0f FCFA", val));
+                if (selected) {
+                    setTextFill(Color.WHITE);
+                    setStyle("-fx-font-weight: bold; -fx-alignment: CENTER-RIGHT; -fx-padding: 0 10 0 0;");
+                } else if (val < 0) {
+                    setTextFill(Color.web("#c0392b"));
+                    setStyle("-fx-font-weight: bold; -fx-alignment: CENTER-RIGHT; -fx-padding: 0 10 0 0;");
+                } else if (val > 0) {
+                    setTextFill(Color.web("#27ae60"));
+                    setStyle("-fx-font-weight: bold; -fx-alignment: CENTER-RIGHT; -fx-padding: 0 10 0 0;");
                 } else {
-                    double val = item != null ? item : 0.0;
-                    setText(String.format("%,.0f FCFA", val));
-                    if (val < 0) {
-                        setTextFill(Color.web("#c0392b"));
-                        setStyle("-fx-font-weight: bold; -fx-alignment: CENTER-RIGHT; -fx-padding: 0 10 0 0;");
-                    } else if (val > 0) {
-                        setTextFill(Color.web("#27ae60"));
-                        setStyle("-fx-font-weight: bold; -fx-alignment: CENTER-RIGHT; -fx-padding: 0 10 0 0;");
-                    } else {
-                        setTextFill(Color.BLACK);
-                        setStyle("-fx-alignment: CENTER-RIGHT; -fx-padding: 0 10 0 0;");
-                    }
+                    setTextFill(Color.BLACK);
+                    setStyle("-fx-alignment: CENTER-RIGHT; -fx-padding: 0 10 0 0;");
                 }
             }
         });

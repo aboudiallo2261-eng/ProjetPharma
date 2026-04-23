@@ -195,6 +195,12 @@
                             <TableColumn fx:id="colStockLot" text="N° Lot" prefWidth="110"/>
                             <TableColumn fx:id="colStockExp" text="Expiration" prefWidth="100"/>
                             <TableColumn fx:id="colStockJours" text="Jours Rest." prefWidth="90"/>
+                            
+                            <!-- NOUVELLES COLONNES ACHAT (Point 1 Phase 3) -->
+                            <TableColumn fx:id="colStockAchatInitial" text="Qte Init." prefWidth="70"/>
+                            <TableColumn fx:id="colStockPAchatBoite" text="P.A Bte" prefWidth="85"/>
+                            <TableColumn fx:id="colStockPAchatUnite" text="P.A Unit." prefWidth="85"/>
+
                             <TableColumn fx:id="colStockQte" text="En Stock" prefWidth="155"/>
                             <TableColumn fx:id="colStockSeuil" text="Seuil" prefWidth="55"/>
                             <TableColumn fx:id="colStockVendus" text="Vendu" prefWidth="70"/>

@@ -82,6 +82,8 @@ public class ProduitController {
     @FXML
     private TableColumn<EtatStockDTO, String> colStockQte;
     @FXML
+    private TableColumn<EtatStockDTO, String> colStockAchatInitial, colStockPAchatBoite, colStockPAchatUnite;
+    @FXML
     private TableColumn<EtatStockDTO, Integer> colStockVendus, colStockSeuil;
     @FXML
     private TableColumn<EtatStockDTO, Double> colStockPrix;
@@ -183,6 +185,9 @@ public class ProduitController {
         colStockLot.setCellValueFactory(new PropertyValueFactory<>("lotNumero"));
         colStockExp.setCellValueFactory(new PropertyValueFactory<>("dateExpiration"));
         colStockQte.setCellValueFactory(new PropertyValueFactory<>("quantiteFormatee"));
+        if (colStockAchatInitial != null) colStockAchatInitial.setCellValueFactory(new PropertyValueFactory<>("qteInitialeAchetee"));
+        if (colStockPAchatBoite != null) colStockPAchatBoite.setCellValueFactory(new PropertyValueFactory<>("prixAchatBoiteFormate"));
+        if (colStockPAchatUnite != null) colStockPAchatUnite.setCellValueFactory(new PropertyValueFactory<>("prixAchatUniteFormate"));
         colStockVendus.setCellValueFactory(new PropertyValueFactory<>("quantiteVendue"));
         colStockPrix.setCellValueFactory(new PropertyValueFactory<>("prixUnitaire"));
 
@@ -432,10 +437,13 @@ public class ProduitController {
                 p.setPrixVenteUnite(null);
             }
 
-            if (selectedProduit == null)
+            if (selectedProduit == null) {
                 produitDAO.save(p);
-            else
+                com.pharmacie.utils.ToastService.showSuccess(tableProduits.getScene().getWindow(), "Produit Ajouté", "Le produit a été enregistré avec succès.");
+            } else {
                 produitDAO.update(p);
+                com.pharmacie.utils.ToastService.showSuccess(tableProduits.getScene().getWindow(), "Produit Modifié", "Les informations du produit ont été mises à jour.");
+            }
 
             resetProdForm();
             loadProduits();
@@ -471,6 +479,7 @@ public class ProduitController {
                             "Il est actuellement lié à un lot en stock ou à des historiques de ventes/achats passés.\nPour ne pas fausser la comptabilité, le système interdit la suppression physique des produits ayant déjà circulé.");
                     alert.showAndWait();
                 } else {
+                    com.pharmacie.utils.ToastService.showSuccess(tableProduits.getScene().getWindow(), "Produit Supprimé", "Le produit a été retiré du catalogue.");
                     resetProdForm();
                     loadProduits();
                 }
@@ -535,6 +544,7 @@ public class ProduitController {
                 Categorie c = new Categorie();
                 c.setNom(nom);
                 categorieDAO.save(c);
+                com.pharmacie.utils.ToastService.showSuccess(cmbProdCategorie.getScene().getWindow(), "Catégorie Créée", "Nouvelle catégorie ajoutée avec succès.");
                 loadCategories();
                 // Sélectionner automatiquement la nouvelle catégorie
                 cmbProdCategorie.getItems().stream()
@@ -562,6 +572,7 @@ public class ProduitController {
                 Espece e = new Espece();
                 e.setNom(nom);
                 especeDAO.save(e);
+                com.pharmacie.utils.ToastService.showSuccess(cmbProdEspece.getScene().getWindow(), "Espèce Créée", "Nouvelle espèce ajoutée avec succès.");
                 loadEspeces();
                 // Sélectionner automatiquement la nouvelle espèce
                 cmbProdEspece.getItems().stream()
@@ -608,10 +619,13 @@ public class ProduitController {
         lblCatError.setVisible(false);
         Categorie c = selectedCategorie == null ? new Categorie() : selectedCategorie;
         c.setNom(nom);
-        if (selectedCategorie == null)
-            categorieDAO.save(c);
-        else
-            categorieDAO.update(c);
+            if (selectedCategorie == null) {
+                categorieDAO.save(c);
+                com.pharmacie.utils.ToastService.showSuccess(tableCategories.getScene().getWindow(), "Catégorie Ajoutée", "La catégorie a été créée.");
+            } else {
+                categorieDAO.update(c);
+                com.pharmacie.utils.ToastService.showSuccess(tableCategories.getScene().getWindow(), "Catégorie Modifiée", "La catégorie a été mise à jour.");
+            }
         resetCatForm();
         loadCategories();
         tableCategories.refresh();
@@ -622,13 +636,11 @@ public class ProduitController {
         if (selectedCategorie != null) {
             boolean success = categorieDAO.delete(selectedCategorie);
             if (!success) {
-                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
-                        javafx.scene.control.Alert.AlertType.ERROR,
-                        "Impossible de supprimer cette catégorie car elle contient déjà des produits enregistrés.");
-                alert.showAndWait();
-            } else {
-                resetCatForm();
-                loadCategories();
+                showProdError("Impossible de supprimer cette catégorie car elle contient déjà des produits enregistrés.");
+                } else {
+                    com.pharmacie.utils.ToastService.showSuccess(tableCategories.getScene().getWindow(), "Catégorie Supprimée", "La catégorie a été retirée avec succès.");
+                    resetCatForm();
+                    loadCategories();
             }
         }
     }
@@ -669,10 +681,13 @@ public class ProduitController {
         lblEspError.setVisible(false);
         Espece e = selectedEspece == null ? new Espece() : selectedEspece;
         e.setNom(nom);
-        if (selectedEspece == null)
-            especeDAO.save(e);
-        else
-            especeDAO.update(e);
+            if (selectedEspece == null) {
+                especeDAO.save(e);
+                com.pharmacie.utils.ToastService.showSuccess(tableEspeces.getScene().getWindow(), "Espèce Ajoutée", "L'espèce a été créée.");
+            } else {
+                especeDAO.update(e);
+                com.pharmacie.utils.ToastService.showSuccess(tableEspeces.getScene().getWindow(), "Espèce Modifiée", "L'espèce a été mise à jour.");
+            }
         resetEspForm();
         loadEspeces();
         tableEspeces.refresh();
@@ -683,13 +698,11 @@ public class ProduitController {
         if (selectedEspece != null) {
             boolean success = especeDAO.delete(selectedEspece);
             if (!success) {
-                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
-                        javafx.scene.control.Alert.AlertType.ERROR,
-                        "Impossible de supprimer cette espèce car elle est affectée à des produits existants.");
-                alert.showAndWait();
-            } else {
-                resetEspForm();
-                loadEspeces();
+                showProdError("Impossible de supprimer cette espèce car elle est affectée à des produits existants.");
+                } else {
+                    com.pharmacie.utils.ToastService.showSuccess(tableEspeces.getScene().getWindow(), "Espèce Supprimée", "L'espèce a été retirée avec succès.");
+                    resetEspForm();
+                    loadEspeces();
             }
         }
     }
@@ -701,6 +714,14 @@ public class ProduitController {
         // #2 : Filtre les lots au niveau SQL avec JOIN FETCH pour tuer le problème N+1
         List<Lot> lots = lotDAO.findActiveLotsWithDetails(inclureArchives);
         java.util.Map<Long, Long> mapQtesVendues = lotDAO.getQuantitesVenduesParLot();
+        
+        java.util.Map<Long, Integer> qtesInitAchetees = new java.util.HashMap<>();
+        try (org.hibernate.Session session = com.pharmacie.utils.HibernateUtil.getSessionFactory().openSession()) {
+            List<Object[]> res = session.createQuery("SELECT la.lot.id, la.quantiteAchetee FROM LigneAchat la", Object[].class).list();
+            for(Object[] r : res){
+                qtesInitAchetees.put((Long)r[0], (Integer)r[1]);
+            }
+        } catch(Exception ignored){}
         
         masterStockList.clear();
 
@@ -734,11 +755,18 @@ public class ProduitController {
                     ? java.time.temporal.ChronoUnit.DAYS.between(java.time.LocalDate.now(), lot.getDateExpiration())
                     : Long.MAX_VALUE; // Pas de date = pas de limite
 
+            int qteInitiale = qtesInitAchetees.getOrDefault(lot.getId(), lot.getQuantiteStock());
+            Double pAchatB = p.getPrixAchat() != null ? p.getPrixAchat() : 0.0;
+            Double pAchatU = null;
+            if (p.getEstDeconditionnable() != null && p.getEstDeconditionnable() && p.getUnitesParBoite() != null && p.getUnitesParBoite() > 0) {
+                pAchatU = pAchatB / p.getUnitesParBoite();
+            }
+
             masterStockList.add(new EtatStockDTO(
                     lot.getId(), p.getNom(), p.getCategorie().getNom(), p.getEspece().getNom(), lot.getNumeroLot(),
                     expDate,
                     lot.getQuantiteStock(), formatee, qteVendue, p.getPrixVente(), isExp, seuil, valeurFinanciere,
-                    joursRestants));
+                    joursRestants, qteInitiale, pAchatB, pAchatU));
         }
         // Init combos
         List<String> cats = categorieDAO.findAll().stream()
@@ -761,7 +789,7 @@ public class ProduitController {
         if (cmbFiltreStockStatut.getItems().isEmpty()) {
             cmbFiltreStockStatut.setItems(FXCollections.observableArrayList(
                     "Tous Statuts", "En alerte", "Expiré", "Normal", "Rupture (Vide)"));
-            cmbFiltreStockStatut.getSelectionModel().selectFirst();
+            cmbFiltreStockStatut.getSelectionModel().select("Normal");
         }
 
         if (txtSearchStock != null)
@@ -773,7 +801,7 @@ public class ProduitController {
     public void resetFiltresStock() {
         if (cmbFiltreStockCat != null) cmbFiltreStockCat.getSelectionModel().selectFirst();
         if (cmbFiltreStockEsp != null) cmbFiltreStockEsp.getSelectionModel().selectFirst();
-        if (cmbFiltreStockStatut != null) cmbFiltreStockStatut.getSelectionModel().selectFirst();
+        if (cmbFiltreStockStatut != null) cmbFiltreStockStatut.getSelectionModel().select("Normal");
         if (txtSearchStock != null) txtSearchStock.clear();
         if (dpFiltreExpAvant != null) dpFiltreExpAvant.setValue(null);
         if (tableEtatStock != null) tableEtatStock.getSelectionModel().clearSelection();
@@ -864,7 +892,7 @@ public class ProduitController {
                         d.getSeuilAlerte(), d.getPrixUnitaire() != null ? d.getPrixUnitaire() : 0.0,
                         d.getValeurFinanciere() != null ? d.getValeurFinanciere() : 0.0);
             }
-            new Alert(Alert.AlertType.INFORMATION, "Export réussi !\n" + file.getAbsolutePath()).showAndWait();
+            com.pharmacie.utils.ToastService.showSuccess(tableProduits.getScene().getWindow(), "Export réussi", "Fichier sauvegardé : " + file.getName());
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, "Erreur export CSV : " + e.getMessage()).showAndWait();
         }
@@ -1069,13 +1097,13 @@ public class ProduitController {
                     boolean estPositif = rbAjout.isSelected();
                     if (qte <= 0) throw new NumberFormatException();
                     if (!estPositif && qte > lot.getQuantiteStock()) {
-                        com.pharmacie.utils.AlertUtils.showPremiumAlert(Alert.AlertType.ERROR, "Erreur", null, "La quantité à retirer ne peut excéder le stock actuel !");
+                        showProdError("La quantité à retirer ne peut excéder le stock actuel !");
                         return;
                     }
                     MouvementStock.TypeMouvement typeAjust = estPositif ? MouvementStock.TypeMouvement.AJUSTEMENT_POSITIF : MouvementStock.TypeMouvement.AJUSTEMENT_NEGATIF;
                     appliquerAjustement(lot, qte, cmbMotif.getValue(), obsField.getText(), typeAjust);
                 } catch (NumberFormatException e) {
-                    com.pharmacie.utils.AlertUtils.showPremiumAlert(Alert.AlertType.ERROR, "Saisie Invalide", null, "Veuillez entrer une quantité entière strictement positive.");
+                    showProdError("Veuillez entrer une quantité entière strictement positive.");
                 }
             });
 
@@ -1131,8 +1159,10 @@ public class ProduitController {
         int qteMvt = typeAjustement == MouvementStock.TypeMouvement.AJUSTEMENT_POSITIF ? qte : -qte;
         mouvementDAO.save(new MouvementStock(
                 lot.getProduit(), lot, SessionManager.getCurrentUser(),
-                typeAjustement, qteMvt, LocalDateTime.now(),
+                typeAjustement, qteMvt, java.time.LocalDateTime.now(),
                 "Ajustement: " + motif.name() + (observation != null && !observation.isEmpty() ? " - " + observation : "")));
+        
+        com.pharmacie.utils.ToastService.showSuccess(tableEtatStock.getScene().getWindow(), "Ajustement de Stock", "Le stock a été ajusté avec succès.");
     }
 
     // --- INNER CLASS DTO POUR STOCK ---
@@ -1150,10 +1180,14 @@ public class ProduitController {
         private boolean estExpire;
         private int seuilAlerte;
         private Double valeurFinanciere;
-        private long joursRestants; // Nombre de jours avant péremption (négatif = expire)
+        private long joursRestants; 
+        private Integer qteInitialeAchetee;
+        private Double prixAchatBoite;
+        private Double prixAchatUnite;
 
         public EtatStockDTO(Long id, String p, String c, String e, String l, String d, Integer qs, String qsFormatee,
-                Integer qv, Double px, boolean exp, int seuil, Double valeurFinanciere, long joursRestants) {
+                Integer qv, Double px, boolean exp, int seuil, Double valeurFinanciere, long joursRestants,
+                Integer qteInitialeAchetee, Double prixAchatBoite, Double prixAchatUnite) {
             this.lotId = id;
             this.produitNom = p;
             this.categorieNom = c;
@@ -1168,6 +1202,9 @@ public class ProduitController {
             this.seuilAlerte = seuil;
             this.valeurFinanciere = valeurFinanciere;
             this.joursRestants = joursRestants;
+            this.qteInitialeAchetee = qteInitialeAchetee;
+            this.prixAchatBoite = prixAchatBoite;
+            this.prixAchatUnite = prixAchatUnite;
         }
 
         public Long getLotId() {
@@ -1243,6 +1280,21 @@ public class ProduitController {
             if (joursRestants == 0) return "⚠️ Auj.";
             if (joursRestants <= 30) return "⚠️ " + joursRestants + " j";
             return joursRestants + " j";
+        }
+
+        public String getQteInitialeAchetee() {
+            if (qteInitialeAchetee == null) return "---";
+            return qteInitialeAchetee + " U";
+        }
+
+        public String getPrixAchatBoiteFormate() {
+            if (prixAchatBoite == null) return "---";
+            return String.format(java.util.Locale.FRANCE, "%,.0f FCFA", prixAchatBoite);
+        }
+
+        public String getPrixAchatUniteFormate() {
+            if (prixAchatUnite == null) return "N/A";
+            return String.format(java.util.Locale.FRANCE, "%,.0f FCFA", prixAchatUnite);
         }
     }
 }

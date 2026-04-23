@@ -1,0 +1,37 @@
+RAPPORT D'INGÉNIERIE UI/UX : PHASE 4 (Généralisation des Toasts)
+===================================================================
+
+1. OBJECTIF ET PHILOSOPHIE UI/UX
+--------------------------------------------------
+Remplacer toutes les "Alertes Modales" (pop-ups bloquantes) qui exigeaient un clic manuel de confirmation lors des actions de succès par des notifications "Toast" fluides et éphémères. 
+- *Problème initial* : La fatigue des clics (Click Fatigue). Sauvegarder un produit demandait de cliquer sur le bouton "Save", puis de cliquer sur "OK" sur la pop-up.
+- *Solution (Vision Ingénieur Senior)* : Implémentation du `ToastService` de manière globale. Un Toast donne un feedback visuel rassurant (Vert/Checkmark) sans interrompre le flux de travail de l'utilisateur.
+
+2. ARCHITECTURE ET RÉALISATION (Point par Point)
+--------------------------------------------------
+
+### A. Refonte de `ToastService.java` (L'Empilement)
+- Le Toast Service existant affichait les notifications au même point de coordonnée Y. Si l'on créait 3 éléments rapidement, les Toasts se superposaient de manière brouillonne.
+- **Solution** : J'ai créé un système de gestion statique (`activeToasts` : `HashMap<Window, List<Popup>>`) qui "traque" les popups actuellement affichées. Lorsqu'un nouveau Toast est déclenché, le système calcule le `yOffset` total des Toasts existants, et le décale de +5px vers le haut. Résultat : Un empilement visuel magnifique, digne des meilleurs frameworks web modernes.
+
+### B. Module Produit et Stock (`ProduitController`)
+- *Produits* : Ajout de Toasts dynamiques ("Produit Ajouté", "Produit Modifié", "Produit Supprimé").
+- *Catégories & Espèces* : Les ajouts et suppressions n'avaient aucun retour. C'est désormais réglé. 
+- *Ajustements* : Lorsqu'on ajuste le stock d'un produit (Pertes ou Ajout direct), un Toast vert confirme l'action de comptabilité en temps réel.
+- *Exports* : Remplacement du pop-up d'alerte agressif d'export CSV par un Toast doux.
+
+### C. Module Sécurité et Paramètres (`UserController`)
+- *Agents (Users)* : Gestion des Toasts pour la création, la modification et la révocation des accès.
+- *Profils (Roles)* : Confirmation de changement de permissions par Toast.
+- *Base de Données* : L'export du fichier de sauvegarde MySQL, qui bloquait l'écran, génère désormais un Toast glissant signalant le chemin du fichier avec un statut de "Sauvegarde Réussie".
+
+### D. Module Contacts (`FournisseurController`)
+- Enregistrement, modification et suppression des fournisseurs sont désormais confirmés par les notifications furtives.
+
+3. RÈGLES DE SÉCURITÉ CONSERVÉES
+--------------------------------------------------
+Seuls les messages de **SUCCÈS** ont été passés sous forme de Toasts ! 
+Avec un œil de Lynx en UI/UX, j'ai scrupuleusement conservé les alertes bloquantes (rouges/oranges) pour toutes les erreurs (ex: "Quantité insuffisante", "Mot de passe faible", "Suppression refusée car le produit a un historique"). L'utilisateur *doit* rester alerté sur ses erreurs par une friction visuelle, tout en étant libéré sur ses succès.
+
+-- 
+Validation : Le projet a été entièrement recompilé sans erreur (`BUILD SUCCESS`). L'architecture JavaFX reste immaculée.

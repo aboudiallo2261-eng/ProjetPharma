@@ -21,6 +21,7 @@ import javafx.util.Duration;
 public class ToastService {
 
     private static final int TOAST_DELAY_MS = 3000; // 3 secondes
+    private static final java.util.Map<Window, java.util.List<Popup>> activeToasts = new java.util.HashMap<>();
 
     public enum ToastType {
         SUCCESS("#2ecc71", "✅"),
@@ -91,10 +92,19 @@ public class ToastService {
 
             popup.getContent().add(pane);
 
-            // Calcul du positionnement en bas à droite
+            // Calcul du positionnement en bas à droite avec empilement
             popup.setOnShown(e -> {
+                java.util.List<Popup> toasts = activeToasts.computeIfAbsent(owner, k -> new java.util.ArrayList<>());
+                toasts.removeIf(p -> !p.isShowing());
+                
+                double yOffset = 0;
+                for (Popup p : toasts) {
+                    yOffset += p.getHeight() + 5; // Espacement de 5px entre les toasts
+                }
+                toasts.add(popup);
+
                 double x = owner.getX() + owner.getWidth() - toastContent.getWidth() - 30;
-                double y = owner.getY() + owner.getHeight() - toastContent.getHeight() - 40;
+                double y = owner.getY() + owner.getHeight() - toastContent.getHeight() - 40 - yOffset;
                 popup.setX(x);
                 popup.setY(y);
 
@@ -129,6 +139,13 @@ public class ToastService {
                 fadeOut.setOnFinished(event -> popup.hide());
 
                 delay.play();
+            });
+
+            popup.setOnHidden(e -> {
+                java.util.List<Popup> list = activeToasts.get(owner);
+                if (list != null) {
+                    list.remove(popup);
+                }
             });
 
             // En cas de clic on le ferme direct

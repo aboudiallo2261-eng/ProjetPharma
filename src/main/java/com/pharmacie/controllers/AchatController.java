@@ -106,7 +106,18 @@ public class AchatController {
         com.pharmacie.utils.DateUtils.bindDateFilters(dpAchatDebut, dpAchatFin);
 
         if (btnValiderAchat != null) btnValiderAchat.disableProperty().bind(javafx.beans.binding.Bindings.isEmpty(panier).or(isProcessingTransaction));
-        if (btnViderPanier != null) btnViderPanier.disableProperty().bind(javafx.beans.binding.Bindings.isEmpty(panier));
+        if (btnViderPanier != null) {
+            btnViderPanier.disableProperty().bind(javafx.beans.binding.Bindings.isEmpty(panier));
+            // Point 6 : Couleur dynamique du bouton Vider (rouge = actif, gris = panier vide)
+            panier.addListener((javafx.collections.ListChangeListener<LigneAchat>) c -> {
+                if (panier.isEmpty()) {
+                    btnViderPanier.setStyle("-fx-background-color: #BDC3C7; -fx-text-fill: white; -fx-background-radius: 6;");
+                } else {
+                    btnViderPanier.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6;");
+                }
+            });
+            btnViderPanier.setStyle("-fx-background-color: #BDC3C7; -fx-text-fill: white; -fx-background-radius: 6;");
+        }
 
         // POINT 2 : Bouton Retirer — gris par défaut, rouge uniquement quand une ligne est sélectionnée
         if (btnRetirerPanier != null) {
@@ -199,7 +210,31 @@ public class AchatController {
 
         // FIX 2: Colonnes Qté et Prix éditables directement dans le tableau
         colPanierQte.setCellValueFactory(new PropertyValueFactory<>("quantiteAchetee"));
-        colPanierQte.setCellFactory(TextFieldTableCell.forTableColumn(new javafx.util.converter.IntegerStringConverter()));
+        // Point 4 : CellFactory avec TextFormatter - uniquement des chiffres positifs
+        colPanierQte.setCellFactory(col -> {
+            TextFieldTableCell<LigneAchat, Integer> cell = new TextFieldTableCell<>(new javafx.util.converter.IntegerStringConverter() {
+                @Override public Integer fromString(String s) {
+                    if (s == null || s.isBlank()) return 1;
+                    try { return Math.max(1, Integer.parseInt(s.trim())); }
+                    catch (NumberFormatException ex) { return 1; }
+                }
+            }) {
+                @Override
+                public void startEdit() {
+                    super.startEdit();
+                    javafx.application.Platform.runLater(() -> {
+                        javafx.scene.Node g = getGraphic();
+                        if (g instanceof javafx.scene.control.TextField tf) {
+                            tf.setTextFormatter(new javafx.scene.control.TextFormatter<>(change -> {
+                                String txt = change.getText();
+                                return (txt.isEmpty() || txt.matches("[0-9]+")) ? change : null;
+                            }));
+                        }
+                    });
+                }
+            };
+            return cell;
+        });
         colPanierQte.setOnEditCommit(event -> {
             int newQte = event.getNewValue() != null ? event.getNewValue() : event.getOldValue();
             if (newQte > 0) {
@@ -212,7 +247,31 @@ public class AchatController {
         });
 
         colPanierPrix.setCellValueFactory(new PropertyValueFactory<>("prixUnitaire"));
-        colPanierPrix.setCellFactory(TextFieldTableCell.forTableColumn(new javafx.util.converter.DoubleStringConverter()));
+        // Point 4 : Filtre chiffres + point décimal pour le prix
+        colPanierPrix.setCellFactory(col -> {
+            TextFieldTableCell<LigneAchat, Double> cell = new TextFieldTableCell<>(new javafx.util.converter.DoubleStringConverter() {
+                @Override public Double fromString(String s) {
+                    if (s == null || s.isBlank()) return 0.0;
+                    try { return Math.max(0.0, Double.parseDouble(s.trim().replace(",", ".")));
+                    } catch (NumberFormatException ex) { return 0.0; }
+                }
+            }) {
+                @Override
+                public void startEdit() {
+                    super.startEdit();
+                    javafx.application.Platform.runLater(() -> {
+                        javafx.scene.Node g = getGraphic();
+                        if (g instanceof javafx.scene.control.TextField tf) {
+                            tf.setTextFormatter(new javafx.scene.control.TextFormatter<>(change -> {
+                                String txt = change.getControlNewText();
+                                return txt.matches("\\d*\\.?\\d*") ? change : null;
+                            }));
+                        }
+                    });
+                }
+            };
+            return cell;
+        });
         colPanierPrix.setOnEditCommit(event -> {
             double newPrix = event.getNewValue() != null ? event.getNewValue() : event.getOldValue();
             if (newPrix >= 0) {
@@ -417,31 +476,83 @@ public class AchatController {
                 return;
             }
 
-            // Margin / Price Alert Detection
-            if (p.getPrixAchat() != null && prix > p.getPrixAchat()) {
-                boolean confirm = com.pharmacie.utils.AlertUtils.showPremiumConfirmation("Alerte de Hausse", "Le prix d'achat a augmenté !", 
-                    "Ancien prix d'achat: " + p.getPrixAchat() + " FCFA.\nNouveau prix: " + prix + " FCFA.\n\n" +
-                    "Souhaitez-vous ajuster votre Prix de Vente public pour ce produit afin de protéger vos marges ?");
-                if (confirm) {
-                    javafx.scene.control.TextInputDialog dialog = new javafx.scene.control.TextInputDialog(String.valueOf(p.getPrixVente() != null ? p.getPrixVente() : ""));
-                    dialog.setTitle("Mise à jour du Prix de Vente");
-                    dialog.setHeaderText("Ajustement du prix pour : " + p.getNom());
-                    dialog.setContentText("Nouveau Prix de Vente (FCFA) :");
-                    // Apply Premium Style
-                    dialog.getDialogPane().setStyle("-fx-font-family: 'Segoe UI', Tahoma, Verdana, sans-serif; -fx-font-size: 14px;");
-                    dialog.getDialogPane().lookup(".header-panel").setStyle("-fx-background-color: #F8F9FA; -fx-font-weight: bold;");
+            // POINTS 5 & 6 : Sécurisation des marges et Vente à Perte
+            // L'alerte ne se déclenche QUE si le nouveau Prix d'Achat dépasse le Prix de Vente public (Vente à perte)
+            if (p.getPrixVente() != null && prix > p.getPrixVente()) {
+                boolean confirm = com.pharmacie.utils.AlertUtils.showPremiumConfirmation("Alerte de Vente à Perte", "Le prix d'achat dépasse votre prix de vente !", 
+                    "Attention: Le nouveau prix d'achat (" + prix + " FCFA) est supérieur au prix public de la boîte (" + p.getPrixVente() + " FCFA).\nVous vendez à perte.\n\n" +
+                    "Souhaitez-vous ajuster vos Prix de Vente pour ce produit de toute urgence ?");
                     
-                    java.util.Optional<String> result = dialog.showAndWait();
-                    if(result.isPresent() && !result.get().isEmpty()) {
+                if (confirm) {
+                    boolean estDetail = p.getEstDeconditionnable() != null && p.getEstDeconditionnable();
+                    
+                    Dialog<java.util.List<String>> dialog = new Dialog<>();
+                    dialog.setTitle("Mise à jour d'Urgence des Prix");
+                    dialog.setHeaderText("Ajustement des prix pour : " + p.getNom() + (estDetail ? " (Mise à jour Boîte + Détail)" : ""));
+                    
+                    // Style Premium
+                    dialog.getDialogPane().setStyle("-fx-font-family: 'Segoe UI', Tahoma, Verdana, sans-serif; -fx-font-size: 14px;");
+                    try {
+                        dialog.getDialogPane().lookup(".header-panel").setStyle("-fx-background-color: #F8F9FA; -fx-font-weight: bold;");
+                    } catch(Exception ignored){}
+                    
+                    ButtonType btnValider = new ButtonType("Mettre à jour", ButtonBar.ButtonData.OK_DONE);
+                    dialog.getDialogPane().getButtonTypes().addAll(btnValider, ButtonType.CANCEL);
+                    
+                    javafx.scene.layout.GridPane grid = new javafx.scene.layout.GridPane();
+                    grid.setHgap(10);
+                    grid.setVgap(10);
+                    grid.setPadding(new javafx.geometry.Insets(20, 10, 10, 10));
+
+                    TextField txtPrixBoite = new TextField(String.valueOf(p.getPrixVente() != null ? p.getPrixVente() : ""));
+                    grid.add(new Label("Nouveau Prix Boîte (FCFA) :"), 0, 0);
+                    grid.add(txtPrixBoite, 1, 0);
+                    
+                    final TextField txtPrixUnite = new TextField(estDetail ? String.valueOf(p.getPrixVenteUnite() != null ? p.getPrixVenteUnite() : "") : "");
+                    if (estDetail) {
+                        grid.add(new Label("Nouveau Prix Unité (FCFA) :"), 0, 1);
+                        grid.add(txtPrixUnite, 1, 1);
+                        
+                        // Action: Suggerer prix detail automatiquement
+                        txtPrixBoite.textProperty().addListener((obs, oldVal, newVal) -> {
+                            try {
+                                if (p.getUnitesParBoite() != null && p.getUnitesParBoite() > 0) {
+                                    double np = Double.parseDouble(newVal);
+                                    txtPrixUnite.setText(String.valueOf(Math.round(np / p.getUnitesParBoite())));
+                                }
+                            } catch(Exception e){}
+                        });
+                    }
+                    
+                    dialog.getDialogPane().setContent(grid);
+                    javafx.application.Platform.runLater(() -> txtPrixBoite.requestFocus());
+
+                    final TextField tfUnite = estDetail ? txtPrixUnite : null;
+                    dialog.setResultConverter(dialogButton -> {
+                        if (dialogButton == btnValider) {
+                            java.util.List<String> results = new ArrayList<>();
+                            results.add(txtPrixBoite.getText());
+                            if (tfUnite != null) results.add(tfUnite.getText());
+                            return results;
+                        }
+                        return null;
+                    });
+                    
+                    dialog.showAndWait().ifPresent(results -> {
                         try {
-                            double newPrixVente = Double.parseDouble(result.get());
-                            p.setPrixVente(newPrixVente);
+                            if (!results.get(0).isEmpty()) {
+                                double newPrixBoite = Double.parseDouble(results.get(0));
+                                p.setPrixVente(newPrixBoite);
+                            }
+                            if (estDetail && results.size() > 1 && !results.get(1).isEmpty()) {
+                                double newPrixUnite = Double.parseDouble(results.get(1));
+                                p.setPrixVenteUnite(newPrixUnite);
+                            }
                             produitDAO.update(p);
                         } catch(Exception ignored){}
-                    }
+                    });
                 }
             }
-
             // Create temporary lot mapping
             Lot lot = new Lot();
             lot.setProduit(p);
@@ -588,11 +699,10 @@ public class AchatController {
 
     @FXML
     public void loadHistorique() {
-        // Point 4 : Filtre par défaut = Mois en cours pour ne pas charger des années de données d'un coup
-        LocalDate debutMois = LocalDate.now().withDayOfMonth(1);
-        LocalDate finMois = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
-        if (dpAchatDebut != null && dpAchatDebut.getValue() == null) dpAchatDebut.setValue(debutMois);
-        if (dpAchatFin != null && dpAchatFin.getValue() == null) dpAchatFin.setValue(finMois);
+        // Point 8 : Filtre par défaut = Aujourd'hui (optimisation massive des perfs DB)
+        LocalDate aujourdhui = LocalDate.now();
+        if (dpAchatDebut != null && dpAchatDebut.getValue() == null) dpAchatDebut.setValue(aujourdhui);
+        if (dpAchatFin != null && dpAchatFin.getValue() == null) dpAchatFin.setValue(aujourdhui);
         filtrerHistoriqueAchats();
     }
 
