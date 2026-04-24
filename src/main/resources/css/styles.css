@@ -78,108 +78,111 @@
    DASHBOARD PREMIUM UI
    ===================================================================== */
 
-/* Conteneurs principaux types 'Cartes' (KPIs et Graphiques) */
-.card {
-    -fx-background-color: #FFFFFF;
-    -fx-background-radius: 10;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.06), 8, 0, 0, 4);
-}
-
-/* Effet interactif au survol des cartes */
-.card:hover {
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.12), 12, 0, 0, 6);
-}
-
-/* Barre de filtres */
-.filter-bar {
-    -fx-background-color: #FFFFFF;
-    -fx-padding: 12 15;
-    -fx-background-radius: 8;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 4, 0, 0, 2);
-}
-
-/* Boutons de la barre de filtres */
-.btn-apply {
-    -fx-background-color: #27ae60;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-cursor: hand;
-    -fx-background-radius: 4;
-}
-
-.btn-apply:hover {
-    -fx-background-color: #219653;
-}
-
-.btn-reset {
-    -fx-background-color: #95a5a6;
-    -fx-text-fill: white;
-    -fx-cursor: hand;
-    -fx-background-radius: 4;
-}
-
-.btn-reset:hover {
-    -fx-background-color: #7f8c8d;
-}
-
-/* Typographie des titres */
+/* Titre principal */
 .dashboard-title {
     -fx-font-size: 26px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #2C3E50;
+    -fx-font-weight: 900;
+    -fx-text-fill: #1E293B; /* Cohérence avec la Sidebar Navy Blue */
 }
 
 .section-title {
-    -fx-font-size: 15px;
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-text-fill: #2C3E50;
+    -fx-text-fill: #334155;
+    -fx-padding: 0 0 10 0;
 }
 
-/* Typographie KPI (Cartes Métriques) */
-.kpi-box {
-    -fx-padding: 18;
-    -fx-alignment: CENTER;
+/* La carte blanche standard */
+.card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.04), 10, 0, 0, 5);
+}
+
+.card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.08), 15, 0, 0, 8);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   KPI CARDS (NOUVEAU DESIGN AVEC BADGES)
+   ───────────────────────────────────────────────────────────────── */
+.kpi-card {
+    -fx-padding: 15;
+    -fx-alignment: CENTER_LEFT;
 }
 
 .kpi-title {
-    -fx-text-fill: #7f8c8d;
-    -fx-font-size: 14px;
-    -fx-font-weight: normal;
+    -fx-text-fill: #64748B; /* Slate 500 */
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-wrap-text: true;
 }
 
 .kpi-value {
-    -fx-font-size: 28px;
-    -fx-font-weight: bold;
+    -fx-font-size: 20px; /* Compromis parfait entre lisibilité et espace */
+    -fx-font-weight: 900;
 }
 
-/* Couleurs sémantiques des KPIs */
-.kpi-green {
-    -fx-text-fill: #27ae60;
+/* Couleurs des textes KPI */
+.kpi-text-green { -fx-text-fill: #10B981; }
+.kpi-text-blue { -fx-text-fill: #3B82F6; }
+.kpi-text-purple { -fx-text-fill: #8B5CF6; }
+.kpi-text-red { -fx-text-fill: #EF4444; }
+.kpi-text-teal { -fx-text-fill: #14B8A6; }
+.kpi-text-orange { -fx-text-fill: #F97316; }
+.kpi-text-indigo { -fx-text-fill: #6366F1; }
+
+/* Les Badges Circulaires */
+.kpi-icon-container-green { -fx-background-color: #D1FAE5; -fx-background-radius: 50%; -fx-padding: 12; }
+.kpi-icon-container-blue { -fx-background-color: #DBEAFE; -fx-background-radius: 50%; -fx-padding: 12; }
+.kpi-icon-container-purple { -fx-background-color: #EDE9FE; -fx-background-radius: 50%; -fx-padding: 12; }
+.kpi-icon-container-red { -fx-background-color: #FEE2E2; -fx-background-radius: 50%; -fx-padding: 12; }
+.kpi-icon-container-teal { -fx-background-color: #CCFBF1; -fx-background-radius: 50%; -fx-padding: 12; }
+.kpi-icon-container-orange { -fx-background-color: #FFEDD5; -fx-background-radius: 50%; -fx-padding: 12; }
+.kpi-icon-container-indigo { -fx-background-color: #E0E7FF; -fx-background-radius: 50%; -fx-padding: 12; }
+
+/* Icônes SVG dans les badges */
+.kpi-icon {
+    -fx-fill: transparent;
+    -fx-stroke-width: 2px;
+    -fx-stroke-linecap: round;
+    -fx-stroke-linejoin: round;
 }
 
-.kpi-blue {
-    -fx-text-fill: #2980b9;
-}
+.kpi-icon-green { -fx-stroke: #10B981; }
+.kpi-icon-blue { -fx-stroke: #3B82F6; }
+.kpi-icon-purple { -fx-stroke: #8B5CF6; }
+.kpi-icon-red { -fx-stroke: #EF4444; }
+.kpi-icon-teal { -fx-stroke: #14B8A6; }
+.kpi-icon-orange { -fx-stroke: #F97316; }
+.kpi-icon-indigo { -fx-stroke: #6366F1; }
 
-.kpi-purple {
-    -fx-text-fill: #8e44ad;
-}
-
-.kpi-red {
-    -fx-text-fill: #e74c3c;
-}
-
-.kpi-teal {
-    -fx-text-fill: #16a085;
-}
-
-.kpi-orange {
-    -fx-text-fill: #e67e22;
-}
-
-/* Conteneurs pour Graphiques */
+/* ─────────────────────────────────────────────────────────────────
+   NETTOYAGE DES GRAPHIQUES JAVAFX (CLEAN CHARTS)
+   ───────────────────────────────────────────────────────────────── */
 .chart-box {
-    -fx-padding: 20;
+    -fx-padding: 25;
+}
+
+.premium-chart {
+    -fx-padding: 10 0 0 0;
+}
+
+.premium-chart .chart-plot-background {
+    -fx-background-color: transparent; /* Retire le fond gris moche */
+}
+
+.premium-chart .chart-vertical-grid-lines {
+    -fx-stroke: transparent; /* Retire les lignes verticales lourdes */
+}
+
+.premium-chart .chart-horizontal-grid-lines {
+    -fx-stroke: #E2E8F0; /* Lignes horizontales très discrètes */
+    -fx-stroke-dash-array: 5, 5;
+}
+
+.premium-chart .chart-series-line {
+    -fx-stroke-width: 3px; /* Courbes plus épaisses et modernes */
 }
 
 /* =====================================================================
@@ -305,10 +308,27 @@
     -fx-padding: 7 20;
     -fx-font-size: 13px;
     -fx-cursor: hand;
+    -fx-graphic-text-gap: 8px;
 }
 
 .btn-filter:hover {
     -fx-background-color: #27ae60;
+}
+
+.btn-icon-white {
+    -fx-fill: transparent;
+    -fx-stroke: white;
+    -fx-stroke-width: 2px;
+    -fx-stroke-linecap: round;
+    -fx-stroke-linejoin: round;
+}
+
+.btn-icon-gray {
+    -fx-fill: transparent;
+    -fx-stroke: #95a5a6;
+    -fx-stroke-width: 2px;
+    -fx-stroke-linecap: round;
+    -fx-stroke-linejoin: round;
 }
 
 /* Bouton gris "Réinitialiser" discret */
@@ -321,6 +341,7 @@
     -fx-padding: 6 15;
     -fx-cursor: hand;
     -fx-font-size: 12px;
+    -fx-graphic-text-gap: 8px;
 }
 
 .btn-outline-reset:hover {
@@ -437,4 +458,281 @@
 
 .total-label-filtered {
     -fx-text-fill: #E67E22;
+}
+
+/* =====================================================================
+   SIDEBAR (MENU LATÉRAL NAVY BLUE - BORDERPANE)
+   ===================================================================== */
+
+.sidebar {
+    -fx-background-color: #1E293B; /* Slate 800 */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 0);
+}
+
+.sidebar-header {
+    -fx-padding: 10 20 5 20;
+}
+
+.sidebar-separator {
+    -fx-padding: 10 0;
+    -fx-opacity: 0.1;
+}
+
+.sidebar-menu {
+    -fx-padding: 10;
+}
+
+.menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #CBD5E1; /* Slate 300 */
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 12 15;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-graphic-text-gap: 12px;
+}
+
+.menu-button:hover, .menu-button:focused {
+    -fx-background-color: #334155; /* Slate 700 */
+    -fx-text-fill: #FFFFFF;
+}
+
+.menu-icon {
+    -fx-fill: transparent;
+    -fx-stroke: #94A3B8; /* Slate 400 */
+    -fx-stroke-width: 2px;
+    -fx-stroke-linecap: round;
+    -fx-stroke-linejoin: round;
+}
+
+.menu-button:hover .menu-icon, .menu-button:focused .menu-icon {
+    -fx-stroke: #22C55E; /* Vert Pharmacie au survol */
+}
+
+.sidebar-footer {
+    -fx-padding: 15;
+    -fx-background-color: #0F172A; /* Slate 900 */
+}
+
+.profile-card {
+    -fx-padding: 10;
+}
+
+.profile-avatar {
+    -fx-background-color: #334155;
+    -fx-background-radius: 50%;
+    -fx-padding: 8;
+}
+
+.profile-icon {
+    -fx-fill: transparent;
+    -fx-stroke: #CBD5E1;
+    -fx-stroke-width: 2px;
+}
+
+.profile-name {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.profile-role {
+    -fx-text-fill: #94A3B8;
+    -fx-font-size: 11px;
+}
+
+.logout-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #FCA5A5; /* Rose très pâle */
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER;
+    -fx-padding: 10;
+    -fx-cursor: hand;
+    -fx-background-radius: 6;
+    -fx-graphic-text-gap: 8px;
+    -fx-border-color: rgba(248, 113, 113, 0.2); /* Bordure rouge transparente */
+    -fx-border-radius: 6;
+}
+
+.logout-button:hover {
+    -fx-background-color: #7F1D1D; /* Rouge très foncé */
+    -fx-text-fill: #FFFFFF;
+    -fx-border-color: transparent;
+}
+
+.logout-icon {
+    -fx-fill: transparent;
+    -fx-stroke: #FCA5A5;
+    -fx-stroke-width: 2px;
+}
+.logout-button:hover .logout-icon {
+    -fx-stroke: #FFFFFF;
+}
+
+.main-content-area {
+    -fx-background-color: #F8FAFC; /* Slate 50 ultra clair */
+}
+
+/* =====================================================================
+   MODALE D'ALERTES (Centre d'Alertes)
+   ===================================================================== */
+.modal-root {
+    -fx-background-color: #F1F5F9; /* Slate 100 */
+    -fx-padding: 25;
+}
+
+.modal-header {
+    -fx-background-color: #FFFFFF;
+    -fx-padding: 15 25;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 10, 0, 0, 5);
+}
+
+.modal-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #1E293B; /* Slate 800 */
+}
+
+.icon-bell {
+    -fx-fill: transparent;
+    -fx-stroke: #EF4444; /* Rouge Alerte */
+    -fx-stroke-width: 2.5px;
+    -fx-stroke-linecap: round;
+    -fx-stroke-linejoin: round;
+}
+
+.header-separator {
+    -fx-padding: 0 15;
+}
+
+/* Mini Stats (Header Modale) */
+.mini-stat-card {
+    -fx-spacing: 12;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.mini-stat-title {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #94A3B8; /* Slate 400 */
+    -fx-text-transform: uppercase;
+}
+
+.mini-stat-value {
+    -fx-font-size: 20px;
+    -fx-font-weight: 900;
+}
+
+.text-red { -fx-text-fill: #EF4444; }
+.text-purple { -fx-text-fill: #8B5CF6; }
+
+/* Mini Icônes SVG */
+.mini-icon-box-red { -fx-background-color: #FEE2E2; -fx-background-radius: 8; -fx-padding: 8; }
+.mini-icon-red { -fx-fill: transparent; -fx-stroke: #EF4444; -fx-stroke-width: 2px; }
+
+.mini-icon-box-purple { -fx-background-color: #EDE9FE; -fx-background-radius: 8; -fx-padding: 8; }
+.mini-icon-purple { -fx-fill: transparent; -fx-stroke: #8B5CF6; -fx-stroke-width: 2px; }
+
+/* Barre de Recherche (Input Group) */
+.search-box {
+    -fx-background-color: #F8FAFC;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 4 10;
+}
+.search-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-font-size: 13px;
+}
+.search-icon {
+    -fx-fill: transparent;
+    -fx-stroke: #94A3B8;
+    -fx-stroke-width: 2px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   MODERN TABPANE (Onglets type Web/Material)
+   ───────────────────────────────────────────────────────────────── */
+.modern-tab-pane {
+    -fx-tab-min-height: 40px;
+}
+
+.modern-tab-pane .tab-header-area {
+    -fx-padding: 0 0 10 0;
+}
+
+.modern-tab-pane .tab-header-background {
+    -fx-background-color: transparent;
+}
+
+.modern-tab-pane .tab {
+    -fx-background-color: transparent;
+    -fx-padding: 0 20 10 20;
+    -fx-cursor: hand;
+}
+
+.modern-tab-pane .tab-label {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #64748B; /* Slate 500 */
+}
+
+/* Onglet sélectionné : Texte noir et bordure inférieure colorée */
+.modern-tab-pane .tab:selected {
+    -fx-border-color: transparent transparent #10B981 transparent; /* Ligne verte en bas */
+    -fx-border-width: 0 0 3 0;
+}
+
+.modern-tab-pane .tab:selected .tab-label {
+    -fx-text-fill: #1E293B; /* Slate 800 */
+}
+
+/* Contenu des onglets */
+.tab-content-box {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 0 12 12 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.04), 10, 0, 0, 4);
+    -fx-padding: 0;
+}
+
+.tab-info-banner {
+    -fx-background-color: #F8FAFC;
+    -fx-padding: 12 20;
+    -fx-spacing: 10;
+    -fx-alignment: CENTER_LEFT;
+    -fx-border-color: #E2E8F0 transparent #E2E8F0 transparent;
+    -fx-border-width: 1 0 1 0;
+}
+
+.info-icon {
+    -fx-fill: transparent;
+    -fx-stroke: #64748B;
+    -fx-stroke-width: 2px;
+}
+
+.info-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748B;
+}
+
+/* Placeholders de réussite (Vide = Pas de problèmes) */
+.success-icon-large {
+    -fx-fill: transparent;
+    -fx-stroke: #10B981; /* Emerald 500 */
+    -fx-stroke-width: 3px;
+}
+.success-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #10B981;
+}
+.success-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #94A3B8;
 }

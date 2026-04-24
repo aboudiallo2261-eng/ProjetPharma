@@ -1,0 +1,109 @@
+/* =====================================================================
+   DASHBOARD PREMIUM UI
+   ===================================================================== */
+
+/* Titre principal */
+.dashboard-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #1E293B; /* Cohérence avec la Sidebar Navy Blue */
+}
+
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #334155;
+    -fx-padding: 0 0 10 0;
+}
+
+/* La carte blanche standard */
+.card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.04), 10, 0, 0, 5);
+}
+
+.card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.08), 15, 0, 0, 8);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   KPI CARDS (NOUVEAU DESIGN AVEC BADGES)
+   ───────────────────────────────────────────────────────────────── */
+.kpi-card {
+    -fx-padding: 20;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.kpi-title {
+    -fx-text-fill: #64748B; /* Slate 500 */
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.kpi-value {
+    -fx-font-size: 22px; /* Sécurisé contre l'overflow (était à 28px) */
+    -fx-font-weight: 900;
+}
+
+/* Couleurs des textes KPI */
+.kpi-text-green { -fx-text-fill: #10B981; }
+.kpi-text-blue { -fx-text-fill: #3B82F6; }
+.kpi-text-purple { -fx-text-fill: #8B5CF6; }
+.kpi-text-red { -fx-text-fill: #EF4444; }
+.kpi-text-teal { -fx-text-fill: #14B8A6; }
+.kpi-text-orange { -fx-text-fill: #F97316; }
+.kpi-text-indigo { -fx-text-fill: #6366F1; }
+
+/* Les Badges Circulaires */
+.kpi-icon-container-green { -fx-background-color: #D1FAE5; -fx-background-radius: 50%; -fx-padding: 12; }
+.kpi-icon-container-blue { -fx-background-color: #DBEAFE; -fx-background-radius: 50%; -fx-padding: 12; }
+.kpi-icon-container-purple { -fx-background-color: #EDE9FE; -fx-background-radius: 50%; -fx-padding: 12; }
+.kpi-icon-container-red { -fx-background-color: #FEE2E2; -fx-background-radius: 50%; -fx-padding: 12; }
+.kpi-icon-container-teal { -fx-background-color: #CCFBF1; -fx-background-radius: 50%; -fx-padding: 12; }
+.kpi-icon-container-orange { -fx-background-color: #FFEDD5; -fx-background-radius: 50%; -fx-padding: 12; }
+.kpi-icon-container-indigo { -fx-background-color: #E0E7FF; -fx-background-radius: 50%; -fx-padding: 12; }
+
+/* Icônes SVG dans les badges */
+.kpi-icon {
+    -fx-fill: transparent;
+    -fx-stroke-width: 2px;
+    -fx-stroke-linecap: round;
+    -fx-stroke-linejoin: round;
+}
+
+.kpi-icon-green { -fx-stroke: #10B981; }
+.kpi-icon-blue { -fx-stroke: #3B82F6; }
+.kpi-icon-purple { -fx-stroke: #8B5CF6; }
+.kpi-icon-red { -fx-stroke: #EF4444; }
+.kpi-icon-teal { -fx-stroke: #14B8A6; }
+.kpi-icon-orange { -fx-stroke: #F97316; }
+.kpi-icon-indigo { -fx-stroke: #6366F1; }
+
+/* ─────────────────────────────────────────────────────────────────
+   NETTOYAGE DES GRAPHIQUES JAVAFX (CLEAN CHARTS)
+   ───────────────────────────────────────────────────────────────── */
+.chart-box {
+    -fx-padding: 25;
+}
+
+.premium-chart {
+    -fx-padding: 10 0 0 0;
+}
+
+.premium-chart .chart-plot-background {
+    -fx-background-color: transparent; /* Retire le fond gris moche */
+}
+
+.premium-chart .chart-vertical-grid-lines {
+    -fx-stroke: transparent; /* Retire les lignes verticales lourdes */
+}
+
+.premium-chart .chart-horizontal-grid-lines {
+    -fx-stroke: #E2E8F0; /* Lignes horizontales très discrètes */
+    -fx-stroke-dash-array: 5, 5;
+}
+
+.premium-chart .chart-series-line {
+    -fx-stroke-width: 3px; /* Courbes plus épaisses et modernes */
+}

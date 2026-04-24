@@ -4,24 +4,87 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane styleClass="root" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pharmacie.controllers.MainController">
+<BorderPane styleClass="root" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pharmacie.controllers.MainController">
+    <!-- NOUVEAU MENU LATÉRAL (NAVY BLUE) AVEC BORDERPANE -->
     <left>
-        <VBox spacing="10" style="-fx-background-color: #2C3E50; -fx-padding: 20;" minWidth="250">
-            <Label text="Menu Principal" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
-            <Separator />
-            <Button fx:id="btnDashboard" text="Tableau de Bord" onAction="#showDashboard" maxWidth="Infinity" styleClass="menu-button"/>
-            <Button fx:id="btnVentes" text="Ventes &amp; Caisse" onAction="#showSales" maxWidth="Infinity" styleClass="menu-button"/>
-            <Button fx:id="btnProduits" text="Produits &amp; Stock" onAction="#showProducts" maxWidth="Infinity" styleClass="menu-button"/>
-            <Button fx:id="btnAchats" text="Approvisionnement" onAction="#showPurchases" maxWidth="Infinity" styleClass="menu-button"/>
-            <Button fx:id="btnFournisseurs" text="Fournisseurs" onAction="#showFournisseurs" maxWidth="Infinity" styleClass="menu-button"/>
-            <Button fx:id="btnRapports" text="Rapports d'Activité" onAction="#showReports" maxWidth="Infinity" styleClass="menu-button"/>
-            <Button fx:id="btnUsers" text="Sécurité &amp; Accès" onAction="#showUsers" maxWidth="Infinity" styleClass="menu-button"/>
-            <Region VBox.vgrow="ALWAYS" />
-            <Button text="Déconnexion" onAction="#handleLogout" maxWidth="Infinity" style="-fx-background-color: #E74C3C; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10;"/>
-        </VBox>
+        <BorderPane styleClass="sidebar" minWidth="260" maxWidth="260">
+            <!-- 1. En-tête : Logo -->
+            <top>
+                <VBox alignment="CENTER" styleClass="sidebar-header">
+                    <javafx.scene.image.ImageView fitWidth="110" preserveRatio="true">
+                        <image>
+                            <javafx.scene.image.Image url="@../images/logo1.jpeg"/>
+                        </image>
+                    </javafx.scene.image.ImageView>
+                </VBox>
+            </top>
+            
+            <!-- 2. Liens de navigation avec Icônes (SVG natif) -->
+            <center>
+                <VBox spacing="4" styleClass="sidebar-menu">
+                    <Button fx:id="btnDashboard" text="Tableau de Bord" onAction="#showDashboard" maxWidth="Infinity" styleClass="menu-button">
+                        <graphic>
+                            <javafx.scene.shape.SVGPath content="M3 3h7v7H3z M14 3h7v7h-7z M14 14h7v7h-7z M3 14h7v7H3z" styleClass="menu-icon"/>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="btnVentes" text="Ventes &amp; Caisse" onAction="#showSales" maxWidth="Infinity" styleClass="menu-button">
+                        <graphic>
+                            <javafx.scene.shape.SVGPath content="M9 20a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm11 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" styleClass="menu-icon"/>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="btnProduits" text="Produits &amp; Stock" onAction="#showProducts" maxWidth="Infinity" styleClass="menu-button">
+                        <graphic>
+                            <javafx.scene.shape.SVGPath content="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z M3.27 6.96L12 12.01l8.73-5.05 M12 22.08V12" styleClass="menu-icon"/>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="btnAchats" text="Approvisionnement" onAction="#showPurchases" maxWidth="Infinity" styleClass="menu-button">
+                        <graphic>
+                            <javafx.scene.shape.SVGPath content="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4 M17 8l-5-5-5 5 M12 3v12" styleClass="menu-icon"/>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="btnFournisseurs" text="Fournisseurs" onAction="#showFournisseurs" maxWidth="Infinity" styleClass="menu-button">
+                        <graphic>
+                            <javafx.scene.shape.SVGPath content="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75" styleClass="menu-icon"/>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="btnRapports" text="Rapports d'Activité" onAction="#showReports" maxWidth="Infinity" styleClass="menu-button">
+                        <graphic>
+                            <javafx.scene.shape.SVGPath content="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8" styleClass="menu-icon"/>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="btnUsers" text="Sécurité &amp; Accès" onAction="#showUsers" maxWidth="Infinity" styleClass="menu-button">
+                        <graphic>
+                            <javafx.scene.shape.SVGPath content="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z M12 8v4 M12 16h.01" styleClass="menu-icon"/>
+                        </graphic>
+                    </Button>
+                </VBox>
+            </center>
+            
+            <!-- 3. Pied de page : Carte Profil & Déconnexion (Fixoé en bas) -->
+            <bottom>
+                <VBox styleClass="sidebar-footer">
+                    <HBox spacing="12" alignment="CENTER_LEFT" styleClass="profile-card">
+                        <StackPane styleClass="profile-avatar">
+                            <javafx.scene.shape.SVGPath content="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" styleClass="profile-icon"/>
+                        </StackPane>
+                        <VBox alignment="CENTER_LEFT">
+                            <Label fx:id="lblUserName" text="Agent Connecté" styleClass="profile-name"/>
+                            <Label fx:id="lblUserRole" text="Administrateur" styleClass="profile-role"/>
+                        </VBox>
+                    </HBox>
+                    <Button text="Déconnexion" onAction="#handleLogout" maxWidth="Infinity" styleClass="logout-button">
+                        <graphic>
+                            <javafx.scene.shape.SVGPath content="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4 M16 17l5-5-5-5 M21 12H9" styleClass="logout-icon"/>
+                        </graphic>
+                    </Button>
+                </VBox>
+            </bottom>
+        </BorderPane>
     </left>
+    
+    <!-- CONTENU PRINCIPAL -->
     <center>
-        <StackPane fx:id="contentArea" style="-fx-background-color: #ECF0F1; -fx-padding: 20;">
+        <StackPane fx:id="contentArea" styleClass="main-content-area">
             <Label text="Bienvenue dans votre système de gestion !" style="-fx-font-size: 24px; -fx-text-fill: #bdc3c7;"/>
         </StackPane>
     </center>

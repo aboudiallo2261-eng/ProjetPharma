@@ -1,0 +1,42 @@
+=======================================================
+DOCUMENTATION D'IMPLÉMENTATION UX/UI - MENU LATÉRAL
+=======================================================
+Objectif : Refonte du menu latéral (Sidebar) pour garantir 
+l'absence de coupure d'écran (Zero-Scroll) et un rendu 
+SaaS Premium (Navy Blue + SVG Natif).
+
+1. CHOIX ARCHITECTURAUX (FXML)
+-------------------------------------------------------
+Nous avons restructuré le layout racine de la sidebar en `BorderPane`.
+- `<top>` : Fixation du Logo Pharmacie en haut.
+- `<center>` : Les liens de navigation avec un alignement fluide.
+- `<bottom>` : La carte de profil (avatar + nom) et le bouton de 
+  Déconnexion sont physiquement collés au bord inférieur.
+Cette approche empêche toute coupure de l'UI sur les petits écrans.
+
+2. LOGIQUE MÉTIER & PROFIL DYNAMIQUE
+-------------------------------------------------------
+Dans `MainController.java`, nous injectons le vrai nom et rôle de 
+l'utilisateur connecté :
+- `lblUserName.setText(currentUser.getNom())`
+- `lblUserRole.setText(currentUser.getProfil().getNom())`
+Cela offre une personnalisation instantanée de l'espace de travail.
+
+3. DESIGN SYSTEM (CSS) & COULEURS
+-------------------------------------------------------
+Le menu utilise la palette "Navy Blue" de Tailwind CSS :
+- Fond principal : Slate-800 (`#1E293B`)
+- Fond du pied de page : Slate-900 (`#0F172A`)
+- Effets Hover (Survol) : Les boutons du menu passent d'un gris doux 
+  à un blanc pur avec un fond Slate-700. Les icônes s'illuminent en 
+  Vert Pharmacie (`#22C55E`), guidant l'œil de l'utilisateur.
+
+4. INDÉPENDANCE ET PÉRENNITÉ (ZÉRO IA, 100% NATIF)
+-------------------------------------------------------
+L'interface est optimisée "100% hors-ligne" grâce à l'utilisation du format 
+SVG natif (`<SVGPath>`). Les coordonnées mathématiques (M12...) sont 
+issues de la bibliothèque open-source Feather Icons.
+- Avantage 1 : L'application n'a besoin d'aucune image externe.
+- Avantage 2 : Les icônes restent nettes quelle que soit la résolution.
+- Avantage 3 : La coloration des icônes est gérée par CSS via `-fx-stroke`, 
+  ce qui est impossible avec des images classiques.

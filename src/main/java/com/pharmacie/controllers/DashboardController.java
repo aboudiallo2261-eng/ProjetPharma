@@ -384,66 +384,27 @@ public class DashboardController {
     }
 
     // =================================================================
-    // Détail alertes — lazy (chargé uniquement sur clic)
+    // Détail alertes — Ouverture de la modale Premium
     // =================================================================
     private void afficherDetailAlertesAsync() {
-        LocalDate today = LocalDate.now();
-        Task<String> taskDetail = new Task<>() {
-            @Override
-            protected String call() {
-                List<Lot> expiredLots = lotDAO.findAll().stream()
-                    .filter(l -> l.getQuantiteStock() > 0
-                             && l.getDateExpiration() != null
-                             && !l.getDateExpiration().isAfter(today))
-                    .toList();
-
-                List<Produit> produits = produitDAO.findAll();
-                List<Lot>     lots     = lotDAO.findAll();
-
-                StringBuilder msg = new StringBuilder("DÉTAIL DES ALERTES\n====================\n\n");
-                msg.append("1. RUPTURES / SEUILS ATTEINTS\n");
-                int count = 0;
-                for (Produit p : produits) {
-                    int qteTotale = lots.stream()
-                        .filter(l -> l.getProduit().getId().equals(p.getId()))
-                        .mapToInt(Lot::getQuantiteStock).sum();
-                    int seuil = p.getSeuilAlerte() != null ? p.getSeuilAlerte() : 0;
-                    if (qteTotale <= seuil) {
-                        msg.append(" - ").append(p.getNom())
-                           .append(" | Stock: ").append(qteTotale)
-                           .append(" | Seuil: ").append(seuil).append("\n");
-                        count++;
-                    }
-                }
-                if (count == 0) msg.append(" - Aucun produit en rupture.\n");
-
-                msg.append("\n2. LOTS PÉRIMÉS EN RAYON (").append(expiredLots.size()).append(")\n");
-                for (Lot l : expiredLots) {
-                    msg.append(" - ").append(l.getProduit().getNom())
-                       .append(" | Lot N°").append(l.getNumeroLot() != null ? l.getNumeroLot() : "N/A")
-                       .append(" | Expiré le : ").append(l.getDateExpiration()).append("\n");
-                }
-                if (expiredLots.isEmpty()) msg.append(" - Aucun lot expiré.\n");
-
-                return msg.toString();
-            }
-        };
-
-        taskDetail.setOnSucceeded(e -> {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Alertes Stock & Péremptions");
-            alert.setHeaderText("Action requise en pharmacie !");
-            TextArea area = new TextArea(taskDetail.getValue());
-            area.setEditable(false);
-            area.setWrapText(true);
-            area.setPrefHeight(300);
-            alert.getDialogPane().setContent(area);
-            alert.showAndWait();
-        });
-
-        Thread t = new Thread(taskDetail);
-        t.setDaemon(true);
-        t.start();
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/fxml/alertes_stock.fxml"));
+            javafx.scene.Parent root = loader.load();
+            
+            javafx.stage.Stage modalStage = new javafx.stage.Stage();
+            modalStage.setTitle("Centre d'Alertes - Pharmacie");
+            modalStage.setScene(new javafx.scene.Scene(root, 950, 650));
+            
+            // Bloque l'application principale tant que la modale est ouverte
+            modalStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            // Empêche le redimensionnement pour conserver le design Premium
+            modalStage.setResizable(false);
+            
+            modalStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("[Dashboard] Erreur lors de l'ouverture de la modale d'alertes.");
+        }
     }
 
     // =================================================================

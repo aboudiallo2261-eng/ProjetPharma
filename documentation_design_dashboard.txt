@@ -1,0 +1,41 @@
+=======================================================
+DOCUMENTATION D'IMPLÉMENTATION UX/UI - TABLEAU DE BORD
+=======================================================
+Objectif : Refonte du Dashboard analytique pour remplacer 
+une conception générique (VBox) par un Cockpit SaaS Premium.
+
+1. CHOIX ARCHITECTURAUX ET ERGONOMIQUES (FXML)
+-------------------------------------------------------
+A. Refonte des KPI (Indicateurs de Performance)
+   - L'ancienne structure empilait du texte sans aide visuelle.
+   - La nouvelle structure utilise un composant horizontal (HBox).
+     À gauche : Le texte. À droite : Un badge circulaire.
+   - Les badges contiennent des SVG (100% Natif, hors-ligne) avec un 
+     fond pastel (Glassmorphism) pour diriger l'attention du cerveau.
+   - La police des chiffres a été sécurisée (de 28px à 22px) avec des
+     propriétés `HBox.hgrow` pour empêcher tout débordement sur de 
+     grands nombres.
+
+B. Menu de Filtres Fluide
+   - Remplacement de l'anti-pattern `GridPane` par un `HBox` fluide.
+   - Les éléments s'alignent naturellement et le bouton "Appliquer" 
+     est poussé à droite grâce à un composant `<Region HBox.hgrow="ALWAYS"/>`.
+
+2. DESIGN SYSTEM (CSS) & GRAPHIQUES JAVAFX
+-------------------------------------------------------
+JavaFX génère par défaut des graphiques encombrés. L'intervention
+CSS a permis de nettoyer l'interface :
+- `chart-plot-background` : Rend le fond gris transparent.
+- `chart-vertical-grid-lines` : Retire les lignes verticales.
+- `chart-horizontal-grid-lines` : Transforme les lignes horizontales
+  en pointillés très discrets (`stroke-dash-array`).
+- `chart-series-line` : Épaissit les courbes à 3px pour un rendu 
+  SaaS contemporain.
+
+3. INDÉPENDANCE TECHNIQUE (100% HUMAIN)
+-------------------------------------------------------
+Toutes les icônes (loupe, sac d'argent, graphiques dans les KPI)
+sont tracées via leurs coordonnées mathématiques `<SVGPath content="...">`.
+Ce choix d'ingénieur assure que l'application ne plantera jamais à 
+cause d'une police externe manquante, tout en garantissant des temps 
+de réponse instantanés (car tout est stocké dans le code binaire Java).

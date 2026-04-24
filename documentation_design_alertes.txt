@@ -1,0 +1,42 @@
+=======================================================
+DOCUMENTATION D'IMPLÉMENTATION UX/UI - MODALE D'ALERTES
+=======================================================
+Objectif : Transformer une simple fenêtre FXML utilitaire 
+en un "Centre d'Alertes" premium, cohérent avec le design SaaS.
+
+1. CHOIX ARCHITECTURAUX ET ÉRADICATION DU CSS INLINE
+-------------------------------------------------------
+Auparavant, le fichier `alertes_stock.fxml` contenait des styles 
+CSS codés en dur (`style="-fx-background-color: white;"`). 
+Cette approche "IA/Brouillon" a été totalement supprimée au profit 
+d'une séparation stricte des préoccupations (Séparation MVC).
+Toute la structure graphique s'appuie désormais sur des classes 
+sémantiques (`modal-root`, `modal-header`, `modern-tab-pane`) 
+définies dans `styles.css`.
+
+2. ERGONOMIE VISUELLE ET "GLASSMORPHISM"
+-------------------------------------------------------
+Les compteurs de l'en-tête ont été transformés en "mini-cartes KPI" :
+- Ruptures de stock : Badge rouge translucide + Icône d'alerte SVG.
+- Péremptions : Badge violet translucide + Icône calendrier SVG.
+Ce choix de "Glassmorphism" pastel est une norme dans les interfaces 
+modernes (Tailwind CSS, Material 3) car il permet d'attirer l'œil 
+sans agresser l'utilisateur avec des couleurs unies trop dures.
+
+3. TABPANE MODERNE (ONGLETS WEB)
+-------------------------------------------------------
+Les onglets natifs JavaFX (avec leurs grosses bordures grises) 
+ont été remplacés par un rendu "Web/Material" :
+- Fond transparent.
+- Police élégante (`Slate 500`).
+- L'onglet actif se distingue par une ligne bleue discrète 
+  sous le texte (`border-bottom`), reproduisant parfaitement 
+  l'expérience utilisateur d'un navigateur internet.
+
+4. INDÉPENDANCE ET ZÉRO DÉPENDANCE EXTERNE
+-------------------------------------------------------
+Absolument toutes les icônes (Cloche, Imprimante, Loupe, Alerte) 
+sont dessinées avec la balise vectorielle `<SVGPath>`.
+C'est un choix d'ingénieur garantissant un logiciel 100% hors-ligne, 
+dont les graphiques restent nets sur n'importe quel écran, sans 
+jamais requérir le chargement d'images externes PNG/JPG.

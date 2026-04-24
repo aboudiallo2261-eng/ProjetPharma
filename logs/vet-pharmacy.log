@@ -388,3 +388,559 @@
 2026-04-24 18:01:22.448 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
 2026-04-24 18:01:35.431 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
 2026-04-24 18:01:35.431 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-24 18:37:49.106 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-04-24 18:37:50.246 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-24 18:37:50.678 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-24 18:37:59.692 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 18:37:59.692 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 18:37:59.693 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 18:38:11.185 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-24 18:42:59.657 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 18:42:59.658 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 18:42:59.658 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 18:43:04.131 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-04-24 18:43:04.132 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-24 18:43:21.982 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-04-24 18:43:23.102 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-24 18:43:23.534 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-24 18:43:32.543 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 18:43:32.543 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 18:43:32.544 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 18:43:37.381 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-24 18:44:28.788 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-24 18:45:05.114 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion réussie: iria
+2026-04-24 18:48:32.593 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 18:48:32.593 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 18:48:32.593 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 18:53:32.578 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 18:53:32.579 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 18:53:32.579 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 18:58:32.559 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 18:58:32.559 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 18:58:32.559 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 19:00:33.830 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-24 19:03:32.564 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 19:03:32.565 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 19:03:32.565 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 19:05:13.210 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-04-24 19:05:13.210 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-24 19:05:33.105 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-04-24 19:05:34.208 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-24 19:05:34.644 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-24 19:05:43.732 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 19:05:43.733 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 19:05:43.734 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 19:05:49.823 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-24 19:10:43.909 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 19:10:43.909 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 19:10:43.909 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 19:15:56.185 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 19:15:56.185 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 19:15:56.186 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 19:16:56.284 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-04-24 19:16:56.284 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-24 19:17:14.519 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-04-24 19:17:15.625 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-24 19:17:16.035 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-24 19:17:25.073 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 19:17:25.074 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 19:17:25.074 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 19:18:12.856 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-24 19:18:12.918 [JavaFX Application Thread] ERROR c.p.controllers.MainController - Erreur chargement d'une Vue (MainController)
+javafx.fxml.LoadException: 
+/C:/projetjavasout/target/classes/fxml/dashboard.fxml:30
+
+	at javafx.fxml/javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2714)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2692)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2555)
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2523)
+	at com.pharmacie.controllers.MainController.loadView(MainController.java:92)
+	at com.pharmacie.controllers.MainController.showDashboard(MainController.java:101)
+	at com.pharmacie.controllers.MainController.initialize(MainController.java:70)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2680)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2555)
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2523)
+	at com.pharmacie.MainApp.showMainLayout(MainApp.java:79)
+	at com.pharmacie.controllers.LoginController.handleLogin(LoginController.java:102)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1854)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: java.lang.IllegalArgumentException: Unable to coerce 0 0 0 10 to class javafx.geometry.Insets.
+	at javafx.fxml/com.sun.javafx.fxml.BeanAdapter.coerce(BeanAdapter.java:497)
+	at javafx.fxml/com.sun.javafx.fxml.BeanAdapter.put(BeanAdapter.java:259)
+	at javafx.fxml/com.sun.javafx.fxml.BeanAdapter.put(BeanAdapter.java:54)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.applyProperty(FXMLLoader.java:523)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.processValue(FXMLLoader.java:373)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.processPropertyAttribute(FXMLLoader.java:335)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.processInstancePropertyAttributes(FXMLLoader.java:245)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ValueElement.processEndElement(FXMLLoader.java:778)
+	at javafx.fxml/javafx.fxml.FXMLLoader.processEndElement(FXMLLoader.java:2961)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2646)
+	... 77 common frames omitted
+2026-04-24 19:18:20.913 [JavaFX Application Thread] ERROR c.p.controllers.MainController - Erreur chargement d'une Vue (MainController)
+javafx.fxml.LoadException: 
+/C:/projetjavasout/target/classes/fxml/dashboard.fxml:30
+
+	at javafx.fxml/javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2714)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2692)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2555)
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2523)
+	at com.pharmacie.controllers.MainController.loadView(MainController.java:92)
+	at com.pharmacie.controllers.MainController.showDashboard(MainController.java:101)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1854)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: java.lang.IllegalArgumentException: Unable to coerce 0 0 0 10 to class javafx.geometry.Insets.
+	at javafx.fxml/com.sun.javafx.fxml.BeanAdapter.coerce(BeanAdapter.java:497)
+	at javafx.fxml/com.sun.javafx.fxml.BeanAdapter.put(BeanAdapter.java:259)
+	at javafx.fxml/com.sun.javafx.fxml.BeanAdapter.put(BeanAdapter.java:54)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.applyProperty(FXMLLoader.java:523)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.processValue(FXMLLoader.java:373)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.processPropertyAttribute(FXMLLoader.java:335)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.processInstancePropertyAttributes(FXMLLoader.java:245)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ValueElement.processEndElement(FXMLLoader.java:778)
+	at javafx.fxml/javafx.fxml.FXMLLoader.processEndElement(FXMLLoader.java:2961)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2646)
+	... 61 common frames omitted
+2026-04-24 19:18:22.251 [JavaFX Application Thread] ERROR c.p.controllers.MainController - Erreur chargement d'une Vue (MainController)
+javafx.fxml.LoadException: 
+/C:/projetjavasout/target/classes/fxml/dashboard.fxml:30
+
+	at javafx.fxml/javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2714)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2692)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2555)
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2523)
+	at com.pharmacie.controllers.MainController.loadView(MainController.java:92)
+	at com.pharmacie.controllers.MainController.showDashboard(MainController.java:101)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1854)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: java.lang.IllegalArgumentException: Unable to coerce 0 0 0 10 to class javafx.geometry.Insets.
+	at javafx.fxml/com.sun.javafx.fxml.BeanAdapter.coerce(BeanAdapter.java:497)
+	at javafx.fxml/com.sun.javafx.fxml.BeanAdapter.put(BeanAdapter.java:259)
+	at javafx.fxml/com.sun.javafx.fxml.BeanAdapter.put(BeanAdapter.java:54)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.applyProperty(FXMLLoader.java:523)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.processValue(FXMLLoader.java:373)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.processPropertyAttribute(FXMLLoader.java:335)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.processInstancePropertyAttributes(FXMLLoader.java:245)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ValueElement.processEndElement(FXMLLoader.java:778)
+	at javafx.fxml/javafx.fxml.FXMLLoader.processEndElement(FXMLLoader.java:2961)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2646)
+	... 61 common frames omitted
+2026-04-24 19:18:23.048 [JavaFX Application Thread] ERROR c.p.controllers.MainController - Erreur chargement d'une Vue (MainController)
+javafx.fxml.LoadException: 
+/C:/projetjavasout/target/classes/fxml/dashboard.fxml:30
+
+	at javafx.fxml/javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2714)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2692)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2555)
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2523)
+	at com.pharmacie.controllers.MainController.loadView(MainController.java:92)
+	at com.pharmacie.controllers.MainController.showDashboard(MainController.java:101)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1854)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: java.lang.IllegalArgumentException: Unable to coerce 0 0 0 10 to class javafx.geometry.Insets.
+	at javafx.fxml/com.sun.javafx.fxml.BeanAdapter.coerce(BeanAdapter.java:497)
+	at javafx.fxml/com.sun.javafx.fxml.BeanAdapter.put(BeanAdapter.java:259)
+	at javafx.fxml/com.sun.javafx.fxml.BeanAdapter.put(BeanAdapter.java:54)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.applyProperty(FXMLLoader.java:523)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.processValue(FXMLLoader.java:373)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.processPropertyAttribute(FXMLLoader.java:335)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.processInstancePropertyAttributes(FXMLLoader.java:245)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ValueElement.processEndElement(FXMLLoader.java:778)
+	at javafx.fxml/javafx.fxml.FXMLLoader.processEndElement(FXMLLoader.java:2961)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2646)
+	... 61 common frames omitted
+2026-04-24 19:18:23.274 [JavaFX Application Thread] ERROR c.p.controllers.MainController - Erreur chargement d'une Vue (MainController)
+javafx.fxml.LoadException: 
+/C:/projetjavasout/target/classes/fxml/dashboard.fxml:30
+
+	at javafx.fxml/javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2714)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2692)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2555)
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2523)
+	at com.pharmacie.controllers.MainController.loadView(MainController.java:92)
+	at com.pharmacie.controllers.MainController.showDashboard(MainController.java:101)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1854)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: java.lang.IllegalArgumentException: Unable to coerce 0 0 0 10 to class javafx.geometry.Insets.
+	at javafx.fxml/com.sun.javafx.fxml.BeanAdapter.coerce(BeanAdapter.java:497)
+	at javafx.fxml/com.sun.javafx.fxml.BeanAdapter.put(BeanAdapter.java:259)
+	at javafx.fxml/com.sun.javafx.fxml.BeanAdapter.put(BeanAdapter.java:54)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.applyProperty(FXMLLoader.java:523)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.processValue(FXMLLoader.java:373)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.processPropertyAttribute(FXMLLoader.java:335)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.processInstancePropertyAttributes(FXMLLoader.java:245)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ValueElement.processEndElement(FXMLLoader.java:778)
+	at javafx.fxml/javafx.fxml.FXMLLoader.processEndElement(FXMLLoader.java:2961)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2646)
+	... 61 common frames omitted
+2026-04-24 19:20:07.047 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-04-24 19:20:07.047 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-24 19:20:34.139 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-04-24 19:20:35.266 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-24 19:20:35.679 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-24 19:20:55.506 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-24 19:20:55.895 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 19:20:55.896 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 19:20:55.896 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 19:25:44.687 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 19:25:44.687 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 19:25:44.688 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 19:29:37.942 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-04-24 19:29:37.942 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-24 19:30:08.232 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-04-24 19:30:10.149 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-24 19:30:10.799 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-24 19:30:18.806 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 19:30:18.806 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 19:30:18.807 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 19:30:44.748 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-24 19:35:30.011 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 19:35:30.029 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 19:35:30.029 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 19:37:20.444 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-04-24 19:37:20.446 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-24 19:37:50.741 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-04-24 19:37:52.535 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-24 19:37:53.209 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-24 19:38:01.314 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 19:38:01.315 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 19:38:01.315 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 19:38:08.234 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-24 19:43:13.443 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 19:43:13.443 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 19:43:13.444 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 19:48:01.338 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 19:48:01.338 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 19:48:01.338 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 19:53:01.732 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 19:53:01.732 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 19:53:01.732 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 19:53:34.056 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-04-24 19:53:34.056 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-24 19:54:04.001 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-04-24 19:54:05.862 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-24 19:54:06.546 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-24 19:54:25.716 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 19:54:25.717 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 19:54:25.717 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 19:55:09.884 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-24 19:55:22.736 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-04-24 19:55:22.736 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-24 19:56:03.046 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-04-24 19:56:05.112 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-24 19:56:05.843 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-24 19:56:20.954 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-24 19:56:24.802 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 19:56:24.802 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 19:56:24.803 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 20:01:13.587 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 20:01:13.587 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 20:01:13.587 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 20:04:18.082 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-04-24 20:04:18.085 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-24 20:04:49.251 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-04-24 20:04:51.126 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-24 20:04:51.771 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-24 20:05:10.963 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 20:05:10.964 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 20:05:10.964 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 20:05:14.398 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-24 20:10:12.835 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 20:10:12.835 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 20:10:12.836 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 20:11:10.173 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-04-24 20:11:10.173 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-24 20:11:46.598 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-04-24 20:11:48.483 [JavaFX Application Thread] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2026-04-24 20:11:49.208 [JavaFX Application Thread] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-24 20:12:08.675 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-04-24 20:12:16.264 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-24 20:17:09.203 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-24 20:17:09.204 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-24 20:17:09.204 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-24 20:22:02.663 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-04-24 20:22:02.664 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.

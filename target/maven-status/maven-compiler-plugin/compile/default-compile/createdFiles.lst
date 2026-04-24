@@ -96,7 +96,6 @@ com\pharmacie\controllers\AchatController$1.class
 com\pharmacie\controllers\AchatController$10.class
 com\pharmacie\controllers\ProduitController$EtatStockDTO.class
 com\pharmacie\MainApp.class
-com\pharmacie\controllers\DashboardController$4.class
 com\pharmacie\dao\SessionCaisseDAO.class
 com\pharmacie\models\Lot.class
 com\pharmacie\models\Vente$ModePaiement.class

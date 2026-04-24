@@ -31,12 +31,18 @@ public class MainController {
     private Button btnRapports;
     @FXML
     private Button btnUsers;
+    
+    @FXML private javafx.scene.control.Label lblUserName;
+    @FXML private javafx.scene.control.Label lblUserRole;
 
     @FXML
     public void initialize() {
         User currentUser = SessionManager.getCurrentUser();
         if (currentUser != null && currentUser.getProfil() != null) {
             com.pharmacie.models.Profil p = currentUser.getProfil();
+            
+            if(lblUserName != null) lblUserName.setText(currentUser.getNom());
+            if(lblUserRole != null) lblUserRole.setText(p.getNom());
 
             btnDashboard.setVisible(p.isCanAccessDashboard());
             btnDashboard.setManaged(p.isCanAccessDashboard());
