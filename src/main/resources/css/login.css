@@ -1,0 +1,117 @@
+/* Palette de couleurs "Vert Pharmacie Premium" */
+.root {
+    -fx-background-color: #F0FDF4; /* Vert menthe très pâle (Tailwind green-50) */
+    -fx-font-family: 'Segoe UI', 'Inter', sans-serif;
+}
+
+/* Carte de connexion centrale */
+.login-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12;
+    -fx-padding: 40;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 20, 0, 0, 10);
+}
+
+/* Typographie */
+.title-text {
+    -fx-font-size: 24px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #1E293B; /* Slate-800 */
+}
+
+.subtitle-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748B; /* Slate-500 */
+}
+
+.field-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #334155; /* Slate-700 */
+}
+
+/* Champs de saisie avec icônes */
+.input-container {
+    -fx-background-color: #F8FAFC; /* Slate-50 */
+    -fx-background-radius: 6;
+    -fx-border-color: #E2E8F0; /* Slate-200 */
+    -fx-border-radius: 6;
+    -fx-border-width: 1px;
+    -fx-padding: 5 10;
+}
+
+/* Effet Focus sur le conteneur simulé par le TextField */
+.input-container:focus-within {
+    -fx-border-color: #059669; /* Emerald-600 */
+    -fx-background-color: #FFFFFF;
+}
+
+.input-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-font-size: 14px;
+    -fx-text-fill: #0F172A; /* Slate-900 */
+    -fx-padding: 8;
+}
+
+.input-field:focus {
+    -fx-background-color: transparent;
+}
+
+/* Icônes SVG */
+.input-icon {
+    -fx-fill: transparent;
+    -fx-stroke: #94A3B8; /* Slate-400 */
+    -fx-stroke-width: 2px;
+    -fx-stroke-linecap: round;
+    -fx-stroke-linejoin: round;
+    -fx-scale-x: 0.9;
+    -fx-scale-y: 0.9;
+}
+
+.input-container:focus-within .input-icon {
+    -fx-stroke: #059669; /* Vert émeraude quand sélectionné */
+}
+
+/* Bouton pour afficher le mot de passe */
+.btn-icon {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-padding: 5;
+}
+
+.btn-icon:hover .eye-icon {
+    -fx-stroke: #334155; /* Devient plus foncé au survol */
+}
+
+/* Bouton Connexion */
+.button-primary {
+    -fx-background-color: #059669; /* Emerald-600 */
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 12 20;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(5, 150, 105, 0.3), 10, 0, 0, 4);
+}
+
+.button-primary:hover {
+    -fx-background-color: #047857; /* Emerald-700 */
+}
+
+.button-primary:pressed {
+    -fx-background-color: #064E3B; /* Emerald-900 */
+    -fx-effect: dropshadow(three-pass-box, rgba(5, 150, 105, 0), 0, 0, 0, 0);
+    -fx-translate-y: 1px; /* Petit effet d'enfoncement */
+}
+
+/* Messages d'erreur élégants */
+.error-label {
+    -fx-text-fill: #E11D48; /* Rose-600 */
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-color: #FFE4E6; /* Rose-100 */
+    -fx-padding: 8 12;
+    -fx-background-radius: 4;
+}

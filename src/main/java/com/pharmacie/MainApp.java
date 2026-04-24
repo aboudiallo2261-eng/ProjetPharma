@@ -23,19 +23,22 @@ public class MainApp extends Application {
         log.info("Démarrage de l'application Vet-Pharmacy...");
         primaryStage = stage;
         primaryStage.setTitle("Pharmacie Vétérinaire - Gestion");
-        
+
         primaryStage.setOnCloseRequest(event -> {
             if (com.pharmacie.utils.SessionManager.getCurrentUser() != null) {
                 com.pharmacie.dao.SessionCaisseDAO sessionDAO = new com.pharmacie.dao.SessionCaisseDAO();
                 boolean isCaisseOpen = sessionDAO.findAll().stream()
-                    .anyMatch(s -> s.getUser().getId().equals(com.pharmacie.utils.SessionManager.getCurrentUser().getId()) 
-                                   && s.getStatut() == com.pharmacie.models.SessionCaisse.StatutSession.OUVERTE);
+                        .anyMatch(s -> s.getUser().getId()
+                                .equals(com.pharmacie.utils.SessionManager.getCurrentUser().getId())
+                                && s.getStatut() == com.pharmacie.models.SessionCaisse.StatutSession.OUVERTE);
 
                 if (isCaisseOpen) {
-                    javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                    javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
+                            javafx.scene.control.Alert.AlertType.ERROR);
                     alert.setTitle("Fermeture Impossible");
                     alert.setHeaderText("🚨 Caisse logicielle toujours ouverte !");
-                    alert.setContentText("La norme de sécurité interdisant la disparition des agents, vous ne pouvez pas fermer l'application sans justifier le compte du tiroir.\n\nVeuillez clôturer votre caisse (Z) d'abord.");
+                    alert.setContentText(
+                            "La norme de sécurité interdisant la disparition des agents, vous ne pouvez pas fermer l'application sans justifier le compte du tiroir.\n\nVeuillez clôturer votre caisse (Z) d'abord.");
                     alert.showAndWait();
                     event.consume(); // Bloque la fermeture de JavaFX
                 }
@@ -57,12 +60,12 @@ public class MainApp extends Application {
         try {
             FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/fxml/login.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root, 600, 400);
+            Scene scene = new Scene(root, 900, 600);
             scene.getStylesheets().add(MainApp.class.getResource("/css/styles.css").toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.setMaximized(false);
-            primaryStage.setWidth(600);
-            primaryStage.setHeight(400);
+            primaryStage.setWidth(620);
+            primaryStage.setHeight(600);
             primaryStage.centerOnScreen();
             primaryStage.show();
         } catch (IOException e) {
@@ -79,7 +82,7 @@ public class MainApp extends Application {
             primaryStage.setScene(scene);
             primaryStage.setMaximized(false); // Force le reset pour que le true suivant soit détecté
             primaryStage.setMaximized(true);
-            primaryStage.show(); 
+            primaryStage.show();
         } catch (IOException e) {
             log.error("Erreur critique lors du chargement de l'interface principale (main_layout.fxml)", e);
         }

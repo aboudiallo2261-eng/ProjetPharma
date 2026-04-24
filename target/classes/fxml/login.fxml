@@ -2,25 +2,75 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
 
-<StackPane styleClass="root" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pharmacie.controllers.LoginController">
-    <VBox alignment="CENTER" maxWidth="400" maxHeight="350" spacing="20" styleClass="login-container">
-        <Label text="Pharmacie Vétérinaire" styleClass="title-text"/>
-        <Label text="Veuillez vous connecter pour continuer" textFill="#7f8c8d"/>
+<!-- Conteneur principal plein écran avec fond Menthe Pâle -->
+<StackPane styleClass="root" stylesheets="@../css/login.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pharmacie.controllers.LoginController">
+
+    <!-- La "Carte" de connexion blanche centrale -->
+    <VBox alignment="CENTER" maxWidth="450" maxHeight="500" spacing="25" styleClass="login-card">
         
-        <VBox spacing="5" alignment="CENTER_LEFT">
-            <Label text="Identifiant" />
-            <TextField fx:id="identifiantField" promptText="Saisissez votre identifiant..." maxWidth="Infinity"/>
+        <!-- Logo de la Pharmacie -->
+        <ImageView fitWidth="140" preserveRatio="true" styleClass="logo-image">
+            <image>
+                <Image url="@../images/logo1.jpeg"/>
+            </image>
+            <VBox.margin>
+                <Insets bottom="10"/>
+            </VBox.margin>
+        </ImageView>
+
+        <!-- Titre et Sous-titre -->
+        <VBox alignment="CENTER" spacing="5">
+            <Label text="Connexion Sécurisée" styleClass="title-text"/>
+            <Label text="Veuillez vous authentifier pour accéder à la caisse" styleClass="subtitle-text"/>
         </VBox>
         
-        <VBox spacing="5" alignment="CENTER_LEFT">
-            <Label text="Mot de passe" />
-            <PasswordField fx:id="passwordField" promptText="Saisissez votre mot de passe..." maxWidth="Infinity"/>
+        <!-- Messages d'erreur -->
+        <Label fx:id="errorLabel" text="" styleClass="error-label" visible="false" managed="false"/>
+
+        <!-- Formulaire -->
+        <VBox spacing="15" maxWidth="350">
+            <!-- Champ Identifiant -->
+            <VBox spacing="8">
+                <Label text="Identifiant" styleClass="field-label"/>
+                <HBox alignment="CENTER_LEFT" styleClass="input-container">
+                    <!-- Icône Utilisateur (Feather SVG) -->
+                    <SVGPath content="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" styleClass="input-icon"/>
+                    <TextField fx:id="identifiantField" promptText="Saisissez votre identifiant..." HBox.hgrow="ALWAYS" styleClass="input-field"/>
+                </HBox>
+            </VBox>
+
+            <!-- Champ Mot de Passe -->
+            <VBox spacing="8">
+                <Label text="Mot de Passe" styleClass="field-label"/>
+                <HBox alignment="CENTER_LEFT" styleClass="input-container">
+                    <!-- Icône Cadenas (Feather SVG) -->
+                    <SVGPath content="M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2z M7 11V7a5 5 0 0 1 10 0v4" styleClass="input-icon"/>
+                    
+                    <StackPane HBox.hgrow="ALWAYS">
+                        <PasswordField fx:id="passwordField" promptText="Saisissez votre mot de passe..." styleClass="input-field"/>
+                        <TextField fx:id="passwordVisibleField" promptText="Saisissez votre mot de passe..." styleClass="input-field" visible="false" managed="false"/>
+                    </StackPane>
+                    
+                    <!-- Bouton pour voir le mot de passe -->
+                    <Button fx:id="btnTogglePassword" styleClass="btn-icon" onAction="#togglePasswordVisibility">
+                        <graphic>
+                            <SVGPath fx:id="eyeIcon" content="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" styleClass="input-icon, eye-icon"/>
+                        </graphic>
+                    </Button>
+                </HBox>
+            </VBox>
         </VBox>
 
-        <Label fx:id="errorLabel" styleClass="error-label" visible="false"/>
+        <!-- Bouton Connexion -->
+        <Button text="Se Connecter" onAction="#handleLogin" maxWidth="350" styleClass="button-primary">
+            <VBox.margin>
+                <Insets top="10"/>
+            </VBox.margin>
+        </Button>
         
-        <Button text="Se Connecter" onAction="#handleLogin" styleClass="button-primary" maxWidth="Infinity"/>
     </VBox>
 </StackPane>
-

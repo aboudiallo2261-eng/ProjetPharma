@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.shape.SVGPath;
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,12 @@ public class LoginController {
 
     @FXML
     private PasswordField passwordField;
+    
+    @FXML
+    private TextField passwordVisibleField;
+    
+    @FXML
+    private SVGPath eyeIcon;
 
     @FXML
     private Label errorLabel;
@@ -31,6 +38,40 @@ public class LoginController {
     public void initialize() {
         // S'assurer que les rôles et permissions sont créés au démarrage
         com.pharmacie.utils.SecuritySeeder.initializeSecurity();
+        
+        // P2.A: Synchroniser les champs de mot de passe (caché et visible)
+        if (passwordVisibleField != null && passwordField != null) {
+            passwordVisibleField.textProperty().bindBidirectional(passwordField.textProperty());
+        }
+    }
+
+    @FXML
+    public void togglePasswordVisibility() {
+        if (passwordVisibleField.isVisible()) {
+            // Passer en mode masqué (cadenas)
+            passwordVisibleField.setVisible(false);
+            passwordVisibleField.setManaged(false);
+            passwordField.setVisible(true);
+            passwordField.setManaged(true);
+            // Icône "Œil Ouvert" (signifie : cliquez ici pour afficher)
+            eyeIcon.setContent("M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z M12 9a3 3 0 1 0 0 6 3 3 0 1 0 0-6z");
+            passwordField.requestFocus();
+        } else {
+            // Passer en mode texte clair
+            passwordVisibleField.setVisible(true);
+            passwordVisibleField.setManaged(true);
+            passwordField.setVisible(false);
+            passwordField.setManaged(false);
+            // Icône "Œil Barré" (Feather Icon eye-off)
+            eyeIcon.setContent("M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24M1 1l22 22");
+            passwordVisibleField.requestFocus();
+        }
+        // Placer le curseur à la fin du texte pour une bonne UX
+        if (passwordVisibleField.isVisible()) {
+            passwordVisibleField.positionCaret(passwordVisibleField.getText().length());
+        } else {
+            passwordField.positionCaret(passwordField.getText().length());
+        }
     }
 
     @FXML

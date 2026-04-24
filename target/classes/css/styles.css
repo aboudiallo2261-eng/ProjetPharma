@@ -14,7 +14,7 @@
 
 .login-container {
     -fx-background-color: #FFFFFF;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
     -fx-background-radius: 8;
     -fx-border-radius: 8;
     -fx-padding: 40;
@@ -26,7 +26,8 @@
     -fx-text-fill: #2C3E50;
 }
 
-.text-field, .password-field {
+.text-field,
+.password-field {
     -fx-font-size: 14px;
     -fx-padding: 10;
     -fx-background-radius: 4;
@@ -35,7 +36,8 @@
     -fx-background-color: #FFFFFF;
 }
 
-.text-field:focused, .password-field:focused {
+.text-field:focused,
+.password-field:focused {
     -fx-border-color: #18BC9C;
     -fx-border-width: 2px;
 }
@@ -80,12 +82,12 @@
 .card {
     -fx-background-color: #FFFFFF;
     -fx-background-radius: 10;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 8, 0, 0, 4);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.06), 8, 0, 0, 4);
 }
 
 /* Effet interactif au survol des cartes */
 .card:hover {
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.12), 12, 0, 0, 6);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.12), 12, 0, 0, 6);
 }
 
 /* Barre de filtres */
@@ -93,7 +95,7 @@
     -fx-background-color: #FFFFFF;
     -fx-padding: 12 15;
     -fx-background-radius: 8;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 4, 0, 0, 2);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 4, 0, 0, 2);
 }
 
 /* Boutons de la barre de filtres */
@@ -104,6 +106,7 @@
     -fx-cursor: hand;
     -fx-background-radius: 4;
 }
+
 .btn-apply:hover {
     -fx-background-color: #219653;
 }
@@ -114,6 +117,7 @@
     -fx-cursor: hand;
     -fx-background-radius: 4;
 }
+
 .btn-reset:hover {
     -fx-background-color: #7f8c8d;
 }
@@ -149,12 +153,29 @@
 }
 
 /* Couleurs sémantiques des KPIs */
-.kpi-green  { -fx-text-fill: #27ae60; }
-.kpi-blue   { -fx-text-fill: #2980b9; }
-.kpi-purple { -fx-text-fill: #8e44ad; }
-.kpi-red    { -fx-text-fill: #e74c3c; }
-.kpi-teal   { -fx-text-fill: #16a085; }
-.kpi-orange { -fx-text-fill: #e67e22; }
+.kpi-green {
+    -fx-text-fill: #27ae60;
+}
+
+.kpi-blue {
+    -fx-text-fill: #2980b9;
+}
+
+.kpi-purple {
+    -fx-text-fill: #8e44ad;
+}
+
+.kpi-red {
+    -fx-text-fill: #e74c3c;
+}
+
+.kpi-teal {
+    -fx-text-fill: #16a085;
+}
+
+.kpi-orange {
+    -fx-text-fill: #e67e22;
+}
 
 /* Conteneurs pour Graphiques */
 .chart-box {
@@ -173,7 +194,7 @@
     -fx-background-color: white;
     -fx-padding: 25;
     -fx-background-radius: 8;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 10, 0, 0, 4);
     -fx-border-color: transparent;
 }
 
@@ -192,6 +213,7 @@
     -fx-background-radius: 5;
     -fx-cursor: hand;
 }
+
 .btn-premium-primary:hover {
     -fx-background-color: #2471A3;
 }
@@ -204,6 +226,7 @@
     -fx-background-radius: 5;
     -fx-cursor: hand;
 }
+
 .btn-premium-secondary:hover {
     -fx-background-color: #A6ACAF;
 }
@@ -228,6 +251,7 @@
 .table-row-cell:expire {
     -fx-background-color: #FADBD8;
 }
+
 /* Ligne En Alerte (Stock Bas) : fond jaune clair/alerte */
 .table-row-cell:alerte {
     -fx-background-color: #FCF3CF;
@@ -239,11 +263,13 @@
     -fx-background-color: #2980B9;
     -fx-text-fill: white;
 }
+
 /* Quand une ligne en alerte EST SÉLECTIONNÉE */
 .table-row-cell:alerte:selected {
     -fx-background-color: #2980B9;
     -fx-text-fill: white;
 }
+
 /* Texte blanc sur sélection bleue pour toutes les cellules */
 .table-row-cell:expire:selected .table-cell,
 .table-row-cell:alerte:selected .table-cell {
@@ -260,7 +286,7 @@
     -fx-background-color: white;
     -fx-padding: 15;
     -fx-background-radius: 8;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.10), 10, 0, 0, 5);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.10), 10, 0, 0, 5);
 }
 
 /* Label de section dans un filtre (ex: "Période :", "Agent :") */
@@ -280,6 +306,7 @@
     -fx-font-size: 13px;
     -fx-cursor: hand;
 }
+
 .btn-filter:hover {
     -fx-background-color: #27ae60;
 }
@@ -295,6 +322,7 @@
     -fx-cursor: hand;
     -fx-font-size: 12px;
 }
+
 .btn-outline-reset:hover {
     -fx-background-color: #ecf0f1;
     -fx-text-fill: #7f8c8d;
@@ -310,7 +338,7 @@
     -fx-background-color: white;
     -fx-padding: 20;
     -fx-background-radius: 8;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.10), 10, 0, 0, 5);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.10), 10, 0, 0, 5);
 }
 
 /* TableView standardisée */
@@ -338,8 +366,14 @@
     -fx-cursor: hand;
     -fx-padding: 6 14;
 }
-.btn-action-blue:hover { -fx-background-color: #2471A3; }
-.btn-action-blue:disabled { -fx-opacity: 0.4; }
+
+.btn-action-blue:hover {
+    -fx-background-color: #2471A3;
+}
+
+.btn-action-blue:disabled {
+    -fx-opacity: 0.4;
+}
 
 /* Bouton orange "Voir Détails" secondaires */
 .btn-action-orange {
@@ -350,8 +384,14 @@
     -fx-cursor: hand;
     -fx-padding: 6 14;
 }
-.btn-action-orange:hover { -fx-background-color: #D68910; }
-.btn-action-orange:disabled { -fx-opacity: 0.4; }
+
+.btn-action-orange:hover {
+    -fx-background-color: #D68910;
+}
+
+.btn-action-orange:disabled {
+    -fx-opacity: 0.4;
+}
 
 /* Bouton PDF rouge */
 .btn-action-red {
@@ -362,8 +402,14 @@
     -fx-cursor: hand;
     -fx-padding: 6 14;
 }
-.btn-action-red:hover { -fx-background-color: #CB4335; }
-.btn-action-red:disabled { -fx-opacity: 0.4; }
+
+.btn-action-red:hover {
+    -fx-background-color: #CB4335;
+}
+
+.btn-action-red:disabled {
+    -fx-opacity: 0.4;
+}
 
 /* Bouton vert CSV */
 .btn-action-green {
@@ -374,14 +420,21 @@
     -fx-cursor: hand;
     -fx-padding: 6 14;
 }
-.btn-action-green:hover { -fx-background-color: #1E8449; }
-.btn-action-green:disabled { -fx-opacity: 0.4; }
+
+.btn-action-green:hover {
+    -fx-background-color: #1E8449;
+}
+
+.btn-action-green:disabled {
+    -fx-opacity: 0.4;
+}
 
 /* Label "Total" sous les tableaux (montant en gras) */
 .total-label {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
 }
+
 .total-label-filtered {
     -fx-text-fill: #E67E22;
 }

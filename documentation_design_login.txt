@@ -1,0 +1,42 @@
+=======================================================
+DOCUMENTATION D'IMPLÉMENTATION UX/UI - MODULE DE CONNEXION
+=======================================================
+Objectif : Refonte de la page de connexion selon les standards 
+SaaS Premium (0% IA, 100% Ingénierie Humaine).
+
+1. CHOIX ARCHITECTURAUX (FXML)
+-------------------------------------------------------
+L'interface abandonne la structure "VBox simple au milieu du vide" 
+pour adopter le modèle "Clean Card".
+- Un `StackPane` racine couvre tout l'écran avec une couleur douce.
+- Une "Carte" blanche centrale regroupe le contenu.
+- Les champs de texte sont encapsulés dans des `HBox` (input-container) 
+  afin d'y intégrer élégamment des icônes à gauche.
+
+2. LOGIQUE MÉTIER & SÉCURITÉ
+-------------------------------------------------------
+Nous avons implémenté un système natif d'affichage du mot de passe.
+- **Principe :** Superposition (via `StackPane`) d'un `PasswordField` 
+  et d'un `TextField`.
+- **Binding Bidirectionnel :** Dans `LoginController.java`, la méthode 
+  `bindBidirectional` synchronise le texte des deux champs en temps réel.
+- **Toggle :** Le clic sur l'icône de l'œil masque/affiche le champ approprié
+  et modifie le chemin vectoriel (`SVGPath`) de l'icône sans dépendance externe.
+
+3. DESIGN SYSTEM (CSS)
+-------------------------------------------------------
+- **Couleurs :** Utilisation des palettes de couleurs Tailwind CSS 
+  (Emerald-600 pour le bouton, Slate-800 pour les textes).
+- **Interactions :** 
+  - La bordure du conteneur du texte devient vert émeraude au focus 
+    grâce à la pseudo-classe `:focus-within` sur la `HBox`.
+  - Le bouton de connexion possède une ombre projetée verte (`dropshadow`)
+    et un effet "pressé" (translation-y) pour une tactilité premium.
+
+4. INDÉPENDANCE ET PÉRENNITÉ
+-------------------------------------------------------
+Aucun framework CSS tiers ni bibliothèque d'icônes externe (CDN) n'est utilisé. 
+- Les polices sont des polices système (Segoe UI).
+- Les icônes sont tracées mathématiquement en SVG.
+Ceci garantit une application rapide, légère, et parfaitement fonctionnelle 
+hors-ligne pour une pharmacie.

@@ -17,20 +17,27 @@ public class MainController {
     @FXML
     private StackPane contentArea;
 
-    @FXML private Button btnDashboard;
-    @FXML private Button btnVentes;
-    @FXML private Button btnProduits;
-    @FXML private Button btnAchats;
-    @FXML private Button btnFournisseurs;
-    @FXML private Button btnRapports;
-    @FXML private Button btnUsers;
+    @FXML
+    private Button btnDashboard;
+    @FXML
+    private Button btnVentes;
+    @FXML
+    private Button btnProduits;
+    @FXML
+    private Button btnAchats;
+    @FXML
+    private Button btnFournisseurs;
+    @FXML
+    private Button btnRapports;
+    @FXML
+    private Button btnUsers;
 
     @FXML
     public void initialize() {
         User currentUser = SessionManager.getCurrentUser();
         if (currentUser != null && currentUser.getProfil() != null) {
             com.pharmacie.models.Profil p = currentUser.getProfil();
-            
+
             btnDashboard.setVisible(p.isCanAccessDashboard());
             btnDashboard.setManaged(p.isCanAccessDashboard());
 
@@ -51,18 +58,25 @@ public class MainController {
 
             btnUsers.setVisible(p.isCanAccessParametres());
             btnUsers.setManaged(p.isCanAccessParametres());
-            
+
             // Lancer la première vue autorisée
-            if (p.isCanAccessDashboard()) showDashboard();
-            else if (p.isCanAccessVentes()) showSales();
-            else if (p.isCanAccessStock()) showProducts();
-            else if (p.isCanAccessAchats()) showPurchases();
+            if (p.isCanAccessDashboard())
+                showDashboard();
+            else if (p.isCanAccessVentes())
+                showSales();
+            else if (p.isCanAccessStock())
+                showProducts();
+            else if (p.isCanAccessAchats())
+                showPurchases();
         } else {
             // Sécurité par défaut (empêche un plantage si profil null)
-            btnDashboard.setVisible(false); btnDashboard.setManaged(false);
-            btnUsers.setVisible(false); btnUsers.setManaged(false);
-            btnRapports.setVisible(false); btnRapports.setManaged(false);
-            showProducts(); 
+            btnDashboard.setVisible(false);
+            btnDashboard.setManaged(false);
+            btnUsers.setVisible(false);
+            btnUsers.setManaged(false);
+            btnRapports.setVisible(false);
+            btnRapports.setManaged(false);
+            showProducts();
         }
     }
 
@@ -116,14 +130,16 @@ public class MainController {
         if (SessionManager.getCurrentUser() != null) {
             com.pharmacie.dao.SessionCaisseDAO sessionDAO = new com.pharmacie.dao.SessionCaisseDAO();
             boolean isCaisseOpen = sessionDAO.findAll().stream()
-                .anyMatch(s -> s.getUser().getId().equals(SessionManager.getCurrentUser().getId()) 
-                               && s.getStatut() == com.pharmacie.models.SessionCaisse.StatutSession.OUVERTE);
+                    .anyMatch(s -> s.getUser().getId().equals(SessionManager.getCurrentUser().getId())
+                            && s.getStatut() == com.pharmacie.models.SessionCaisse.StatutSession.OUVERTE);
 
             if (isCaisseOpen) {
-                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
+                        javafx.scene.control.Alert.AlertType.ERROR);
                 alert.setTitle("Déconnexion Impossible");
                 alert.setHeaderText("🚨 Caisse logicielle toujours ouverte !");
-                alert.setContentText("La norme de sécurité vous interdit de quitter votre poste sans justifier le tiroir-caisse.\n\nVeuillez accéder à l'onglet [Ventes] et cliquer sur [Clôturer (Z)] pour fermer proprement votre caisse.");
+                alert.setContentText(
+                        "La norme de sécurité vous interdit de quitter votre poste sans justifier le tiroir-caisse.\n\nVeuillez accéder à l'onglet [Ventes] et cliquer sur [Clôturer (Z)] pour fermer proprement votre caisse.");
                 alert.showAndWait();
                 return; // Bloque la déconnexion
             }
