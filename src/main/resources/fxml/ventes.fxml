@@ -67,16 +67,16 @@
                                     <VBox alignment="CENTER" spacing="10"><Region styleClass="icon, icon-search, icon-dark" style="-fx-min-width:32px; -fx-min-height:32px;"/><Label text="Aucun produit trouvé ou disponible" style="-fx-text-fill: #94A3B8; -fx-font-style: italic; -fx-font-size: 14px;" /></VBox>
                                 </placeholder>
                                 <columns>
-                                    <TableColumn fx:id="colStkNom" text="Produit" prefWidth="250" />
+                                    <TableColumn fx:id="colStkNom" text="Produit" prefWidth="180" />
                                     <TableColumn fx:id="colStkPrix" text="Prix (Boîte)" prefWidth="90" />
-                                    <TableColumn fx:id="colStkPrixDetail" text="Prix (Détail)" prefWidth="80" />
-                                    <TableColumn fx:id="colStkQte" text="Stock" prefWidth="90" minWidth="70" />
+                                    <TableColumn fx:id="colStkPrixDetail" text="Prix (Détail)" prefWidth="100" />
+                                    <TableColumn fx:id="colStkQte" text="Stock" prefWidth="130" minWidth="130" />
                                 </columns>
                             </TableView>
                             <HBox spacing="8" alignment="CENTER_LEFT" style="-fx-padding: 8 0 0 0;">
                                 <Label text="Qté :" style="-fx-font-weight: bold;"/>
                                 <ComboBox fx:id="cmbQuantite" editable="true" prefWidth="100"/>
-                                <ComboBox fx:id="cmbUniteType" prefWidth="130" promptText="Type Unité"/>
+                                <ComboBox fx:id="cmbUniteType" prefWidth="160" promptText="Type Unité"/>
                                 <Region HBox.hgrow="ALWAYS" />
                                 <Button text="Ajouter" onAction="#ajouterAuPanier" styleClass="pos-btn, button-primary">
     <graphic><Region styleClass="icon, icon-plus"/></graphic>
