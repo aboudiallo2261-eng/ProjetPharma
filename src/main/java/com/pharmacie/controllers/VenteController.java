@@ -1716,154 +1716,203 @@ public class VenteController {
         });
     }
 
+    // ─── Helpers ticket ──────────────────────────────────────────────────────────
+    private static final int TICKET_LINE_WIDTH = 38;
+
+    private javafx.scene.shape.Polygon createZigZagEdge(double width, boolean isTop) {
+        javafx.scene.shape.Polygon zigzag = new javafx.scene.shape.Polygon();
+        double tw = 10, th = 6;
+        if (isTop) {
+            zigzag.getPoints().addAll(0.0, th);
+            for (double x = 0; x < width; x += tw) {
+                zigzag.getPoints().addAll(x + tw / 2, 0.0);
+                zigzag.getPoints().addAll(Math.min(x + tw, width), th);
+            }
+            zigzag.getPoints().addAll(width, th);
+        } else {
+            zigzag.getPoints().addAll(0.0, 0.0);
+            for (double x = 0; x < width; x += tw) {
+                zigzag.getPoints().addAll(x + tw / 2, th);
+                zigzag.getPoints().addAll(Math.min(x + tw, width), 0.0);
+            }
+            zigzag.getPoints().addAll(width, 0.0);
+        }
+        zigzag.setFill(javafx.scene.paint.Color.WHITE);
+        return zigzag;
+    }
+
+    private Label makeMonoRow(String key, String value, String style) {
+        String keyPart = key + " : ";
+        int spaces = Math.max(1, TICKET_LINE_WIDTH - keyPart.length() - value.length());
+        StringBuilder sb = new StringBuilder(keyPart);
+        for (int i = 0; i < spaces; i++) sb.append('\u00A0'); // espace insécable monospace
+        sb.append(value);
+        Label lbl = new Label(sb.toString());
+        lbl.setStyle(style);
+        return lbl;
+    }
+    // ─────────────────────────────────────────────────────────────────────────────
+
     @FXML
     public void showSelectedVenteDetail() {
         Vente selecVente = tableHistoriqueVentes.getSelectionModel().getSelectedItem();
-        if (selecVente == null)
-            return;
+        if (selecVente == null) return;
 
         Dialog<Void> dialog = new Dialog<>();
         dialog.setTitle("Aperçu du Ticket Premium");
         dialog.setHeaderText(null);
 
-        // Fetch Pharmacy Info
+        // Infos Pharmacie
         com.pharmacie.dao.PharmacieInfoDAO infoDAO = new com.pharmacie.dao.PharmacieInfoDAO();
         com.pharmacie.models.PharmacieInfo info = infoDAO.getInfo();
-
         String nomPharma = info != null && info.getNom() != null ? info.getNom() : "PHARMACIE VÉTÉRINAIRE";
         String telPharma = info != null && info.getTelephone() != null ? "Tél: " + info.getTelephone() : "";
         String addrPharma = info != null && info.getAdresse() != null ? info.getAdresse() : "";
-        String msgPharma = info != null && info.getMessageTicket() != null ? info.getMessageTicket() : "Merci de votre visite et à bientôt !";
+        String msgPharma = info != null && info.getMessageTicket() != null ? info.getMessageTicket().trim() : "Merci de votre confiance !";
 
-        // Container principal du ticket paper visuel
-        javafx.scene.layout.VBox ticketBox = new javafx.scene.layout.VBox(5);
-        ticketBox.setStyle("-fx-background-color: #FFFFFF; -fx-padding: 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 15, 0, 0, 5);");
-        ticketBox.setPrefWidth(380);
-        ticketBox.setMinWidth(380);
-        ticketBox.setMaxWidth(380);
+        // Styles Monospace — Noir pur (simulation imprimante thermique)
+        String monoNormal = "-fx-font-family: 'Courier New', monospace; -fx-font-size: 13px; -fx-text-fill: #000000;";
+        String monoBold   = "-fx-font-family: 'Courier New', monospace; -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #000000;";
+
+        // ── Ticket Body ───────────────────────────────────────────────────────────
+        javafx.scene.layout.VBox ticketBox = new javafx.scene.layout.VBox(4);
+        ticketBox.setStyle("-fx-background-color: #FFFFFF; -fx-padding: 12 28 12 28;");
         ticketBox.setAlignment(javafx.geometry.Pos.TOP_LEFT);
 
-        String monoBold = "-fx-font-family: 'Courier New', 'Consolas', monospace; -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #000000;";
-        String monoNormal = "-fx-font-family: 'Courier New', 'Consolas', monospace; -fx-font-size: 13px; -fx-text-fill: #000000;";
-        String monoTitle = "-fx-font-family: 'Courier New', 'Consolas', monospace; -fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #000000;";
-
         // En-tête centré
-        javafx.scene.layout.VBox header = new javafx.scene.layout.VBox(3);
+        javafx.scene.layout.VBox header = new javafx.scene.layout.VBox(2);
         header.setAlignment(javafx.geometry.Pos.CENTER);
-        
         Label lblNom = new Label(nomPharma.toUpperCase());
-        lblNom.setStyle(monoTitle);
+        lblNom.setStyle("-fx-font-family: 'Courier New', monospace; -fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #000000;");
         header.getChildren().add(lblNom);
-        
         if (!addrPharma.isEmpty()) {
-            Label lblAddr = new Label(addrPharma); lblAddr.setStyle(monoNormal); header.getChildren().add(lblAddr);
+            Label l = new Label(addrPharma); l.setStyle(monoNormal); header.getChildren().add(l);
         }
         if (!telPharma.isEmpty()) {
-            Label lblTel = new Label(telPharma); lblTel.setStyle(monoNormal); header.getChildren().add(lblTel);
+            Label l = new Label(telPharma); l.setStyle(monoNormal); header.getChildren().add(l);
         }
-        
         ticketBox.getChildren().addAll(header, new Label(""));
 
-        // Metabox: Infos Date / Agent / Ticket
+        // Séparateur
+        Label sep1 = new Label("- - - - - - - - - - - - - - - - - - - -");
+        sep1.setStyle("-fx-font-family: 'Courier New'; -fx-font-size: 11px; -fx-text-fill: #000000;");
+        sep1.setAlignment(javafx.geometry.Pos.CENTER); sep1.setMaxWidth(Double.MAX_VALUE);
+        ticketBox.getChildren().add(sep1);
+
+        // Infos ticket
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        String dateStr = selecVente.getDateVente() != null ? selecVente.getDateVente().format(fmt) : "";
-        String agent = selecVente.getUser() != null ? selecVente.getUser().getNom() : "Inconnu";
-        String customRef = selecVente.getDateVente() != null ? selecVente.getDateVente().format(DateTimeFormatter.ofPattern("ddMMyy-HHmm")) + "-" + String.format("%03d", selecVente.getId()) : String.valueOf(selecVente.getId());
+        String dateStr  = selecVente.getDateVente() != null ? selecVente.getDateVente().format(fmt) : "";
+        String agent    = selecVente.getUser() != null ? selecVente.getUser().getNom() : "Inconnu";
+        String customRef = selecVente.getDateVente() != null
+                ? selecVente.getDateVente().format(DateTimeFormatter.ofPattern("ddMMyy-HHmm")) + "-" + String.format("%03d", selecVente.getId())
+                : String.valueOf(selecVente.getId());
 
-        Label lDate = new Label("Date     : " + dateStr); lDate.setStyle(monoNormal);
-        Label lAgent = new Label("Caissier : " + agent); lAgent.setStyle(monoNormal);
-        Label lTicket = new Label("Ticket N°: " + customRef); lTicket.setStyle(monoNormal);
-        
-        Label sep1 = new Label("----------------------------------------"); sep1.setStyle(monoNormal);
+        ticketBox.getChildren().addAll(
+            makeMonoRow("Date",       dateStr,   monoNormal),
+            makeMonoRow("Caissier",   agent,     monoNormal),
+            makeMonoRow("Ticket N°",  customRef, monoNormal)
+        );
 
-        ticketBox.getChildren().addAll(lDate, lAgent, lTicket, sep1);
+        // Séparateur articles
+        Label sep2 = new Label("----------------------------------------");
+        sep2.setStyle("-fx-font-family: 'Courier New'; -fx-font-size: 13px; -fx-text-fill: #000000;");
+        ticketBox.getChildren().addAll(new Label(""), sep2);
 
-        // Lignes de produits (Comme sur l'imprimante avec tirets)
+        // Lignes de produits
         for (LigneVente lv : selecVente.getLignesVente()) {
             String nom = lv.getProduit().getNom();
-            if (nom.length() > 40) nom = nom.substring(0, 40); 
-            Label lblProd = new Label(nom);
-            lblProd.setStyle(monoBold);
-            
-            String leftPart = "  " + lv.getQuantiteVendue() + " x " + String.format(java.util.Locale.FRANCE, "%.0f", lv.getPrixUnitaire()) + " F ";
-            String rightPart = " " + String.format(java.util.Locale.FRANCE, "%.0f", lv.getSousTotal()) + " FCFA";
-            int baseLen = leftPart.length() + rightPart.length();
-            int dotsCount = 40 - baseLen; // 40 char pour la longueur repère (Ajusté pour tenir sur un papier 80mm)
-            if (dotsCount < 1) dotsCount = 1;
-            
-            StringBuilder line = new StringBuilder(leftPart);
-            for(int i=0; i < dotsCount; i++){ line.append("-"); } // Les tirets expressément demandés
-            line.append(rightPart);
-            
-            Label lblLineInfo = new Label(line.toString());
-            lblLineInfo.setStyle(monoNormal);
-            
-            ticketBox.getChildren().addAll(lblProd, lblLineInfo);
-        }
-        
-        Label sep2 = new Label("----------------------------------------"); sep2.setStyle(monoNormal);
-        ticketBox.getChildren().add(sep2);
+            if (nom.length() > 38) nom = nom.substring(0, 38);
+            Label lblProd = new Label(nom); lblProd.setStyle(monoBold);
 
-        // Total et Pied de ticket
-        javafx.scene.layout.VBox footer = new javafx.scene.layout.VBox(5);
-        footer.setAlignment(javafx.geometry.Pos.CENTER);
-        
-        Label lTotal = new Label("TOTAL A PAYER : " + String.format(java.util.Locale.FRANCE, "%,.0f FCFA", selecVente.getTotal()));
-        lTotal.setStyle(monoTitle);
-        footer.getChildren().add(lTotal);
-        
-        String mode = selecVente.getModePaiement() != null ? selecVente.getModePaiement().name() : "INCONNU";
-        Label lMode = new Label("Payé par : " + mode.replace("_", " "));
-        lMode.setStyle(monoNormal);
-        footer.getChildren().add(lMode);
-        
+            String leftPart  = "  " + lv.getQuantiteVendue() + " x " + String.format(java.util.Locale.FRANCE, "%.0f", lv.getPrixUnitaire()) + " F ";
+            String rightPart = String.format(java.util.Locale.FRANCE, "%.0f FCFA", lv.getSousTotal());
+            int dots = Math.max(1, TICKET_LINE_WIDTH - leftPart.length() - rightPart.length());
+            StringBuilder lineStr = new StringBuilder(leftPart);
+            for (int i = 0; i < dots; i++) lineStr.append('.');
+            lineStr.append(rightPart);
+
+            Label lblLine = new Label(lineStr.toString()); lblLine.setStyle(monoNormal);
+            ticketBox.getChildren().addAll(lblProd, lblLine);
+        }
+
+        // Séparateur total
+        Label sep3 = new Label("----------------------------------------");
+        sep3.setStyle("-fx-font-family: 'Courier New'; -fx-font-size: 13px; -fx-text-fill: #000000;");
+        ticketBox.getChildren().addAll(sep3, new Label(""));
+
+        // ── TOTAL \u2014 Noir pur, style imprimante thermique (bordure simple)
+        javafx.scene.layout.StackPane totalPane = new javafx.scene.layout.StackPane();
+        totalPane.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #000000; -fx-border-width: 1.5; -fx-padding: 6;");
+        Label lTotal = new Label("*** TOTAL : " + String.format(java.util.Locale.FRANCE, "%,.0f FCFA", selecVente.getTotal()) + " ***");
+        lTotal.setStyle("-fx-font-family: 'Courier New', monospace; -fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #000000;");
+        totalPane.getChildren().add(lTotal);
+        ticketBox.getChildren().add(totalPane);
+
+        // ── Pied de ticket aligné ──────────────────────────────────────────────
+        ticketBox.getChildren().add(new Label(""));
+        String mode = selecVente.getModePaiement() != null ? selecVente.getModePaiement().name().replace("_", " ") : "INCONNU";
+        ticketBox.getChildren().add(makeMonoRow("Payé par", mode, monoNormal));
+
         if (selecVente.getModePaiement() == Vente.ModePaiement.MIXTE || selecVente.getModePaiement() == Vente.ModePaiement.ESPECES) {
-            double rec = selecVente.getMontantRecu() != null ? selecVente.getMontantRecu() : selecVente.getTotal();
-            double mon = selecVente.getMonnaieRendue() != null ? selecVente.getMonnaieRendue() : 0.0;
-            Label lRecu = new Label("Montant Reçu : " + String.format(java.util.Locale.FRANCE, "%,.0f FCFA", rec));
-            lRecu.setStyle(monoNormal);
-            footer.getChildren().add(lRecu);
-            Label lMonnaie = new Label("Monnaie      : " + String.format(java.util.Locale.FRANCE, "%,.0f FCFA", mon));
-            lMonnaie.setStyle(monoNormal);
-            footer.getChildren().add(lMonnaie);
+            double rec = selecVente.getMontantRecu()    != null ? selecVente.getMontantRecu()    : selecVente.getTotal();
+            double mon = selecVente.getMonnaieRendue()  != null ? selecVente.getMonnaieRendue()  : 0.0;
+            ticketBox.getChildren().add(makeMonoRow("Montant Reçu", String.format(java.util.Locale.FRANCE, "%,.0f FCFA", rec), monoNormal));
+            ticketBox.getChildren().add(makeMonoRow("Monnaie",      String.format(java.util.Locale.FRANCE, "%,.0f FCFA", mon), monoNormal));
         }
-
         if (selecVente.getModePaiement() == Vente.ModePaiement.MIXTE) {
             double c = selecVente.getMontantEspeces() != null ? selecVente.getMontantEspeces() : 0.0;
-            double m = selecVente.getMontantMobile() != null ? selecVente.getMontantMobile() : 0.0;
-            Label lMixte = new Label(String.format(java.util.Locale.FRANCE, "Espèces: %,.0f | Mobile: %,.0f", c, m));
-            lMixte.setStyle(monoNormal);
-            footer.getChildren().add(lMixte);
+            double m = selecVente.getMontantMobile()  != null ? selecVente.getMontantMobile()  : 0.0;
+            ticketBox.getChildren().add(makeMonoRow("Espèces", String.format(java.util.Locale.FRANCE, "%,.0f FCFA", c), monoNormal));
+            ticketBox.getChildren().add(makeMonoRow("Mobile",  String.format(java.util.Locale.FRANCE, "%,.0f FCFA", m), monoNormal));
         }
-        
-        footer.getChildren().add(new Label(""));
-        
+
+        // Message de fin
+        ticketBox.getChildren().add(new Label(""));
+        Label sepFin = new Label("- - - - - - - - - - - - - - - - - - - -");
+        sepFin.setStyle("-fx-font-family: 'Courier New'; -fx-font-size: 11px; -fx-text-fill: #000000;");
+        sepFin.setAlignment(javafx.geometry.Pos.CENTER); sepFin.setMaxWidth(Double.MAX_VALUE);
+        ticketBox.getChildren().add(sepFin);
+
         Label lMsg = new Label(msgPharma);
-        lMsg.setStyle(monoNormal);
-        lMsg.setWrapText(true);
-        lMsg.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-        footer.getChildren().add(lMsg);
-        
-        ticketBox.getChildren().add(footer);
+        lMsg.setStyle("-fx-font-family: 'Courier New', monospace; -fx-font-size: 12px; -fx-text-fill: #000000;");
+        lMsg.setWrapText(true); lMsg.setAlignment(javafx.geometry.Pos.CENTER); lMsg.setMaxWidth(Double.MAX_VALUE);
+        ticketBox.getChildren().addAll(lMsg, new Label(""));
 
-        // --- INTERFACE EXTERNE (ARRIERE PLAN DE LA DIALOG) ---
-        javafx.scene.layout.VBox rootBox = new javafx.scene.layout.VBox(15);
+        // ── Wrapper zigzag ─────────────────────────────────────────────────────
+        javafx.scene.layout.VBox ticketWrapper = new javafx.scene.layout.VBox();
+        ticketWrapper.setPrefWidth(380); ticketWrapper.setMinWidth(380); ticketWrapper.setMaxWidth(380);
+        ticketWrapper.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 20, 0, 0, 6);");
+        ticketWrapper.getChildren().addAll(createZigZagEdge(380, true), ticketBox, createZigZagEdge(380, false));
+
+        // ── ScrollPane pour limiter la hauteur de la fenêtre ──────────────────
+        javafx.scene.control.ScrollPane scrollPane = new javafx.scene.control.ScrollPane(ticketWrapper);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setHbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setMaxHeight(580);
+        scrollPane.setStyle("-fx-background-color: transparent; -fx-background: #1E293B; -fx-border-color: transparent;");
+
+        // ── Fond Slate + Boutons ───────────────────────────────────────────────
+        javafx.scene.layout.VBox rootBox = new javafx.scene.layout.VBox(20);
         rootBox.setAlignment(javafx.geometry.Pos.CENTER);
-        // Utilisation d'un fond de type "Soft dark" pour accentuer l'effet papier blanc pur du ticket
-        rootBox.setStyle("-fx-padding: 35; -fx-background-color: #2C3E50;"); 
-        rootBox.getChildren().add(ticketBox);
+        rootBox.setStyle("-fx-padding: 25; -fx-background-color: #1E293B;");
+        rootBox.getChildren().add(scrollPane);
 
-        javafx.scene.layout.HBox actionBox = new javafx.scene.layout.HBox(10);
+        javafx.scene.layout.HBox actionBox = new javafx.scene.layout.HBox(12);
         actionBox.setAlignment(javafx.geometry.Pos.CENTER);
 
-        Button btnPrint = new Button("🖨 Imprimer le Ticket");
-        btnPrint.setStyle("-fx-background-color: #2980B9; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 5; -fx-cursor: hand;");
-        btnPrint.setOnAction(e -> {
-            com.pharmacie.utils.PrinterService.imprimerTicket(selecVente);
-        });
+        // Bouton Imprimer avec icône SVG
+        Button btnPrint = new Button("Imprimer le Ticket");
+        javafx.scene.shape.SVGPath printIcon = new javafx.scene.shape.SVGPath();
+        printIcon.setContent("M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z");
+        printIcon.setFill(javafx.scene.paint.Color.WHITE);
+        btnPrint.setGraphic(printIcon);
+        btnPrint.setStyle("-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 24; -fx-background-radius: 6; -fx-cursor: hand; -fx-graphic-text-gap: 8;");
+        btnPrint.setOnAction(e -> com.pharmacie.utils.PrinterService.imprimerTicket(selecVente));
 
+        // Bouton Fermer propre
         Button btnClose = new Button("Fermer");
-        btnClose.setStyle("-fx-background-color: #BDC3C7; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 5; -fx-cursor: hand;");
+        btnClose.setStyle("-fx-background-color: white; -fx-text-fill: #475569; -fx-border-color: #CBD5E1; -fx-border-radius: 6; -fx-background-radius: 6; -fx-font-weight: bold; -fx-padding: 9 23; -fx-cursor: hand;");
         btnClose.setOnAction(e -> dialog.close());
 
         actionBox.getChildren().addAll(btnClose, btnPrint);
@@ -1871,11 +1920,9 @@ public class VenteController {
 
         dialog.getDialogPane().setContent(rootBox);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        // Clean look
         dialog.getDialogPane().lookupButton(ButtonType.CLOSE).setVisible(false);
         dialog.getDialogPane().lookupButton(ButtonType.CLOSE).setManaged(false);
         dialog.getDialogPane().setStyle("-fx-background-color: transparent;");
-
         dialog.showAndWait();
     }
 

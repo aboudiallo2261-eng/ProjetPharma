@@ -42,7 +42,9 @@ public class ReportController {
     @FXML private Button btnExportCsvVentes;
     @FXML private Button btnExportPdfAjust;
     @FXML private Button btnExportPdfCloture;
+    @FXML private Button btnExportExcelCloture;
     @FXML private Button btnExportPdfAudit;
+    @FXML private Button btnExportExcelAudit;
 
     @FXML private TableView<LigneVente> tableLignesVente;
     @FXML private TableColumn<LigneVente, String> colLvDate, colLvTicket, colLvAgent, colLvProduit, colLvCat, colLvEsp;
@@ -58,6 +60,7 @@ public class ReportController {
     @FXML private TableColumn<AjustementStock, String> colAdjDate, colAdjProduit, colAdjLot, colAdjUser, colAdjMotif, colAdjObs;
     @FXML private TableColumn<AjustementStock, Integer> colAdjQte;
     @FXML private Label lblTotalAjustements;
+    @FXML private javafx.scene.control.Button btnExportExcelAjust;
 
     // --- AUDIT DES STOCKS ---
     @FXML private DatePicker dpAuditDebut;
@@ -235,7 +238,16 @@ public class ReportController {
         if (cmbRapportProduit != null) cmbRapportProduit.setConverter(prodConv);
 
         javafx.util.StringConverter<MouvementStock.TypeMouvement> typeConv = new javafx.util.StringConverter<>() {
-            public String toString(MouvementStock.TypeMouvement v) { return v == null ? "Tous les mouvements" : v.name(); }
+            public String toString(MouvementStock.TypeMouvement v) {
+                if (v == null) return "Tous les mouvements";
+                return switch (v) {
+                    case AJUSTEMENT_POSITIF -> "Ajouts de Stock";
+                    case AJUSTEMENT_NEGATIF -> "Perte / Retrait";
+                    case ACHAT              -> "Achat / Réception";
+                    case VENTE              -> "Vente";
+                    default                 -> v.name();
+                };
+            }
             public MouvementStock.TypeMouvement fromString(String string) { return null; }
         };
         cmbAuditType.setConverter(typeConv);
@@ -394,9 +406,8 @@ public class ReportController {
                         setStyle("");
                         return;
                     }
-                    if (isSelected()) {
-                        // On laisse le système appliquer sa couleur de sélection (bleu).
-                        // Forcer un style ici écraserait le bleu par la couleur métier.
+                    if (isSelected() || isHover()) {
+                        // Laisse le système appliquer sa couleur de sélection (Emerald)
                         setStyle("");
                         return;
                     }
@@ -406,9 +417,9 @@ public class ReportController {
                         setStyle("-fx-background-color: #fdf2f2;"); // Rouge très pâle
                     }
                 };
-                // Ce listener est critique : sans lui, déselectionner une ligne
-                // ne déclenche pas updateItem() et la couleur de sélection reste bloquée.
+                // Écoute les changements de sélection ET de survol (hover)
                 selectedProperty().addListener((obs, wasSelected, isNowSelected) -> applyStyle.run());
+                hoverProperty().addListener((obs, wasHovered, isNowHovered) -> applyStyle.run());
                 applyStyle.run();
             }
         });
@@ -437,26 +448,38 @@ public class ReportController {
                 boolean selected = getTableRow() != null && getTableRow().isSelected();
                 MouvementStock m = getTableView().getItems().get(getIndex());
                 if (m != null) {
-                    switch (m.getTypeMouvement()) {
-                        case ACHAT:
-                            setText("Entrée (Achat)");
-                            setStyle(selected ? "-fx-text-fill: white; -fx-font-weight: bold;"
-                                             : "-fx-text-fill: #27ae60; -fx-font-weight: bold;");
-                            break;
-                        case VENTE:
-                            setText("Sortie (Vente)");
-                            setStyle(selected ? "-fx-text-fill: white; -fx-font-weight: bold;"
-                                             : "-fx-text-fill: #2980b9; -fx-font-weight: bold;");
-                            break;
-                        case AJUSTEMENT_NEGATIF:
-                            setText("Perte / Retrait");
-                            setStyle(selected ? "-fx-text-fill: white; -fx-font-weight: bold;"
-                                             : "-fx-text-fill: #c0392b; -fx-font-weight: bold;");
-                            break;
-                        default:
-                            setText(m.getTypeMouvement().name());
-                            setStyle(selected ? "-fx-text-fill: white;" : "-fx-text-fill: #34495e;");
-                            break;
+                    if (selected) {
+                        setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+                        switch (m.getTypeMouvement()) {
+                            case ACHAT: setText("Entrée (Achat)"); break;
+                            case VENTE: setText("Sortie (Vente)"); break;
+                            case AJUSTEMENT_POSITIF: setText("Ajouts de Stock"); break;
+                            case AJUSTEMENT_NEGATIF: setText("Perte / Retrait"); break;
+                            default: setText(m.getTypeMouvement().name()); break;
+                        }
+                    } else {
+                        switch (m.getTypeMouvement()) {
+                            case ACHAT:
+                                setText("Entrée (Achat)");
+                                setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
+                                break;
+                            case VENTE:
+                                setText("Sortie (Vente)");
+                                setStyle("-fx-text-fill: #2980b9; -fx-font-weight: bold;");
+                                break;
+                            case AJUSTEMENT_POSITIF:
+                                setText("Ajouts de Stock");
+                                setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
+                                break;
+                            case AJUSTEMENT_NEGATIF:
+                                setText("Perte / Retrait");
+                                setStyle("-fx-text-fill: #c0392b; -fx-font-weight: bold;");
+                                break;
+                            default:
+                                setText(m.getTypeMouvement().name());
+                                setStyle("-fx-text-fill: #34495e;");
+                                break;
+                        }
                     }
                 }
             }
@@ -536,7 +559,7 @@ public class ReportController {
                 double val = item != null ? item : 0.0;
                 setText(String.format("%,.0f FCFA", val));
                 if (selected) {
-                    setTextFill(Color.WHITE);
+                    setTextFill(Color.web("#0F172A"));
                     setStyle("-fx-font-weight: bold; -fx-alignment: CENTER-RIGHT; -fx-padding: 0 10 0 0;");
                 } else if (val < 0) {
                     setTextFill(Color.web("#c0392b"));
@@ -636,7 +659,7 @@ public class ReportController {
         task.setOnSucceeded(e -> {
             currentPeriodLines = task.getValue();
             double filteredCA = currentPeriodLines.stream().mapToDouble(LigneVente::getSousTotal).sum();
-            lblTotalFiltre.setText(String.format("%,.0f FCFA", filteredCA));
+            com.pharmacie.utils.AnimationUtils.animerValeurMonetaire(lblTotalFiltre, filteredCA, "");
             tableLignesVente.setItems(FXCollections.observableArrayList(currentPeriodLines));
             boolean hasData = !currentPeriodLines.isEmpty();
             if (btnExportPdfVentes != null) btnExportPdfVentes.setDisable(!hasData);
@@ -719,6 +742,7 @@ public class ReportController {
                 lblTotalAjustements.setText(count + (count > 1 ? " enregistrements" : " enregistrement"));
             }
             if (btnExportPdfAjust != null) btnExportPdfAjust.setDisable(currentAjustements.isEmpty());
+            if (btnExportExcelAjust != null) btnExportExcelAjust.setDisable(currentAjustements.isEmpty());
             setAjustLoading(false);
         });
 
@@ -762,8 +786,9 @@ public class ReportController {
             int count = res.size();
             lblTotalAudit.setText(count + (count > 1 ? " mouvements" : " mouvement"));
         }
-        // Phase 5 : Activer bouton PDF
+        // Phase 5 : Activer bouton PDF & Excel
         if (btnExportPdfAudit != null) btnExportPdfAudit.setDisable(res.isEmpty());
+        if (btnExportExcelAudit != null) btnExportExcelAudit.setDisable(res.isEmpty());
     }
 
     @FXML
@@ -799,11 +824,12 @@ public class ReportController {
         tableClotures.setItems(FXCollections.observableArrayList(currentClotures));
         // Mise à jour du compteur de sessions — même pattern que les autres onglets
         if (lblTotalClotures != null) {
-            int count = currentClotures.size();
-            lblTotalClotures.setText(count + (count > 1 ? " sessions" : " session"));
+            int count = list.size();
+            lblTotalClotures.setText(count + (count > 1 ? " clôtures" : " clôture"));
         }
-        // Phase 5 : Activer bouton PDF
-        if (btnExportPdfCloture != null) btnExportPdfCloture.setDisable(currentClotures.isEmpty());
+        
+        if (btnExportPdfCloture != null) btnExportPdfCloture.setDisable(list.isEmpty());
+        if (btnExportExcelCloture != null) btnExportExcelCloture.setDisable(list.isEmpty());
     }
 
     @FXML
@@ -812,35 +838,8 @@ public class ReportController {
             com.pharmacie.utils.AlertUtils.showPremiumAlert(javafx.scene.control.Alert.AlertType.WARNING, "Aucune de donnée", "Export impossible", "Aucune donnée à exporter pour cette période.");
             return;
         }
-        javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
-        fileChooser.setTitle("Enregistrer le Journal des Ventes (CSV)");
-        fileChooser.getExtensionFilters().add(new javafx.stage.FileChooser.ExtensionFilter("Fichier CSV", "*.csv"));
-        fileChooser.setInitialFileName("Journal_Ventes_" + LocalDate.now().toString() + ".csv");
         javafx.stage.Stage stage = (javafx.stage.Stage) tableLignesVente.getScene().getWindow();
-        File file = fileChooser.showSaveDialog(stage);
-        if (file == null) return;
-        try {
-            try (PrintWriter pw = new PrintWriter(new FileWriter(file))) {
-                pw.println("Date,Ticket,Caissier,Produit,Categorie,Espece,Qte,PrixUnitaire,SousTotal");
-                for (LigneVente lv : currentPeriodLines) {
-                    pw.println(
-                        lv.getVente().getDateVente().toLocalDate() + "," +
-                        "TCK-" + lv.getVente().getId() + "," +
-                        lv.getVente().getUser().getNom() + "," +
-                        lv.getProduit().getNom() + "," +
-                        lv.getProduit().getCategorie().getNom() + "," +
-                        lv.getProduit().getEspece().getNom() + "," +
-                        lv.getQuantiteVendue() + "," +
-                        lv.getPrixUnitaire() + "," +
-                        lv.getSousTotal()
-                    );
-                }
-            }
-            com.pharmacie.utils.ToastService.showSuccess(tableLignesVente.getScene().getWindow(), "Export terminé", "Export Brut Excel (CSV) généré avec succès !");
-        } catch (Exception e) {
-            log.error("Erreur lors de l'export CSV", e);
-            showError("Erreur lors de l'export CSV : " + e.getMessage());
-        }
+        com.pharmacie.utils.ExcelExportService.genererJournalVentesExcel(currentPeriodLines, stage);
     }
     
     @FXML
@@ -859,7 +858,17 @@ public class ReportController {
         if (currentAjustements == null || currentAjustements.isEmpty()) return;
         javafx.stage.Stage stage = (javafx.stage.Stage) tableAjustements.getScene().getWindow();
         String periode = dpAjustDebut.getValue().toString() + " au " + dpAjustFin.getValue().toString();
-        com.pharmacie.utils.PdfService.genererRapportAjustements(currentAjustements, periode, stage);
+        MouvementStock.TypeMouvement operation = cmbAjustType != null ? cmbAjustType.getValue() : null;
+        com.pharmacie.utils.PdfService.genererRapportAjustements(currentAjustements, periode, operation, stage);
+    }
+    
+    @FXML
+    public void exporterAjustementsExcel() {
+        if (currentAjustements == null || currentAjustements.isEmpty()) return;
+        javafx.stage.Stage stage = (javafx.stage.Stage) tableAjustements.getScene().getWindow();
+        String periode = dpAjustDebut.getValue().toString() + "_au_" + dpAjustFin.getValue().toString();
+        MouvementStock.TypeMouvement operation = cmbAjustType != null ? cmbAjustType.getValue() : null;
+        com.pharmacie.utils.ExcelExportService.genererRapportAjustementsExcel(currentAjustements, periode, operation, stage);
     }
     
     @FXML
@@ -871,6 +880,17 @@ public class ReportController {
         javafx.stage.Stage stage = (javafx.stage.Stage) tableAudit.getScene().getWindow();
         String periode = dpAuditDebut.getValue().toString() + " au " + dpAuditFin.getValue().toString();
         com.pharmacie.utils.PdfService.genererRapportAudit(new java.util.ArrayList<>(tableAudit.getItems()), periode, stage);
+    }
+    
+    @FXML
+    public void exporterAuditExcel() {
+        if (tableAudit.getItems() == null || tableAudit.getItems().isEmpty()) {
+            showError("Aucune donnée d'audit à exporter.");
+            return;
+        }
+        javafx.stage.Stage stage = (javafx.stage.Stage) tableAudit.getScene().getWindow();
+        String periode = dpAuditDebut.getValue().toString() + "_au_" + dpAuditFin.getValue().toString();
+        com.pharmacie.utils.ExcelExportService.genererAuditStocksExcel(new java.util.ArrayList<>(tableAudit.getItems()), periode, stage);
     }
     
     @FXML 
@@ -886,6 +906,22 @@ public class ReportController {
         } catch(Exception e) {
             log.error("Erreur lors de la génération PDF", e);
             showError("Erreur lors de la génération PDF : " + e.getMessage());
+        }
+    }
+
+    @FXML 
+    public void exporterCloturesExcel() {
+        if (currentClotures == null || currentClotures.isEmpty()) {
+            showError("Aucune donnée de clôture à exporter.");
+            return;
+        }
+        try {
+            javafx.stage.Stage stage = (javafx.stage.Stage) tableClotures.getScene().getWindow();
+            String periode = dpClotureDebut.getValue().toString() + "_au_" + dpClotureFin.getValue().toString();
+            com.pharmacie.utils.ExcelExportService.genererCloturesCaisseExcel(currentClotures, periode, stage);
+        } catch(Exception e) {
+            log.error("Erreur lors de la génération Excel", e);
+            showError("Erreur lors de la génération Excel : " + e.getMessage());
         }
     }
 

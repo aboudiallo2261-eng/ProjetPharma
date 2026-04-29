@@ -1,0 +1,97 @@
+================================================================================
+DOCUMENTATION TECHNIQUE - DÉSIATISATION MODULE VENTES & CAISSE
+Étape 2 : Changement de la palette de couleurs
+Date : 2026-04-25
+Auteur : Ingénieur UI/UX Senior
+================================================================================
+
+OBJECTIF
+--------
+Remplacer les couleurs "standards" (parfois criardes ou désuètes) par une
+palette de couleurs moderne, professionnelle et apaisante pour l'utilisateur,
+typiquement utilisée dans les meilleurs logiciels SaaS et Point of Sale (POS).
+L'objectif est d'avoir une identité visuelle cohérente sans casser la
+structure existante de l'interface (respect de la démarche itérative).
+
+
+ANALYSE PRÉALABLE (AUDIT)
+--------------------------
+J'ai identifié l'ensemble des couleurs définies "en dur" (inline styles) dans
+le fichier de vue FXML (`ventes.fxml`) ainsi que dans le contrôleur 
+(`VenteController.java`).
+
+Couleurs d'origine problématiques :
+  - Rouge vif d'erreur/fermeture : #E74C3C
+  - Vert fluo/flash de succès : #27ae60
+  - Violet lourd pour le verrouillage : #8E44AD
+  - Orange/Jaune agressif pour l'attente : #F39C12
+  - Nuances de gris incohérentes pour les bordures et les textes désactivés : #95a5a6, #BDC3C7, #7f8c8d
+  - Bleus saturés et froids pour les arrière-plans et le texte : #2C3E50, #2980B9, #ECF0F1
+
+
+DÉCISION ARCHITECTURALE & PALETTE SÉLECTIONNÉE
+-----------------------------------------------
+Pour élever le niveau de l'interface et lui donner une "patte" d'ingénieur
+senior, j'ai adopté une charte chromatique inspirée du système Tailwind CSS,
+largement reconnu comme un standard dans l'industrie (Notion, Shopify, etc.).
+
+La nouvelle palette (Palette "Slate / Emerald / Rose") :
+  1. Success (Validations, Ouvertures, Ajouts) : 
+     → #10B981 (Emerald 500) à la place de #27ae60
+     *Plus doux pour les yeux, moins fatigant sur une longue session.*
+
+  2. Danger (Fermetures, Annulations, Erreurs) :
+     → #EF4444 (Red 500) à la place de #E74C3C
+     *Rouge d'alerte classique des interfaces modernes, clair mais non agressif.*
+
+  3. Warning (Attente) :
+     → #F59E0B (Amber 500) à la place de #F39C12
+     *Plus chaud, connote une action en suspens de façon rassurante.*
+
+  4. Primary / Info (Verrouillage, Impression) :
+     → #3B82F6 (Blue 500) et #8B5CF6 (Violet 500) à la place de #2980B9 et #8E44AD
+     *Teintes plus "vibrantes" qui modernisent l'interface.*
+
+  5. Textes principaux (Titres, Labels, Données) :
+     → #1E293B (Slate 800) et #334155 (Slate 700) à la place de #2C3E50 et #34495E
+     *Plus profonds, augmentant le contraste sans être "noir pur".*
+
+  6. Textes secondaires & Bordures (Labels discrets, Boutons grisés) :
+     → #64748B (Slate 500), #94A3B8 (Slate 400), #CBD5E1 (Slate 300)
+     *Uniformisation totale des gris pour une lisibilité hiérarchisée parfaite.*
+
+  7. Arrière-plans & Overlays :
+     → #F8FAFC (Slate 50) pour le fond général (à la place de #ECF0F1).
+     → rgba(15,23,42,0.95) pour l'overlay de verrouillage (à la place d'un bleuâtre).
+
+
+MÉTHODE D'IMPLÉMENTATION
+-------------------------
+Afin de respecter la consigne de procéder "tout doucement pour éviter de tout
+chambouler" (aucune réécriture de la logique ou de l'arbre FXML), j'ai procédé
+à un remplacement chirurgical des codes héxadécimaux directement dans les 
+attributs `style` du fichier FXML et dans le code Java du contrôleur.
+
+Fichiers impactés :
+  1. `src/main/resources/fxml/ventes.fxml`
+  2. `src/main/java/com/pharmacie/controllers/VenteController.java`
+  3. `src/main/resources/css/styles.css` (Mise à jour des commentaires de palette)
+
+L'implémentation garantit que l'intégrité fonctionnelle de l'application reste à 100%, 
+seul le rendu colorimétrique (la "couche peinture") a été amélioré.
+
+
+VÉRIFICATION
+------------
+Après recompilation de l'application, l'utilisateur peut inspecter visuellement :
+  - La douceur des couleurs des boutons (Ouvrir Caisse, Ajouter au panier, Encaisser).
+  - L'amélioration du contraste des textes (plus nets et lisibles).
+  - La subtilité des couleurs de l'overlay lors du verrouillage de la session.
+  - L'alignement parfait avec la police `Inter` introduite lors de l'Étape 1.
+
+Si cette ambiance chromatique est validée, l'étape 3 consistera à épurer les
+"emojis" (signes IA) pour les remplacer par des icônes professionnelles (SVG/FontAwesome).
+
+================================================================================
+FIN DU DOCUMENT - ÉTAPE 2
+================================================================================

@@ -1,0 +1,55 @@
+================================================================================
+DOCUMENTATION TECHNIQUE - DÉSIATISATION MODULE VENTES & CAISSE
+Étape 5 : Finitions d'Agencement (Layout & Typographie)
+Date : 2026-04-25
+Auteur : Ingénieur UI/UX Senior
+================================================================================
+
+OBJECTIF
+--------
+Corriger les derniers défauts d'agencement visuel identifiés lors de la revue 
+de qualité finale. L'objectif est d'atteindre un standard 100% professionnel 
+où aucun élément n'est tronqué et où la hiérarchie de lecture (alignement) 
+respecte les conventions des interfaces SaaS premium.
+
+ANALYSE DES DÉFAUTS (L'ŒIL DE LYNX)
+-----------------------------------
+1. Labels tronqués : Les textes "Catég. :" et "Espèce :" sous la barre de 
+   recherche étaient coupés (ex: "Caté..."). La cause technique est que les 
+   composants `ComboBox` adjacents (configurés en `HBox.hgrow="ALWAYS"`) 
+   prenaient tout l'espace disponible, écrasant les labels.
+2. Alignement des Tableaux : Par défaut en JavaFX, les titres des colonnes 
+   sont centrés. Or, le contenu texte (nom du produit) est naturellement aligné 
+   à gauche. Cette asymétrie "Titre au centre / Texte à gauche" donne un 
+   aspect désordonné caractéristique des applications "par défaut".
+
+DÉCISIONS ARCHITECTURALES ET CORRECTIONS
+----------------------------------------
+1. Fix des Labels (FXML) :
+   Plutôt que de fixer une largeur en dur (ce qui n'est pas responsive), 
+   j'ai ajouté la propriété `minWidth="-Infinity"` aux balises `<Label>` 
+   concernes dans `ventes.fxml`. 
+   Cette directive technique indique au moteur de layout JavaFX de ne *jamais* 
+   compresser ce nœud en dessous de sa taille idéale (prefSize), forçant 
+   ainsi les ComboBox à céder l'espace nécessaire.
+
+2. Alignement Typographique (CSS) :
+   J'ai surchargé le style global des en-têtes de colonnes dans `styles.css` :
+   `.table-view .column-header .label { -fx-alignment: center-left; }`
+   Cela aligne tous les titres à gauche, en cohérence parfaite avec le texte 
+   des données en dessous. Le tableau devient "droit" et structuré.
+
+NOTE SUR LE BLOC DE PAIEMENT
+----------------------------
+Conformément à la demande du Product Owner, le bloc de paiement en bas à 
+droite a été conservé tel quel sans réalignement vertical de la grille.
+
+VÉRIFICATION
+------------
+Au redémarrage, les filtres "Catég. :" et "Espèce :" s'afficheront 
+intégralement, quelle que soit la taille de la fenêtre. Les tableaux auront 
+une allure stricte et carrée (données et titres alignés).
+
+================================================================================
+FIN DU DOCUMENT - ÉTAPE 5
+================================================================================

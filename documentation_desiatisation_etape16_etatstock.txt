@@ -1,0 +1,74 @@
+================================================================================
+DOCUMENTATION TECHNIQUE - DÉSIATISATION UI/UX
+Étape 16 : Nettoyage Onglet "État du Stock" (produits.fxml)
+Date : 2026-04-26
+Auteur : Ingénieur UI/UX Senior
+================================================================================
+
+OBJECTIF
+--------
+Supprimer toutes les signatures IA visuelles dans l'onglet "État du Stock"
+du module Produits & Catalogue. Aucune touche au CONSTRAINED_RESIZE_POLICY
+sur demande explicite du client (l'état actuel est satisfaisant).
+
+AUDIT RÉALISÉ - ONGLET ÉTAT DU STOCK
+--------------------------------------
+Éléments analysés un par un avec comparaison au Design System établi :
+
+1. promptText du champ de recherche (L.156)
+   ❌ "🔍 Produit/Lot..." (emoji codé en dur)
+   ✅ Corrigé → "Produit / Lot..." (texte clair, aucun emoji)
+
+2. Bouton "Filtrer" (L.157)
+   ❌ "🔍 Filtrer" (emoji + mauvaise pratique)
+   ✅ Corrigé → "Filtrer" (texte seul, classe .btn-filter conservée)
+
+3. Bouton "Réinitialiser" (L.169)
+   ❌ "🔄 Réinitialiser" (emoji)
+   ✅ Corrigé → "Réinitialiser" (texte seul, classe .btn-outline-reset conservée)
+
+4. Label "Valeur du stock filtré" (L.180)
+   ❌ -fx-text-fill: #27ae60 (vert Material Design - étranger au Design System)
+   ✅ Corrigé → -fx-text-fill: #10B981 (Emerald 500 - couleur primaire du DS)
+
+5. SplitMenuButton "Exporter" (L.182-188)
+   ❌ text="🖨 Exporter (PDF/Excel)" + style inline blue #2980B9 hardcodé
+   ❌ MenuItems avec emojis 📄 et 📊
+   ✅ Corrigé → text="Exporter", styleClass="btn-outline" (bordure grise, neutre)
+   ✅ MenuItems : "Exporter en PDF", "Exporter en Excel/CSV" (texte propre)
+
+6. Placeholder du tableau (L.194)
+   ❌ "📦 Aucun produit ne correspond à vos filtres." (emoji)
+   ✅ Corrigé → "Aucun produit ne correspond à vos filtres." (texte simple)
+
+7. Bouton "Fiche Lot" (L.227)
+   ❌ "🔎 Fiche Lot" (emoji)
+   ✅ Corrigé → "Fiche Lot" (texte seul, classe .btn-action-blue conservée)
+
+8. Bouton "Ajuster Stock" (L.229)
+   ❌ "⚖ Ajuster Stock" (emoji balance)
+   ✅ Corrigé → "Ajuster Stock" (texte seul, classe .btn-action-blue conservée)
+
+DÉCISIONS ARCHITECTURALES
+--------------------------
+Bouton "Exporter" : SplitMenuButton avec .btn-outline
+→ Raison : Le SplitMenuButton est un composant "neutre" (ni primaire ni danger).
+  L'outline gris est le choix correct car il ne compete pas visuellement
+  avec le bouton "Filtrer" (vert). La hiérarchie visuelle est respectée :
+  Filtrer (vert, action principale) > Exporter (outline, action secondaire).
+
+Aucun emoji conservé dans tout l'onglet.
+Aucune icône SVG ajoutée (demande explicite : "pas beaucoup d'icone").
+Couleur valeur stock : #27ae60 → #10B981 (unification palette Design System).
+
+CONVENTION EMOJIS (rappel définitif)
+-------------------------------------
+Les emojis sont interdits dans les composants JavaFX de cette application car :
+1. Rendu inconsistant selon l'OS et la version JVM
+2. Signature "IA générative" immédiatement reconnaissable
+3. Non compatible avec une interface professionnelle de gestion
+Seul le texte propre est autorisé dans les boutons et les champs.
+
+================================================================================
+FIN DU DOCUMENT - ÉTAPE 16 (NETTOYAGE ÉTAT DU STOCK)
+================================================================================

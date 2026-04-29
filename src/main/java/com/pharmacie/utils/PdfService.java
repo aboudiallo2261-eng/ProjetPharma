@@ -25,205 +25,371 @@ public class PdfService {
     private static final float PAGE_WIDTH = PDRectangle.A4.getWidth();
     private static final float PAGE_HEIGHT = PDRectangle.A4.getHeight();
 
-    private static float drawProfessionalHeader(PDPageContentStream cs, String documentTitle, String subtitle, float startY) throws IOException {
+    private static float drawProfessionalHeader(PDDocument document, PDPageContentStream cs, String documentTitle, String subtitle, float startY) throws IOException {
         com.pharmacie.models.PharmacieInfo info = new com.pharmacie.dao.PharmacieInfoDAO().getInfo();
-        String nom = (info != null && info.getNom() != null && !info.getNom().isEmpty()) ? info.getNom() : "PHARMACIE VETERINAIRE";
-        String adresse = (info != null && info.getAdresse() != null) ? info.getAdresse() : "";
-        String telephone = (info != null && info.getTelephone() != null) ? info.getTelephone() : "";
-        String email = (info != null && info.getEmail() != null) ? info.getEmail() : "";
+        String nomPharma = (info != null && info.getNom() != null && !info.getNom().isEmpty()) ? info.getNom() : "PHARMACIE VETERINAIRE";
+        String adrPharma = (info != null && info.getAdresse() != null) ? info.getAdresse() : "Adresse non définie";
+        String telPharma = (info != null && info.getTelephone() != null) ? info.getTelephone() : "Tel non défini";
 
-        PDType1Font fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
-        PDType1Font fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+        org.apache.pdfbox.pdmodel.font.PDFont fontBold;
+        org.apache.pdfbox.pdmodel.font.PDFont fontNormal;
+        
+        try {
+            File reg = new File("src/main/resources/fonts/Inter-Regular.ttf");
+            File bold = new File("src/main/resources/fonts/Inter-Bold.ttf");
+            if (reg.exists() && bold.exists()) {
+                fontNormal = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, reg);
+                fontBold = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, bold);
+            } else {
+                fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+            }
+        } catch (Exception e) {
+            fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+            fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+        }
         
         float y = startY;
 
-        // 1. Nom Pharmacie
-        cs.setFont(fontBold, 20);
-        cs.setNonStrokingColor(Color.decode("#2C3E50"));
-        drawText(cs, nom.toUpperCase(), MARGIN, y);
-        y -= 15;
-        
-        // 2. Coordonnées
-        cs.setFont(fontNormal, 10);
-        cs.setNonStrokingColor(Color.DARK_GRAY);
-        if (!adresse.trim().isEmpty()) {
-            drawText(cs, adresse, MARGIN, y);
-            y -= 14;
-        }
-        
-        String contactLine = "";
-        if (!telephone.trim().isEmpty()) contactLine += "Tel: " + telephone;
-        if (!email.trim().isEmpty()) {
-            if (!contactLine.isEmpty()) contactLine += "  |  ";
-            contactLine += "Email/NINEA: " + email;
-        }
-        
-        if (!contactLine.isEmpty()) {
-            drawText(cs, contactLine, MARGIN, y);
-            y -= 15;
+        // Logo
+        float currentX = MARGIN;
+        try {
+            File logoFile = new File("src/main/resources/images/logo1.jpeg");
+            if (logoFile.exists()) {
+                org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject logo = org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject.createFromFile(logoFile.getAbsolutePath(), document);
+                float scale = 50f / logo.getHeight();
+                float width = logo.getWidth() * scale;
+                cs.drawImage(logo, currentX, y - 50, width, 50);
+                currentX += width + 15;
+            }
+        } catch (Exception e) {
+            logger.warn("Impossible de charger le logo", e);
         }
 
-        y -= 8;
+        // Info Pharmacie
+        cs.setNonStrokingColor(Color.decode("#1E293B"));
+        if (nomPharma.length() > 25) {
+            cs.setFont(fontBold, 12);
+        } else {
+            cs.setFont(fontBold, 14);
+        }
+        drawText(cs, nomPharma.toUpperCase(), currentX, y - 15);
+        cs.setFont(fontNormal, 9);
+        cs.setNonStrokingColor(Color.decode("#64748B"));
+        drawText(cs, adrPharma, currentX, y - 30);
+        drawText(cs, "Tel: " + telPharma, currentX, y - 45);
+
+        y -= 90; // Espace après logo et infos
+
+        // Titre Centré
+        cs.setFont(fontBold, 18);
+        cs.setNonStrokingColor(Color.decode("#059669")); // Emerald 600
+        String titre = documentTitle.toUpperCase();
+        float titreWidth = fontBold.getStringWidth(titre) / 1000 * 18;
+        float titreX = (PAGE_WIDTH - titreWidth) / 2;
+        drawText(cs, titre, titreX, y);
+        y -= 20;
         
-        // Séparateur principal
-        cs.setLineWidth(1.5f);
-        cs.setStrokingColor(Color.decode("#BDC3C7"));
+        if (subtitle != null && !subtitle.isEmpty()) {
+            cs.setFont(fontNormal, 10);
+            cs.setNonStrokingColor(Color.decode("#475569"));
+            float subWidth = fontNormal.getStringWidth(subtitle) / 1000 * 10;
+            float subX = (PAGE_WIDTH - subWidth) / 2;
+            drawText(cs, subtitle, subX, y);
+            y -= 20;
+        }
+
+        y -= 10;
+
+        // Ligne séparatrice fine
+        cs.setLineWidth(1f);
+        cs.setStrokingColor(Color.decode("#E2E8F0"));
         cs.moveTo(MARGIN, y);
         cs.lineTo(PAGE_WIDTH - MARGIN, y);
         cs.stroke();
-        cs.setStrokingColor(Color.BLACK);
         
-        y -= 25;
-        
-        // 3. Titre du Document
-        cs.setNonStrokingColor(Color.decode("#2980B9"));
-        cs.setFont(fontBold, 16);
-        drawText(cs, documentTitle.toUpperCase(), MARGIN, y);
-        y -= 18;
-        
-        if (subtitle != null && !subtitle.isEmpty()) {
-            cs.setNonStrokingColor(Color.BLACK);
-            cs.setFont(fontNormal, 11);
-            drawText(cs, subtitle, MARGIN, y);
-            y -= 18;
-        }
-        
-        cs.setNonStrokingColor(Color.BLACK);
-        return y - 10;
+        return y - 30; // Retourne le nouveau Y
     }
 
     public static void genererBonDeCommande(Achat achat, Stage ownerStage) {
-        // Boite de dialogue pour choisir l'emplacement de sauvegarde
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Enregistrer le Bon de Commande");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichier PDF", "*.pdf"));
         String nomFichier = "BonCommande_" + (achat.getReferenceFacture() != null ? achat.getReferenceFacture() : achat.getId()) + ".pdf";
-        fileChooser.setInitialFileName(nomFichier);
-
-        File fichier = fileChooser.showSaveDialog(ownerStage);
-        if (fichier == null) return; // L'utilisateur a annulé
+        File fichier = new File(System.getProperty("java.io.tmpdir"), nomFichier);
 
         try (PDDocument document = new PDDocument()) {
             PDPage page = new PDPage(PDRectangle.A4);
             document.addPage(page);
 
-            PDType1Font fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
-            PDType1Font fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+            org.apache.pdfbox.pdmodel.font.PDFont fontBold;
+            org.apache.pdfbox.pdmodel.font.PDFont fontNormal;
+            org.apache.pdfbox.pdmodel.font.PDFont fontOblique;
+            
+            try {
+                File reg = new File("src/main/resources/fonts/Inter-Regular.ttf");
+                File bold = new File("src/main/resources/fonts/Inter-Bold.ttf");
+                if (reg.exists() && bold.exists()) {
+                    fontNormal = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, reg);
+                    fontBold = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, bold);
+                    fontOblique = fontNormal; // Inter n'a pas d'oblique natif facile à charger, on utilise normal pour TVA
+                } else {
+                    fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                    fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+                    fontOblique = new PDType1Font(Standard14Fonts.FontName.HELVETICA_OBLIQUE);
+                }
+            } catch (Exception e) {
+                fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+                fontOblique = new PDType1Font(Standard14Fonts.FontName.HELVETICA_OBLIQUE);
+            }
+
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
             try (PDPageContentStream cs = new PDPageContentStream(document, page)) {
-
                 float y = PAGE_HEIGHT - MARGIN;
 
-                // -------- EN-TETE PROFESSIONNEL --------
-                y = drawProfessionalHeader(cs, "BON DE COMMANDE", "Document d'approvisionnement", y);
+                // --- HEADER PREMIUM ---
+                com.pharmacie.models.PharmacieInfo info = new com.pharmacie.dao.PharmacieInfoDAO().getInfo();
+                String nomPharma = (info != null && info.getNom() != null && !info.getNom().isEmpty()) ? info.getNom() : "PHARMACIE VETERINAIRE";
+                String adrPharma = (info != null && info.getAdresse() != null) ? info.getAdresse() : "Adresse non définie";
+                String telPharma = (info != null && info.getTelephone() != null) ? info.getTelephone() : "Tel non défini";
 
-                // -------- INFOS --------
-                cs.setFont(fontNormal, 11);
-                drawText(cs, "Fournisseur : " + achat.getFournisseur().getNom(), MARGIN, y);
-                y -= 16;
+                // Logo
+                float currentX = MARGIN;
+                try {
+                    File logoFile = new File("src/main/resources/images/logo1.jpeg");
+                    if (logoFile.exists()) {
+                        org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject logo = org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject.createFromFile(logoFile.getAbsolutePath(), document);
+                        // Scale logo to fit height of 50
+                        float scale = 50f / logo.getHeight();
+                        float width = logo.getWidth() * scale;
+                        cs.drawImage(logo, currentX, y - 50, width, 50);
+                        currentX += width + 15;
+                    }
+                } catch (Exception e) {
+                    logger.warn("Impossible de charger le logo", e);
+                }
 
-                String contact = achat.getFournisseur().getTelephone() != null ? achat.getFournisseur().getTelephone() : "N/A";
-                drawText(cs, "Contact      : " + contact, MARGIN, y);
-                y -= 16;
+                // Info Pharmacie
+                cs.setNonStrokingColor(Color.decode("#1E293B"));
+                if (nomPharma.length() > 25) {
+                    cs.setFont(fontBold, 12); // Réduction si trop long
+                } else {
+                    cs.setFont(fontBold, 14);
+                }
+                drawText(cs, nomPharma.toUpperCase(), currentX, y - 15);
+                cs.setFont(fontNormal, 9); // Taille 9 pour éviter les dépassements
+                cs.setNonStrokingColor(Color.decode("#64748B"));
+                drawText(cs, adrPharma, currentX, y - 30);
+                drawText(cs, "Tel: " + telPharma, currentX, y - 45);
 
-                String ref = achat.getReferenceFacture() != null ? achat.getReferenceFacture() : "---";
-                drawText(cs, "Ref Facture  : " + ref, MARGIN, y);
-                y -= 16;
-
+                // Titre BON DE COMMANDE à droite
+                cs.setFont(fontBold, 20);
+                cs.setNonStrokingColor(Color.decode("#059669")); // Emerald 600
+                String titre = "BON DE COMMANDE";
+                // On s'assure qu'il est aligné par rapport à la bordure droite
+                float titreWidth = fontBold.getStringWidth(titre) / 1000 * 20;
+                float titreX = PAGE_WIDTH - MARGIN - titreWidth;
+                drawText(cs, titre, titreX, y - 15);
+                
+                cs.setFont(fontBold, 9);
+                cs.setNonStrokingColor(Color.decode("#334155"));
+                String ref = achat.getReferenceFacture() != null ? achat.getReferenceFacture() : String.valueOf(achat.getId());
+                drawText(cs, "RÉFÉRENCE : " + ref, titreX, y - 35);
                 String date = achat.getDateAchat() != null ? achat.getDateAchat().toLocalDate().format(formatter) : "---";
-                drawText(cs, "Date         : " + date, MARGIN, y);
+                drawText(cs, "DATE : " + date, titreX, y - 50);
+
+                y -= 90;
+
+                // Ligne séparatrice fine
+                cs.setLineWidth(1f);
+                cs.setStrokingColor(Color.decode("#E2E8F0"));
+                cs.moveTo(MARGIN, y);
+                cs.lineTo(PAGE_WIDTH - MARGIN, y);
+                cs.stroke();
+                
                 y -= 30;
 
-                // -------- EN-TETE TABLEAU --------
-                cs.setFont(fontBold, 10);
-                cs.setNonStrokingColor(Color.decode("#2C3E50"));
-                drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 18, Color.decode("#ECF0F1"));
-                cs.setNonStrokingColor(Color.BLACK);
-
-                drawText(cs, "PRODUIT", MARGIN + 5, y);
-                drawText(cs, "N° LOT", MARGIN + 220, y);
-                drawText(cs, "QTE", MARGIN + 310, y);
-                drawText(cs, "PRIX/U", MARGIN + 360, y);
-                drawText(cs, "SOUS-TOTAL", MARGIN + 420, y);
-
-                // Ligne sous le header — dessinée AVANT le décrément pour rester entre header et données
-                cs.setLineWidth(0.5f);
-                cs.moveTo(MARGIN, y - 7);
-                cs.lineTo(PAGE_WIDTH - MARGIN, y - 7);
+                // --- BLOC FOURNISSEUR ---
+                drawFilledRect(cs, MARGIN, y - 40, 250, 50, Color.decode("#F8FAFC"));
+                cs.setLineWidth(1f);
+                cs.setStrokingColor(Color.decode("#CBD5E1"));
+                cs.addRect(MARGIN, y - 40, 250, 50);
                 cs.stroke();
 
-                y -= 22; // Espacement suffisant pour que les données commencent bien en dessous
-
-                // -------- LIGNES --------
+                cs.setFont(fontBold, 10);
+                cs.setNonStrokingColor(Color.decode("#64748B"));
+                drawText(cs, "DESTINATAIRE (FOURNISSEUR)", MARGIN + 10, y);
+                
+                cs.setFont(fontBold, 12);
+                cs.setNonStrokingColor(Color.decode("#1E293B"));
+                drawText(cs, achat.getFournisseur().getNom(), MARGIN + 10, y - 18);
+                
                 cs.setFont(fontNormal, 10);
+                String contact = achat.getFournisseur().getTelephone() != null ? achat.getFournisseur().getTelephone() : "Non renseigné";
+                drawText(cs, "Contact: " + contact, MARGIN + 10, y - 32);
+
+                y -= 70;
+
+                // --- TABLEAU PREMIUM ---
+                // Header du tableau
+                drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 22, Color.decode("#059669"));
+                cs.setFont(fontBold, 9);
+                cs.setNonStrokingColor(Color.WHITE);
+                
+                drawText(cs, "DÉSIGNATION PRODUIT", MARGIN + 10, y);
+                drawText(cs, "N° LOT", MARGIN + 230, y);
+                drawText(cs, "QTE", MARGIN + 310, y);
+                drawText(cs, "PRIX U.", MARGIN + 360, y);
+                drawText(cs, "SOUS-TOTAL", MARGIN + 430, y);
+
+                y -= 25;
+
+                // Lignes de données
                 double grandTotal = 0;
                 boolean pair = false;
 
                 for (LigneAchat l : achat.getLignesAchat()) {
+                    // RÉINITIALISATION DU STYLE POUR CHAQUE LIGNE (Correction du Bug "ALPHA")
+                    cs.setFont(fontNormal, 9);
+                    cs.setNonStrokingColor(Color.decode("#334155"));
+
                     if (pair) {
-                        drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 16, Color.decode("#F8F9FA"));
+                        drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 20, Color.decode("#F8FAFC"));
                     }
                     String nomProd = l.getProduit().getNom();
-                    if (nomProd.length() > 30) nomProd = nomProd.substring(0, 30) + "...";
+                    if (nomProd.length() > 38) nomProd = nomProd.substring(0, 38) + "...";
                     double sousTotal = l.getQuantiteAchetee() * l.getPrixUnitaire();
                     grandTotal += sousTotal;
 
-                    cs.setNonStrokingColor(Color.BLACK);
-                    drawText(cs, nomProd, MARGIN + 5, y);
-                    drawText(cs, l.getLot().getNumeroLot(), MARGIN + 220, y);
+                    cs.setNonStrokingColor(Color.decode("#334155"));
+                    drawText(cs, nomProd, MARGIN + 10, y);
+                    drawText(cs, l.getLot().getNumeroLot(), MARGIN + 230, y);
+                    
+                    cs.setFont(fontBold, 9);
                     drawText(cs, String.valueOf(l.getQuantiteAchetee()), MARGIN + 310, y);
-                    drawText(cs, String.format("%.2f", l.getPrixUnitaire()), MARGIN + 360, y);
-                    drawText(cs, String.format("%.2f FCFA", sousTotal), MARGIN + 420, y);
-                    y -= 18;
+                    cs.setFont(fontNormal, 9);
+                    
+                    drawText(cs, String.format("%.0f", l.getPrixUnitaire()), MARGIN + 360, y);
+                    
+                    cs.setFont(fontBold, 9);
+                    cs.setNonStrokingColor(Color.decode("#0F172A"));
+                    drawText(cs, String.format("%.0f FCFA", sousTotal), MARGIN + 430, y);
+                    
+                    // Séparateur de ligne subtil
+                    cs.setLineWidth(0.5f);
+                    cs.setStrokingColor(Color.decode("#E2E8F0"));
+                    cs.moveTo(MARGIN, y - 5);
+                    cs.lineTo(PAGE_WIDTH - MARGIN, y - 5);
+                    cs.stroke();
+
+                    y -= 20;
                     pair = !pair;
                 }
 
-                // -------- TOTAL --------
-                y -= 10;
+                // --- TOTAL BLOCK ---
+                y -= 20;
+                drawFilledRect(cs, PAGE_WIDTH - MARGIN - 240, y - 10, 240, 30, Color.decode("#F1F5F9"));
                 cs.setLineWidth(1f);
-                cs.moveTo(MARGIN, y + 8);
-                cs.lineTo(PAGE_WIDTH - MARGIN, y + 8);
+                cs.setStrokingColor(Color.decode("#059669"));
+                cs.moveTo(PAGE_WIDTH - MARGIN - 240, y - 10);
+                cs.lineTo(PAGE_WIDTH - MARGIN - 240, y + 20);
                 cs.stroke();
-                y -= 5;
 
-                cs.setFont(fontBold, 12);
-                drawText(cs, "MONTANT TOTAL : " + String.format("%.2f FCFA", grandTotal), MARGIN + 280, y);
+                cs.setFont(fontBold, 11);
+                cs.setNonStrokingColor(Color.decode("#059669"));
+                drawText(cs, "MONTANT TOTAL :", PAGE_WIDTH - MARGIN - 230, y - 1);
+                
+                cs.setFont(fontBold, 13);
+                cs.setNonStrokingColor(Color.decode("#0F172A"));
+                String strTotal = String.format("%.0f FCFA", grandTotal);
+                float totalW = fontBold.getStringWidth(strTotal) / 1000 * 13;
+                // Alignement mathématique parfait à droite
+                drawText(cs, strTotal, PAGE_WIDTH - MARGIN - totalW - 10, y - 1);
+
                 y -= 40;
 
-                // -------- SIGNATURE --------
-                cs.setFont(fontNormal, 10);
+                // --- MENTION LÉGALE ---
+                cs.setFont(fontOblique, 9);
+                cs.setNonStrokingColor(Color.decode("#64748B"));
+                drawText(cs, "TVA non applicable, ou mention exonérée selon l'article en vigueur.", MARGIN, y);
+
+                y -= 60;
+
+                // --- SIGNATURES ---
+                cs.setFont(fontBold, 10);
+                cs.setNonStrokingColor(Color.decode("#1E293B"));
                 drawText(cs, "Signature Fournisseur :", MARGIN, y);
-                drawText(cs, "Cachet Pharmacie :", MARGIN + 270, y);
-                y -= 50;
-                cs.setLineWidth(0.5f);
+                drawText(cs, "Cachet et Signature Pharmacie :", MARGIN + 300, y);
+                y -= 40;
+                
+                // Lignes de pointillé ou de signature
+                cs.setLineWidth(1f);
+                cs.setStrokingColor(Color.decode("#CBD5E1"));
                 cs.moveTo(MARGIN, y);
-                cs.lineTo(MARGIN + 200, y);
+                cs.lineTo(MARGIN + 150, y);
                 cs.stroke();
-                cs.moveTo(MARGIN + 270, y);
-                cs.lineTo(MARGIN + 470, y);
+                
+                cs.moveTo(MARGIN + 300, y);
+                cs.lineTo(MARGIN + 480, y);
                 cs.stroke();
             }
 
             document.save(fichier);
-            logger.info("Bon de commande sauvegardé : {}", fichier.getAbsolutePath());
+            logger.info("Bon de commande premium généré en temp : {}", fichier.getAbsolutePath());
 
-            // Ouvrir le PDF automatiquement
-            if (Desktop.isDesktopSupported()) {
-                Desktop.getDesktop().open(fichier);
-            }
+            javafx.application.Platform.runLater(() -> {
+                try {
+                    javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(PdfService.class.getResource("/fxml/pdf_preview_modal.fxml"));
+                    javafx.scene.Parent root = loader.load();
+                    com.pharmacie.controllers.PdfPreviewController controller = loader.getController();
+                    
+                    Stage dialogStage = new Stage();
+                    dialogStage.setTitle("Aperçu du Bon de Commande");
+                    dialogStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
+                    dialogStage.initOwner(ownerStage);
+                    dialogStage.setScene(new javafx.scene.Scene(root));
+                    
+                    controller.setDialogStage(dialogStage);
+                    controller.loadPdf(fichier, nomFichier);
+                    
+                    dialogStage.showAndWait();
+                } catch (Exception ex) {
+                    logger.error("Erreur d'ouverture du modal PDF", ex);
+                    com.pharmacie.utils.AlertUtils.showPremiumAlert(javafx.scene.control.Alert.AlertType.ERROR, 
+                        "Erreur Aperçu", "Impossible d'afficher le document", ex.getMessage());
+                }
+            });
 
-        } catch (IOException e) {
-            logger.error("Erreur lors de la génération du PDF", e);
+        } catch (Exception e) {
+            logger.error("Erreur lors de la génération du PDF Premium", e);
         }
     }
 
     private static void drawText(PDPageContentStream cs, String text, float x, float y) throws IOException {
         cs.beginText();
         cs.newLineAtOffset(x, y);
-        cs.showText(text);
+        cs.showText(sanitize(text));
         cs.endText();
     }
+
+    /**
+     * Filtre les caractères hors WinAnsiEncoding (emoji, symboles Unicode > U+00FF)
+     * pour éviter les crashes quand Helvetica est utilisé en fallback (sans fichier Inter.ttf).
+     */
+    private static String sanitize(String text) {
+        if (text == null) return "";
+        return text
+            .replace("\u26A0", "[!]")   // ⚠ WARNING SIGN
+            .replace("\u2713", "OK")    // ✓ CHECK MARK
+            .replace("\u2714", "OK")    // ✔ HEAVY CHECK MARK
+            .replace("\u2718", "X")     // ✘ HEAVY BALLOT X
+            .replace("\u2022", "-")     // • BULLET
+            .replace("\u2019", "'")     // ' RIGHT SINGLE QUOTATION MARK
+            .replace("\u2018", "'")     // ' LEFT SINGLE QUOTATION MARK
+            .replace("\u201C", "\"")    // " LEFT DOUBLE QUOTATION MARK
+            .replace("\u201D", "\"")    // " RIGHT DOUBLE QUOTATION MARK
+            .replaceAll("[^\\x00-\\xFF]", "?"); // Fallback universel
+    }
+
 
     private static void drawFilledRect(PDPageContentStream cs, float x, float y, float w, float h, Color color) throws IOException {
         cs.setNonStrokingColor(color);
@@ -245,32 +411,41 @@ public class PdfService {
             PDPage page = new PDPage(PDRectangle.A4);
             document.addPage(page);
 
-            PDType1Font fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
-            PDType1Font fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+            org.apache.pdfbox.pdmodel.font.PDFont fontBold;
+            org.apache.pdfbox.pdmodel.font.PDFont fontNormal;
+            try {
+                File reg = new File("src/main/resources/fonts/Inter-Regular.ttf");
+                File bold = new File("src/main/resources/fonts/Inter-Bold.ttf");
+                if (reg.exists() && bold.exists()) {
+                    fontNormal = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, reg);
+                    fontBold = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, bold);
+                } else {
+                    fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                    fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+                }
+            } catch (Exception e) {
+                fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+            }
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
             try (PDPageContentStream cs = new PDPageContentStream(document, page)) {
                 float y = PAGE_HEIGHT - MARGIN;
 
                 // En-tête
-                y = drawProfessionalHeader(cs, "HISTORIQUE DES VENTES", "Récapitulatif" + (periode.isEmpty() ? "" : " — Période : " + periode), y);
+                y = drawProfessionalHeader(document, cs, "HISTORIQUE DES VENTES", "Récapitulatif" + (periode.isEmpty() ? "" : " — Période : " + periode), y);
 
-                // En-tête tableau
+                // En-tête tableau Premium (Sans ID)
+                drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 22, Color.decode("#059669"));
                 cs.setFont(fontBold, 9);
-                drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 18, Color.decode("#ECF0F1"));
-                cs.setNonStrokingColor(Color.BLACK);
-                drawText(cs, "ID", MARGIN + 5, y);
-                drawText(cs, "DATE & HEURE", MARGIN + 35, y);
-                drawText(cs, "AGENT", MARGIN + 145, y);
-                drawText(cs, "NB PROD.", MARGIN + 250, y);
-                drawText(cs, "MODE PAIEMENT", MARGIN + 310, y);
-                drawText(cs, "TOTAL (FCFA)", MARGIN + 420, y);
+                cs.setNonStrokingColor(Color.WHITE);
+                drawText(cs, "DATE & HEURE", MARGIN + 10, y);
+                drawText(cs, "AGENT", MARGIN + 120, y);
+                drawText(cs, "NB PROD.", MARGIN + 230, y);
+                drawText(cs, "MODE PAIEMENT", MARGIN + 300, y);
+                drawText(cs, "TOTAL (FCFA)", MARGIN + 430, y);
 
-                cs.setLineWidth(0.5f);
-                cs.moveTo(MARGIN, y - 7);
-                cs.lineTo(PAGE_WIDTH - MARGIN, y - 7);
-                cs.stroke();
-                y -= 22;
+                y -= 25;
 
                 // Lignes
                 cs.setFont(fontNormal, 9);
@@ -279,33 +454,57 @@ public class PdfService {
 
                 for (com.pharmacie.models.Vente v : ventes) {
                     if (y < MARGIN + 40) break; // Sécurité — page overflow simplifiée
+                    
+                    cs.setFont(fontNormal, 9);
+                    cs.setNonStrokingColor(Color.decode("#334155"));
+
                     if (pair) {
-                        drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 16, Color.decode("#F8F9FA"));
+                        drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 20, Color.decode("#F8FAFC"));
                     }
-                    cs.setNonStrokingColor(Color.BLACK);
-                    drawText(cs, String.valueOf(v.getId()), MARGIN + 5, y);
+                    
                     String dateStr = v.getDateVente() != null ? v.getDateVente().format(formatter) : "---";
-                    drawText(cs, dateStr, MARGIN + 35, y);
+                    drawText(cs, dateStr, MARGIN + 10, y);
                     String agent = v.getUser() != null ? v.getUser().getNom() : "---";
                     if (agent.length() > 13) agent = agent.substring(0, 13) + "...";
-                    drawText(cs, agent, MARGIN + 145, y);
+                    drawText(cs, agent, MARGIN + 120, y);
                     int nb = v.getLignesVente() != null ? v.getLignesVente().size() : 0;
-                    drawText(cs, String.valueOf(nb), MARGIN + 270, y);
-                    drawText(cs, v.getModePaiement() != null ? v.getModePaiement().name() : "", MARGIN + 310, y);
+                    drawText(cs, String.valueOf(nb), MARGIN + 240, y);
+                    drawText(cs, v.getModePaiement() != null ? v.getModePaiement().name() : "", MARGIN + 300, y);
+                    
+                    cs.setFont(fontBold, 9);
+                    cs.setNonStrokingColor(Color.decode("#0F172A"));
                     drawText(cs, String.format("%.0f", v.getTotal()), MARGIN + 430, y);
                     grandTotal += v.getTotal();
-                    y -= 18;
+                    
+                    // Séparateur fin
+                    cs.setLineWidth(0.5f);
+                    cs.setStrokingColor(Color.decode("#E2E8F0"));
+                    cs.moveTo(MARGIN, y - 5);
+                    cs.lineTo(PAGE_WIDTH - MARGIN, y - 5);
+                    cs.stroke();
+
+                    y -= 20;
                     pair = !pair;
                 }
 
-                // Grand Total
-                y -= 10;
+                // --- TOTAL BLOCK ---
+                y -= 20;
+                drawFilledRect(cs, PAGE_WIDTH - MARGIN - 260, y - 10, 260, 30, Color.decode("#F1F5F9"));
                 cs.setLineWidth(1f);
-                cs.moveTo(MARGIN, y + 8);
-                cs.lineTo(PAGE_WIDTH - MARGIN, y + 8);
+                cs.setStrokingColor(Color.decode("#059669"));
+                cs.moveTo(PAGE_WIDTH - MARGIN - 260, y - 10);
+                cs.lineTo(PAGE_WIDTH - MARGIN - 260, y + 20);
                 cs.stroke();
-                cs.setFont(fontBold, 12);
-                drawText(cs, "CHIFFRE D'AFFAIRES TOTAL : " + String.format("%.0f FCFA", grandTotal), MARGIN + 220, y - 5);
+
+                cs.setFont(fontBold, 11);
+                cs.setNonStrokingColor(Color.decode("#059669"));
+                drawText(cs, "C.A TOTAL :", PAGE_WIDTH - MARGIN - 250, y - 1);
+                
+                cs.setFont(fontBold, 13);
+                cs.setNonStrokingColor(Color.decode("#0F172A"));
+                String strTotal = String.format("%.0f FCFA", grandTotal);
+                float totalW = fontBold.getStringWidth(strTotal) / 1000 * 13;
+                drawText(cs, strTotal, PAGE_WIDTH - MARGIN - totalW - 10, y - 1);
             }
 
             document.save(fichier);
@@ -331,32 +530,41 @@ public class PdfService {
             PDPage page = new PDPage(PDRectangle.A4);
             document.addPage(page);
 
-            PDType1Font fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
-            PDType1Font fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+            org.apache.pdfbox.pdmodel.font.PDFont fontBold;
+            org.apache.pdfbox.pdmodel.font.PDFont fontNormal;
+            try {
+                File reg = new File("src/main/resources/fonts/Inter-Regular.ttf");
+                File bold = new File("src/main/resources/fonts/Inter-Bold.ttf");
+                if (reg.exists() && bold.exists()) {
+                    fontNormal = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, reg);
+                    fontBold = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, bold);
+                } else {
+                    fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                    fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+                }
+            } catch (Exception e) {
+                fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+            }
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
             try (PDPageContentStream cs = new PDPageContentStream(document, page)) {
                 float y = PAGE_HEIGHT - MARGIN;
 
                 // En-tête
-                y = drawProfessionalHeader(cs, "HISTORIQUE DES APPROVISIONNEMENTS", "Récapitulatif" + (periode.isEmpty() ? "" : " — Période : " + periode), y);
+                y = drawProfessionalHeader(document, cs, "HISTORIQUE DES APPROVISIONNEMENTS", "Récapitulatif" + (periode.isEmpty() ? "" : " — Période : " + periode), y);
 
-                // En-tête tableau
+                // En-tête tableau Premium (sans ID)
+                drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 22, Color.decode("#059669"));
                 cs.setFont(fontBold, 9);
-                drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 18, Color.decode("#ECF0F1"));
-                cs.setNonStrokingColor(Color.BLACK);
-                drawText(cs, "ID", MARGIN + 5, y);
-                drawText(cs, "DATE", MARGIN + 35, y);
-                drawText(cs, "FOURNISSEUR", MARGIN + 110, y);
-                drawText(cs, "REF FACTURE", MARGIN + 260, y);
-                drawText(cs, "NB LIGNES", MARGIN + 370, y);
-                drawText(cs, "MONTANT (FCFA)", MARGIN + 440, y);
+                cs.setNonStrokingColor(Color.WHITE);
+                drawText(cs, "DATE", MARGIN + 10, y);
+                drawText(cs, "FOURNISSEUR", MARGIN + 80, y);
+                drawText(cs, "REF FACTURE", MARGIN + 230, y);
+                drawText(cs, "NB LIGNES", MARGIN + 340, y);
+                drawText(cs, "MONTANT (FCFA)", MARGIN + 420, y);
 
-                cs.setLineWidth(0.5f);
-                cs.moveTo(MARGIN, y - 7);
-                cs.lineTo(PAGE_WIDTH - MARGIN, y - 7);
-                cs.stroke();
-                y -= 22;
+                y -= 25;
 
                 // Lignes
                 cs.setFont(fontNormal, 9);
@@ -365,37 +573,62 @@ public class PdfService {
 
                 for (com.pharmacie.models.Achat a : achats) {
                     if (y < MARGIN + 40) break;
+                    
+                    cs.setFont(fontNormal, 9);
+                    cs.setNonStrokingColor(Color.decode("#334155"));
+
                     if (pair) {
-                        drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 16, Color.decode("#F8F9FA"));
+                        drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 20, Color.decode("#F8FAFC"));
                     }
-                    cs.setNonStrokingColor(Color.BLACK);
-                    drawText(cs, String.valueOf(a.getId()), MARGIN + 5, y);
+                    
                     String dateStr = a.getDateAchat() != null ? a.getDateAchat().toLocalDate().format(formatter) : "---";
-                    drawText(cs, dateStr, MARGIN + 35, y);
+                    drawText(cs, dateStr, MARGIN + 10, y);
                     String fournisseur = a.getFournisseur() != null ? a.getFournisseur().getNom() : "---";
                     if (fournisseur.length() > 18) fournisseur = fournisseur.substring(0, 18) + "...";
-                    drawText(cs, fournisseur, MARGIN + 110, y);
+                    drawText(cs, fournisseur, MARGIN + 80, y);
                     String ref = a.getReferenceFacture() != null ? a.getReferenceFacture() : "---";
-                    drawText(cs, ref, MARGIN + 260, y);
+                    drawText(cs, ref, MARGIN + 230, y);
                     int nbLignes = a.getLignesAchat() != null ? a.getLignesAchat().size() : 0;
-                    drawText(cs, String.valueOf(nbLignes), MARGIN + 390, y);
+                    drawText(cs, String.valueOf(nbLignes), MARGIN + 350, y);
+                    
                     double montant = a.getLignesAchat() != null
                         ? a.getLignesAchat().stream().mapToDouble(la -> la.getQuantiteAchetee() * la.getPrixUnitaire()).sum()
                         : 0;
-                    drawText(cs, String.format("%.0f", montant), MARGIN + 450, y);
+                        
+                    cs.setFont(fontBold, 9);
+                    cs.setNonStrokingColor(Color.decode("#0F172A"));
+                    drawText(cs, String.format("%.0f", montant), MARGIN + 420, y);
                     grandTotal += montant;
-                    y -= 18;
+                    
+                    // Séparateur fin
+                    cs.setLineWidth(0.5f);
+                    cs.setStrokingColor(Color.decode("#E2E8F0"));
+                    cs.moveTo(MARGIN, y - 5);
+                    cs.lineTo(PAGE_WIDTH - MARGIN, y - 5);
+                    cs.stroke();
+
+                    y -= 20;
                     pair = !pair;
                 }
 
-                // Grand Total
-                y -= 10;
+                // --- TOTAL BLOCK ---
+                y -= 20;
+                drawFilledRect(cs, PAGE_WIDTH - MARGIN - 260, y - 10, 260, 30, Color.decode("#F1F5F9"));
                 cs.setLineWidth(1f);
-                cs.moveTo(MARGIN, y + 8);
-                cs.lineTo(PAGE_WIDTH - MARGIN, y + 8);
+                cs.setStrokingColor(Color.decode("#059669"));
+                cs.moveTo(PAGE_WIDTH - MARGIN - 260, y - 10);
+                cs.lineTo(PAGE_WIDTH - MARGIN - 260, y + 20);
                 cs.stroke();
-                cs.setFont(fontBold, 12);
-                drawText(cs, "TOTAL DES ACHATS : " + String.format("%.0f FCFA", grandTotal), MARGIN + 250, y - 5);
+
+                cs.setFont(fontBold, 11);
+                cs.setNonStrokingColor(Color.decode("#059669"));
+                drawText(cs, "ACHATS TOTAUX :", PAGE_WIDTH - MARGIN - 250, y - 1);
+                
+                cs.setFont(fontBold, 13);
+                cs.setNonStrokingColor(Color.decode("#0F172A"));
+                String strTotal = String.format("%.0f FCFA", grandTotal);
+                float totalW = fontBold.getStringWidth(strTotal) / 1000 * 13;
+                drawText(cs, strTotal, PAGE_WIDTH - MARGIN - totalW - 10, y - 1);
             }
 
             document.save(fichier);
@@ -421,32 +654,43 @@ public class PdfService {
             PDPage page = new PDPage(PDRectangle.A4);
             document.addPage(page);
 
-            PDType1Font fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
-            PDType1Font fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+            org.apache.pdfbox.pdmodel.font.PDFont fontBold;
+            org.apache.pdfbox.pdmodel.font.PDFont fontNormal;
+            try {
+                File reg = new File("src/main/resources/fonts/Inter-Regular.ttf");
+                File bold = new File("src/main/resources/fonts/Inter-Bold.ttf");
+                if (reg.exists() && bold.exists()) {
+                    fontNormal = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, reg);
+                    fontBold = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, bold);
+                } else {
+                    fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                    fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+                }
+            } catch (Exception e) {
+                fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+            }
 
             try (PDPageContentStream cs = new PDPageContentStream(document, page)) {
                 float y = PAGE_HEIGHT - MARGIN;
 
-                y = drawProfessionalHeader(cs, "ETAT DU STOCK PAR LOTS", "Inventaire Valorisé", y);
+                y = drawProfessionalHeader(document, cs, "ETAT DU STOCK PAR LOTS", "Inventaire Valorisé", y);
 
+                // En-tête tableau Premium
+                drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 22, Color.decode("#059669"));
                 cs.setFont(fontBold, 9);
-                drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 18, Color.decode("#ECF0F1"));
-                cs.setNonStrokingColor(Color.BLACK);
-                drawText(cs, "PRODUIT", MARGIN + 5, y);
-                drawText(cs, "LOT", MARGIN + 90, y);
-                drawText(cs, "EXPIR.", MARGIN + 150, y);
-                drawText(cs, "JOURS", MARGIN + 205, y);
-                drawText(cs, "STOCK", MARGIN + 245, y);
-                drawText(cs, "SEUIL", MARGIN + 310, y);
-                drawText(cs, "VENDU", MARGIN + 350, y);
-                drawText(cs, "PRIX U.", MARGIN + 395, y);
-                drawText(cs, "VALEUR", MARGIN + 445, y);
+                cs.setNonStrokingColor(Color.WHITE);
+                drawText(cs, "PRODUIT", MARGIN + 10, y);
+                drawText(cs, "LOT", MARGIN + 95, y);
+                drawText(cs, "EXPIR.", MARGIN + 155, y);
+                drawText(cs, "JOURS", MARGIN + 210, y);
+                drawText(cs, "STOCK", MARGIN + 250, y);
+                drawText(cs, "SEUIL", MARGIN + 315, y);
+                drawText(cs, "VENDU", MARGIN + 355, y);
+                drawText(cs, "PRIX U.", MARGIN + 400, y);
+                drawText(cs, "VALEUR", MARGIN + 450, y);
 
-                cs.setLineWidth(0.5f);
-                cs.moveTo(MARGIN, y - 7);
-                cs.lineTo(PAGE_WIDTH - MARGIN, y - 7);
-                cs.stroke();
-                y -= 22;
+                y -= 25;
 
                 cs.setFont(fontNormal, 8); // Plus petit pour tout faire rentrer
                 double valeurTotale = 0;
@@ -454,51 +698,75 @@ public class PdfService {
 
                 for (com.pharmacie.controllers.ProduitController.EtatStockDTO s : stockList) {
                     if (y < MARGIN + 40) break;
+                    
+                    cs.setFont(fontNormal, 8);
+                    cs.setNonStrokingColor(Color.decode("#334155"));
+
                     if (pair) {
-                        drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 16, Color.decode("#F8F9FA"));
+                        drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 18, Color.decode("#F8FAFC"));
                     }
-                    cs.setNonStrokingColor(Color.BLACK);
                     
                     String prod = s.getProduitNom();
                     if (prod.length() > 18) prod = prod.substring(0, 18) + ".";
-                    drawText(cs, prod, MARGIN + 5, y);
+                    drawText(cs, prod, MARGIN + 10, y);
                     
                     String lot = s.getLotNumero();
                     if (lot.length() > 10) lot = lot.substring(0, 10);
-                    drawText(cs, lot, MARGIN + 90, y);
+                    drawText(cs, lot, MARGIN + 95, y);
                     
-                    drawText(cs, s.getDateExpiration(), MARGIN + 150, y);
+                    drawText(cs, s.getDateExpiration(), MARGIN + 155, y);
                     
                     String jours = s.getJoursRestantsFormate().replace(" Expiré", " Exp.");
-                    drawText(cs, jours, MARGIN + 205, y);
+                    drawText(cs, jours, MARGIN + 210, y);
 
-                    // Conversion intelligente "Bte(s) et Unités" pour le PDF
                     String qte = s.getQuantiteFormatee()
                         .replace(" Bte(s) et ", "B/").replace(" Unité(s)", "U")
                         .replace(" Bte(s)", "B").replace(" Unités", "U").replace(" Unité", "U");
-                    drawText(cs, qte, MARGIN + 245, y);
+                    drawText(cs, qte, MARGIN + 250, y);
 
-                    drawText(cs, String.valueOf(s.getSeuilAlerte()), MARGIN + 315, y);
-                    drawText(cs, String.valueOf(s.getQuantiteVendue()), MARGIN + 355, y);
+                    drawText(cs, String.valueOf(s.getSeuilAlerte()), MARGIN + 320, y);
+                    drawText(cs, String.valueOf(s.getQuantiteVendue()), MARGIN + 360, y);
                     
                     double prix = s.getPrixUnitaire() != null ? s.getPrixUnitaire() : 0;
-                    drawText(cs, String.format("%.0f", prix), MARGIN + 395, y);
+                    drawText(cs, String.format("%.0f", prix), MARGIN + 400, y);
                     
                     double valeurLigne = s.getValeurFinanciere() != null ? s.getValeurFinanciere() : 0;
-                    drawText(cs, String.format("%.0f", valeurLigne), MARGIN + 445, y);
+                    
+                    cs.setFont(fontBold, 8);
+                    cs.setNonStrokingColor(Color.decode("#0F172A"));
+                    drawText(cs, String.format("%.0f", valeurLigne), MARGIN + 450, y);
                     
                     valeurTotale += valeurLigne;
-                    y -= 14; // Lignes plus serrées pour police de 8
+                    
+                    // Séparateur fin
+                    cs.setLineWidth(0.5f);
+                    cs.setStrokingColor(Color.decode("#E2E8F0"));
+                    cs.moveTo(MARGIN, y - 5);
+                    cs.lineTo(PAGE_WIDTH - MARGIN, y - 5);
+                    cs.stroke();
+
+                    y -= 18;
                     pair = !pair;
                 }
 
-                y -= 10;
+                // --- TOTAL BLOCK ---
+                y -= 20;
+                drawFilledRect(cs, PAGE_WIDTH - MARGIN - 260, y - 10, 260, 30, Color.decode("#F1F5F9"));
                 cs.setLineWidth(1f);
-                cs.moveTo(MARGIN, y + 8);
-                cs.lineTo(PAGE_WIDTH - MARGIN, y + 8);
+                cs.setStrokingColor(Color.decode("#059669"));
+                cs.moveTo(PAGE_WIDTH - MARGIN - 260, y - 10);
+                cs.lineTo(PAGE_WIDTH - MARGIN - 260, y + 20);
                 cs.stroke();
-                cs.setFont(fontBold, 12);
-                drawText(cs, "VALEUR TOTALE : " + String.format("%.0f FCFA", valeurTotale), MARGIN + 220, y - 5);
+
+                cs.setFont(fontBold, 11);
+                cs.setNonStrokingColor(Color.decode("#059669"));
+                drawText(cs, "VALEUR TOTALE :", PAGE_WIDTH - MARGIN - 250, y - 1);
+                
+                cs.setFont(fontBold, 13);
+                cs.setNonStrokingColor(Color.decode("#0F172A"));
+                String strTotal = String.format("%.0f FCFA", valeurTotale);
+                float totalW = fontBold.getStringWidth(strTotal) / 1000 * 13;
+                drawText(cs, strTotal, PAGE_WIDTH - MARGIN - totalW - 10, y - 1);
             }
 
             document.save(fichier);
@@ -511,9 +779,13 @@ public class PdfService {
         }
     }
 
-    public static void genererRapportAjustements(java.util.List<com.pharmacie.models.AjustementStock> ajustements, String periode, Stage ownerStage) {
+    public static void genererRapportAjustements(
+            java.util.List<com.pharmacie.models.AjustementStock> ajustements,
+            String periode,
+            com.pharmacie.models.MouvementStock.TypeMouvement operation,
+            Stage ownerStage) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Enregistrer le rapport des pertes/ajustements");
+        fileChooser.setTitle("Enregistrer le rapport des ajustements");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichier PDF", "*.pdf"));
         fileChooser.setInitialFileName("Rapport_Ajustements_" + (periode.isEmpty() ? "tout" : periode.replace(" au ", "_").replace("/", "-")) + ".pdf");
 
@@ -524,30 +796,53 @@ public class PdfService {
             PDPage page = new PDPage(PDRectangle.A4);
             document.addPage(page);
 
-            PDType1Font fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
-            PDType1Font fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+            org.apache.pdfbox.pdmodel.font.PDFont fontBold;
+            org.apache.pdfbox.pdmodel.font.PDFont fontNormal;
+            try {
+                File reg = new File("src/main/resources/fonts/Inter-Regular.ttf");
+                File bold = new File("src/main/resources/fonts/Inter-Bold.ttf");
+                if (reg.exists() && bold.exists()) {
+                    fontNormal = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, reg);
+                    fontBold = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, bold);
+                } else {
+                    fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                    fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+                }
+            } catch (Exception e) {
+                fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+            }
             java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
             try (PDPageContentStream cs = new PDPageContentStream(document, page)) {
                 float y = PAGE_HEIGHT - MARGIN;
 
-                y = drawProfessionalHeader(cs, "HISTORIQUE DES RETRAITS EXCEPTIONNELS", "Période : " + periode, y);
+                // Construire le label de l'opération pour le sous-titre
+                String opLabel;
+                if (operation == null) {
+                    opLabel = "Toutes les opérations";
+                } else switch (operation) {
+                    case AJUSTEMENT_POSITIF: opLabel = "Ajouts au stock"; break;
+                    case AJUSTEMENT_NEGATIF: opLabel = "Retraits du stock"; break;
+                    default: opLabel = operation.name(); break;
+                }
 
+                y = drawProfessionalHeader(document, cs, "HISTORIQUE DES AJUSTEMENTS",
+                    "Période : " + periode + "   |   Opération : " + opLabel, y);
+
+                // En-tête tableau Premium
+                // Colonnes réorganisées : DATE | PRODUIT | LOT | OPÉRATION | MOTIF | QTE | AGENT
+                drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 22, Color.decode("#059669"));
                 cs.setFont(fontBold, 9);
-                drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 18, Color.decode("#ECF0F1"));
-                cs.setNonStrokingColor(Color.BLACK);
-                drawText(cs, "DATE", MARGIN + 5, y);
-                drawText(cs, "PRODUIT", MARGIN + 90, y);
-                drawText(cs, "LOT", MARGIN + 220, y);
-                drawText(cs, "MOTIF", MARGIN + 290, y);
+                cs.setNonStrokingColor(Color.WHITE);
+                drawText(cs, "DATE", MARGIN + 10, y);
+                drawText(cs, "PRODUIT", MARGIN + 100, y);
+                drawText(cs, "LOT", MARGIN + 215, y);
+                drawText(cs, "MOTIF", MARGIN + 268, y);
                 drawText(cs, "QTE", MARGIN + 400, y);
-                drawText(cs, "AGENT", MARGIN + 440, y);
+                drawText(cs, "AGENT", MARGIN + 435, y);
 
-                cs.setLineWidth(0.5f);
-                cs.moveTo(MARGIN, y - 7);
-                cs.lineTo(PAGE_WIDTH - MARGIN, y - 7);
-                cs.stroke();
-                y -= 22;
+                y -= 25;
 
                 cs.setFont(fontNormal, 9);
                 int totalPerte = 0;
@@ -555,42 +850,81 @@ public class PdfService {
 
                 for (com.pharmacie.models.AjustementStock a : ajustements) {
                     if (y < MARGIN + 40) break;
+                    
+                    cs.setFont(fontNormal, 9);
+                    cs.setNonStrokingColor(Color.decode("#334155"));
+
                     if (pair) {
-                        drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 16, Color.decode("#F8F9FA"));
+                        drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 20, Color.decode("#F8FAFC"));
                     }
-                    cs.setNonStrokingColor(Color.BLACK);
                     
                     String dateStr = a.getDateAjustement() != null ? a.getDateAjustement().format(formatter) : "---";
-                    drawText(cs, dateStr, MARGIN + 5, y);
+                    drawText(cs, dateStr, MARGIN + 10, y);
                     
                     String prod = a.getLot().getProduit().getNom();
-                    if (prod.length() > 22) prod = prod.substring(0, 22) + "...";
-                    drawText(cs, prod, MARGIN + 90, y);
+                    if (prod.length() > 16) prod = prod.substring(0, 16) + "...";
+                    drawText(cs, prod, MARGIN + 100, y);
                     
-                    drawText(cs, a.getLot().getNumeroLot(), MARGIN + 220, y);
+                    String lot = a.getLot().getNumeroLot();
+                    if (lot.length() > 8) lot = lot.substring(0, 8);
+                    drawText(cs, lot, MARGIN + 215, y);
                     
-                    String motif = a.getMotif().name();
-                    if (motif.length() > 20) motif = motif.substring(0, 20);
-                    drawText(cs, motif, MARGIN + 290, y);
+                    // Motif avec label lisible
+                    String motifLabel = a.getMotif().getLabel();
+                    if (motifLabel.length() > 18) motifLabel = motifLabel.substring(0, 18) + ".";
+                    drawText(cs, motifLabel, MARGIN + 268, y);
                     
-                    drawText(cs, String.valueOf(a.getQuantite()), MARGIN + 405, y);
+                    // Coloriser la quantité selon le type d'opération
+                    com.pharmacie.models.MouvementStock.TypeMouvement typeOp = a.getTypeAjustement() != null
+                        ? a.getTypeAjustement()
+                        : com.pharmacie.models.MouvementStock.TypeMouvement.AJUSTEMENT_NEGATIF;
                     
+                    cs.setFont(fontBold, 9);
+                    if (typeOp == com.pharmacie.models.MouvementStock.TypeMouvement.AJUSTEMENT_POSITIF) {
+                        cs.setNonStrokingColor(Color.decode("#059669")); // Vert
+                        drawText(cs, "+ " + a.getQuantite(), MARGIN + 400, y);
+                    } else {
+                        cs.setNonStrokingColor(Color.decode("#E11D48")); // Rouge
+                        drawText(cs, "- " + a.getQuantite(), MARGIN + 400, y);
+                    }
+                    
+                    cs.setFont(fontNormal, 9);
+                    cs.setNonStrokingColor(Color.decode("#334155"));
                     String user = a.getUser().getNom();
-                    if (user.length() > 10) user = user.substring(0, 10) + "...";
-                    drawText(cs, user, MARGIN + 440, y);
+                    if (user.length() > 15) user = user.substring(0, 15) + "...";
+                    drawText(cs, user, MARGIN + 435, y);
                     
                     totalPerte += a.getQuantite();
-                    y -= 18;
+                    
+                    // Séparateur fin
+                    cs.setLineWidth(0.5f);
+                    cs.setStrokingColor(Color.decode("#E2E8F0"));
+                    cs.moveTo(MARGIN, y - 5);
+                    cs.lineTo(PAGE_WIDTH - MARGIN, y - 5);
+                    cs.stroke();
+
+                    y -= 20;
                     pair = !pair;
                 }
 
-                y -= 10;
+                // --- TOTAL BLOCK ---
+                y -= 20;
+                drawFilledRect(cs, PAGE_WIDTH - MARGIN - 260, y - 10, 260, 30, Color.decode("#F1F5F9"));
                 cs.setLineWidth(1f);
-                cs.moveTo(MARGIN, y + 8);
-                cs.lineTo(PAGE_WIDTH - MARGIN, y + 8);
+                cs.setStrokingColor(Color.decode("#059669"));
+                cs.moveTo(PAGE_WIDTH - MARGIN - 260, y - 10);
+                cs.lineTo(PAGE_WIDTH - MARGIN - 260, y + 20);
                 cs.stroke();
-                cs.setFont(fontBold, 12);
-                drawText(cs, "TOTAL DES UNITES RETIREES / PERDUES : " + totalPerte, MARGIN + 220, y - 5);
+
+                cs.setFont(fontBold, 11);
+                cs.setNonStrokingColor(Color.decode("#059669"));
+                drawText(cs, "UNITÉS PERDUES :", PAGE_WIDTH - MARGIN - 250, y - 1);
+                
+                cs.setFont(fontBold, 13);
+                cs.setNonStrokingColor(Color.decode("#0F172A"));
+                String strTotal = String.valueOf(totalPerte);
+                float totalW = fontBold.getStringWidth(strTotal) / 1000 * 13;
+                drawText(cs, strTotal, PAGE_WIDTH - MARGIN - totalW - 10, y - 1);
             }
 
             document.save(fichier);
@@ -616,30 +950,41 @@ public class PdfService {
             PDPage page = new PDPage(PDRectangle.A4);
             document.addPage(page);
 
-            PDType1Font fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
-            PDType1Font fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+            org.apache.pdfbox.pdmodel.font.PDFont fontBold;
+            org.apache.pdfbox.pdmodel.font.PDFont fontNormal;
+            try {
+                File reg = new File("src/main/resources/fonts/Inter-Regular.ttf");
+                File bold = new File("src/main/resources/fonts/Inter-Bold.ttf");
+                if (reg.exists() && bold.exists()) {
+                    fontNormal = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, reg);
+                    fontBold = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, bold);
+                } else {
+                    fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                    fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+                }
+            } catch (Exception e) {
+                fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+            }
             java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
             try (PDPageContentStream cs = new PDPageContentStream(document, page)) {
                 float y = PAGE_HEIGHT - MARGIN;
 
-                y = drawProfessionalHeader(cs, "LIGNES DE VENTE", "Journal Détaillé — Période : " + periode, y);
+                y = drawProfessionalHeader(document, cs, "LIGNES DE VENTE", "Journal Détaillé — Période : " + periode, y);
 
+                // En-tête tableau Premium
+                drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 22, Color.decode("#059669"));
                 cs.setFont(fontBold, 9);
-                drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 18, Color.decode("#ECF0F1"));
-                cs.setNonStrokingColor(Color.BLACK);
-                drawText(cs, "DATE", MARGIN + 5, y);
-                drawText(cs, "TICKET", MARGIN + 85, y);
-                drawText(cs, "PRODUIT", MARGIN + 140, y);
-                drawText(cs, "CAISSIER", MARGIN + 280, y);
-                drawText(cs, "QTE", MARGIN + 360, y);
-                drawText(cs, "TOTAL", MARGIN + 410, y);
+                cs.setNonStrokingColor(Color.WHITE);
+                drawText(cs, "DATE", MARGIN + 10, y);
+                drawText(cs, "TICKET", MARGIN + 90, y);
+                drawText(cs, "PRODUIT", MARGIN + 150, y);
+                drawText(cs, "CAISSIER", MARGIN + 290, y);
+                drawText(cs, "QTE", MARGIN + 370, y);
+                drawText(cs, "TOTAL", MARGIN + 420, y);
 
-                cs.setLineWidth(0.5f);
-                cs.moveTo(MARGIN, y - 7);
-                cs.lineTo(PAGE_WIDTH - MARGIN, y - 7);
-                cs.stroke();
-                y -= 22;
+                y -= 25;
 
                 cs.setFont(fontNormal, 9);
                 double grandTotal = 0;
@@ -647,39 +992,64 @@ public class PdfService {
 
                 for (com.pharmacie.models.LigneVente lv : lignes) {
                     if (y < MARGIN + 40) break;
+                    
+                    cs.setFont(fontNormal, 9);
+                    cs.setNonStrokingColor(Color.decode("#334155"));
+
                     if (pair) {
-                        drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 16, Color.decode("#F8F9FA"));
+                        drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 20, Color.decode("#F8FAFC"));
                     }
-                    cs.setNonStrokingColor(Color.BLACK);
                     
                     String dateStr = lv.getVente().getDateVente() != null ? lv.getVente().getDateVente().format(formatter) : "---";
-                    drawText(cs, dateStr, MARGIN + 5, y);
+                    drawText(cs, dateStr, MARGIN + 10, y);
                     
-                    drawText(cs, "TCK-" + lv.getVente().getId(), MARGIN + 85, y);
+                    drawText(cs, "TCK-" + lv.getVente().getId(), MARGIN + 90, y);
                     
                     String prod = lv.getProduit().getNom();
                     if (prod.length() > 25) prod = prod.substring(0, 25) + "...";
-                    drawText(cs, prod, MARGIN + 140, y);
+                    drawText(cs, prod, MARGIN + 150, y);
                     
                     String agent = lv.getVente().getUser().getNom();
-                    if (agent.length() > 12) agent = agent.substring(0, 12) + "...";
-                    drawText(cs, agent, MARGIN + 280, y);
+                    if (agent.length() > 18) agent = agent.substring(0, 18) + "...";
+                    drawText(cs, agent, MARGIN + 290, y);
                     
-                    drawText(cs, String.valueOf(lv.getQuantiteVendue()), MARGIN + 365, y);
-                    drawText(cs, String.format("%.0f", lv.getSousTotal()), MARGIN + 410, y);
+                    cs.setFont(fontBold, 9);
+                    drawText(cs, String.valueOf(lv.getQuantiteVendue()), MARGIN + 375, y);
+                    
+                    cs.setNonStrokingColor(Color.decode("#0F172A"));
+                    drawText(cs, String.format("%.0f", lv.getSousTotal()), MARGIN + 420, y);
                     
                     grandTotal += lv.getSousTotal();
-                    y -= 18;
+                    
+                    // Séparateur fin
+                    cs.setLineWidth(0.5f);
+                    cs.setStrokingColor(Color.decode("#E2E8F0"));
+                    cs.moveTo(MARGIN, y - 5);
+                    cs.lineTo(PAGE_WIDTH - MARGIN, y - 5);
+                    cs.stroke();
+
+                    y -= 20;
                     pair = !pair;
                 }
 
-                y -= 10;
+                // --- TOTAL BLOCK ---
+                y -= 20;
+                drawFilledRect(cs, PAGE_WIDTH - MARGIN - 260, y - 10, 260, 30, Color.decode("#F1F5F9"));
                 cs.setLineWidth(1f);
-                cs.moveTo(MARGIN, y + 8);
-                cs.lineTo(PAGE_WIDTH - MARGIN, y + 8);
+                cs.setStrokingColor(Color.decode("#059669"));
+                cs.moveTo(PAGE_WIDTH - MARGIN - 260, y - 10);
+                cs.lineTo(PAGE_WIDTH - MARGIN - 260, y + 20);
                 cs.stroke();
-                cs.setFont(fontBold, 12);
-                drawText(cs, "C.A. DE LA SELECTION : " + String.format("%.0f FCFA", grandTotal), MARGIN + 220, y - 5);
+
+                cs.setFont(fontBold, 11);
+                cs.setNonStrokingColor(Color.decode("#059669"));
+                drawText(cs, "C.A SÉLECTION :", PAGE_WIDTH - MARGIN - 250, y - 1);
+                
+                cs.setFont(fontBold, 13);
+                cs.setNonStrokingColor(Color.decode("#0F172A"));
+                String strTotal = String.format("%.0f FCFA", grandTotal);
+                float totalW = fontBold.getStringWidth(strTotal) / 1000 * 13;
+                drawText(cs, strTotal, PAGE_WIDTH - MARGIN - totalW - 10, y - 1);
             }
 
             document.save(fichier);
@@ -705,68 +1075,108 @@ public class PdfService {
             PDPage page = new PDPage(PDRectangle.A4);
             document.addPage(page);
 
-            PDType1Font fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
-            PDType1Font fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+            org.apache.pdfbox.pdmodel.font.PDFont fontBold;
+            org.apache.pdfbox.pdmodel.font.PDFont fontNormal;
+            try {
+                File reg = new File("src/main/resources/fonts/Inter-Regular.ttf");
+                File bold = new File("src/main/resources/fonts/Inter-Bold.ttf");
+                if (reg.exists() && bold.exists()) {
+                    fontNormal = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, reg);
+                    fontBold = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, bold);
+                } else {
+                    fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                    fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+                }
+            } catch (Exception e) {
+                fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+            }
             java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
             try (PDPageContentStream cs = new PDPageContentStream(document, page)) {
                 float y = PAGE_HEIGHT - MARGIN;
 
-                y = drawProfessionalHeader(cs, "AUDIT DES STOCKS", "Période : " + periode, y);
+                y = drawProfessionalHeader(document, cs, "AUDIT DES STOCKS", "Période : " + periode, y);
 
-                cs.setFont(fontBold, 9);
-                drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 18, Color.decode("#ECF0F1"));
-                cs.setNonStrokingColor(Color.BLACK);
-                drawText(cs, "DATE", MARGIN + 5, y);
-                drawText(cs, "TYPE", MARGIN + 80, y);
-                drawText(cs, "PRODUIT / LOT", MARGIN + 140, y);
-                drawText(cs, "QTE", MARGIN + 300, y);
-                drawText(cs, "REFERENCE", MARGIN + 350, y);
-                drawText(cs, "AGENT", MARGIN + 450, y);
+                // En-tête tableau Premium — 6 colonnes en 8pt sur 495 pts disponibles
+                // DATE(70) | TYPE(55) | PRODUIT/LOT(145) | QTE(45) | REFERENCE(110) | AGENT(60)
+                drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 22, Color.decode("#059669"));
+                cs.setFont(fontBold, 8);
+                cs.setNonStrokingColor(Color.WHITE);
+                drawText(cs, "DATE",         MARGIN + 10,  y);
+                drawText(cs, "TYPE",         MARGIN + 80,  y);
+                drawText(cs, "PRODUIT / LOT",MARGIN + 135, y);
+                drawText(cs, "QTE",          MARGIN + 280, y);
+                drawText(cs, "REFERENCE",    MARGIN + 325, y);
+                drawText(cs, "AGENT",        MARGIN + 435, y);
 
-                cs.setLineWidth(0.5f);
-                cs.moveTo(MARGIN, y - 7);
-                cs.lineTo(PAGE_WIDTH - MARGIN, y - 7);
-                cs.stroke();
-                y -= 22;
+                y -= 25;
 
-                cs.setFont(fontNormal, 9);
+                cs.setFont(fontNormal, 8);
                 boolean pair = false;
 
                 for (com.pharmacie.models.MouvementStock m : mouvements) {
                     if (y < MARGIN + 40) break;
-                    if (pair) drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 16, Color.decode("#F8F9FA"));
-                    cs.setNonStrokingColor(Color.BLACK);
                     
-                    drawText(cs, m.getDateMouvement().format(formatter), MARGIN + 5, y);
-                    
-                    if (m.getTypeMouvement() == com.pharmacie.models.MouvementStock.TypeMouvement.VENTE) {
-                        cs.setNonStrokingColor(Color.decode("#27ae60"));
-                    } else {
-                        cs.setNonStrokingColor(Color.decode("#c0392b"));
+                    cs.setFont(fontNormal, 8);
+                    cs.setNonStrokingColor(Color.decode("#334155"));
+
+                    if (pair) {
+                        drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 18, Color.decode("#F8FAFC"));
                     }
-                    drawText(cs, m.getTypeMouvement().name(), MARGIN + 80, y);
                     
-                    cs.setNonStrokingColor(Color.BLACK);
+                    drawText(cs, m.getDateMouvement().format(formatter), MARGIN + 10, y);
+                    
+                    // Label lisible pour le type de mouvement
+                    String typeLabel;
+                    switch (m.getTypeMouvement()) {
+                        case VENTE:               typeLabel = "Vente";   cs.setNonStrokingColor(Color.decode("#059669")); break;
+                        case ACHAT:               typeLabel = "Achat";   cs.setNonStrokingColor(Color.decode("#2563EB")); break;
+                        case AJUSTEMENT_POSITIF:  typeLabel = "Ajout";   cs.setNonStrokingColor(Color.decode("#059669")); break;
+                        case AJUSTEMENT_NEGATIF:  typeLabel = "Retrait"; cs.setNonStrokingColor(Color.decode("#E11D48")); break;
+                        default:                  typeLabel = m.getTypeMouvement().name(); cs.setNonStrokingColor(Color.decode("#334155")); break;
+                    }
+                    drawText(cs, typeLabel, MARGIN + 80, y);
+                    
+                    cs.setNonStrokingColor(Color.decode("#334155"));
                     String prod = m.getProduit().getNom();
                     if (m.getLot() != null) prod += " (L: " + m.getLot().getNumeroLot() + ")";
-                    if (prod.length() > 28) prod = prod.substring(0, 25) + "...";
-                    drawText(cs, prod, MARGIN + 140, y);
+                    if (prod.length() > 26) prod = prod.substring(0, 23) + "...";
+                    drawText(cs, prod, MARGIN + 135, y);
                     
                     String prefix = m.getQuantite() > 0 ? "+ " : "- ";
-                    drawText(cs, prefix + Math.abs(m.getQuantite()), MARGIN + 300, y);
+                    cs.setFont(fontBold, 8);
+                    drawText(cs, prefix + Math.abs(m.getQuantite()), MARGIN + 280, y);
                     
-                    String ref = m.getReference() != null ? m.getReference() : "N/A";
-                    if (ref.length() > 18) ref = ref.substring(0, 15) + "...";
-                    drawText(cs, ref, MARGIN + 350, y);
+                    cs.setFont(fontNormal, 8);
+                    String ref;
+                    switch (m.getTypeMouvement()) {
+                        case AJUSTEMENT_POSITIF:
+                        case AJUSTEMENT_NEGATIF:
+                            ref = "\u2014"; // Tiret long — : ajustement sans référence externe
+                            break;
+                        default:
+                            ref = m.getReference() != null ? m.getReference() : "N/A";
+                            if (ref.length() > 17) ref = ref.substring(0, 14) + "...";
+                            break;
+                    }
+                    drawText(cs, ref, MARGIN + 325, y);
                     
                     String user = m.getUser().getNom();
-                    if (user.length() > 10) user = user.substring(0, 10) + "...";
-                    drawText(cs, user, MARGIN + 450, y);
+                    if (user.length() > 14) user = user.substring(0, 14) + ".";
+                    drawText(cs, user, MARGIN + 435, y);
+                    
+                    // Séparateur fin
+                    cs.setLineWidth(0.5f);
+                    cs.setStrokingColor(Color.decode("#E2E8F0"));
+                    cs.moveTo(MARGIN, y - 5);
+                    cs.lineTo(PAGE_WIDTH - MARGIN, y - 5);
+                    cs.stroke();
                     
                     y -= 18;
                     pair = !pair;
                 }
+
             }
             document.save(fichier);
             logger.info("Rapport Audit sauvegardé : {}", fichier.getAbsolutePath());
@@ -789,61 +1199,85 @@ public class PdfService {
             PDPage page = new PDPage(PDRectangle.A4);
             document.addPage(page);
 
-            PDType1Font fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
-            PDType1Font fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+            org.apache.pdfbox.pdmodel.font.PDFont fontBold;
+            org.apache.pdfbox.pdmodel.font.PDFont fontNormal;
+            try {
+                File reg = new File("src/main/resources/fonts/Inter-Regular.ttf");
+                File bold = new File("src/main/resources/fonts/Inter-Bold.ttf");
+                if (reg.exists() && bold.exists()) {
+                    fontNormal = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, reg);
+                    fontBold = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, bold);
+                } else {
+                    fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                    fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+                }
+            } catch (Exception e) {
+                fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+            }
             java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yy HH:mm");
 
             try (PDPageContentStream cs = new PDPageContentStream(document, page)) {
                 float y = PAGE_HEIGHT - MARGIN;
 
-                y = drawProfessionalHeader(cs, "SESSIONS DE CAISSE (CLOTURES Z)", "Période : " + periode, y);
+                y = drawProfessionalHeader(document, cs, "SESSIONS DE CAISSE (CLOTURES Z)", "Période : " + periode, y);
 
+                // En-tête tableau Premium
+                drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 22, Color.decode("#059669"));
                 cs.setFont(fontBold, 9);
-                drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 18, Color.decode("#ECF0F1"));
-                cs.setNonStrokingColor(Color.BLACK);
-                drawText(cs, "OUVERTURE", MARGIN + 5, y);
-                drawText(cs, "CLOTURE", MARGIN + 85, y);
-                drawText(cs, "AGENT", MARGIN + 165, y);
-                drawText(cs, "STATUT", MARGIN + 250, y);
-                drawText(cs, "ECART ESPECES", MARGIN + 320, y);
-                drawText(cs, "ECART MOBILE", MARGIN + 430, y);
+                cs.setNonStrokingColor(Color.WHITE);
+                drawText(cs, "OUVERTURE", MARGIN + 10, y);
+                drawText(cs, "CLOTURE", MARGIN + 90, y);
+                drawText(cs, "AGENT", MARGIN + 170, y);
+                drawText(cs, "STATUT", MARGIN + 255, y);
+                drawText(cs, "ECART ESPECES", MARGIN + 325, y);
+                drawText(cs, "ECART MOBILE", MARGIN + 435, y);
 
-                cs.setLineWidth(0.5f);
-                cs.moveTo(MARGIN, y - 7);
-                cs.lineTo(PAGE_WIDTH - MARGIN, y - 7);
-                cs.stroke();
-                y -= 22;
+                y -= 25;
 
                 cs.setFont(fontNormal, 9);
                 boolean pair = false;
 
                 for (com.pharmacie.models.SessionCaisse s : sessions) {
                     if (y < MARGIN + 40) break;
-                    if (pair) drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 16, Color.decode("#F8F9FA"));
-                    cs.setNonStrokingColor(Color.BLACK);
                     
-                    drawText(cs, s.getDateOuverture().format(formatter), MARGIN + 5, y);
-                    drawText(cs, s.getDateCloture() != null ? s.getDateCloture().format(formatter) : "En cours", MARGIN + 85, y);
+                    cs.setFont(fontNormal, 9);
+                    cs.setNonStrokingColor(Color.decode("#334155"));
+
+                    if (pair) {
+                        drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 20, Color.decode("#F8FAFC"));
+                    }
+                    
+                    drawText(cs, s.getDateOuverture().format(formatter), MARGIN + 10, y);
+                    drawText(cs, s.getDateCloture() != null ? s.getDateCloture().format(formatter) : "En cours", MARGIN + 90, y);
                     
                     String user = s.getUser().getNom();
                     if (user.length() > 15) user = user.substring(0, 12) + "...";
-                    drawText(cs, user, MARGIN + 165, y);
+                    drawText(cs, user, MARGIN + 170, y);
                     
-                    drawText(cs, s.getStatut().name(), MARGIN + 250, y);
+                    drawText(cs, s.getStatut().name(), MARGIN + 255, y);
                     
                     // Couleur des écarts
+                    cs.setFont(fontBold, 9);
                     double ecartEsp = s.getEcartEspeces() != null ? s.getEcartEspeces() : 0.0;
-                    if (ecartEsp < 0) cs.setNonStrokingColor(Color.decode("#c0392b")); // Rouge
-                    else if (ecartEsp > 0) cs.setNonStrokingColor(Color.decode("#27ae60")); // Vert
-                    drawText(cs, String.format("%.0f F", ecartEsp), MARGIN + 320, y);
+                    if (ecartEsp < 0) cs.setNonStrokingColor(Color.decode("#E11D48")); // Rouge 600
+                    else if (ecartEsp > 0) cs.setNonStrokingColor(Color.decode("#059669")); // Emerald 600
+                    drawText(cs, String.format("%.0f F", ecartEsp), MARGIN + 325, y);
                     
-                    cs.setNonStrokingColor(Color.BLACK);
+                    cs.setNonStrokingColor(Color.decode("#334155"));
                     double ecartMob = s.getEcartMobile() != null ? s.getEcartMobile() : 0.0;
-                    if (ecartMob < 0) cs.setNonStrokingColor(Color.decode("#c0392b")); // Rouge
-                    else if (ecartMob > 0) cs.setNonStrokingColor(Color.decode("#27ae60")); // Vert
-                    drawText(cs, String.format("%.0f F", ecartMob), MARGIN + 430, y);
+                    if (ecartMob < 0) cs.setNonStrokingColor(Color.decode("#E11D48")); // Rouge 600
+                    else if (ecartMob > 0) cs.setNonStrokingColor(Color.decode("#059669")); // Emerald 600
+                    drawText(cs, String.format("%.0f F", ecartMob), MARGIN + 435, y);
                     
-                    y -= 18;
+                    // Séparateur fin
+                    cs.setLineWidth(0.5f);
+                    cs.setStrokingColor(Color.decode("#E2E8F0"));
+                    cs.moveTo(MARGIN, y - 5);
+                    cs.lineTo(PAGE_WIDTH - MARGIN, y - 5);
+                    cs.stroke();
+                    
+                    y -= 20;
                     pair = !pair;
                 }
             }

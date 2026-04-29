@@ -33,13 +33,12 @@ public class MainApp extends Application {
                                 && s.getStatut() == com.pharmacie.models.SessionCaisse.StatutSession.OUVERTE);
 
                 if (isCaisseOpen) {
-                    javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
-                            javafx.scene.control.Alert.AlertType.ERROR);
-                    alert.setTitle("Fermeture Impossible");
-                    alert.setHeaderText("🚨 Caisse logicielle toujours ouverte !");
-                    alert.setContentText(
-                            "La norme de sécurité interdisant la disparition des agents, vous ne pouvez pas fermer l'application sans justifier le compte du tiroir.\n\nVeuillez clôturer votre caisse (Z) d'abord.");
-                    alert.showAndWait();
+                    com.pharmacie.utils.AlertUtils.showPremiumAlert(
+                            javafx.scene.control.Alert.AlertType.ERROR,
+                            "Fermeture Impossible",
+                            "Caisse logicielle toujours ouverte !",
+                            "La norme de sécurité interdisant la disparition des agents, vous ne pouvez pas fermer l'application sans justifier le compte du tiroir.\n\nVeuillez clôturer votre caisse (Z) d'abord."
+                    );
                     event.consume(); // Bloque la fermeture de JavaFX
                 }
             }

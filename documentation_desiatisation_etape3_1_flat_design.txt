@@ -1,0 +1,63 @@
+================================================================================
+DOCUMENTATION TECHNIQUE - DÉSIATISATION MODULE VENTES & CAISSE
+Étape 3.1 : Correction SVG "Solid" & Implémentation du Flat Design
+Date : 2026-04-25
+Auteur : Ingénieur UI/UX Senior
+================================================================================
+
+OBJECTIF
+--------
+Résoudre le bug de rendu JavaFX (les icônes SVG qui se remplissent en blocs blancs)
+et moderniser l'ensemble des contrôles de l'interface (boutons, champs, tableaux)
+pour supprimer l'aspect 3D natif de JavaFX ("Modena theme") et basculer sur un
+pur "Flat Design" de niveau SaaS Premium.
+
+
+ANALYSE DU PROBLÈME (AUDIT)
+---------------------------
+1. Bug SVG : Les tracés initiaux (Heroicons Outline) utilisent une règle de 
+   remplissage "even-odd" qui n'est pas supportée nativement par la propriété CSS 
+   `-fx-shape` de JavaFX. En tentant de remplir ces tracés de couleur blanche, 
+   JavaFX "bouche" les trous internes des icônes (ex: l'intérieur de la loupe).
+2. Bug UI 3D : L'interface conservait des dégradés, des ombres internes 
+   (`background-insets`) et des bordures 3D sur les TextField, ComboBox et TableView.
+
+
+DÉCISION ARCHITECTURALE & FLAT DESIGN
+-------------------------------------
+1. Migration vers FontAwesome 5 Solid :
+   J'ai remplacé les tracés SVG par ceux de FontAwesome "Solid". Ces tracés 
+   sont conçus de manière monolithique (règle "non-zero fill"). Ils sont 
+   nativement compatibles avec JavaFX et garantissent un rendu pixel-perfect.
+
+2. Override Global "Flat Design" (CSS) :
+   Plutôt que de modifier chaque élément individuellement, j'ai injecté une 
+   surcharge globale dans `styles.css`.
+   - Boutons : Supression des insets (`-fx-background-insets: 0;`), ajout d'une 
+     ombre très douce (`dropshadow`).
+   - Champs de saisie (TextField, ComboBox) : Passage à un fond 100% blanc, 
+     bordure fine grise (`#CBD5E1`), avec une bordure bleue (`#3B82F6`) et une 
+     légère lueur au focus pour guider l'utilisateur.
+   - Tableaux (TableView) : Supression des dégradés d'en-tête, suppression des 
+     bordures de cellules encombrantes, et ajout d'un fond vert ultra léger au survol
+     et à la sélection de ligne (`rgba(16, 185, 129, 0.1)`).
+
+
+MÉTHODE D'IMPLÉMENTATION
+-------------------------
+Modification chirurgicale du fichier `styles.css` via script automatisé (PowerShell) :
+- Remplacement du bloc "ICONES VECTORIELLES" par la version "SOLID".
+- Ajout du bloc "FLAT DESIGN (SAAS PREMIUM)" à la fin du fichier.
+
+
+VÉRIFICATION
+------------
+L'utilisateur verra immédiatement la différence : 
+- Les icônes SVG (loupe, cadenas, croix) apparaîtront avec une définition parfaite.
+- Les boutons perdront leur reflet brillant.
+- Les champs de saisie seront plats et élégants.
+- Le tableau des produits sera épuré (façon Notion / Shopify).
+
+================================================================================
+FIN DU DOCUMENT - ÉTAPE 3.1
+================================================================================

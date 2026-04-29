@@ -1,0 +1,85 @@
+================================================================================
+DOCUMENTATION TECHNIQUE - DÉSIATISATION UI/UX
+Étape 17 : Premium UI - ContextMenu, btn-action-blue, Icons, Formatage FCFA
+Date : 2026-04-26
+Auteur : Ingénieur UI/UX Senior
+================================================================================
+
+OBJECTIF
+--------
+Atteindre 100% de qualité premium sur l'onglet "État du Stock" en corrigeant
+les 3 derniers résidus visuels identifiés lors du dernier audit visuel.
+
+AUDIT RÉALISÉ - 3 DÉFAUTS CORRIGÉS
+------------------------------------
+
+1. DROPDOWN MENU (SplitMenuButton "Exporter") - Bleu natif JavaFX
+   ❌ Symptôme : L'item survolé dans le menu déroulant affichait le bleu
+      JavaFX Modena par défaut (#0096C9 environ), étranger au Design System.
+   
+   ✅ Correction CSS (styles.css) :
+      Ajout de sélecteurs `.context-menu .menu-item:focused` et `:hover`
+      avec background #D1FAE5 (Emerald 100) et texte #065F46 (Emerald 900).
+      Même palette que le ComboBox popup déjà corrigé.
+   
+   Note technique : Le ContextMenu est un composant distinct du ComboBox.
+   Il fallait cibler `.context-menu .menu-item` et son label enfant
+   séparément. JavaFX CSS ne propage pas automatiquement la couleur de fond
+   au label enfant — d'où le sélecteur `.label` enfant explicite.
+
+2. BOUTONS "Fiche Lot" ET "Ajuster Stock" - Bleu plein #2980B9 (étranger DS)
+   ❌ Symptôme : .btn-action-blue utilisait #2980B9 plein (bleu Material),
+      fond blanc cassé, texte blanc. Design System = Slate + Emerald uniquement.
+   
+   ✅ Correction CSS (styles.css) :
+      Redéfinition de .btn-action-blue en bouton "soft blue" :
+      - Fond : #EFF6FF (Blue 50) — pâle, non-intrusif
+      - Bordure : #BFDBFE (Blue 200)
+      - Texte : #1D4ED8 (Blue 700) — lisible sur fond pâle
+      - Hover : #DBEAFE (Blue 100) + #93C5FD (Blue 300)
+      Ce style est cohérent avec le DS car il complète le triptyque :
+        > Vert (action principale) | Rouge (danger) | Bleu pâle (info/détail)
+      Il n'y a plus de couleur pleine opaque, tous les boutons secondaires
+      utilisent un fond pastel + bordure + texte coloré.
+
+3. COLONNE "Prix U." - Notation scientifique 1.0E8 FCFA
+   ❌ Symptôme : Les valeurs Double > 10^7 s'affichaient en notation
+      scientifique (ex: 1.0E8 pour 100 000 000 FCFA). Catastrophique
+      pour une interface de gestion financière.
+   
+   ✅ Correction Java (ProduitController.java - ligne 192) :
+      Ajout d'un setCellFactory() après le setCellValueFactory() :
+      - String.format("%,.0f FCFA", item) → "100,000,000 FCFA"
+      - .replace(",", " ") → "100 000 000 FCFA" (format européen FCFA)
+      - Pas de décimales : les FCFA n'ont pas de centimes
+      L'import n'est pas nécessaire (String.format est natif).
+
+4. ICÔNES SVG SUR "Filtrer" ET "Réinitialiser"
+   ✅ Ajout de petites icônes SVG (scale 0.6 = 14px effectif) :
+      - "Filtrer" : icône loupe Material (path filled, fill: white)
+      - "Réinitialiser" : icône refresh Material (path filled, fill: #64748B)
+   
+   Raisons du choix :
+   - scale 0.6 sur un path 24x24 → 14.4px réel : compact, non intrusif
+   - Material Icons filled paths : parfaitement lisibles à petite taille
+   - Couleur alignée sur la couleur du texte du bouton (blanc / Slate 500)
+   
+   Règle maintenue : PAS d'emoji, PAS de texte unicode spécial.
+   Uniquement SVGPath avec coordonnées float précises.
+
+CONVENTIONS FINALES (SCELLÉES)
+-------------------------------
+Boutons → 4 types uniquement, aucune exception :
+  .button-primary    → Vert émeraude plein (action principale)
+  .btn-outline       → Transparent/bordure grise (action secondaire neutre)
+  .btn-danger        → Rouge pâle/texte rouge (action destructrice)
+  .btn-action-blue   → Bleu pâle/texte bleu (consultation, détail, info)
+
+Icônes → SVGPath uniquement, scale 0.6 max, cohérence couleur/bouton.
+Emojis → INTERDITS définitivement dans tous les composants.
+Menus  → ContextMenu et ComboBox popup : fond Emerald 100 au survol.
+Nombres → String.format avec groupement et remplacement virgule → espace.
+
+================================================================================
+FIN DU DOCUMENT - ÉTAPE 17 (PREMIUM FINAL ÉTAT DU STOCK)
+================================================================================

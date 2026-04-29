@@ -1,0 +1,29 @@
+# Processus d'Intégration du Modal PDF "Détails de Commande" (Premium)
+
+Conformément à la demande d'amélioration de la fenêtre des détails de commande, l'architecture a été migrée d'une simple grille de données (table) vers un véritable **Visualiseur de Document Intégré**, typique des logiciels SaaS de haut niveau (ERP, Gestionnaires de documents médicaux).
+
+## 1. Objectif du Design
+Le but est d'offrir une expérience utilisateur (UX) "captive" et haut de gamme. Plutôt que de forcer l'utilisateur à ouvrir le PDF dans un logiciel externe (comme Acrobat Reader) pour le consulter, le PDF est rendu visible instantanément au sein même de l'application JavaFX. 
+La fenêtre est scindée en deux :
+- **Zone Principale (70%) :** Une prévisualisation réaliste du document final, générée en haute résolution.
+- **Zone d'Action (30%) :** Un panneau latéral épuré, blanc, permettant des interactions rapides (Télécharger ou Imprimer physiquement).
+
+## 2. Choix Technologiques & Méthodologie
+
+### A. Génération Transparente
+Le moteur `PdfService` a été modifié. Auparavant, lorsqu'on cliquait sur "Imprimer Bon", le système demandait systématiquement où enregistrer le fichier (boîte de dialogue), le sauvegardait, puis l'ouvrait via l'OS.
+**Nouveau comportement :** Le fichier PDF est généré silencieusement dans le répertoire temporaire de l'ordinateur (`java.io.tmpdir`), évitant de polluer le disque dur de l'utilisateur avec des centaines de fichiers inutiles.
+
+### B. Moteur de Rendu (Apache PDFBox)
+La librairie `Apache PDFBox` (version 3.0.x), déjà présente dans le `pom.xml`, n'a pas été utilisée uniquement pour générer le PDF, mais aussi pour le "photographier". 
+Le `PdfPreviewController` lance un processus asynchrone (pour ne pas figer l'interface) qui charge le PDF temporaire et utilise `PDFRenderer.renderImageWithDPI(0, 150)`. Cette méthode transforme la première page du PDF en une image standard (JavaFX `Image`), qui est ensuite placée dans un `ImageView` avec une ombre portée (`dropshadow`) pour simuler une vraie feuille de papier.
+
+### C. Impression Native
+Le bouton "Imprimer physiquement" utilise `java.awt.print.PrinterJob` combiné à `PDFPageable`. 
+Suite à la validation, l'appel à `job.printDialog()` a été conservé : cela permet d'afficher la fenêtre standard de Windows pour sélectionner l'imprimante (particulièrement utile si la pharmacie possède plusieurs imprimantes : une pour les tickets, une pour les A4).
+
+### D. Remplacement de l'ancienne fenêtre
+La méthode `showSelectedAchatDetail()` (déclenchée par un double-clic ou le bouton "Voir Détails") ne charge plus l'ancien fichier `achat_details.fxml`. Elle redirige directement l'action vers le nouveau moteur PDF, ce qui rend l'expérience d'analyse de commande beaucoup plus authentique.
+
+---
+*Ce processus garantit une cohérence absolue avec la philosophie de DésIAtisation : des composants natifs, fluides, sans dépendances lourdes externes, et avec un rendu visuel exigeant.*

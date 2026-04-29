@@ -1,0 +1,135 @@
+================================================================================
+DOCUMENTATION TECHNIQUE - DÉSIATISATION MODULE VENTES & CAISSE
+Étape 1 : Changement de police d'écriture
+Date : 2026-04-25
+Auteur : Ingénieur UI/UX Senior
+================================================================================
+
+OBJECTIF
+--------
+Remplacer la police système par défaut "Segoe UI" par une police
+professionnelle conçue spécifiquement pour les interfaces numériques,
+sans toucher aux couleurs ni aux icônes (périmètre de l'étape 1 uniquement).
+
+
+ANALYSE PRÉALABLE (AUDIT)
+--------------------------
+Avant toute modification, j'ai localisé TOUTES les déclarations de police
+existantes dans le projet :
+
+  Fichier            Ligne   Valeur actuelle
+  ---------          -----   ---------------
+  styles.css           11    'Segoe UI', sans-serif
+  styles.css          205    'Segoe UI', 'Roboto', sans-serif   (sur .ticket-header)
+  login.css             4    'Segoe UI', 'Inter', sans-serif    (ordre inversé !)
+
+Problèmes identifiés :
+  1. Trois déclarations distinctes → incohérence garantie si on ne les
+     aligne pas toutes en même temps.
+  2. Dans login.css, Inter était déjà mentionné MAIS en deuxième position,
+     donc jamais utilisé (Segoe UI étant toujours disponible sur Windows,
+     il était choisi en premier).
+  3. La deuxième déclaration dans styles.css (sur .ticket-header) avait un
+     fallback 'Roboto' non installé, créant un rendu différent du reste
+     de l'application.
+
+
+DÉCISION DE POLICE : INTER
+---------------------------
+Police choisie : Inter (https://rsms.me/inter/)
+
+Pourquoi Inter et pas une autre :
+
+  1. CONÇUE POUR L'ÉCRAN : Inter a été dessinée par Rasmus Andersson
+     (designer chez Figma) exclusivement pour les interfaces numériques.
+     Contrairement à Segoe UI (conçue pour Windows en général), chaque
+     caractère d'Inter est optimisé pour la lecture sur écran à haute
+     densité de pixels.
+
+  2. CHIFFRES TABULAIRES : Inter possède nativement des chiffres de largeur
+     fixe (tabulaires). Concrètement, dans une colonne de montants FCFA,
+     les chiffres "1" et "8" occupent exactement la même largeur → les
+     colonnes de prix restent parfaitement alignées, même à des tailles
+     de police différentes. C'est un détail qui fait la différence entre
+     un logiciel amateur et un logiciel professionnel.
+
+  3. LISIBILITÉ À PETITE TAILLE : Inter est parfaitement lisible à 12-13px,
+     la taille typique des labels dans une interface de gestion. Ses
+     caractères sont légèrement plus ouverts (ouvertures des 'a', 'e', 'c')
+     ce qui réduit la fatigue visuelle lors d'une utilisation intensive.
+
+  4. STANDARD INDUSTRIE : Inter est utilisée par Linear, Vercel, Raycast,
+     Stripe Dashboard, et d'autres outils SaaS de référence. C'est le
+     signal visuel immédiat d'une interface professionnelle moderne.
+
+  5. DISPONIBILITÉ : Inter est installable gratuitement et fonctionne sur
+     Windows, macOS et Linux. Le fallback 'Segoe UI' garantit un affichage
+     correct si Inter n'est pas installée sur la machine.
+
+
+MODIFICATIONS EFFECTUÉES
+--------------------------
+Trois fichiers modifiés. Un seul type de changement : la valeur de
+-fx-font-family. Rien d'autre n'a été touché.
+
+  1. styles.css, ligne 11 (règle .root - police globale)
+     AVANT  : -fx-font-family: 'Segoe UI', sans-serif;
+     APRÈS  : -fx-font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+
+  2. styles.css, ligne 212 (règle .ticket-header)
+     AVANT  : -fx-font-family: 'Segoe UI', 'Roboto', sans-serif;
+     APRÈS  : -fx-font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+
+  3. login.css, ligne 4 (règle .root de la page de connexion)
+     AVANT  : -fx-font-family: 'Segoe UI', 'Inter', sans-serif;
+     APRÈS  : -fx-font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+
+
+LOGIQUE DU FALLBACK
+--------------------
+  'Inter'     → Police cible (à installer sur le poste)
+  'Segoe UI'  → Fallback Windows (toujours disponible)
+  system-ui   → Fallback cross-platform (utilise la meilleure police système)
+  sans-serif  → Dernier recours générique
+
+Cette chaîne garantit que l'interface ne "casse" jamais visuellement, même
+sur un poste où Inter n'est pas installée.
+
+
+PÉRIMÈTRE RESPECTÉ
+-------------------
+✔  Seule la police a été modifiée.
+✗  Les couleurs n'ont PAS été touchées (étape 2, en attente de validation).
+✗  Les icônes n'ont PAS été touchées (étape 3, en attente de validation).
+✗  Le FXML ventes.fxml n'a PAS été modifié.
+✗  Le contrôleur VenteController.java n'a PAS été modifié.
+
+
+INSTALLATION D'INTER (si pas encore fait)
+------------------------------------------
+Pour que Inter s'applique, elle doit être installée sur Windows :
+
+  1. Aller sur https://fonts.google.com/specimen/Inter
+  2. Cliquer "Download family"
+  3. Décompresser le zip, sélectionner tous les .ttf, clic droit → Installer
+  4. Relancer l'application
+
+Note : Si Inter n'est pas installée, l'application affichera Segoe UI
+(fallback), ce qui est correct. Il n'y a aucun crash possible.
+
+
+VÉRIFICATION
+------------
+Après relancement de l'application (.\mvnw javafx:run), inspecter
+visuellement :
+  - Le titre "Ventes & Caisse"
+  - Les labels du tableau catalogue produits
+  - Les montants FCFA dans les colonnes
+  - Les boutons et labels de la zone d'encaissement
+  - La page de connexion
+
+Si tout est cohérent et lisible → valider l'étape 1 et passer à l'étape 2.
+
+================================================================================
+FIN DU DOCUMENT - ÉTAPE 1
+================================================================================

@@ -1,0 +1,49 @@
+================================================================================
+DOCUMENTATION TECHNIQUE - DÉSIATISATION MODULE VENTES & CAISSE
+Étape 8 : Finitions Typographiques et Accentuation des Affordances
+Date : 2026-04-25
+Auteur : Ingénieur UI/UX Senior
+================================================================================
+
+OBJECTIF
+--------
+Répondre aux derniers retours qualitatifs ("l'œil de lynx" du Product Owner)
+pour accentuer la visibilité de certains composants clés qui étaient trop discrets.
+Les modifications portent sur la mise en gras du label "Qté :", des titres 
+des onglets, et le renforcement des contours des menus déroulants (ComboBox).
+
+ANALYSE DES DÉFAUTS
+-------------------
+1. Hiérarchie Visuelle (Typographie) :
+   - Le texte "Qté :" manquait de poids visuel à côté du champ de saisie.
+   - Les titres des onglets inactifs ("Historique des Ventes") se fondaient trop 
+     dans le décor.
+2. Contraste des Inputs (Bordures) :
+   - Les ComboBox avaient une bordure très fine (1px) et claire (`#CBD5E1`), 
+     les rendant difficiles à repérer rapidement au milieu des tableaux.
+
+DÉCISIONS ARCHITECTURALES ET CORRECTIONS
+----------------------------------------
+1. Typographie (Label et Onglets) :
+   - FXML (`ventes.fxml`) : J'ai ajouté `style="-fx-font-weight: bold;"` 
+     directement sur le `Label` "Qté :".
+   - CSS (`styles.css`) : J'ai ciblé `.tab-pane .tab-label` pour imposer un 
+     `-fx-font-weight: bold;` global à tous les onglets, actifs ou non. 
+     Cela structure fermement l'en-tête de l'application.
+
+2. Renforcement des Contours (ComboBox) :
+   - CSS (`styles.css`) : J'ai alourdi le trait de la classe `.combo-box`.
+     La bordure passe de 1px à `1.5px`, et la couleur s'assombrit vers 
+     un gris plus prononcé (`#94A3B8`). 
+     J'ai également répliqué cette couleur sur le séparateur du bouton flèche
+     (`.combo-box .arrow-button`) pour conserver l'harmonie du composant.
+
+VÉRIFICATION
+------------
+L'interface est désormais beaucoup plus affirmée. Les zones d'interaction 
+(onglets, menus déroulants, champs de quantité) sautent aux yeux sans avoir 
+besoin de les chercher, réduisant considérablement la charge cognitive du caissier.
+
+================================================================================
+FIN DU DOCUMENT - ÉTAPE 8
+================================================================================

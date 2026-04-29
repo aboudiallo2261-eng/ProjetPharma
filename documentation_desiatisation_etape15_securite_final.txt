@@ -1,0 +1,84 @@
+================================================================================
+DOCUMENTATION TECHNIQUE - DÉSIATISATION UI/UX
+Étape 15 : Finalisation Modules Sécurité & Accès - Nettoyage Résidus Finaux
+Date : 2026-04-26
+Auteur : Ingénieur UI/UX Senior
+================================================================================
+
+OBJECTIF
+--------
+Éliminer définitivement les derniers macarons icônes et les résidus de design
+IA dans les onglets du module Sécurité & Accès (users.fxml). Uniformiser à 100%
+le module avec les standards établis aux étapes précédentes.
+
+AUDIT RÉALISÉ - MODULE SÉCURITÉ (users.fxml)
+--------------------------------------------
+Onglets analysés un par un :
+
+1. PROFILS & HABILITATIONS (Onglet 1)
+   ❌ Macaron jaune + icône icon-key détecté sur le titre "Créer/Modifier un Profil"
+   ✅ Action : Supprimé. Titre seul avec police 800, taille 18px, Slate 900.
+
+2. COMPTES UTILISATEURS (Onglet 2)
+   ❌ Labels plats sans Top-Label (Nom, Identifiant, Email, MDP, Profil)
+   ❌ Bouton "Nouveau" gris #BDC3C7 texte blanc
+   ❌ Bouton "Désactiver l'accès" rouge plat #E74C3C texte blanc
+   ❌ Tableau avec bordure #BDC3C7 + pas de CONSTRAINED_RESIZE_POLICY
+   ❌ Cards avec border-radius: 8 (incohérent, les autres sont à 12)
+   ❌ Card droite sans sous-titre descriptif
+   ✅ Action : Refonte complète
+
+3. PARAMÈTRES DE L'ÉTABLISSEMENT (Onglet 3)
+   ❌ Macaron gris #F1F5F9 + icône icon-settings + sous-titre descriptif
+   ✅ Action : Supprimé. Titre seul.
+
+4. SAUVEGARDE & DONNÉES (Onglet 4)
+   ❌ Macaron vert #ECFDF5 + icône icon-database + sous-titre descriptif
+   ✅ Action : Supprimé. Titre seul.
+
+CORRECTIONS APPLIQUÉES - COMPTES UTILISATEURS
+----------------------------------------------
+1. CARD FORMULAIRE (gauche)
+   - Padding : 20px → 25px
+   - Border-radius : 8px → 12px (cohérence avec Profils & Habilitations)
+   - Espacement VBox : 10 → 15
+   - Titre : "Informations de l'employé" (bold 16px) → 
+     "Informations de l'Employé" (font-weight 800, 18px, Slate 900)
+   - Labels : Plats sans style → Top-Label (Slate 600, 13px, font-weight 700)
+   - Identifiant + Email : Empilés séparément → HBox 50/50 côte à côte
+   - ComboBox Profil : prefWidth="300" fixe → maxWidth="Infinity" (fluide)
+   - Bouton "Nouveau" : #BDC3C7 rouge → .btn-outline
+   - Bouton "Enregistrer" : Ajout style padding 8 20
+
+2. CARD LISTE (droite)
+   - Padding : 20px → 25px
+   - Border-radius : 8px → 12px
+   - Espacement VBox : 10 → 15
+   - Header : Label seul → VBox titre + sous-titre descriptif
+   - Bouton "Désactiver l'accès (Supprimer)" rouge plat → 
+     "Supprimer" .btn-danger (rouge pâle)
+   - Tableau bordure : #BDC3C7 → #E2E8F0 (Slate 200)
+   - CONSTRAINED_RESIZE_POLICY : Absent → Ajouté
+
+RÈGLE GÉNÉRALE RÉAFFIRMÉE
+--------------------------
+Après inspection complète du module users.fxml, le Design System est maintenant
+appliqué à 100% sur TOUS les onglets :
+
+  Onglet 1 (Profils)     : ✅ Card 12px, Top-Label, btn-danger, CONSTRAINED
+  Onglet 2 (Utilisateurs): ✅ Card 12px, Top-Label, btn-outline + btn-danger, CONSTRAINED
+  Onglet 3 (Paramètres)  : ✅ Card 12px, Top-Label, titre simple
+  Onglet 4 (Sauvegarde)  : ✅ Card 12px, bandeau info, titre simple
+
+CONVENTION DE NOMMAGE DES BOUTONS (rappel définitif)
+-----------------------------------------------------
+- Action primaire (Enregistrer, Valider)  : .button-primary (vert émeraude plein)
+- Action secondaire (Nouveau, Annuler)    : .btn-outline (transparent, bordure grise)
+- Action destructrice (Supprimer, Effacer): .btn-danger (rouge pâle, texte rouge)
+- Action rapide inline (+)                : .btn-quick-add (vert pastel)
+
+Aucune autre convention ne doit être utilisée dans l'application.
+
+================================================================================
+FIN DU DOCUMENT - ÉTAPE 15 (NETTOYAGE FINAL SÉCURITÉ & ACCÈS)
+================================================================================

@@ -35,7 +35,7 @@ public class AjustementStock {
     private MouvementStock.TypeMouvement typeAjustement;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private MotifAjustement motif;
 
     @Column(length = 255)

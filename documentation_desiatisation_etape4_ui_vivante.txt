@@ -1,0 +1,69 @@
+================================================================================
+DOCUMENTATION TECHNIQUE - DÉSIATISATION MODULE VENTES & CAISSE
+Étape 4 : Profondeur (Depth) et Micro-Interactions (Flat Design Premium)
+Date : 2026-04-25
+Auteur : Ingénieur UI/UX Senior
+================================================================================
+
+OBJECTIF
+--------
+Résoudre le syndrome de "l'interface morte et trop blanche" signalé lors de
+l'audit visuel. L'objectif est d'apporter de la profondeur (axe Z) pour faire
+ressortir les panneaux principaux, et de rendre les tableaux réactifs à la
+souris (feedback tactile) pour un rendu "100% humain" et vivant. De plus, il
+s'agit de corriger un conflit CSS empêchant la sélection visuelle des produits
+en rupture de stock (rouge).
+
+
+ANALYSE DU PROBLÈME
+-------------------
+1. Manque de profondeur : Le fond de l'application (`#F8FAFC`) et le fond
+   des panneaux de contenu (`#FFFFFF`) présentaient un contraste trop faible.
+2. Rigidité : Les tableaux (TableView) ne réagissaient pas au passage de la 
+   souris, donnant un sentiment d'interface figée.
+3. Bug de sélection (Stock = 0) : La classe `.stock-zero` imposait un fond
+   rouge clair absolu qui écrasait la couleur de sélection standard.
+
+
+DÉCISION ARCHITECTURALE & FLAT DESIGN
+-------------------------------------
+1. Le pattern "Card & Shadow" (Profondeur) :
+   J'ai créé une classe CSS générique `.card` dans `styles.css`.
+   - Fond : `#FFFFFF` (Blanc pur).
+   - Radius : `12px` (Bords plus doux).
+   - Ombre : `dropshadow(gaussian, rgba(0,0,0,0.04), 15, 0, 0, 4)`.
+   Cette ombre très diffuse, combinée à un assombrissement du fond général
+   (`.root`) vers `#F1F5F9` (Slate 100), donne l'illusion que les panneaux
+   "flottent" légèrement au-dessus du fond, structurant l'information.
+
+2. Les Micro-Interactions (Vie) :
+   J'ai ajouté un effet `:hover` sur la classe `.table-row-cell`. Au survol,
+   la ligne prend une très légère teinte `#F8FAFC`. L'application réagit 
+   désormais au mouvement de l'utilisateur.
+
+3. Fix de la Ligne Rouge (Feedback) :
+   J'ai spécifié l'état sélectionné pour la ligne en rupture :
+   `.table-row-cell.stock-zero:selected { -fx-background-color: #FCA5A5; }`.
+   Ainsi, quand on clique sur un produit vide, le rouge "réagit" en devenant 
+   plus sombre, confirmant l'action.
+
+
+MÉTHODE D'IMPLÉMENTATION
+-------------------------
+- Script PowerShell pour injecter proprement les états CSS (`:hover`, `:selected`)
+  et la nouvelle classe `.card` dans `styles.css`.
+- Script Python de remplacement (RegEx) pour nettoyer `ventes.fxml` de ses styles
+  inline figés (les anciens `dropshadow` codés en dur) et appliquer la classe
+  propre `styleClass="card"`.
+
+
+VÉRIFICATION
+------------
+Au prochain démarrage, l'interface présentera un aspect "Studio SaaS". Les
+panneaux de vente et de panier se détacheront du fond avec élégance, et le 
+tableau de stock répondra subtilement aux mouvements de la souris. 
+Le bug du produit en rupture est définitivement résolu.
+
+================================================================================
+FIN DU DOCUMENT - ÉTAPE 4
+================================================================================

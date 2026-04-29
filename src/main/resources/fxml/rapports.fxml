@@ -2,6 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.SVGPath?>
 
 <VBox spacing="20" styleClass="root" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pharmacie.controllers.ReportController">
     <padding>
@@ -37,8 +38,12 @@
                     <ComboBox fx:id="cmbCaissier" promptText="Tous les Caissiers" maxWidth="Infinity"
                               GridPane.columnIndex="3" GridPane.rowIndex="0" onAction="#genererRapport"/>
 
-                    <Button text="🔍 Filtrer" onAction="#genererRapport" styleClass="btn-filter"
-                            GridPane.columnIndex="5" GridPane.rowIndex="0"/>
+                    <Button text="Filtrer" onAction="#genererRapport" styleClass="btn-filter"
+                            GridPane.columnIndex="5" GridPane.rowIndex="0">
+                        <graphic>
+                            <SVGPath content="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" styleClass="btn-icon-white"/>
+                        </graphic>
+                    </Button>
 
                     <!-- Spinner de chargement asynchrone : visible uniquement pendant le Task -->
                     <ProgressIndicator fx:id="progressRapport" visible="false" managed="false"
@@ -61,8 +66,12 @@
                     <ComboBox fx:id="cmbRapportProduit" promptText="Tous les Produits" maxWidth="Infinity"
                               GridPane.columnIndex="1" GridPane.rowIndex="2" onAction="#genererRapport"/>
 
-                    <Button text="🔄 Réinitialiser" onAction="#resetRapportVente" styleClass="btn-outline-reset"
-                            GridPane.columnIndex="5" GridPane.rowIndex="2"/>
+                    <Button text="Réinitialiser" onAction="#resetRapportVente" styleClass="btn-outline-reset"
+                            GridPane.columnIndex="5" GridPane.rowIndex="2">
+                        <graphic>
+                            <SVGPath content="M1 4v6h6 M23 20v-6h-6 M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" styleClass="btn-icon-gray"/>
+                        </graphic>
+                    </Button>
                 </GridPane>
 
                 <!-- Tableau Ventes - Phase 3+4+5 -->
@@ -72,8 +81,18 @@
                         <Label fx:id="lblTotalFiltre" text="0 FCFA" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
                         <Region HBox.hgrow="ALWAYS"/>
                         <!-- Phase 5 : Boutons PDF/CSV actifs uniquement si données présentes (géré par ReportController) -->
-                        <Button fx:id="btnExportPdfVentes" text="📄 Exporter PDF" onAction="#exporterVentesPDF" styleClass="btn-action-red" disable="true"/>
-                        <Button fx:id="btnExportCsvVentes" text="📊 Exporter CSV" onAction="#exporterCSV" styleClass="btn-action-green" disable="true"/>
+                        <Button fx:id="btnExportPdfVentes" text="Exporter PDF" onAction="#exporterVentesPDF"
+                                styleClass="btn-action-red" disable="true" style="-fx-graphic-text-gap: 8;">
+                            <graphic>
+                                <javafx.scene.shape.SVGPath content="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="WHITE"/>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnExportCsvVentes" text="Exporter Excel" onAction="#exporterCSV"
+                                styleClass="btn-action-green" disable="true" style="-fx-graphic-text-gap: 8;">
+                            <graphic>
+                                <javafx.scene.shape.SVGPath content="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" fill="WHITE"/>
+                            </graphic>
+                        </Button>
                     </HBox>
 
                     <!-- Journal détaillé des ventes - CONSTRAINED via ReportController -->
@@ -123,8 +142,12 @@
                     <ComboBox fx:id="cmbAuditUser" promptText="Tous les agents" maxWidth="Infinity"
                               GridPane.columnIndex="3" GridPane.rowIndex="0" onAction="#genererAudit"/>
 
-                    <Button text="🔍 Filtrer" onAction="#genererAudit" styleClass="btn-filter"
-                            GridPane.columnIndex="5" GridPane.rowIndex="0"/>
+                    <Button text="Filtrer" onAction="#genererAudit" styleClass="btn-filter"
+                            GridPane.columnIndex="5" GridPane.rowIndex="0">
+                        <graphic>
+                            <SVGPath content="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" styleClass="btn-icon-white"/>
+                        </graphic>
+                    </Button>
 
                     <Label text="Produit :" styleClass="filter-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
                     <ComboBox fx:id="cmbAuditProduit" promptText="Tous les produits" maxWidth="Infinity"
@@ -134,8 +157,12 @@
                     <ComboBox fx:id="cmbAuditType" promptText="Tous les mouvements" maxWidth="Infinity"
                               GridPane.columnIndex="3" GridPane.rowIndex="1" onAction="#genererAudit"/>
 
-                    <Button text="🔄 Réinitialiser" onAction="#resetAudit" styleClass="btn-outline-reset"
-                            GridPane.columnIndex="5" GridPane.rowIndex="1"/>
+                    <Button text="Réinitialiser" onAction="#resetAudit" styleClass="btn-outline-reset"
+                            GridPane.columnIndex="5" GridPane.rowIndex="1">
+                        <graphic>
+                            <SVGPath content="M1 4v6h6 M23 20v-6h-6 M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" styleClass="btn-icon-gray"/>
+                        </graphic>
+                    </Button>
                 </GridPane>
 
                 <!-- Tableau Audit — même wrapper table-card que Journal des Ventes -->
@@ -145,8 +172,18 @@
                         <Label fx:id="lblTotalAudit" text="0 mouvement(s)"
                                style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2980b9;"/>
                         <Region HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="btnExportPdfAudit" text="📄 Exporter PDF" onAction="#exporterAuditPDF"
-                                styleClass="btn-action-red" disable="true"/>
+                        <Button fx:id="btnExportPdfAudit" text="Exporter PDF" onAction="#exporterAuditPDF"
+                                styleClass="btn-action-red" disable="true" style="-fx-graphic-text-gap: 8;">
+                            <graphic>
+                                <javafx.scene.shape.SVGPath content="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="WHITE"/>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnExportExcelAudit" text="Exporter Excel" onAction="#exporterAuditExcel"
+                                styleClass="btn-action-green" disable="true" style="-fx-graphic-text-gap: 8;">
+                            <graphic>
+                                <javafx.scene.shape.SVGPath content="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" fill="WHITE"/>
+                            </graphic>
+                        </Button>
                     </HBox>
 
                     <!-- Tableau Audit - CONSTRAINED via ReportController -->
@@ -193,8 +230,12 @@
                     <ComboBox fx:id="cmbAjustUser" promptText="Tous les agents" maxWidth="Infinity"
                               GridPane.columnIndex="3" GridPane.rowIndex="0" onAction="#genererAjustements"/>
 
-                    <Button text="🔍 Filtrer" onAction="#genererAjustements" styleClass="btn-filter"
-                            GridPane.columnIndex="5" GridPane.rowIndex="0"/>
+                    <Button text="Filtrer" onAction="#genererAjustements" styleClass="btn-filter"
+                            GridPane.columnIndex="5" GridPane.rowIndex="0">
+                        <graphic>
+                            <SVGPath content="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" styleClass="btn-icon-white"/>
+                        </graphic>
+                    </Button>
 
                     <!-- Spinner de chargement asynchrone -->
                     <ProgressIndicator fx:id="progressAjust" visible="false" managed="false"
@@ -211,8 +252,12 @@
                     <ComboBox fx:id="cmbAjustType" promptText="Toutes les opérations" maxWidth="Infinity"
                               GridPane.columnIndex="3" GridPane.rowIndex="1" onAction="#genererAjustements"/>
 
-                    <Button text="🔄 Réinitialiser" onAction="#resetAjustements" styleClass="btn-outline-reset"
-                            GridPane.columnIndex="5" GridPane.rowIndex="1"/>
+                    <Button text="Réinitialiser" onAction="#resetAjustements" styleClass="btn-outline-reset"
+                            GridPane.columnIndex="5" GridPane.rowIndex="1">
+                        <graphic>
+                            <SVGPath content="M1 4v6h6 M23 20v-6h-6 M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" styleClass="btn-icon-gray"/>
+                        </graphic>
+                    </Button>
                 </GridPane>
 
                 <!-- Tableau Ajustements — même wrapper table-card que Journal des Ventes -->
@@ -222,8 +267,18 @@
                         <Label fx:id="lblTotalAjustements" text="0 enregistrement(s)"
                                style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #e67e22;"/>
                         <Region HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="btnExportPdfAjust" text="📄 Exporter PDF" onAction="#exporterAjustementsPDF"
-                                styleClass="btn-action-red" disable="true"/>
+                        <Button fx:id="btnExportPdfAjust" text="Exporter PDF" onAction="#exporterAjustementsPDF"
+                                styleClass="btn-action-red" disable="true" style="-fx-graphic-text-gap: 8;">
+                            <graphic>
+                                <javafx.scene.shape.SVGPath content="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="WHITE"/>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnExportExcelAjust" text="Exporter Excel" onAction="#exporterAjustementsExcel"
+                                styleClass="btn-action-green" disable="true" style="-fx-graphic-text-gap: 8;">
+                            <graphic>
+                                <javafx.scene.shape.SVGPath content="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" fill="WHITE"/>
+                            </graphic>
+                        </Button>
                     </HBox>
 
                     <TableView fx:id="tableAjustements" VBox.vgrow="ALWAYS" styleClass="table-view">
@@ -272,8 +327,12 @@
                               GridPane.columnIndex="3" GridPane.rowIndex="0" onAction="#genererClotures"/>
 
                     <!-- Filtrer en haut à droite — identique aux autres onglets -->
-                    <Button text="🔍 Filtrer" onAction="#genererClotures" styleClass="btn-filter"
-                            GridPane.columnIndex="5" GridPane.rowIndex="0"/>
+                    <Button text="Filtrer" onAction="#genererClotures" styleClass="btn-filter"
+                            GridPane.columnIndex="5" GridPane.rowIndex="0">
+                        <graphic>
+                            <SVGPath content="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" styleClass="btn-icon-white"/>
+                        </graphic>
+                    </Button>
 
                     <!-- LIGNE 2 : Nouveaux filtres de clôture -->
                     <Label text="Statut :" styleClass="filter-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
@@ -285,8 +344,12 @@
                               GridPane.columnIndex="3" GridPane.rowIndex="1" onAction="#genererClotures"/>
 
                     <!-- Bouton Réinitialiser pour garder la symétrie -->
-                    <Button text="🔄 Réinitialiser" onAction="#resetClotures" styleClass="btn-outline-reset"
-                            GridPane.columnIndex="5" GridPane.rowIndex="1"/>
+                    <Button text="Réinitialiser" onAction="#resetClotures" styleClass="btn-outline-reset"
+                            GridPane.columnIndex="5" GridPane.rowIndex="1">
+                        <graphic>
+                            <SVGPath content="M1 4v6h6 M23 20v-6h-6 M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" styleClass="btn-icon-gray"/>
+                        </graphic>
+                    </Button>
                 </GridPane>
 
                 <!-- Tableau Clôtures — même wrapper table-card que Journal des Ventes -->
@@ -296,8 +359,18 @@
                         <Label fx:id="lblTotalClotures" text="0 session(s)"
                                style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #8e44ad;"/>
                         <Region HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="btnExportPdfCloture" text="📄 Exporter PDF" onAction="#exporterCloturesPDF"
-                                styleClass="btn-action-red" disable="true"/>
+                        <Button fx:id="btnExportPdfCloture" text="Exporter PDF" onAction="#exporterCloturesPDF"
+                                styleClass="btn-action-red" disable="true" style="-fx-graphic-text-gap: 8;">
+                            <graphic>
+                                <javafx.scene.shape.SVGPath content="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="WHITE"/>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnExportExcelCloture" text="Exporter Excel" onAction="#exporterCloturesExcel"
+                                styleClass="btn-action-green" disable="true" style="-fx-graphic-text-gap: 8;">
+                            <graphic>
+                                <javafx.scene.shape.SVGPath content="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" fill="WHITE"/>
+                            </graphic>
+                        </Button>
                     </HBox>
 
                     <!-- Tableau Clôtures - CONSTRAINED via ReportController -->

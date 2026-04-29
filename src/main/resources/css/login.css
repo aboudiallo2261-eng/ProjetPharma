@@ -1,7 +1,7 @@
 /* Palette de couleurs "Vert Pharmacie Premium" */
 .root {
     -fx-background-color: #F0FDF4; /* Vert menthe très pâle (Tailwind green-50) */
-    -fx-font-family: 'Segoe UI', 'Inter', sans-serif;
+    -fx-font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
 }
 
 /* Carte de connexion centrale */

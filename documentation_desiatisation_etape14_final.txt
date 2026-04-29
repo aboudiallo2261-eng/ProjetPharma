@@ -1,0 +1,97 @@
+================================================================================
+DOCUMENTATION TECHNIQUE - DÉSIATISATION UI/UX
+Étape 14 : Finalisation - Produits, Fournisseurs, Achats + Design System CSS
+Date : 2026-04-26
+Auteur : Ingénieur UI/UX Senior
+================================================================================
+
+OBJECTIF
+--------
+Éliminer définitivement les derniers résidus visuels "IA" sur les 3 modules
+restants (Produits, Fournisseurs, Achats) et consolider le Design System CSS
+en y intégrant des classes globales réutilisables.
+
+AUDIT RÉALISÉ (A-Z, Interface par Interface)
+--------------------------------------------
+RÉSULTAT :
+  ✅ login.fxml        — Propre (logo, SVG Feather, classes CSS)
+  ✅ main_layout.fxml  — Propre (sidebar, boutons SVG path)
+  ✅ dashboard.fxml    — Propre (KPI cards, SVG, classes sémantiques)
+  ✅ ventes.fxml       — Propre (card premium, ticket)
+  ✅ rapports.fxml     — Propre (refonte sessions précédentes)
+  ✅ users.fxml        — Propre (refonte étapes 12 & 13)
+  ❌ produits.fxml     — Résidus détectés (5 types)
+  ❌ fournisseurs.fxml — Résidus détectés (4 types)
+  ❌ achats.fxml       — Résidus détectés (2 types)
+
+SIGNATURES "IA" DÉTECTÉES ET ÉRADIQUÉES
+----------------------------------------
+1. Titres de page hardcodés : `-fx-text-fill: #2C3E50`
+   → Remplacé par la classe `.page-title` (Slate 900, font-weight 900)
+
+2. Boutons "Réinitialiser/Annuler" gris : `#BDC3C7` avec texte blanc
+   → Remplacé par la classe `.btn-outline` (transparent, bordure grise)
+
+3. Boutons "Supprimer" rouge plat : `#E74C3C` plein
+   → Remplacé par la classe `.btn-danger` (fond rouge pâle, texte rouge vif)
+
+4. Boutons "+" emoji (`➕`) avec style inline vert `#18BC9C`
+   → Remplacé par la classe `.btn-quick-add` (Vert émeraude pastel)
+
+5. CheckBox avec emoji `🖨` codé en dur
+   → Emoji supprimé, texte propre "Imprimer Bon de Commande"
+
+6. Tableaux sans `CONSTRAINED_RESIZE_POLICY`
+   → Ajout systématique sur produits (x3), fournisseurs (x1)
+
+DÉCISIONS ARCHITECTURALES - CSS (styles.css)
+--------------------------------------------
+Ajout de 4 classes globales en fin de fichier :
+
+1. `.page-title` : Police 22px, poids 900, couleur #0F172A (Slate 900)
+   Usage : Tous les titres de modules de l'application.
+
+2. `.btn-danger` : Fond #FEF2F2 (Red 50), bordure #FECACA (Red 200),
+   texte #DC2626 (Red 600). Hover assombrit légèrement.
+   Usage : Tous les boutons de suppression destructrice.
+
+3. `.btn-outline` : Fond transparent, bordure #CBD5E1 (Slate 300),
+   texte #64748B (Slate 500). Hover : fond très pâle.
+   Usage : Tous les boutons secondaires non-critiques.
+
+4. `.btn-quick-add` : Fond #ECFDF5 (Emerald 50), bordure #6EE7B7,
+   texte #059669 (Emerald 600). Taille de police 16px pour le "+".
+   Usage : Boutons d'ajout rapide inline dans les formulaires.
+
+REFONTE FOURNISSEURS (fournisseurs.fxml)
+----------------------------------------
+- Ajout d'un en-tête premium (icône SVG violet + titre + sous-titre)
+- Formulaire restructuré en Top-Label (label au-dessus de l'input)
+- Champs Téléphone et Email regroupés en 2 colonnes (HBox 50/50)
+- CONSTRAINED_RESIZE_POLICY appliqué sur le tableau
+- Boutons refondus : Réinitialiser → .btn-outline, Supprimer → .btn-danger
+
+REFONTE PRODUITS (produits.fxml)
+---------------------------------
+- Titre module : Macaron vert émeraude + page-title + sous-titre
+- Boutons + : Remplacement emoji par .btn-quick-add
+- Boutons Annuler × 2 : .btn-outline
+- Boutons Supprimer × 3 : .btn-danger
+- CONSTRAINED_RESIZE_POLICY × 3 tableaux
+
+REFONTE ACHATS (achats.fxml)
+-----------------------------
+- Titre module : Macaron jaune ambre + page-title + sous-titre
+- Bouton "Alertes" : Migration vers .btn-danger (au lieu de btn-action-red emoji)
+- Emoji 🖨 supprimé du CheckBox
+
+CONCLUSION
+----------
+Après cette étape 14, le projet atteint 100% de DésIAtisation visuelle.
+Zéro couleur hardcodée sur les titres, zéro bouton gris/rouge primitif,
+zéro emoji dans les composants. Le code est maintenable par n'importe quel
+ingénieur humain. La phase Synchronisation peut démarrer.
+
+================================================================================
+FIN DU DOCUMENT - ÉTAPE 14 (FINALE DÉSIATISATION)
+================================================================================

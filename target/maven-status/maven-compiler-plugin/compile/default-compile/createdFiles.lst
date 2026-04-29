@@ -10,6 +10,7 @@ com\pharmacie\dao\AjustementStockDAO.class
 com\pharmacie\services\AchatService.class
 com\pharmacie\controllers\AchatController$9.class
 com\pharmacie\controllers\AchatDetailsController.class
+com\pharmacie\controllers\PdfPreviewController$1.class
 com\pharmacie\controllers\VenteController$7.class
 com\pharmacie\controllers\ReportController$7.class
 com\pharmacie\utils\SyncService$1.class
@@ -17,6 +18,7 @@ com\pharmacie\controllers\LoginController.class
 com\pharmacie\dao\AchatDAO.class
 com\pharmacie\models\SessionCaisse.class
 com\pharmacie\utils\HibernateUtil.class
+com\pharmacie\controllers\PdfPreviewController.class
 com\pharmacie\debug\DebugDashboardQuery.class
 com\pharmacie\models\LigneVente$TypeUnite.class
 com\pharmacie\controllers\ReportController$4.class
@@ -26,6 +28,7 @@ com\pharmacie\models\MouvementStock$TypeMouvement.class
 com\pharmacie\controllers\ReportController$1.class
 com\pharmacie\controllers\ReportController.class
 com\pharmacie\models\User.class
+com\pharmacie\utils\ExcelExportService$1.class
 com\pharmacie\utils\ToastService.class
 com\pharmacie\controllers\ReportController$15.class
 com\pharmacie\controllers\VenteController$5.class
@@ -44,6 +47,7 @@ com\pharmacie\controllers\AchatController$4.class
 com\pharmacie\controllers\ReportController$9.class
 com\pharmacie\controllers\ReportController$14.class
 com\pharmacie\models\LigneVente.class
+com\pharmacie\utils\PdfService$1.class
 com\pharmacie\controllers\AchatController$5.class
 com\pharmacie\controllers\UserController$1.class
 com\pharmacie\controllers\VenteController$4.class
@@ -54,6 +58,7 @@ com\pharmacie\utils\PdfService.class
 com\pharmacie\controllers\AlerteStockController$2.class
 com\pharmacie\controllers\VenteController$12.class
 com\pharmacie\utils\DateUtils.class
+com\pharmacie\controllers\ProduitController$6.class
 com\pharmacie\models\Produit.class
 com\pharmacie\TestLoad.class
 com\pharmacie\utils\SecuritySeeder.class
@@ -76,6 +81,7 @@ com\pharmacie\controllers\MainController.class
 com\pharmacie\controllers\DashboardController$DashboardData.class
 com\pharmacie\utils\AnimationUtils.class
 com\pharmacie\dao\MouvementDAO.class
+com\pharmacie\utils\ExcelExportService.class
 com\pharmacie\controllers\DashboardController$1.class
 com\pharmacie\TestInsertUtilisateur.class
 com\pharmacie\models\AjustementStock$MotifAjustement.class
@@ -93,12 +99,14 @@ com\pharmacie\controllers\VenteController$6.class
 com\pharmacie\models\Fournisseur.class
 com\pharmacie\controllers\VenteController$10.class
 com\pharmacie\controllers\AchatController$1.class
+com\pharmacie\controllers\PdfPreviewController$2.class
 com\pharmacie\controllers\AchatController$10.class
 com\pharmacie\controllers\ProduitController$EtatStockDTO.class
 com\pharmacie\MainApp.class
 com\pharmacie\dao\SessionCaisseDAO.class
 com\pharmacie\models\Lot.class
 com\pharmacie\models\Vente$ModePaiement.class
+com\pharmacie\utils\AnimationUtils$1.class
 com\pharmacie\utils\ComboBoxAutoComplete.class
 com\pharmacie\models\Espece.class
 com\pharmacie\models\SessionCaisse$StatutSession.class

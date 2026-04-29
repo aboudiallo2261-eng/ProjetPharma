@@ -89,9 +89,35 @@ public class FournisseurController {
 
     @FXML
     public void handleSave() {
-        String nom = txtNom.getText();
-        if (nom == null || nom.trim().isEmpty()) {
+        String nom = txtNom.getText() == null ? "" : txtNom.getText().trim();
+        if (nom.isEmpty()) {
+            showErrorEffect(txtNom);
             showError("Le nom de l'entreprise est obligatoire.");
+            txtNom.requestFocus();
+            return;
+        }
+
+        String contact = txtContact.getText() == null ? "" : txtContact.getText().trim();
+        if (contact.isEmpty()) {
+            showErrorEffect(txtContact);
+            showError("Le nom de la personne en contact est obligatoire.");
+            txtContact.requestFocus();
+            return;
+        }
+
+        String telephone = txtTelephone.getText() == null ? "" : txtTelephone.getText().trim();
+        if (telephone.isEmpty()) {
+            showErrorEffect(txtTelephone);
+            showError("Le numéro de téléphone est obligatoire.");
+            txtTelephone.requestFocus();
+            return;
+        }
+
+        String conditions = txtConditions.getText() == null ? "" : txtConditions.getText().trim();
+        if (conditions.isEmpty()) {
+            showErrorEffect(txtConditions);
+            showError("Les conditions de paiement sont obligatoires.");
+            txtConditions.requestFocus();
             return;
         }
 
@@ -144,5 +170,23 @@ public class FournisseurController {
     private void showError(String message) {
         lblErrorText.setText(message);
         lblErrorText.setVisible(true);
+    }
+
+    private void showErrorEffect(javafx.scene.Node node) {
+        if (node == null) return;
+        String originalStyle = node.getStyle();
+        node.setStyle(originalStyle + "; -fx-border-color: #E74C3C; -fx-border-width: 2px; -fx-border-radius: 4px;");
+        javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(2));
+        pause.setOnFinished(e -> node.setStyle(originalStyle));
+        
+        javafx.animation.TranslateTransition shake = new javafx.animation.TranslateTransition(javafx.util.Duration.millis(60), node);
+        shake.setFromX(0); shake.setByX(8);
+        shake.setCycleCount(6);
+        shake.setAutoReverse(true);
+        shake.setOnFinished(e -> node.setTranslateX(0));
+        
+        javafx.animation.ParallelTransition pt = new javafx.animation.ParallelTransition(shake);
+        pt.play();
+        pause.play();
     }
 }

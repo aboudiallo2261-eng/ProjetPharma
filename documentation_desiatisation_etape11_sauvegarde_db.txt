@@ -1,0 +1,62 @@
+================================================================================
+DOCUMENTATION TECHNIQUE - DÉSIATISATION UI/UX
+Étape 11 : Refonte Premium du Module de Sauvegarde DB
+Date : 2026-04-26
+Auteur : Ingénieur UI/UX Senior
+================================================================================
+
+OBJECTIF
+--------
+Refondre entièrement l'onglet "Sauvegarde & Données" pour l'élever aux 
+standards SaaS "Premium" (Design System) et corriger les maladresses de 
+l'interface initiale.
+
+DÉFAUTS CONSTATÉS (AVANT INTERVENTION)
+--------------------------------------
+1. Orthographe ("Securité" sans accent).
+2. Typographie sommaire ne respectant pas la charte (pas de noir profond `#0F172A`).
+3. Bouton bleu obsolète (`#2980B9`) codé en dur, cassant le composant `.button-primary`.
+4. Conteneur simpliste manquant d'affordance (aucune notion de gravité/avertissement).
+5. Absence totale d'iconographie vectorielle.
+
+DÉCISIONS ARCHITECTURALES ET RÉALISATIONS
+-----------------------------------------
+1. Injection d'une Iconographie Dédiée (`styles.css`) :
+   Création et intégration d'un path SVG propre (`.icon-database`) pour 
+   illustrer physiquement la notion de "Base de données".
+
+2. Restructuration Visuelle en "Card" (`users.fxml`) :
+   L'interface n'est plus une simple page blanche. L'action est encapsulée 
+   dans une "Card" flottante (max-width: 650px) avec ombre portée 
+   (`dropshadow(three-pass-box, rgba(0,0,0,0.1), 15, 0, 0, 5)`). 
+   Ce composant central attire immédiatement l'œil et symbolise un 
+   panneau de contrôle sérieux.
+
+3. En-tête Professionnel (Header) :
+   - Ajout d'un macaron "Vert Émeraude pâle" (`#ECFDF5`) contenant la nouvelle 
+     icône de base de données.
+   - Titre fort (`font-weight: 900`, 20px) accompagné d'un sous-titre gris 
+     ardoise (`#64748B`) pour expliquer l'action.
+
+4. Création d'une "Alert Banner" Stratégique :
+   Les phrases d'explications étaient perdues au milieu. Elles ont été 
+   regroupées dans un bloc d'alerte spécifique (Fond Ambre très clair `#FEF3C7`, 
+   Bordure gauche orange `#F59E0B`). Ce motif de design (copié sur les grands 
+   standards type GitHub/Stripe) fait comprendre instantanément à l'utilisateur 
+   qu'il lit une instruction vitale (utilisation d'une clé USB, risque de panne).
+
+5. Standardisation de l'Action Principale :
+   Le bouton bleu a été détruit. Le bouton utilise désormais strictement la 
+   classe `.button-primary` du thème principal (Vert Émeraude), et arbore 
+   fièrement la nouvelle icône `.icon-database` en blanc. 
+
+CONCLUSION
+----------
+L'interface respire le professionnalisme. L'action de sauvegarde, bien 
+qu'unique sur cette page, ne fait plus "vide" : elle est mise en scène comme 
+une fonctionnalité majeure et sécurisée du logiciel. Il n'y a plus aucune 
+trace de "code généré à la va-vite" (0% IA, 100% Ingénierie Humaine).
+
+================================================================================
+FIN DU DOCUMENT - ÉTAPE 11
+================================================================================

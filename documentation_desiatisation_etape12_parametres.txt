@@ -1,0 +1,63 @@
+================================================================================
+DOCUMENTATION TECHNIQUE - DÉSIATISATION UI/UX
+Étape 12 : Refonte Premium du Module Paramètres de l'Établissement
+Date : 2026-04-26
+Auteur : Ingénieur UI/UX Senior
+================================================================================
+
+OBJECTIF
+--------
+Refondre le formulaire "Paramètres de l'Établissement" pour supprimer 
+l'effet de vide ("floaty grid") et appliquer les best practices ergonomiques 
+(Eye Tracking, Labels Top-Aligned) des interfaces SaaS B2B modernes.
+
+DÉFAUTS CONSTATÉS (AVANT INTERVENTION)
+--------------------------------------
+1. Utilisation d'un GridPane brut : Les labels à gauche et les inputs 
+   complètement à droite créaient un gouffre visuel fatiguant la lecture.
+2. Labels obsolètes : Utilisation des deux-points ":" et d'un noir 100% 
+   basique sans hiérarchie.
+3. Absence d'encapsulation (pas de Card).
+4. Bouton final aveugle (aucune icône de confirmation ou de disquette).
+
+DÉCISIONS ARCHITECTURALES ET RÉALISATIONS
+-----------------------------------------
+1. Injection de Nouvelles Icônes SVG (`styles.css`) :
+   - `.icon-settings` (Roue crantée) pour l'en-tête du module.
+   - `.icon-save` (Disquette classique) pour le bouton de validation.
+   (Chemins vectoriels purs, 0 appel d'image externe).
+
+2. Nouvelle Ergonomie "Top-Label" (`users.fxml`) :
+   - Le GridPane a été restructuré. Il comporte maintenant deux colonnes de 
+     50% chacune.
+   - Dans chaque cellule de la grille, j'ai placé une `VBox` contenant 
+     le Label AU-DESSUS du TextField.
+   - Les "deux-points" ont été supprimés.
+   - Les labels utilisent une typographie `Slate 600` (`#475569`), fine (13px) 
+     mais grasse (700), typique des interfaces Stripe ou Shopify.
+
+3. Enveloppe Visuelle (Card & Header) :
+   - Le formulaire est maintenant contenu dans une belle Card avec ombre 
+     portée (identique à celle de la Sauvegarde).
+   - Le titre est accompagné d'un macaron "Gris clair/Bleuté" (`#F1F5F9`) 
+     contenant la roue crantée noire (`icon-dark`).
+   - Le sous-titre explicatif adoucit le visuel.
+
+4. Cohérence de la Zone de Texte :
+   - Le champ "Pied de Ticket" (qui est plus long) prend maintenant 
+     les 2 colonnes du bas (`GridPane.columnSpan="2"`).
+
+5. Bouton d'Enregistrement :
+   - Centré proprement en bas.
+   - Il hérite de la classe `.button-primary` (Vert) et inclut `.icon-save`.
+
+CONCLUSION
+----------
+Le formulaire est devenu compact, intuitif et ultra-lisible. L'œil 
+lit naturellement de haut en bas sans avoir à "traverser" la page pour 
+faire correspondre un label à un champ. Une ingénierie UX 100% humaine, 
+garantissant un "Wow Effect" instantané.
+
+================================================================================
+FIN DU DOCUMENT - ÉTAPE 12
+================================================================================

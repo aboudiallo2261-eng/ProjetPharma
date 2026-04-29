@@ -2,32 +2,43 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.SVGPath?>
 
 <VBox styleClass="root" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pharmacie.controllers.VenteController">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
-    <Label text="Ventes &amp; Caisse" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;"/>
+    <Label text="Ventes &amp; Caisse" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1E293B;"/>
 
-    <TabPane VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE" style="-fx-padding: 10 0 0 0;">
+    <TabPane fx:id="tabPaneMain" VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE" style="-fx-padding: 10 0 0 0;">
 
         <!-- ===== ONGLET CAISSE ===== -->
         <Tab text="Caisse (Point de Vente)">
             <BorderPane>
                 <top>
-                    <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: #ECF0F1; -fx-background-radius: 8;">
-                        <Label fx:id="lblStatutSession" text="Caisse: FERMÉE" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #E74C3C;"/>
-                        <Button fx:id="btnOuvrirCaisse" text="🔑 Ouvrir" onAction="#ouvrirCaisse"
-                                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 12;"/>
-                        <Button fx:id="btnCloturerCaisse" text="🔒 Clôturer (Z)" onAction="#cloturerCaisse" visible="false" managed="false"
-                                style="-fx-background-color: #E74C3C; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 12;"/>
-                        <Button fx:id="btnVerrouiller" text="🔐 Verrouil." onAction="#verrouillerSession" visible="false" managed="false"
-                                style="-fx-background-color: #8E44AD; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 12;"/>
-                        <Button fx:id="btnTicketsEnAttente" text="⏸ Attente (0)" onAction="#voirTicketsEnAttente" visible="false" managed="false"
-                                style="-fx-background-color: #F39C12; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 12;"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: transparent;">
+                        <Label fx:id="lblStatutSession" text="Caisse: FERMÉE" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #EF4444;"/>
+                        <Button fx:id="btnOuvrirCaisse" text="Ouvrir" onAction="#ouvrirCaisse"
+                                styleClass="pos-btn, btn-warning" style="-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 12;">
+                            <graphic>
+                                <SVGPath content="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" fill="white" scaleX="0.8" scaleY="0.8"/>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnCloturerCaisse" text="Clôturer (Z)" onAction="#cloturerCaisse" visible="false" managed="false"
+                                styleClass="pos-btn, btn-warning" style="-fx-background-color: #EF4444; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 12;">
+    <graphic><Region styleClass="icon, icon-lock"/></graphic>
+</Button>
+                        <Button fx:id="btnVerrouiller" text="Verrouil." onAction="#verrouillerSession" visible="false" managed="false"
+                                styleClass="pos-btn, btn-warning" style="-fx-background-color: #8B5CF6; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 12;">
+    <graphic><Region styleClass="icon, icon-lock"/></graphic>
+</Button>
+                        <Button fx:id="btnTicketsEnAttente" text="Attente (0)" onAction="#voirTicketsEnAttente" visible="false" managed="false"
+                                styleClass="pos-btn, btn-warning" style="-fx-background-color: #F59E0B; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 12;">
+    <graphic><Region styleClass="icon, icon-pause"/></graphic>
+</Button>
                         <Region HBox.hgrow="ALWAYS" />
-                        <Label fx:id="lblCaisseUser" text="Agent:" style="-fx-font-size: 13px; -fx-text-fill: #7f8c8d;"/>
+                        <Label fx:id="lblCaisseUser" text="Agent:" style="-fx-font-size: 13px; -fx-text-fill: #64748B;"/>
                     </HBox>
                 </top>
                 <center>
@@ -35,47 +46,51 @@
                         <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: transparent; -fx-padding: 0; -fx-border-width: 0;">
                             <HBox fx:id="boxVenteMain" spacing="20">
                                 <!-- Zone Produits -->
-                            <VBox spacing="10" maxHeight="Infinity" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                            <VBox spacing="10" maxHeight="Infinity" HBox.hgrow="ALWAYS" styleClass="card" style="-fx-padding: 20;">
                             <Label text="Rechercher un produit à vendre" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
                             <!-- Barre de recherche texte -->
                             <HBox spacing="8">
-                                <TextField fx:id="txtRechercheProduit" promptText="🔍 Nom du produit..." HBox.hgrow="ALWAYS"/>
-                                <Button text="🗵 Tout" onAction="#reinitialiserFiltres" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                                <TextField fx:id="txtRechercheProduit" promptText="Nom du produit..." HBox.hgrow="ALWAYS"/>
+                                <Button text="Tout" onAction="#reinitialiserFiltres" styleClass="pos-btn, btn-warning" style="-fx-background-color: #94A3B8; -fx-text-fill: white; -fx-font-weight: bold;">
+    <graphic><Region styleClass="icon, icon-x"/></graphic>
+</Button>
                             </HBox>
                             <!-- Filtres par Catégorie et Espèce -->
                             <HBox spacing="8" alignment="CENTER_LEFT">
-                                <Label text="Catég. :" style="-fx-font-weight: bold;"/>
+                                <Label text="Catég. :" style="-fx-font-weight: bold;" minWidth="-Infinity"/>
                                 <ComboBox fx:id="cmbFiltreCategorie" HBox.hgrow="ALWAYS" maxWidth="Infinity" promptText="Toutes les catégories"/>
-                                <Label text="Espèce :" style="-fx-font-weight: bold;"/>
+                                <Label text="Espèce :" style="-fx-font-weight: bold;" minWidth="-Infinity"/>
                                 <ComboBox fx:id="cmbFiltreEspece" HBox.hgrow="ALWAYS" maxWidth="Infinity" promptText="Toutes les espèces"/>
                             </HBox>
-                            <TableView fx:id="tableStock" VBox.vgrow="ALWAYS" style="-fx-border-color: #BDC3C7;">
+                            <TableView fx:id="tableStock" VBox.vgrow="ALWAYS" style="-fx-border-color: #CBD5E1;">
                                 <placeholder>
-                                    <Label text="🔍 Aucun produit trouvé ou disponible" style="-fx-text-fill: #95a5a6; -fx-font-style: italic; -fx-font-size: 14px;" />
+                                    <VBox alignment="CENTER" spacing="10"><Region styleClass="icon, icon-search, icon-dark" style="-fx-min-width:32px; -fx-min-height:32px;"/><Label text="Aucun produit trouvé ou disponible" style="-fx-text-fill: #94A3B8; -fx-font-style: italic; -fx-font-size: 14px;" /></VBox>
                                 </placeholder>
                                 <columns>
                                     <TableColumn fx:id="colStkNom" text="Produit" prefWidth="200" />
                                     <TableColumn fx:id="colStkPrix" text="Prix (Boîte)" prefWidth="90" />
-                                    <TableColumn fx:id="colStkPrixDetail" text="Prix (Détail)" prefWidth="90" />
-                                    <TableColumn fx:id="colStkQte" text="Stock (Unités min)" prefWidth="120" />
+                                    <TableColumn fx:id="colStkPrixDetail" text="Prix (Détail)" prefWidth="80" />
+                                    <TableColumn fx:id="colStkQte" text="Stock" prefWidth="10" />
                                 </columns>
                             </TableView>
                             <HBox spacing="8" alignment="CENTER_LEFT" style="-fx-padding: 8 0 0 0;">
-                                <Label text="Qté :" />
-                                <ComboBox fx:id="cmbQuantite" editable="true" prefWidth="75"/>
+                                <Label text="Qté :" style="-fx-font-weight: bold;"/>
+                                <ComboBox fx:id="cmbQuantite" editable="true" prefWidth="100"/>
                                 <ComboBox fx:id="cmbUniteType" prefWidth="130" promptText="Type Unité"/>
                                 <Region HBox.hgrow="ALWAYS" />
-                                <Button text="➕ Ajouter" onAction="#ajouterAuPanier" styleClass="button-primary"/>
+                                <Button text="Ajouter" onAction="#ajouterAuPanier" styleClass="pos-btn, button-primary">
+    <graphic><Region styleClass="icon, icon-plus"/></graphic>
+</Button>
                             </HBox>
                             <Label fx:id="lblVenteError" styleClass="error-label" visible="false"/>
                         </VBox>
 
                         <!-- Zone Panier -->
-                        <VBox spacing="8" minWidth="460" maxHeight="Infinity" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                        <VBox spacing="8" minWidth="460" maxHeight="Infinity" styleClass="card" style="-fx-padding: 15;">
                             <Label text="Panier Client" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
-                            <TableView fx:id="tablePanierVente" VBox.vgrow="ALWAYS" style="-fx-border-color: #BDC3C7;">
+                            <TableView fx:id="tablePanierVente" VBox.vgrow="ALWAYS" style="-fx-border-color: #CBD5E1;">
                                 <placeholder>
-                                    <Label text="🛒 Le panier est vide pour le moment" style="-fx-text-fill: #95a5a6; -fx-font-style: italic; -fx-font-size: 14px;" />
+                                    <VBox alignment="CENTER" spacing="10"><Region styleClass="icon, icon-cart, icon-dark" style="-fx-min-width:32px; -fx-min-height:32px;"/><Label text="Le panier est vide pour le moment" style="-fx-text-fill: #94A3B8; -fx-font-style: italic; -fx-font-size: 14px;" /></VBox>
                                 </placeholder>
                                 <columns>
                                     <TableColumn fx:id="colPanVenteProd" text="Produit" prefWidth="200" />
@@ -86,16 +101,20 @@
                             </TableView>
                             <HBox alignment="CENTER_LEFT" spacing="8">
                                 <Label text="Total :" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-                                <Label fx:id="lblTotalVente" text="0 FCFA" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #18BC9C;"/>
+                                <Label fx:id="lblTotalVente" text="0 FCFA" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #059669;"/>
                                 <Region HBox.hgrow="ALWAYS"/>
-                                <Button fx:id="btnMettreEnAttente" text="⏸ Attente" onAction="#mettreEnAttente"
-                                        style="-fx-background-color: #F39C12; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 4 8; -fx-background-radius: 6; -fx-font-size: 12px;"/>
+                                <Button fx:id="btnMettreEnAttente" text="Attente" onAction="#mettreEnAttente"
+                                        styleClass="pos-btn, btn-warning" >
+    <graphic><Region styleClass="icon, icon-pause"/></graphic>
+</Button>
 
-                                <Button fx:id="btnRetirerDuPanier" text="✖ Retirer" onAction="#retirerDuPanier"
-                                        style="-fx-background-color: #BDC3C7; -fx-text-fill: white; -fx-padding: 4 8; -fx-font-size: 12px; -fx-background-radius: 6;"/>
+                                <Button fx:id="btnRetirerDuPanier" text="Retirer" onAction="#retirerDuPanier"
+                                        styleClass="pos-btn, btn-warning" style="-fx-background-color: #CBD5E1; -fx-text-fill: white; -fx-padding: 4 8; -fx-font-size: 12px; -fx-background-radius: 6;">
+    <graphic><Region styleClass="icon, icon-x"/></graphic>
+</Button>
                             </HBox>
                             
-                            <VBox spacing="6" style="-fx-background-color: #ECF0F1; -fx-padding: 10; -fx-background-radius: 8;">
+                            <VBox spacing="6" style="-fx-background-color: #F8FAFC; -fx-padding: 10; -fx-background-radius: 8;">
                                 <!-- Ligne 1: Mode paiement + checkbox imprimante -->
                                 <HBox spacing="8" alignment="CENTER_LEFT">
                                     <Label text="Paiement :" prefWidth="72" style="-fx-font-weight:bold;"/>
@@ -109,23 +128,27 @@
                                 </HBox>
                                 <!-- Ligne 2 bis: Montant reçu Mixte -->
                                 <HBox fx:id="boxPaiementMixte" spacing="10" alignment="CENTER_LEFT" visible="false" managed="false">
-                                    <Label text="Cash:" minWidth="-Infinity" style="-fx-font-weight:bold; -fx-text-fill: #2c3e50;"/>
+                                    <Label text="Cash:" minWidth="-Infinity" style="-fx-font-weight:bold; -fx-text-fill: #1E293B;"/>
                                     <TextField fx:id="txtMontantEspeces" HBox.hgrow="ALWAYS" promptText="0" style="-fx-font-size: 13px; -fx-font-weight: bold;"/>
                                     <Region prefWidth="5" />
-                                    <Label text="Mob:" minWidth="-Infinity" style="-fx-font-weight:bold; -fx-text-fill: #2c3e50;"/>
+                                    <Label text="Mob:" minWidth="-Infinity" style="-fx-font-weight:bold; -fx-text-fill: #1E293B;"/>
                                     <TextField fx:id="txtMontantMobile" HBox.hgrow="ALWAYS" promptText="0" style="-fx-font-size: 13px; -fx-font-weight: bold;"/>
                                 </HBox>
                                 <!-- Ligne 3: Monnaie à rendre -->
                                 <HBox spacing="8" alignment="CENTER_LEFT">
                                     <Label text="Monnaie :" prefWidth="72" style="-fx-font-weight:bold;"/>
-                                    <Label fx:id="lblMonnaieRendre" text="0 FCFA" style="-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:#E74C3C;"/>
+                                    <Label fx:id="lblMonnaieRendre" text="0 FCFA" style="-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:#EF4444;"/>
                                 </HBox>
                                 <!-- Ligne 4: Boutons Annuler / Valider -->
                                 <HBox spacing="10" alignment="CENTER_RIGHT">
-                                    <Button fx:id="btnAnnulerVente" text="✖ Annuler" onAction="#annulerVente"
-                                            style="-fx-background-color:#95a5a6; -fx-text-fill:white; -fx-font-weight:bold; -fx-padding: 7 18; -fx-background-radius:5;"/>
-                                    <Button fx:id="btnValiderVente" text="✔ Valider" onAction="#validerVente"
-                                            style="-fx-background-color:#27ae60; -fx-text-fill:white; -fx-font-size:13px; -fx-font-weight:bold; -fx-padding: 7 22; -fx-background-radius:5;"/>
+                                    <Button fx:id="btnAnnulerVente" text="Annuler" onAction="#annulerVente"
+                                            styleClass="pos-btn, btn-secondary">
+    <graphic><Region styleClass="icon, icon-x"/></graphic>
+</Button>
+                                    <Button fx:id="btnValiderVente" text="Valider" onAction="#validerVente"
+                                            styleClass="pos-btn, btn-success">
+    <graphic><Region styleClass="icon, icon-check"/></graphic>
+</Button>
                                 </HBox>
                             </VBox>
                         </VBox>
@@ -134,32 +157,36 @@
                         
                             <!-- Overlay Bloquant de Caisse Fermée -->
                             <VBox fx:id="overlayCaisseFermee" alignment="CENTER" spacing="15" style="-fx-background-color: rgba(255,255,255,0.90); -fx-background-radius: 8;">
-                                <Label text="🔒" style="-fx-font-size: 50px;"/>
-                                <Label text="LA CAISSE EST FERMÉE" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #E74C3C;"/>
-                                <Label text="Veuillez cliquer sur 'Ouvrir Caisse' pour imputer de nouvelles ventes." style="-fx-font-size: 16px; -fx-text-fill: #34495E;"/>
+                                <Region styleClass="icon, icon-lock, icon-dark" style="-fx-min-width:50px; -fx-min-height:50px;"/>
+                                <Label text="LA CAISSE EST FERMÉE" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #EF4444;"/>
+                                <Label text="Veuillez cliquer sur 'Ouvrir Caisse' pour imputer de nouvelles ventes." style="-fx-font-size: 16px; -fx-text-fill: #334155;"/>
                             </VBox>
 
                             <!-- Overlay Session Verrouillée -->
                         <VBox fx:id="overlaySessionVerrouillee" alignment="CENTER" spacing="20" visible="false" managed="false"
-                               style="-fx-background-color: rgba(44,62,80,0.95); -fx-background-radius: 8;">
-                             <Label text="🔐" style="-fx-font-size: 60px;"/>
+                               style="-fx-background-color: rgba(15,23,42,0.95); -fx-background-radius: 8;">
+                             <Region styleClass="icon, icon-lock, icon-dark" style="-fx-min-width:60px; -fx-min-height:60px; -fx-background-color: white;"/>
                              <Label text="SESSION VERROUILLÉE" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"/>
-                             <Label fx:id="lblVerrouilleAgent" text="Agent : ---" style="-fx-font-size: 16px; -fx-text-fill: #BDC3C7;"/>
+                             <Label fx:id="lblVerrouilleAgent" text="Agent : ---" style="-fx-font-size: 16px; -fx-text-fill: #CBD5E1;"/>
                              <VBox alignment="CENTER" spacing="10" style="-fx-background-color: rgba(255,255,255,0.1); -fx-padding: 20; -fx-background-radius: 8; -fx-min-width: 350;">
-                                 <Label text="Entrez votre mot de passe pour reprendre votre session :" style="-fx-text-fill: #ECF0F1; -fx-font-size: 14px;" wrapText="true"/>
+                                 <Label text="Entrez votre mot de passe pour reprendre votre session :" style="-fx-text-fill: #F8FAFC; -fx-font-size: 14px;" wrapText="true"/>
                                  <HBox alignment="CENTER" spacing="5">
                                      <StackPane alignment="CENTER_RIGHT" prefWidth="300">
                                          <PasswordField fx:id="txtPinDeverrouillage" promptText="Mot de passe..."
                                                        style="-fx-font-size: 18px; -fx-padding: 10; -fx-pref-width: 300;"/>
                                          <TextField fx:id="txtPinVisible" promptText="Mot de passe..." visible="false" managed="false"
                                                        style="-fx-font-size: 18px; -fx-padding: 10; -fx-pref-width: 300;"/>
-                                         <Button fx:id="btnTogglePin" text="👁" onAction="#togglePasswordVisibility"
-                                                 style="-fx-background-color: transparent; -fx-text-fill: #7f8c8d; -fx-cursor: hand; -fx-font-size: 16px; -fx-padding: 0 10 0 0;" />
+                                         <Button fx:id="btnTogglePin" text="" onAction="#togglePasswordVisibility"
+                                                 styleClass="pos-btn, btn-warning" style="-fx-background-color: transparent; -fx-text-fill: #64748B; -fx-cursor: hand; -fx-font-size: 16px; -fx-padding: 0 10 0 0;" >
+    <graphic><Region styleClass="icon, icon-eye"/></graphic>
+</Button>
                                      </StackPane>
                                  </HBox>
-                                 <Label fx:id="lblVerrouilleErreur" text="Mot de passe incorrect !" style="-fx-text-fill: #E74C3C; -fx-font-weight: bold;" visible="false" managed="false"/>
-                                 <Button text="🔓 Déverrouiller" onAction="#deverrouillerSession"
-                                         style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10 30; -fx-background-radius: 6; -fx-cursor: hand;"/>
+                                 <Label fx:id="lblVerrouilleErreur" text="Mot de passe incorrect !" style="-fx-text-fill: #EF4444; -fx-font-weight: bold;" visible="false" managed="false"/>
+                                 <Button text="Déverrouiller" onAction="#deverrouillerSession"
+                                         styleClass="pos-btn, btn-warning" style="-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10 30; -fx-background-radius: 6; -fx-cursor: hand;">
+    <graphic><Region styleClass="icon, icon-unlock"/></graphic>
+</Button>
                              </VBox>
                          </VBox>
                      </StackPane>
@@ -169,9 +196,9 @@
 
         <!-- ===== ONGLET HISTORIQUE DES VENTES ===== -->
         <Tab text="Historique des Ventes">
-            <VBox spacing="10" style="-fx-padding: 20 0 0 0;">
+            <VBox spacing="10" style="-fx-padding: 20 0 0 0; -fx-background-color: #F8FAFC;">
                 <!-- Barre de filtre aérée (2 lignes max) -->
-                <GridPane hgap="15" vgap="12" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                <GridPane hgap="15" vgap="12" styleClass="card" style="-fx-padding: 15;">
                     <columnConstraints>
                         <ColumnConstraints minWidth="65" halignment="RIGHT"/>
                         <ColumnConstraints minWidth="280" />
@@ -182,44 +209,58 @@
                     </columnConstraints>
                     
                     <!-- Ligne 1 -->
-                    <Label text="Période :" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-weight: bold; -fx-text-fill: #7f8c8d;"/>
+                    <Label text="Période :" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-weight: bold; -fx-text-fill: #64748B;"/>
                     <HBox spacing="10" alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="0">
                         <DatePicker fx:id="dpHistoDebut" promptText="Début" prefWidth="130"/>
-                        <Label text="au" style="-fx-text-fill: #7f8c8d;"/>
+                        <Label text="au" style="-fx-text-fill: #64748B;"/>
                         <DatePicker fx:id="dpHistoFin" promptText="Fin" prefWidth="130"/>
                     </HBox>
 
-                    <Label text="ID Ticket :" GridPane.columnIndex="2" GridPane.rowIndex="0" style="-fx-font-weight: bold; -fx-text-fill: #7f8c8d;"/>
+                    <Label text="ID Ticket :" GridPane.columnIndex="2" GridPane.rowIndex="0" style="-fx-font-weight: bold; -fx-text-fill: #64748B;"/>
                     <TextField fx:id="txtFiltreVenteTicketId" promptText="N° de Ticket..." maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
 
-                    <Button text="🔍 Filtrer" onAction="#filtrerHistorique" styleClass="button-primary" style="-fx-padding: 8 25; -fx-font-size: 13px;" GridPane.columnIndex="5" GridPane.rowIndex="0"/>
+                    <Button text="Filtrer" onAction="#filtrerHistorique" styleClass="btn-filter" style="-fx-padding: 8 25; -fx-font-size: 13px; -fx-cursor: hand;" GridPane.columnIndex="5" GridPane.rowIndex="0">
+                        <graphic>
+                            <SVGPath content="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" styleClass="btn-icon-white"/>
+                        </graphic>
+                    </Button>
 
                     <!-- Ligne 2 -->
-                    <Label text="Agent :" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-font-weight: bold; -fx-text-fill: #7f8c8d;"/>
+                    <Label text="Agent :" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-font-weight: bold; -fx-text-fill: #64748B;"/>
                     <ComboBox fx:id="cmbFiltreVenteAgent" promptText="Tous les agents" prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="LEFT"/>
 
-                    <Label text="Paiement :" GridPane.columnIndex="2" GridPane.rowIndex="1" style="-fx-font-weight: bold; -fx-text-fill: #7f8c8d;"/>
+                    <Label text="Paiement :" GridPane.columnIndex="2" GridPane.rowIndex="1" style="-fx-font-weight: bold; -fx-text-fill: #64748B;"/>
                     <ComboBox fx:id="cmbFiltreVenteMode" promptText="Tous moyens" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
 
-                    <Button text="🔄 Réinitialiser" onAction="#resetHistoriqueFiltres" style="-fx-background-color: transparent; -fx-text-fill: #95a5a6; -fx-border-color: #bdc3c7; -fx-border-radius: 4; -fx-padding: 6 15;" GridPane.columnIndex="5" GridPane.rowIndex="1"/>
+                    <Button text="Réinitialiser" onAction="#resetHistoriqueFiltres" styleClass="btn-outline-reset" style="-fx-padding: 8 15; -fx-cursor: hand;" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                        <graphic>
+                            <SVGPath content="M1 4v6h6 M23 20v-6h-6 M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" styleClass="btn-icon-gray"/>
+                        </graphic>
+                    </Button>
                 </GridPane>
 
                 <!-- Tableau Historique -->
-                <VBox VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                <VBox VBox.vgrow="ALWAYS" styleClass="card" style="-fx-padding: 20;">
                     <!-- Point 2 : Barre d'actions EN HAUT du tableau (pattern cohérent avec Ajustements) -->
                     <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 0 0 10 0;">
-                        <Button fx:id="btnReimprimerRecu" text="🖨 Réimprimer le Reçu" onAction="#reimprimerRecuHistorique" disable="true"
-                                style="-fx-background-color: #2980B9; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6;"/>
-                        <Button fx:id="btnVoirDetailsVente" text="👁 Voir Détails" onAction="#showSelectedVenteDetail" disable="true"
-                                style="-fx-background-color: #F39C12; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6;"/>
+                        <Button fx:id="btnReimprimerRecu" text="Réimprimer le Reçu" onAction="#reimprimerRecuHistorique" disable="true"
+                                styleClass="pos-btn, btn-warning" style="-fx-background-color: #3B82F6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand;">
+    <graphic><Region styleClass="icon, icon-printer"/></graphic>
+</Button>
+                        <Button fx:id="btnVoirDetailsVente" text="Voir Détails" onAction="#showSelectedVenteDetail" disable="true"
+                                styleClass="pos-btn, btn-warning" style="-fx-background-color: #F59E0B; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand;">
+    <graphic><Region styleClass="icon, icon-eye"/></graphic>
+</Button>
                         <Region HBox.hgrow="ALWAYS"/>
-                        <Label text="Total : " style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
-                        <Label fx:id="lblTotalHistorique" text="0 FCFA" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #18BC9C;"/>
-                        <Button text="🖨 Imprimer Récapitulatif PDF" onAction="#imprimerHistoriquePdf" style="-fx-background-color: #8E44AD; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6;"/>
+                        <Label text="Total : " style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #64748B;"/>
+                        <Label fx:id="lblTotalHistorique" text="0 FCFA" style="-fx-font-weight: bold; -fx-font-size: 20px; -fx-text-fill: #059669;"/>
+                        <Button text="Imprimer Récapitulatif PDF" onAction="#imprimerHistoriquePdf" styleClass="pos-btn, btn-warning" style="-fx-background-color: #8B5CF6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand;">
+    <graphic><Region styleClass="icon, icon-printer"/></graphic>
+</Button>
                     </HBox>
-                    <TableView fx:id="tableHistoriqueVentes" VBox.vgrow="ALWAYS" style="-fx-border-color: #BDC3C7;">
+                    <TableView fx:id="tableHistoriqueVentes" VBox.vgrow="ALWAYS" style="-fx-border-color: #CBD5E1;">
                         <placeholder>
-                            <Label text="📭 Aucune vente enregistrée pour cette période." style="-fx-text-fill: #95a5a6; -fx-font-style: italic; -fx-font-size: 14px;" />
+                            <VBox alignment="CENTER" spacing="10"><Region styleClass="icon, icon-doc, icon-dark" style="-fx-min-width:32px; -fx-min-height:32px;"/><Label text="Aucune vente enregistrée pour cette période." style="-fx-text-fill: #94A3B8; -fx-font-style: italic; -fx-font-size: 14px;" /></VBox>
                         </placeholder>
                         <columns>
                             <TableColumn fx:id="colHistVenteId" text="ID" prefWidth="60"/>

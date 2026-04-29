@@ -2,7 +2,9 @@ package com.pharmacie.utils;
 
 import javafx.animation.TranslateTransition;
 import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.util.Duration;
 
 /**
@@ -45,5 +47,31 @@ public class AnimationUtils {
         seq.setOnFinished(e -> {
             node.setStyle(oldStyle);
         });
+    }
+
+    /**
+     * Anime de façon fluide une valeur monétaire sur un label de 0 à sa cible finale,
+     * avec un effet d'ease-out (ralentissement sur la fin).
+     * 
+     * @param lbl    Le label à animer
+     * @param cible  La valeur monétaire cible
+     * @param prefix Un préfixe optionnel (ex: "Total : ", "Écart : ")
+     */
+    public static void animerValeurMonetaire(Label lbl, double cible, String prefix) {
+        if (lbl == null) return;
+        
+        Transition animation = new Transition() {
+            { setCycleDuration(Duration.millis(1200)); } // 1.2 sec d'animation
+            
+            @Override
+            protected void interpolate(double frac) {
+                // Ease-out simple : Math.pow(frac, 0.5)
+                double currentFrac = Math.pow(frac, 0.5);
+                double val = cible * currentFrac;
+                String format = String.format("%,.0f FCFA", val);
+                lbl.setText(prefix != null ? prefix + format : format);
+            }
+        };
+        animation.play();
     }
 }

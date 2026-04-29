@@ -88,11 +88,11 @@ public class ProduitController {
     @FXML
     private TableColumn<EtatStockDTO, Double> colStockPrix;
     @FXML
-    private TableColumn<EtatStockDTO, String> colStockJours;   // Jours restants
+    private TableColumn<EtatStockDTO, String> colStockJours; // Jours restants
     @FXML
-    private TableColumn<EtatStockDTO, String> colStockValeur;  // Valeur du lot
+    private TableColumn<EtatStockDTO, String> colStockValeur; // Valeur du lot
     @FXML
-    private Label lblTotalStockValeur;  // KPI valeur totale en bas de tableau
+    private Label lblTotalStockValeur; // KPI valeur totale en bas de tableau
     @FXML
     private Button btnAjustementStock, btnVoirLot;
     @FXML
@@ -185,11 +185,28 @@ public class ProduitController {
         colStockLot.setCellValueFactory(new PropertyValueFactory<>("lotNumero"));
         colStockExp.setCellValueFactory(new PropertyValueFactory<>("dateExpiration"));
         colStockQte.setCellValueFactory(new PropertyValueFactory<>("quantiteFormatee"));
-        if (colStockAchatInitial != null) colStockAchatInitial.setCellValueFactory(new PropertyValueFactory<>("qteInitialeAchetee"));
-        if (colStockPAchatBoite != null) colStockPAchatBoite.setCellValueFactory(new PropertyValueFactory<>("prixAchatBoiteFormate"));
-        if (colStockPAchatUnite != null) colStockPAchatUnite.setCellValueFactory(new PropertyValueFactory<>("prixAchatUniteFormate"));
+        if (colStockAchatInitial != null)
+            colStockAchatInitial.setCellValueFactory(new PropertyValueFactory<>("qteInitialeAchetee"));
+        if (colStockPAchatBoite != null)
+            colStockPAchatBoite.setCellValueFactory(new PropertyValueFactory<>("prixAchatBoiteFormate"));
+        if (colStockPAchatUnite != null)
+            colStockPAchatUnite.setCellValueFactory(new PropertyValueFactory<>("prixAchatUniteFormate"));
         colStockVendus.setCellValueFactory(new PropertyValueFactory<>("quantiteVendue"));
         colStockPrix.setCellValueFactory(new PropertyValueFactory<>("prixUnitaire"));
+        // Formatage FCFA — evite la notation scientifique (ex: 1.0E8 au lieu de 100 000
+        // FCFA)
+        colStockPrix.setCellFactory(col -> new TableCell<EtatStockDTO, Double>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    // Format entier groupé (pas de décimales pour FCFA)
+                    setText(String.format("%,.0f FCFA", item).replace(",", " "));
+                }
+            }
+        });
 
         // Nouvelles colonnes intelligentes
         if (colStockJours != null)
@@ -202,7 +219,8 @@ public class ProduitController {
         // Sélection multiple pour pertes groupées (#3)
         tableEtatStock.getSelectionModel().setSelectionMode(javafx.scene.control.SelectionMode.MULTIPLE);
 
-        // Pseudo-classes CSS pour coloration des alertes — compatibles avec la sélection native JavaFX
+        // Pseudo-classes CSS pour coloration des alertes — compatibles avec la
+        // sélection native JavaFX
         javafx.css.PseudoClass expirePseudo = javafx.css.PseudoClass.getPseudoClass("expire");
         javafx.css.PseudoClass alertePseudo = javafx.css.PseudoClass.getPseudoClass("alerte");
 
@@ -211,7 +229,8 @@ public class ProduitController {
             protected void updateItem(EtatStockDTO item, boolean empty) {
                 super.updateItem(item, empty);
                 boolean isExpire = !empty && item != null && item.isEstExpire();
-                boolean isAlerte = !empty && item != null && !isExpire && item.getQuantiteStock() <= item.getSeuilAlerte();
+                boolean isAlerte = !empty && item != null && !isExpire
+                        && item.getQuantiteStock() <= item.getSeuilAlerte();
                 pseudoClassStateChanged(expirePseudo, isExpire);
                 pseudoClassStateChanged(alertePseudo, isAlerte);
             }
@@ -225,12 +244,15 @@ public class ProduitController {
         });
 
         // Activation dynamique des boutons
-        tableEtatStock.getSelectionModel().getSelectedItems().addListener((javafx.collections.ListChangeListener.Change<? extends EtatStockDTO> c) -> {
-            int selectedCount = tableEtatStock.getSelectionModel().getSelectedItems().size();
-            if (btnAjustementStock != null) btnAjustementStock.setDisable(selectedCount == 0);
-            // La fiche détails ne s'ouvre que pour UNE SEULE ligne sélectionnée
-            if (btnVoirLot != null) btnVoirLot.setDisable(selectedCount != 1); 
-        });
+        tableEtatStock.getSelectionModel().getSelectedItems()
+                .addListener((javafx.collections.ListChangeListener.Change<? extends EtatStockDTO> c) -> {
+                    int selectedCount = tableEtatStock.getSelectionModel().getSelectedItems().size();
+                    if (btnAjustementStock != null)
+                        btnAjustementStock.setDisable(selectedCount == 0);
+                    // La fiche détails ne s'ouvre que pour UNE SEULE ligne sélectionnée
+                    if (btnVoirLot != null)
+                        btnVoirLot.setDisable(selectedCount != 1);
+                });
 
         // Tri par défaut : les lots expirant le plus tôt en premier
         if (colStockJours != null) {
@@ -439,10 +461,12 @@ public class ProduitController {
 
             if (selectedProduit == null) {
                 produitDAO.save(p);
-                com.pharmacie.utils.ToastService.showSuccess(tableProduits.getScene().getWindow(), "Produit Ajouté", "Le produit a été enregistré avec succès.");
+                com.pharmacie.utils.ToastService.showSuccess(tableProduits.getScene().getWindow(), "Produit Ajouté",
+                        "Le produit a été enregistré avec succès.");
             } else {
                 produitDAO.update(p);
-                com.pharmacie.utils.ToastService.showSuccess(tableProduits.getScene().getWindow(), "Produit Modifié", "Les informations du produit ont été mises à jour.");
+                com.pharmacie.utils.ToastService.showSuccess(tableProduits.getScene().getWindow(), "Produit Modifié",
+                        "Les informations du produit ont été mises à jour.");
             }
 
             resetProdForm();
@@ -479,7 +503,8 @@ public class ProduitController {
                             "Il est actuellement lié à un lot en stock ou à des historiques de ventes/achats passés.\nPour ne pas fausser la comptabilité, le système interdit la suppression physique des produits ayant déjà circulé.");
                     alert.showAndWait();
                 } else {
-                    com.pharmacie.utils.ToastService.showSuccess(tableProduits.getScene().getWindow(), "Produit Supprimé", "Le produit a été retiré du catalogue.");
+                    com.pharmacie.utils.ToastService.showSuccess(tableProduits.getScene().getWindow(),
+                            "Produit Supprimé", "Le produit a été retiré du catalogue.");
                     resetProdForm();
                     loadProduits();
                 }
@@ -505,19 +530,23 @@ public class ProduitController {
     /**
      * Visual Error Feedback — Standard Premium UI/UX.
      * 1. Bordure rouge de 2px autour du champ fautif (2 secondes).
-     * 2. Animation "shake" (oscillation horizontale) pour capter l'œil instantanément.
+     * 2. Animation "shake" (oscillation horizontale) pour capter l'œil
+     * instantanément.
      * Identique au mécanisme implémenté dans AchatController.
      */
     private void showErrorEffect(javafx.scene.Node node) {
-        if (node == null) return;
+        if (node == null)
+            return;
         // --- 1. Bordure rouge ---
         String originalStyle = node.getStyle();
         node.setStyle(originalStyle + "; -fx-border-color: #E74C3C; -fx-border-width: 2px; -fx-border-radius: 4px;");
         javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(2));
         pause.setOnFinished(e -> node.setStyle(originalStyle));
         // --- 2. Shake horizontal (oscillation premium) ---
-        javafx.animation.TranslateTransition shake = new javafx.animation.TranslateTransition(javafx.util.Duration.millis(60), node);
-        shake.setFromX(0); shake.setByX(8);
+        javafx.animation.TranslateTransition shake = new javafx.animation.TranslateTransition(
+                javafx.util.Duration.millis(60), node);
+        shake.setFromX(0);
+        shake.setByX(8);
         shake.setCycleCount(6);
         shake.setAutoReverse(true);
         shake.setOnFinished(e -> node.setTranslateX(0));
@@ -544,13 +573,14 @@ public class ProduitController {
                 Categorie c = new Categorie();
                 c.setNom(nom);
                 categorieDAO.save(c);
-                com.pharmacie.utils.ToastService.showSuccess(cmbProdCategorie.getScene().getWindow(), "Catégorie Créée", "Nouvelle catégorie ajoutée avec succès.");
+                com.pharmacie.utils.ToastService.showSuccess(cmbProdCategorie.getScene().getWindow(), "Catégorie Créée",
+                        "Nouvelle catégorie ajoutée avec succès.");
                 loadCategories();
                 // Sélectionner automatiquement la nouvelle catégorie
                 cmbProdCategorie.getItems().stream()
-                    .filter(cat -> cat.getNom().equalsIgnoreCase(nom))
-                    .findFirst()
-                    .ifPresent(cat -> cmbProdCategorie.getSelectionModel().select(cat));
+                        .filter(cat -> cat.getNom().equalsIgnoreCase(nom))
+                        .findFirst()
+                        .ifPresent(cat -> cmbProdCategorie.getSelectionModel().select(cat));
             }
         });
     }
@@ -572,13 +602,14 @@ public class ProduitController {
                 Espece e = new Espece();
                 e.setNom(nom);
                 especeDAO.save(e);
-                com.pharmacie.utils.ToastService.showSuccess(cmbProdEspece.getScene().getWindow(), "Espèce Créée", "Nouvelle espèce ajoutée avec succès.");
+                com.pharmacie.utils.ToastService.showSuccess(cmbProdEspece.getScene().getWindow(), "Espèce Créée",
+                        "Nouvelle espèce ajoutée avec succès.");
                 loadEspeces();
                 // Sélectionner automatiquement la nouvelle espèce
                 cmbProdEspece.getItems().stream()
-                    .filter(esp -> esp.getNom().equalsIgnoreCase(nom))
-                    .findFirst()
-                    .ifPresent(esp -> cmbProdEspece.getSelectionModel().select(esp));
+                        .filter(esp -> esp.getNom().equalsIgnoreCase(nom))
+                        .findFirst()
+                        .ifPresent(esp -> cmbProdEspece.getSelectionModel().select(esp));
             }
         });
     }
@@ -619,13 +650,15 @@ public class ProduitController {
         lblCatError.setVisible(false);
         Categorie c = selectedCategorie == null ? new Categorie() : selectedCategorie;
         c.setNom(nom);
-            if (selectedCategorie == null) {
-                categorieDAO.save(c);
-                com.pharmacie.utils.ToastService.showSuccess(tableCategories.getScene().getWindow(), "Catégorie Ajoutée", "La catégorie a été créée.");
-            } else {
-                categorieDAO.update(c);
-                com.pharmacie.utils.ToastService.showSuccess(tableCategories.getScene().getWindow(), "Catégorie Modifiée", "La catégorie a été mise à jour.");
-            }
+        if (selectedCategorie == null) {
+            categorieDAO.save(c);
+            com.pharmacie.utils.ToastService.showSuccess(tableCategories.getScene().getWindow(), "Catégorie Ajoutée",
+                    "La catégorie a été créée.");
+        } else {
+            categorieDAO.update(c);
+            com.pharmacie.utils.ToastService.showSuccess(tableCategories.getScene().getWindow(), "Catégorie Modifiée",
+                    "La catégorie a été mise à jour.");
+        }
         resetCatForm();
         loadCategories();
         tableCategories.refresh();
@@ -636,11 +669,13 @@ public class ProduitController {
         if (selectedCategorie != null) {
             boolean success = categorieDAO.delete(selectedCategorie);
             if (!success) {
-                showProdError("Impossible de supprimer cette catégorie car elle contient déjà des produits enregistrés.");
-                } else {
-                    com.pharmacie.utils.ToastService.showSuccess(tableCategories.getScene().getWindow(), "Catégorie Supprimée", "La catégorie a été retirée avec succès.");
-                    resetCatForm();
-                    loadCategories();
+                showProdError(
+                        "Impossible de supprimer cette catégorie car elle contient déjà des produits enregistrés.");
+            } else {
+                com.pharmacie.utils.ToastService.showSuccess(tableCategories.getScene().getWindow(),
+                        "Catégorie Supprimée", "La catégorie a été retirée avec succès.");
+                resetCatForm();
+                loadCategories();
             }
         }
     }
@@ -681,13 +716,15 @@ public class ProduitController {
         lblEspError.setVisible(false);
         Espece e = selectedEspece == null ? new Espece() : selectedEspece;
         e.setNom(nom);
-            if (selectedEspece == null) {
-                especeDAO.save(e);
-                com.pharmacie.utils.ToastService.showSuccess(tableEspeces.getScene().getWindow(), "Espèce Ajoutée", "L'espèce a été créée.");
-            } else {
-                especeDAO.update(e);
-                com.pharmacie.utils.ToastService.showSuccess(tableEspeces.getScene().getWindow(), "Espèce Modifiée", "L'espèce a été mise à jour.");
-            }
+        if (selectedEspece == null) {
+            especeDAO.save(e);
+            com.pharmacie.utils.ToastService.showSuccess(tableEspeces.getScene().getWindow(), "Espèce Ajoutée",
+                    "L'espèce a été créée.");
+        } else {
+            especeDAO.update(e);
+            com.pharmacie.utils.ToastService.showSuccess(tableEspeces.getScene().getWindow(), "Espèce Modifiée",
+                    "L'espèce a été mise à jour.");
+        }
         resetEspForm();
         loadEspeces();
         tableEspeces.refresh();
@@ -699,10 +736,11 @@ public class ProduitController {
             boolean success = especeDAO.delete(selectedEspece);
             if (!success) {
                 showProdError("Impossible de supprimer cette espèce car elle est affectée à des produits existants.");
-                } else {
-                    com.pharmacie.utils.ToastService.showSuccess(tableEspeces.getScene().getWindow(), "Espèce Supprimée", "L'espèce a été retirée avec succès.");
-                    resetEspForm();
-                    loadEspeces();
+            } else {
+                com.pharmacie.utils.ToastService.showSuccess(tableEspeces.getScene().getWindow(), "Espèce Supprimée",
+                        "L'espèce a été retirée avec succès.");
+                resetEspForm();
+                loadEspeces();
             }
         }
     }
@@ -714,15 +752,17 @@ public class ProduitController {
         // #2 : Filtre les lots au niveau SQL avec JOIN FETCH pour tuer le problème N+1
         List<Lot> lots = lotDAO.findActiveLotsWithDetails(inclureArchives);
         java.util.Map<Long, Long> mapQtesVendues = lotDAO.getQuantitesVenduesParLot();
-        
+
         java.util.Map<Long, Integer> qtesInitAchetees = new java.util.HashMap<>();
         try (org.hibernate.Session session = com.pharmacie.utils.HibernateUtil.getSessionFactory().openSession()) {
-            List<Object[]> res = session.createQuery("SELECT la.lot.id, la.quantiteAchetee FROM LigneAchat la", Object[].class).list();
-            for(Object[] r : res){
-                qtesInitAchetees.put((Long)r[0], (Integer)r[1]);
+            List<Object[]> res = session
+                    .createQuery("SELECT la.lot.id, la.quantiteAchetee FROM LigneAchat la", Object[].class).list();
+            for (Object[] r : res) {
+                qtesInitAchetees.put((Long) r[0], (Integer) r[1]);
             }
-        } catch(Exception ignored){}
-        
+        } catch (Exception ignored) {
+        }
+
         masterStockList.clear();
 
         for (Lot lot : lots) {
@@ -741,7 +781,7 @@ public class ProduitController {
                 int boites = lot.getQuantiteStock() / p.getUnitesParBoite();
                 int unites = lot.getQuantiteStock() % p.getUnitesParBoite();
                 formatee = boites + " Bte(s) et " + unites + " Unité(s)";
-                
+
                 double prixBoite = p.getPrixVente() != null ? p.getPrixVente() : 0.0;
                 double prixUnite = p.getPrixVenteUnite() != null ? p.getPrixVenteUnite() : 0.0;
                 valeurFinanciere = (boites * prixBoite) + (unites * prixUnite);
@@ -758,7 +798,8 @@ public class ProduitController {
             int qteInitiale = qtesInitAchetees.getOrDefault(lot.getId(), lot.getQuantiteStock());
             Double pAchatB = p.getPrixAchat() != null ? p.getPrixAchat() : 0.0;
             Double pAchatU = null;
-            if (p.getEstDeconditionnable() != null && p.getEstDeconditionnable() && p.getUnitesParBoite() != null && p.getUnitesParBoite() > 0) {
+            if (p.getEstDeconditionnable() != null && p.getEstDeconditionnable() && p.getUnitesParBoite() != null
+                    && p.getUnitesParBoite() > 0) {
                 pAchatU = pAchatB / p.getUnitesParBoite();
             }
 
@@ -799,19 +840,26 @@ public class ProduitController {
 
     @FXML
     public void resetFiltresStock() {
-        if (cmbFiltreStockCat != null) cmbFiltreStockCat.getSelectionModel().selectFirst();
-        if (cmbFiltreStockEsp != null) cmbFiltreStockEsp.getSelectionModel().selectFirst();
-        if (cmbFiltreStockStatut != null) cmbFiltreStockStatut.getSelectionModel().select("Normal");
-        if (txtSearchStock != null) txtSearchStock.clear();
-        if (dpFiltreExpAvant != null) dpFiltreExpAvant.setValue(null);
-        if (tableEtatStock != null) tableEtatStock.getSelectionModel().clearSelection();
+        if (cmbFiltreStockCat != null)
+            cmbFiltreStockCat.getSelectionModel().selectFirst();
+        if (cmbFiltreStockEsp != null)
+            cmbFiltreStockEsp.getSelectionModel().selectFirst();
+        if (cmbFiltreStockStatut != null)
+            cmbFiltreStockStatut.getSelectionModel().select("Normal");
+        if (txtSearchStock != null)
+            txtSearchStock.clear();
+        if (dpFiltreExpAvant != null)
+            dpFiltreExpAvant.setValue(null);
+        if (tableEtatStock != null)
+            tableEtatStock.getSelectionModel().clearSelection();
         filtrerStock();
     }
 
     @FXML
     public void onBtnVoirLotClick() {
         EtatStockDTO selected = tableEtatStock.getSelectionModel().getSelectedItem();
-        if (selected != null) showLotDetail(selected);
+        if (selected != null)
+            showLotDetail(selected);
     }
 
     @FXML
@@ -829,34 +877,41 @@ public class ProduitController {
                 .filter(d -> cat == null || cat.equals("Toutes Catégories") || d.getCategorieNom().equals(cat))
                 .filter(d -> esp == null || esp.equals("Toutes Espèces") || d.getEspeceNom().equals(esp))
                 .filter(d -> {
-                    if (statut == null || statut.equals("Tous Statuts")) return true;
+                    if (statut == null || statut.equals("Tous Statuts"))
+                        return true;
                     if (statut.equals("En alerte"))
-                        return d.getQuantiteStock() <= d.getSeuilAlerte() && !d.isEstExpire() && d.getQuantiteStock() > 0;
-                    if (statut.equals("Expiré")) return d.isEstExpire();
+                        return d.getQuantiteStock() <= d.getSeuilAlerte() && !d.isEstExpire()
+                                && d.getQuantiteStock() > 0;
+                    if (statut.equals("Expiré"))
+                        return d.isEstExpire();
                     if (statut.equals("Normal"))
                         return d.getQuantiteStock() > d.getSeuilAlerte() && !d.isEstExpire();
-                    if (statut.equals("Rupture (Vide)")) return d.getQuantiteStock() == 0; // #4
+                    if (statut.equals("Rupture (Vide)"))
+                        return d.getQuantiteStock() == 0; // #4
                     return true;
                 })
                 // #5 : filtre "expiration avant le [date]"
                 .filter(d -> {
-                    if (dateLimit == null || d.getDateExpiration().equals("---")) return true;
+                    if (dateLimit == null || d.getDateExpiration().equals("---"))
+                        return true;
                     try {
                         return java.time.LocalDate.parse(d.getDateExpiration()).isBefore(dateLimit.plusDays(1));
-                    } catch (Exception e) { return true; }
+                    } catch (Exception e) {
+                        return true;
+                    }
                 })
                 .toList();
 
         tableEtatStock.setItems(FXCollections.observableArrayList(filtered));
 
-        // #7 : Calcul et affichage de la valeur financière totale du stock visible (Alignement UX Ventes)
+        // #7 : Calcul et affichage de la valeur financière totale du stock visible
+        // (Alignement UX Ventes)
         if (lblTotalStockValeur != null) {
             double total = filtered.stream()
                     .mapToDouble(d -> d.getValeurFinanciere() != null ? d.getValeurFinanciere() : 0.0)
                     .sum();
-            lblTotalStockValeur.setText(
-                    String.format(java.util.Locale.FRANCE, "%,.0f FCFA", total));
-            lblTotalStockValeur.setStyle("-fx-text-fill: #27ae60; -fx-font-size: 16px; -fx-font-weight: bold;");
+            com.pharmacie.utils.AnimationUtils.animerValeurMonetaire(lblTotalStockValeur, total, "");
+            lblTotalStockValeur.setStyle("-fx-text-fill: #059669; -fx-font-size: 20px; -fx-font-weight: 900;");
         }
     }
 
@@ -870,79 +925,97 @@ public class ProduitController {
         com.pharmacie.utils.PdfService.genererEtatStockPdf(new java.util.ArrayList<>(tableEtatStock.getItems()), stage);
     }
 
-    /** #8 — Export CSV (Excel compatible) du stock visible */
+    /** #8 — Export Excel Premium du stock visible */
     @FXML
-    public void exporterCsv() {
-        if (tableEtatStock.getItems().isEmpty()) { showProdError("Rien à exporter."); return; }
-        javafx.stage.Stage stage = (javafx.stage.Stage) tableProduits.getScene().getWindow();
-        javafx.stage.FileChooser fc = new javafx.stage.FileChooser();
-        fc.setTitle("Exporter le stock en CSV");
-        fc.getExtensionFilters().add(new javafx.stage.FileChooser.ExtensionFilter("Fichier CSV (Excel)", "*.csv"));
-        fc.setInitialFileName("etat_stock_" + java.time.LocalDate.now() + ".csv");
-        java.io.File file = fc.showSaveDialog(stage);
-        if (file == null) return;
-        try (java.io.PrintWriter pw = new java.io.PrintWriter(new java.io.OutputStreamWriter(
-                new java.io.FileOutputStream(file), java.nio.charset.StandardCharsets.UTF_8))) {
-            pw.print('\uFEFF'); // BOM UTF-8 pour Excel Windows
-            pw.println("Produit;Catégorie;N° Lot;Expiration;Jours Rest.;En Stock;Seuil;Prix U.;Valeur Lot");
-            for (EtatStockDTO d : tableEtatStock.getItems()) {
-                pw.printf(java.util.Locale.FRANCE, "%s;%s;%s;%s;%s;%s;%d;%.0f;%.0f%n",
-                        d.getProduitNom(), d.getCategorieNom(), d.getLotNumero(),
-                        d.getDateExpiration(), d.getJoursRestantsFormate(), d.getQuantiteFormatee(),
-                        d.getSeuilAlerte(), d.getPrixUnitaire() != null ? d.getPrixUnitaire() : 0.0,
-                        d.getValeurFinanciere() != null ? d.getValeurFinanciere() : 0.0);
-            }
-            com.pharmacie.utils.ToastService.showSuccess(tableProduits.getScene().getWindow(), "Export réussi", "Fichier sauvegardé : " + file.getName());
-        } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR, "Erreur export CSV : " + e.getMessage()).showAndWait();
+    public void exporterExcel() {
+        if (tableEtatStock.getItems().isEmpty()) {
+            showProdError("Rien à exporter.");
+            return;
         }
+        javafx.stage.Stage stage = (javafx.stage.Stage) tableProduits.getScene().getWindow();
+        
+        // Délégation au service d'export Premium
+        com.pharmacie.utils.ExcelExportService.genererEtatStockExcel(tableEtatStock.getItems(), stage);
     }
 
     /** #9 — Fiche Lot Premium déclenchée par double-clic */
     private void showLotDetail(EtatStockDTO dto) {
         Lot lot = lotDAO.findById(dto.getLotId());
-        if (lot == null) return;
+        if (lot == null)
+            return;
 
         // Appel direct du DAO avec JOIN FETCH empêchant les LazyInitializationException
         List<com.pharmacie.models.MouvementStock> mouvements = mouvementDAO.findByLotId(dto.getLotId());
 
         Dialog<Void> dialog = new Dialog<>();
         dialog.setTitle("Fiche Lot — " + dto.getLotNumero());
+        try {
+            dialog.getDialogPane().getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+        } catch (Exception e) {
+            System.err.println("Erreur chargement styles.css dans Fiche Lot: " + e.getMessage());
+        }
+        dialog.getDialogPane().setStyle("-fx-background-color: #F8FAFC;");
 
-        String headerStyle = dto.isEstExpire()
-                ? "-fx-background-color: #ffcccc; -fx-padding: 15; -fx-background-radius: 6;"
-                : (dto.getJoursRestants() <= 30 && dto.getJoursRestants() >= 0)
-                ? "-fx-background-color: #fff3cd; -fx-padding: 15; -fx-background-radius: 6;"
-                : "-fx-background-color: #e8f8f5; -fx-padding: 15; -fx-background-radius: 6;";
+        boolean isExpired = dto.isEstExpire();
+        boolean isWarning = !isExpired && (dto.getJoursRestants() <= 30 && dto.getJoursRestants() >= 0);
 
-        javafx.scene.layout.VBox header = new javafx.scene.layout.VBox(5);
+        String headerBg = isExpired ? "#FFF1F2" : isWarning ? "#FFFBEB" : "#FFFFFF";
+        String headerBorder = isExpired ? "#FECDD3" : isWarning ? "#FDE68A" : "#E2E8F0";
+        String titleColor = isExpired ? "#E11D48" : isWarning ? "#D97706" : "#0F172A";
+        String valueColor = isExpired ? "#E11D48" : isWarning ? "#D97706" : "#059669";
+
+        String headerStyle = String.format(
+                "-fx-background-color: %s; -fx-padding: 16; -fx-background-radius: 8; -fx-border-color: %s; -fx-border-width: 1.5; -fx-border-radius: 8;",
+                headerBg, headerBorder);
+
+        javafx.scene.layout.VBox header = new javafx.scene.layout.VBox(8);
         header.setStyle(headerStyle);
-        header.getChildren().addAll(
-                styledLabel("📦  " + dto.getProduitNom(), "-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;"),
-                styledLabel("Catégorie : " + dto.getCategorieNom() + "   |   Espèce : " + dto.getEspeceNom(), "-fx-font-size: 12px; -fx-text-fill: #555;"),
-                styledLabel("N° Lot : " + dto.getLotNumero() + "   |   Expiration : " + dto.getDateExpiration()
-                        + "  (" + dto.getJoursRestantsFormate() + ")", "-fx-font-size: 12px; -fx-text-fill: #555;"),
-                styledLabel("Stock actuel : " + dto.getQuantiteFormatee() + "   |   Valeur : " + dto.getValeurFormatee(),
-                        "-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #27AE60;")
-        );
+
+        Label titleLbl = styledLabel(dto.getProduitNom(),
+                "-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: " + titleColor + ";");
+        Label metaLbl = styledLabel("Catégorie : " + dto.getCategorieNom() + "   •   Espèce : " + dto.getEspeceNom(),
+                "-fx-font-size: 13px; -fx-text-fill: #64748B;");
+        Label lotLbl = styledLabel("N° Lot : " + dto.getLotNumero() + "   •   Expiration : " + dto.getDateExpiration()
+                + "  (" + dto.getJoursRestantsFormate() + ")", "-fx-font-size: 13px; -fx-text-fill: #64748B;");
+
+        javafx.scene.layout.HBox metricsBox = new javafx.scene.layout.HBox(15);
+        metricsBox.setPadding(new javafx.geometry.Insets(6, 0, 0, 0));
+        Label stockLbl = styledLabel("Stock actuel : " + dto.getQuantiteFormatee(),
+                "-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: " + valueColor + ";");
+        Label valLbl = styledLabel("Valeur : " + dto.getValeurFormatee(),
+                "-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: " + valueColor + ";");
+        metricsBox.getChildren().addAll(stockLbl, styledLabel(" | ", "-fx-text-fill: #CBD5E1;"), valLbl);
+
+        header.getChildren().addAll(titleLbl, metaLbl, lotLbl, metricsBox);
 
         TableView<com.pharmacie.models.MouvementStock> tableMvt = new TableView<>();
-        tableMvt.setPrefHeight(250);
+        tableMvt.setPrefHeight(280);
         tableMvt.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableMvt.setStyle("-fx-border-color: #CBD5E1; -fx-border-radius: 4; -fx-background-radius: 4;");
 
         TableColumn<com.pharmacie.models.MouvementStock, String> colDate = new TableColumn<>("Date");
         colDate.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(
-                c.getValue().getDateMouvement().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yy HH:mm"))));
+                c.getValue().getDateMouvement()
+                        .format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yy HH:mm"))));
         TableColumn<com.pharmacie.models.MouvementStock, String> colType = new TableColumn<>("Type");
-        colType.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(c.getValue().getTypeMouvement().name()));
+        colType.setCellValueFactory(c -> {
+            String label = switch (c.getValue().getTypeMouvement()) {
+                case AJUSTEMENT_POSITIF -> "Ajout de stocks";
+                case AJUSTEMENT_NEGATIF -> "Perte/Retrait";
+                case ACHAT -> "Achat / Réception";
+                case VENTE -> "Vente";
+                default -> c.getValue().getTypeMouvement().name();
+            };
+            return new javafx.beans.property.SimpleStringProperty(label);
+        });
         TableColumn<com.pharmacie.models.MouvementStock, String> colQte = new TableColumn<>("Quantité");
         colQte.setCellValueFactory(c -> {
             int q = c.getValue().getQuantite();
             com.pharmacie.models.Produit p = c.getValue().getProduit();
             String prefix = (q > 0 ? "+" : "");
-            
-            if (p != null && Boolean.TRUE.equals(p.getEstDeconditionnable()) 
-                && p.getUnitesParBoite() != null && p.getUnitesParBoite() > 0) {
+
+            if (p != null && Boolean.TRUE.equals(p.getEstDeconditionnable())
+                    && p.getUnitesParBoite() != null && p.getUnitesParBoite() > 0) {
                 int boites = Math.abs(q) / p.getUnitesParBoite();
                 int unites = Math.abs(q) % p.getUnitesParBoite();
                 String sign = q < 0 ? "-" : "+";
@@ -965,176 +1038,278 @@ public class ProduitController {
             protected void updateItem(com.pharmacie.models.MouvementStock item, boolean empty) {
                 super.updateItem(item, empty);
                 Runnable updateStyle = () -> {
-                    if (item == null || empty) { setStyle(""); return; }
-                    if (isSelected()) { setStyle(""); return; } // Évite le bug du texte blanc invisible sur fond clair
+                    if (item == null || empty) {
+                        setStyle("");
+                        return;
+                    }
+
+                    if (isSelected() || isHover()) {
+                        setStyle(""); // Laisse le CSS global (.table-row-cell:selected / :hover) agir !
+                        return;
+                    }
+
                     switch (item.getTypeMouvement()) {
-                        case ACHAT -> setStyle("-fx-background-color: #e8f8f5;"); // Vert pâle
-                        case VENTE -> setStyle("-fx-background-color: #fef9e7;"); // Jaune pâle
-                        case AJUSTEMENT_NEGATIF -> setStyle("-fx-background-color: #FAEDEC;"); // Rouge très pâle
+                        case ACHAT -> setStyle("-fx-background-color: #E0F2FE;"); // Sky 100 (bleu clair)
+                        case VENTE -> setStyle("-fx-background-color: #FFFFFF;"); // White
+                        case AJUSTEMENT_NEGATIF -> setStyle("-fx-background-color: #FEF2F2;"); // Red 50
+                        case AJUSTEMENT_POSITIF -> setStyle("-fx-background-color: #F0FDF4;"); // Emerald 50
                         default -> setStyle("");
                     }
                 };
                 selectedProperty().addListener((obs, wasSelected, isNowSelected) -> updateStyle.run());
+                hoverProperty().addListener((obs, wasHovered, isNowHovered) -> updateStyle.run());
                 updateStyle.run();
             }
         });
 
-        javafx.scene.layout.VBox content = new javafx.scene.layout.VBox(12);
-        content.setPadding(new javafx.geometry.Insets(0, 15, 15, 15));
-        content.setPrefWidth(650);
+        javafx.scene.layout.VBox content = new javafx.scene.layout.VBox(16);
+        content.setPadding(new javafx.geometry.Insets(20));
+        content.setPrefWidth(750);
         content.getChildren().addAll(
                 header,
-                styledLabel("📋  Historique des mouvements (" + mouvements.size() + " entrées)",
-                        "-fx-font-weight: bold; -fx-font-size: 13px; -fx-padding: 8 0 0 0;"),
-                tableMvt
-        );
+                styledLabel("Historique des mouvements (" + mouvements.size() + " entrées)",
+                        "-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #334155; -fx-padding: 10 0 0 0;"),
+                tableMvt);
 
         dialog.getDialogPane().setContent(content);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        dialog.getDialogPane().setStyle("-fx-background-color: #f9f9f9;");
+
+        javafx.application.Platform.runLater(() -> {
+            javafx.scene.Node closeBtn = dialog.getDialogPane().lookupButton(ButtonType.CLOSE);
+            if (closeBtn != null) {
+                closeBtn.setStyle(
+                        "-fx-background-color: transparent; -fx-text-fill: #64748B; -fx-font-weight: bold; -fx-padding: 7 24; -fx-min-width: 100px; -fx-border-color: #CBD5E1; -fx-border-width: 1.5; -fx-border-radius: 6; -fx-cursor: hand;");
+            }
+        });
+
         dialog.showAndWait();
     }
 
     private Label styledLabel(String text, String style) {
-        Label l = new Label(text); l.setStyle(style); l.setWrapText(true); return l;
+        Label l = new Label(text);
+        l.setStyle(style);
+        l.setWrapText(true);
+        return l;
     }
 
     @FXML
     public void ajusterStock() {
         var selectedItems = new java.util.ArrayList<>(tableEtatStock.getSelectionModel().getSelectedItems());
         if (selectedItems.isEmpty()) return;
-
-        ToggleGroup groupType = new ToggleGroup();
-        RadioButton rbRetrait = new RadioButton("↘ Retrait / Perte");
-        rbRetrait.setToggleGroup(groupType);
-        rbRetrait.setSelected(true);
-        rbRetrait.setStyle("-fx-text-fill: #c0392b; -fx-font-weight: bold;");
-
-        RadioButton rbAjout = new RadioButton("↗ Ajout Manuel");
-        rbAjout.setToggleGroup(groupType);
-        rbAjout.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
-
-        HBox opBox = new HBox(15, rbRetrait, rbAjout);
-        opBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
-        
-        ComboBox<AjustementStock.MotifAjustement> cmbMotif = new ComboBox<>();
-        Runnable updateMotifs = () -> {
-            boolean estPositif = rbAjout.isSelected();
-            java.util.List<AjustementStock.MotifAjustement> motifs = new java.util.ArrayList<>();
-            for (AjustementStock.MotifAjustement m : AjustementStock.MotifAjustement.values()) {
-                switch(m) {
-                    case CASSE: case PEREMPTION: case USAGE_INTERNE:
-                        if (!estPositif) motifs.add(m); break;
-                    case EXCEDENT_INVENTAIRE: case RETOUR_INTERNE:
-                        if (estPositif) motifs.add(m); break;
-                    default:
-                        motifs.add(m); break;
-                }
-            }
-            cmbMotif.setItems(javafx.collections.FXCollections.observableArrayList(motifs));
-            cmbMotif.getSelectionModel().selectFirst();
-        };
-        updateMotifs.run();
-        rbRetrait.setOnAction(e -> updateMotifs.run());
-        rbAjout.setOnAction(e -> updateMotifs.run());
-
-        TextField obsField = new TextField();
-        obsField.setPromptText("Observation (optionnel)");
-
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Ajustement de Stock");
-
-        if (selectedItems.size() == 1) {
+        if (selectedItems.size() > 1) {
+            afficherDialogAjustementMassif(selectedItems);
+        } else {
             EtatStockDTO sel = selectedItems.get(0);
             Lot lot = lotDAO.findById(sel.getLotId());
-            if (lot == null) return;
-
-            dialog.setHeaderText("Ajustement pour : " + sel.getProduitNom() + "\nLot n°: " + lot.getNumeroLot()
-                    + " (Stock actuel: " + lot.getQuantiteStock() + ")");
-
-            TextField qteField = new TextField();
-            qteField.setPromptText("Exemple: 5");
-            
-            // Restriction de frappe : Uniquement des chiffres
-            qteField.textProperty().addListener((observable, oldValue, newValue) -> {
-                if (!newValue.matches("\\d*")) {
-                    qteField.setText(newValue.replaceAll("[^\\d]", ""));
-                }
-            });
-
-            // Agrandissement visuel des champs optionnels
-            cmbMotif.setPrefWidth(300);
-            obsField.setPrefWidth(300);
-
-            // Modification du texte d'aide dynamiquement avec protection anti-troncature
-            Label lblQte = new Label("Quantité à retirer :");
-            lblQte.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE); 
-            javafx.event.EventHandler<javafx.event.ActionEvent> toggleEvent = e -> {
-                updateMotifs.run();
-                lblQte.setText(rbAjout.isSelected() ? "Quantité à ajouter :" : "Quantité à retirer :");
-                qteField.setStyle(rbAjout.isSelected() ? "-fx-border-color: #27ae60;" : "-fx-border-color: #e74c3c;");
-            };
-            rbRetrait.setOnAction(toggleEvent);
-            rbAjout.setOnAction(toggleEvent);
-
-            javafx.scene.layout.GridPane grid = new javafx.scene.layout.GridPane();
-            grid.setHgap(10); grid.setVgap(10);
-            grid.setPadding(new javafx.geometry.Insets(20, 10, 10, 10));
-            grid.add(new Label("Opération :"), 0, 0); grid.add(opBox, 1, 0);
-            grid.add(lblQte, 0, 1); grid.add(qteField, 1, 1);
-            grid.add(new Label("Motif :"), 0, 2); grid.add(cmbMotif, 1, 2);
-            grid.add(new Label("Observation :"), 0, 3); grid.add(obsField, 1, 3);
-            
-            dialog.getDialogPane().setContent(grid);
-            dialog.getDialogPane().setPrefWidth(550); // Agrandissement général de la fenêtre
-            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-            javafx.application.Platform.runLater(qteField::requestFocus);
-
-            dialog.showAndWait().ifPresent(btn -> {
-                if (btn != ButtonType.OK) return;
-                try {
-                    int qte = Integer.parseInt(qteField.getText());
-                    boolean estPositif = rbAjout.isSelected();
-                    if (qte <= 0) throw new NumberFormatException();
-                    if (!estPositif && qte > lot.getQuantiteStock()) {
-                        showProdError("La quantité à retirer ne peut excéder le stock actuel !");
-                        return;
-                    }
-                    MouvementStock.TypeMouvement typeAjust = estPositif ? MouvementStock.TypeMouvement.AJUSTEMENT_POSITIF : MouvementStock.TypeMouvement.AJUSTEMENT_NEGATIF;
-                    appliquerAjustement(lot, qte, cmbMotif.getValue(), obsField.getText(), typeAjust);
-                } catch (NumberFormatException e) {
-                    showProdError("Veuillez entrer une quantité entière strictement positive.");
-                }
-            });
-
-        } else {
-            dialog.setHeaderText("Déclarer un ajustement massif pour les " + selectedItems.size() + " lots sélectionnés ?\n"
-                    + "(La modification s'appliquera à la totalité du stock de chaque lot pour les retraits)");
-            javafx.scene.layout.VBox box = new javafx.scene.layout.VBox(10);
-            box.setPadding(new javafx.geometry.Insets(15));
-            // On masque le qte pour la déclaration groupée (elle s'applique à la totalité pour un retrait)
-            // Mais pour un ajout massif, ça n'a pas de sens d'ajouter la "totalité de son propre stock", donc on bloque l'ajout massif.
-            rbAjout.setDisable(true); // Seul le retrait intégral est permis en lot par lot massif dans cette version
-            rbRetrait.setDisable(true); 
-            box.getChildren().addAll(new Label("Opération (Forcée) :"), opBox, new Label("Motif commun :"), cmbMotif, new Label("Observation :"), obsField);
-            dialog.getDialogPane().setContent(box);
-            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-            dialog.showAndWait().ifPresent(btn -> {
-                if (btn != ButtonType.OK) return;
-                for (EtatStockDTO sel : selectedItems) {
-                    Lot lot = lotDAO.findById(sel.getLotId());
-                    if (lot != null && lot.getQuantiteStock() > 0) {
-                        appliquerAjustement(lot, lot.getQuantiteStock(), cmbMotif.getValue(), obsField.getText(), MouvementStock.TypeMouvement.AJUSTEMENT_NEGATIF);
-                    }
-                }
-            });
+            if (lot != null) afficherDialogAjustementSingle(lot, sel.getProduitNom());
         }
-
         loadEtatStock();
     }
 
-    private void appliquerAjustement(Lot lot, int qte, AjustementStock.MotifAjustement motif, String observation, MouvementStock.TypeMouvement typeAjustement) {
+    private Label mkSectionLabel(String text) {
+        Label l = new Label(text.toUpperCase());
+        l.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #334155;");
+        return l;
+    }
+
+    private void afficherDialogAjustementSingle(Lot lot, String produitNom) {
+        final boolean[] estAjout = {false};
+
+        ComboBox<AjustementStock.MotifAjustement> cmbMotif = new ComboBox<>();
+        cmbMotif.setMaxWidth(Double.MAX_VALUE);
+        cmbMotif.setStyle("-fx-border-color: #64748B; -fx-border-width: 2; -fx-border-radius: 6; -fx-background-radius: 6; -fx-font-size: 13px; -fx-padding: 4 8;");
+        cmbMotif.getStyleClass().add("combo-box");
+
+        TextField qteField = new TextField();
+        qteField.setPromptText("Quantit\u00e9...");
+        qteField.setStyle("-fx-background-color: white; -fx-border-color: #64748B; -fx-border-width: 2; -fx-border-radius: 6; -fx-background-radius: 6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 8;");
+        qteField.textProperty().addListener((obs, o, n) -> { if (!n.matches("\\d*")) qteField.setText(n.replaceAll("[^\\d]", "")); });
+
+        TextField obsField = new TextField();
+        obsField.setPromptText("Observation (optionnel)");
+        obsField.setStyle("-fx-background-color: white; -fx-border-color: #64748B; -fx-border-width: 2; -fx-border-radius: 6; -fx-background-radius: 6; -fx-font-size: 13px; -fx-padding: 8;");
+
+        Label lblQte  = new Label("Quantit\u00e9 \u00e0 retirer :");
+        lblQte.setStyle("-fx-font-size: 12px; -fx-text-fill: #334155; -fx-font-weight: bold;");
+        Label lblNote = new Label("");
+        lblNote.setStyle("-fx-font-size: 11px; -fx-text-fill: #94A3B8; -fx-font-style: italic;");
+
+        Runnable updateQte = () -> {
+            boolean peri = cmbMotif.getValue() == AjustementStock.MotifAjustement.PEREMPTION && !estAjout[0];
+            if (peri) {
+                qteField.setText(String.valueOf(lot.getQuantiteStock()));
+                qteField.setDisable(true);
+                qteField.setStyle("-fx-background-color: #FFF1F2; -fx-border-color: #FDA4AF; -fx-border-width: 2; -fx-border-radius: 6; -fx-background-radius: 6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 8; -fx-opacity: 0.75;");
+                lblNote.setText("Stock total retir\u00e9 automatiquement (lot p\u00e9rim\u00e9)");
+            } else {
+                if (qteField.isDisabled()) qteField.clear();
+                qteField.setDisable(false);
+                String bc = estAjout[0] ? "#059669" : "#E74C3C";
+                qteField.setStyle("-fx-background-color: white; -fx-border-color: " + bc + "; -fx-border-width: 2; -fx-border-radius: 6; -fx-background-radius: 6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 8;");
+                lblNote.setText("");
+            }
+        };
+
+        Runnable updateMotifs = () -> {
+            java.util.List<AjustementStock.MotifAjustement> list = new java.util.ArrayList<>();
+            for (AjustementStock.MotifAjustement m : AjustementStock.MotifAjustement.values()) {
+                switch (m) {
+                    case CASSE: case PEREMPTION: case USAGE_INTERNE: if (!estAjout[0]) list.add(m); break;
+                    case EXCEDENT_INVENTAIRE: case RETOUR_INTERNE:  if (estAjout[0])  list.add(m); break;
+                    default: list.add(m);
+                }
+            }
+            cmbMotif.setItems(javafx.collections.FXCollections.observableArrayList(list));
+            cmbMotif.getSelectionModel().selectFirst();
+        };
+        updateMotifs.run();
+        cmbMotif.setOnAction(e -> updateQte.run());
+
+        String sActifR = "-fx-background-color: #E74C3C; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 8 20;";
+        String sActifA = "-fx-background-color: #059669; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 8 20;";
+        String sInact  = "-fx-background-color: #F1F5F9; -fx-text-fill: #94A3B8; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-border-color: #CBD5E1; -fx-border-width: 1; -fx-border-radius: 8; -fx-cursor: hand; -fx-padding: 8 20;";
+
+        Button btnR = new Button("Retrait / Perte");    btnR.setMaxWidth(Double.MAX_VALUE); btnR.setStyle(sActifR);
+        Button btnA = new Button("Ajout de Stock");     btnA.setMaxWidth(Double.MAX_VALUE); btnA.setStyle(sInact);
+
+        Runnable toggleUI = () -> {
+            if (!estAjout[0]) { btnR.setStyle(sActifR); btnA.setStyle(sInact); lblQte.setText("Quantit\u00e9 \u00e0 retirer :"); }
+            else              { btnA.setStyle(sActifA); btnR.setStyle(sInact); lblQte.setText("Quantit\u00e9 \u00e0 ajouter :"); }
+            updateMotifs.run(); updateQte.run();
+        };
+        btnR.setOnAction(e -> { estAjout[0] = false; toggleUI.run(); });
+        btnA.setOnAction(e -> { estAjout[0] = true;  toggleUI.run(); });
+
+        HBox toggleBox = new HBox(8, btnR, btnA);
+        toggleBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        HBox.setHgrow(btnR, javafx.scene.layout.Priority.ALWAYS);
+        HBox.setHgrow(btnA, javafx.scene.layout.Priority.ALWAYS);
+
+        // --- Header card ---
+        Label lblTitre   = new Label("Ajustement de Stock");
+        lblTitre.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1E293B;");
+        Label lblProd    = new Label(produitNom);
+        lblProd.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #10B981;");
+        String expTxt    = lot.getDateExpiration() != null && !lot.getDateExpiration().equals("---") ? " \u00b7 Exp: " + lot.getDateExpiration() : "";
+        Label lblMeta    = new Label("Lot n\u00b0 " + lot.getNumeroLot() + expTxt);
+        lblMeta.setStyle("-fx-font-size: 12px; -fx-text-fill: #64748B;");
+        Label lblStk     = new Label("Stock actuel : " + lot.getQuantiteStock() + " unit\u00e9(s)");
+        lblStk.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #334155; -fx-background-color: #F1F5F9; -fx-background-radius: 6; -fx-padding: 4 10;");
+
+        javafx.scene.layout.VBox header = new javafx.scene.layout.VBox(4, lblTitre, lblProd, lblMeta, lblStk);
+        header.setStyle("-fx-background-color: white; -fx-border-color: #E2E8F0; -fx-border-width: 0 0 1 0; -fx-padding: 16 20 14 20;");
+
+        javafx.scene.layout.VBox form = new javafx.scene.layout.VBox(10,
+            mkSectionLabel("Op\u00e9ration"), toggleBox,
+            mkSectionLabel("Motif"), cmbMotif,
+            lblQte, qteField, lblNote,
+            mkSectionLabel("Observation"), obsField);
+        form.setPadding(new javafx.geometry.Insets(16, 20, 10, 20));
+
+        Label lblErr = new Label(""); lblErr.setStyle("-fx-text-fill: #E74C3C; -fx-font-size: 12px; -fx-font-weight: bold;"); lblErr.setVisible(false);
+
+        Button btnOk  = new Button("Confirmer l'ajustement");
+        btnOk.setStyle("-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 9 24;");
+        btnOk.setOnMouseEntered(e -> btnOk.setStyle("-fx-background-color: #059669; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 9 24;"));
+        btnOk.setOnMouseExited(e  -> btnOk.setStyle("-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 9 24;"));
+
+        Button btnCancel = new Button("Annuler");
+        btnCancel.setStyle("-fx-background-color: transparent; -fx-text-fill: #64748B; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 9 20; -fx-border-color: #CBD5E1; -fx-border-radius: 8;");
+        btnCancel.setOnMouseEntered(e -> btnCancel.setStyle("-fx-background-color: #F1F5F9; -fx-text-fill: #475569; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 9 20; -fx-border-color: #94A3B8; -fx-border-radius: 8;"));
+        btnCancel.setOnMouseExited(e  -> btnCancel.setStyle("-fx-background-color: transparent; -fx-text-fill: #64748B; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 9 20; -fx-border-color: #CBD5E1; -fx-border-radius: 8;"));
+
+        javafx.scene.layout.Region spacer = new javafx.scene.layout.Region();
+        HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+        HBox actions = new HBox(10, lblErr, spacer, btnCancel, btnOk);
+        actions.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
+        actions.setStyle("-fx-background-color: #F8FAFC; -fx-border-color: #E2E8F0; -fx-border-width: 1 0 0 0; -fx-padding: 12 20;");
+
+        javafx.scene.layout.VBox root = new javafx.scene.layout.VBox(header, form, actions);
+        root.setStyle("-fx-background-color: white;"); root.setPrefWidth(480);
+
+        javafx.stage.Stage stage = new javafx.stage.Stage();
+        stage.setTitle("Ajustement de Stock");
+        stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+        stage.setResizable(false);
+        javafx.scene.Scene scene = new javafx.scene.Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+        stage.setScene(scene);
+
+        btnCancel.setOnAction(e -> stage.close());
+        btnOk.setOnAction(e -> {
+            lblErr.setVisible(false);
+            String txt = qteField.getText().trim();
+            if (txt.isEmpty()) { lblErr.setText("La quantit\u00e9 est obligatoire."); lblErr.setVisible(true); return; }
+            try {
+                int qte = Integer.parseInt(txt);
+                if (qte <= 0) throw new NumberFormatException();
+                if (!estAjout[0] && qte > lot.getQuantiteStock()) {
+                    lblErr.setText("Quantit\u00e9 sup\u00e9rieure au stock disponible !"); lblErr.setVisible(true); return;
+                }
+                MouvementStock.TypeMouvement type = estAjout[0]
+                    ? MouvementStock.TypeMouvement.AJUSTEMENT_POSITIF
+                    : MouvementStock.TypeMouvement.AJUSTEMENT_NEGATIF;
+                appliquerAjustement(lot, qte, cmbMotif.getValue(), obsField.getText(), type);
+                stage.close();
+            } catch (NumberFormatException ex) {
+                lblErr.setText("Entrez un nombre entier positif."); lblErr.setVisible(true);
+            }
+        });
+
+        javafx.application.Platform.runLater(cmbMotif::requestFocus);
+        stage.showAndWait();
+    }
+
+    private void afficherDialogAjustementMassif(java.util.List<EtatStockDTO> items) {
+        ComboBox<AjustementStock.MotifAjustement> cmbMotif = new ComboBox<>();
+        cmbMotif.getItems().addAll(AjustementStock.MotifAjustement.CASSE, AjustementStock.MotifAjustement.PEREMPTION, AjustementStock.MotifAjustement.USAGE_INTERNE, AjustementStock.MotifAjustement.AUTRE);
+        cmbMotif.getSelectionModel().selectFirst(); cmbMotif.setMaxWidth(Double.MAX_VALUE);
+        cmbMotif.setStyle("-fx-border-color: #64748B; -fx-border-width: 2; -fx-border-radius: 6; -fx-background-radius: 6; -fx-font-size: 13px; -fx-padding: 4 8;");
+        cmbMotif.getStyleClass().add("combo-box");
+        TextField obsField = new TextField(); obsField.setPromptText("Observation (optionnel)");
+        obsField.setStyle("-fx-background-color: white; -fx-border-color: #64748B; -fx-border-width: 2; -fx-border-radius: 6; -fx-background-radius: 6; -fx-font-size: 13px; -fx-padding: 8;");
+
+        Label lblT = new Label("Ajustement Massif"); lblT.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1E293B;");
+        Label lblS = new Label(items.size() + " lots s\u00e9lectionn\u00e9s \u2014 retrait int\u00e9gral du stock de chaque lot"); lblS.setStyle("-fx-font-size: 12px; -fx-text-fill: #64748B;"); lblS.setWrapText(true);
+        Label lblW = new Label("Cette op\u00e9ration retirera la TOTALIT\u00c9 du stock de chaque lot s\u00e9lectionn\u00e9.");
+        lblW.setStyle("-fx-font-size: 12px; -fx-text-fill: #B45309; -fx-background-color: #FEF3C7; -fx-background-radius: 6; -fx-padding: 8 12; -fx-font-weight: bold;"); lblW.setWrapText(true);
+
+        javafx.scene.layout.VBox header = new javafx.scene.layout.VBox(6, lblT, lblS, lblW);
+        header.setStyle("-fx-background-color: white; -fx-border-color: #E2E8F0; -fx-border-width: 0 0 1 0; -fx-padding: 16 20 14 20;");
+        javafx.scene.layout.VBox form = new javafx.scene.layout.VBox(10, mkSectionLabel("Motif commun"), cmbMotif, mkSectionLabel("Observation"), obsField);
+        form.setPadding(new javafx.geometry.Insets(16, 20, 10, 20));
+
+        Button btnOk = new Button("Confirmer le retrait massif");
+        btnOk.setStyle("-fx-background-color: #E74C3C; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 9 24;");
+        Button btnCancel = new Button("Annuler");
+        btnCancel.setStyle("-fx-background-color: transparent; -fx-text-fill: #64748B; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 9 20; -fx-border-color: #CBD5E1; -fx-border-radius: 8;");
+
+        javafx.scene.layout.Region spacer = new javafx.scene.layout.Region(); HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+        HBox actions = new HBox(10, spacer, btnCancel, btnOk); actions.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
+        actions.setStyle("-fx-background-color: #F8FAFC; -fx-border-color: #E2E8F0; -fx-border-width: 1 0 0 0; -fx-padding: 12 20;");
+
+        javafx.scene.layout.VBox root = new javafx.scene.layout.VBox(header, form, actions);
+        root.setStyle("-fx-background-color: white;"); root.setPrefWidth(460);
+        javafx.stage.Stage stage = new javafx.stage.Stage();
+        stage.setTitle("Ajustement Massif"); stage.initModality(javafx.stage.Modality.APPLICATION_MODAL); stage.setResizable(false);
+        javafx.scene.Scene scene = new javafx.scene.Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+        stage.setScene(scene);
+        btnCancel.setOnAction(e -> stage.close());
+        btnOk.setOnAction(e -> {
+            for (EtatStockDTO sel : items) {
+                Lot lot = lotDAO.findById(sel.getLotId());
+                if (lot != null && lot.getQuantiteStock() > 0)
+                    appliquerAjustement(lot, lot.getQuantiteStock(), cmbMotif.getValue(), obsField.getText(), MouvementStock.TypeMouvement.AJUSTEMENT_NEGATIF);
+            }
+            stage.close();
+        });
+        javafx.application.Platform.runLater(cmbMotif::requestFocus);
+        stage.showAndWait();
+    }
+
+    private void appliquerAjustement(Lot lot, int qte, AjustementStock.MotifAjustement motif, String observation,
+            MouvementStock.TypeMouvement typeAjustement) {
         AjustementStock adj = new AjustementStock();
         adj.setLot(lot);
         adj.setUser(SessionManager.getCurrentUser());
@@ -1152,7 +1327,8 @@ public class ProduitController {
             }
         } else {
             lot.setQuantiteStock(lot.getQuantiteStock() - qte);
-            if (lot.getQuantiteStock() <= 0) lot.setEstArchive(true);
+            if (lot.getQuantiteStock() <= 0)
+                lot.setEstArchive(true);
         }
         lotDAO.update(lot);
 
@@ -1160,9 +1336,11 @@ public class ProduitController {
         mouvementDAO.save(new MouvementStock(
                 lot.getProduit(), lot, SessionManager.getCurrentUser(),
                 typeAjustement, qteMvt, java.time.LocalDateTime.now(),
-                "Ajustement: " + motif.name() + (observation != null && !observation.isEmpty() ? " - " + observation : "")));
-        
-        com.pharmacie.utils.ToastService.showSuccess(tableEtatStock.getScene().getWindow(), "Ajustement de Stock", "Le stock a été ajusté avec succès.");
+                "Ajustement: " + motif.name()
+                        + (observation != null && !observation.isEmpty() ? " - " + observation : "")));
+
+        com.pharmacie.utils.ToastService.showSuccess(tableEtatStock.getScene().getWindow(), "Ajustement de Stock",
+                "Le stock a été ajusté avec succès.");
     }
 
     // --- INNER CLASS DTO POUR STOCK ---
@@ -1180,7 +1358,7 @@ public class ProduitController {
         private boolean estExpire;
         private int seuilAlerte;
         private Double valeurFinanciere;
-        private long joursRestants; 
+        private long joursRestants;
         private Integer qteInitialeAchetee;
         private Double prixAchatBoite;
         private Double prixAchatUnite;
@@ -1261,39 +1439,50 @@ public class ProduitController {
 
         /** Retourne la valeur du lot formatée en FCFA pour la colonne */
         public String getValeurFormatee() {
-            if (valeurFinanciere == null) return "---";
+            if (valeurFinanciere == null)
+                return "---";
             return String.format(java.util.Locale.FRANCE, "%,.0f FCFA", valeurFinanciere);
         }
 
-        /** Retourne les jours restants avant exp : positif = OK, 0 = aujourd'hui, négatif = expiré */
+        /**
+         * Retourne les jours restants avant exp : positif = OK, 0 = aujourd'hui,
+         * négatif = expiré
+         */
         public long getJoursRestants() {
             return joursRestants;
         }
 
         /**
          * Formate intelligemment les jours restants pour l'affichage :
-         *  "❌ Expiré", "⚠️ 3 j", "12 j", "Aucune date"
+         * "❌ Expiré", "⚠️ 3 j", "12 j", "Aucune date"
          */
         public String getJoursRestantsFormate() {
-            if (dateExpiration.equals("---")) return "Sans date";
-            if (joursRestants < 0) return "❌ Expiré";
-            if (joursRestants == 0) return "⚠️ Auj.";
-            if (joursRestants <= 30) return "⚠️ " + joursRestants + " j";
+            if (dateExpiration.equals("---"))
+                return "Sans date";
+            if (joursRestants < 0)
+                return "❌ Expiré";
+            if (joursRestants == 0)
+                return "⚠️ Auj.";
+            if (joursRestants <= 30)
+                return "⚠️ " + joursRestants + " j";
             return joursRestants + " j";
         }
 
         public String getQteInitialeAchetee() {
-            if (qteInitialeAchetee == null) return "---";
+            if (qteInitialeAchetee == null)
+                return "---";
             return qteInitialeAchetee + " U";
         }
 
         public String getPrixAchatBoiteFormate() {
-            if (prixAchatBoite == null) return "---";
+            if (prixAchatBoite == null)
+                return "---";
             return String.format(java.util.Locale.FRANCE, "%,.0f FCFA", prixAchatBoite);
         }
 
         public String getPrixAchatUniteFormate() {
-            if (prixAchatUnite == null) return "N/A";
+            if (prixAchatUnite == null)
+                return "N/A";
             return String.format(java.util.Locale.FRANCE, "%,.0f FCFA", prixAchatUnite);
         }
     }

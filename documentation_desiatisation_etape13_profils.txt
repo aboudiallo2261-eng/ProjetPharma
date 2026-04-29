@@ -1,0 +1,65 @@
+================================================================================
+DOCUMENTATION TECHNIQUE - DÉSIATISATION UI/UX
+Étape 13 : Refonte Premium du Module Profils & Habilitations
+Date : 2026-04-26
+Auteur : Ingénieur UI/UX Senior
+================================================================================
+
+OBJECTIF
+--------
+Refondre l'interface de création de rôles et de gestion des accès pour 
+éliminer les artefacts "vieux logiciel" (boutons gris illisibles, tableaux 
+cassés) et imposer le standard "SaaS Premium" à 100%.
+
+DÉFAUTS CONSTATÉS (AVANT INTERVENTION)
+--------------------------------------
+1. Bouton "Réinitialiser" Désastreux : Fond gris `#BDC3C7` avec texte blanc. 
+   Contraste illégal (WCAG) donnant l'impression d'un bouton verrouillé.
+2. Formulaire Plat : Les labels ne respectaient pas le design Top-Label.
+3. Tableau Non-Fluide : Les colonnes de la liste des profils ne 
+   s'étendaient pas, laissant un espace blanc vide et désagréable à droite.
+4. Bouton de Suppression : Rouge plat basique sans icône.
+5. Manque d'Hiérarchie : Les cases à cocher (autorisations) ressemblaient 
+   à une simple liste de courses sans cadre de sécurité.
+
+DÉCISIONS ARCHITECTURALES ET RÉALISATIONS
+-----------------------------------------
+1. Uniformisation des Enveloppes (Card Design) :
+   - Passage des deux VBox (Gauche/Droite) sur un `border-radius: 12px` et 
+     une ombre portée Premium (`dropshadow(..., 15, 0, 0, 5)`).
+   - Espacement global augmenté pour faire "respirer" l'interface.
+
+2. Refonte du Formulaire (Panneau Gauche) :
+   - En-tête : Ajout du macaron jaune pastel `#FEF3C7` avec l'icône de 
+     sécurité purement vectorielle `.icon-key` (orange `#D97706`).
+   - Labels : Passage au standard "Top-Label" (`Slate 600`, 13px, gras).
+   - Zone de Sécurité (Autorisations) : Les CheckBoxes sont désormais 
+     regroupées dans un conteneur dédié (Fond gris bleuté `#F8FAFC`, bordure 
+     fine `#E2E8F0`, padding interne). L'œil identifie instantanément cette 
+     zone comme sensible.
+
+3. Refonte des Boutons d'Action :
+   - "Réinitialiser" : Transformé en bouton `Outline` transparent avec une 
+     bordure grise (`#CBD5E1`), texte gris foncé et l'icône `.icon-refresh`. 
+     Élégant et non-intrusif.
+   - "Enregistrer" : Utilise notre `.button-primary` (Vert Émeraude) avec 
+     l'icône `.icon-save`.
+
+4. Correction du Tableau (Panneau Droit) :
+   - Fix technique : Injection de `<columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>`. 
+     Les colonnes absorbent désormais 100% de la largeur disponible.
+   - En-tête : Ajout d'un sous-titre explicatif pour guider l'utilisateur.
+   - "Supprimer" : Création d'un bouton "Danger" ultra-moderne (Fond rouge 
+     très pâle `#FEF2F2`, bordure rouge `#FECACA`, texte et icône `.icon-x` 
+     en rouge vif `#DC2626`).
+
+CONCLUSION
+----------
+L'écran "Profils & Habilitations" a été propulsé dans le futur. L'ergonomie 
+est chirurgicale : l'utilisateur est guidé par les couleurs, les blocs 
+séparés et les icônes. C'est l'incarnation d'un développement "100% humain" 
+sans concessions sur la qualité de l'interface.
+
+================================================================================
+FIN DU DOCUMENT - ÉTAPE 13
+================================================================================

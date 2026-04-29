@@ -57,9 +57,6 @@
                     <Label text="Chiffre d'Affaires" styleClass="kpi-title"/>
                     <Label fx:id="lblCA" text="— FCFA" styleClass="kpi-value, kpi-text-green"/>
                 </VBox>
-                <StackPane styleClass="kpi-icon-container-green">
-                    <SVGPath content="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" styleClass="kpi-icon, kpi-icon-green"/>
-                </StackPane>
             </HBox>
             
             <!-- BÉNÉFICE -->
@@ -68,9 +65,6 @@
                     <Label text="Bénéfice Net Estimé" styleClass="kpi-title"/>
                     <Label fx:id="lblBenefice" text="— FCFA" styleClass="kpi-value, kpi-text-blue"/>
                 </VBox>
-                <StackPane styleClass="kpi-icon-container-blue">
-                    <SVGPath content="M23 6l-9.5 9.5-5-5L1 18 M23 6h-6 M23 6v6" styleClass="kpi-icon, kpi-icon-blue"/>
-                </StackPane>
             </HBox>
             
             <!-- VOLUME -->
@@ -79,9 +73,6 @@
                     <Label text="Volume de Ventes" styleClass="kpi-title"/>
                     <Label fx:id="lblVolume" text="—" styleClass="kpi-value, kpi-text-purple"/>
                 </VBox>
-                <StackPane styleClass="kpi-icon-container-purple">
-                    <SVGPath content="M9 20a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm11 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" styleClass="kpi-icon, kpi-icon-purple"/>
-                </StackPane>
             </HBox>
             
             <!-- ALERTES -->
@@ -90,9 +81,6 @@
                     <Label text="Alertes Stock / Exp" styleClass="kpi-title"/>
                     <Label fx:id="lblAlertes" text="— / —" styleClass="kpi-value, kpi-text-red"/>
                 </VBox>
-                <StackPane styleClass="kpi-icon-container-red">
-                    <SVGPath content="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z M12 9v4 M12 17h.01" styleClass="kpi-icon, kpi-icon-red"/>
-                </StackPane>
             </HBox>
         </HBox>
 
@@ -106,9 +94,6 @@
                     <Label text="Valeur Totale Stock" styleClass="kpi-title"/>
                     <Label fx:id="lblValeurStock" text="— FCFA" styleClass="kpi-value, kpi-text-teal"/>
                 </VBox>
-                <StackPane styleClass="kpi-icon-container-teal">
-                    <SVGPath content="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z M3.27 6.96L12 12.01l8.73-5.05 M12 22.08V12" styleClass="kpi-icon, kpi-icon-teal"/>
-                </StackPane>
             </HBox>
             
             <!-- ESPÈCES -->
@@ -117,9 +102,6 @@
                     <Label text="Recettes Espèces" styleClass="kpi-title"/>
                     <Label fx:id="lblEspeces" text="— FCFA" styleClass="kpi-value, kpi-text-orange"/>
                 </VBox>
-                <StackPane styleClass="kpi-icon-container-orange">
-                    <SVGPath content="M12 1v22 M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" styleClass="kpi-icon, kpi-icon-orange"/>
-                </StackPane>
             </HBox>
             
             <!-- MOBILE MONEY -->
@@ -128,9 +110,6 @@
                     <Label text="Recettes Mobile" styleClass="kpi-title"/>
                     <Label fx:id="lblMobile" text="— FCFA" styleClass="kpi-value, kpi-text-indigo"/>
                 </VBox>
-                <StackPane styleClass="kpi-icon-container-indigo">
-                    <SVGPath content="M5 2h14a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z M12 18h.01" styleClass="kpi-icon, kpi-icon-indigo"/>
-                </StackPane>
             </HBox>
         </HBox>
 

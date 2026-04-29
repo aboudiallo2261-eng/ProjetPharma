@@ -1,0 +1,57 @@
+================================================================================
+DOCUMENTATION TECHNIQUE - DÉSIATISATION MODULE VENTES & CAISSE
+Étape 7 : Débogage Virtuel du Tableau et Affordance des ComboBox
+Date : 2026-04-25
+Auteur : Ingénieur UI/UX Senior
+================================================================================
+
+OBJECTIF
+--------
+Résoudre deux problèmes majeurs d'ergonomie et de stabilité de l'interface :
+1. Le bug d'affichage du tableau où des lignes devenaient invisibles (blanches) 
+   lors d'un scroll ou d'une sélection multiple.
+2. Le manque "d'affordance" des ComboBox (menus déroulants), qui étaient trop 
+   silencieux visuellement et pouvaient être confondus avec de simples champs texte.
+
+ANALYSE DES DÉFAUTS
+-------------------
+1. Bug du TableView (Disparition de lignes) :
+   JavaFX utilise la "virtualisation" pour les tableaux : il recycle les 
+   composants `TableRow` pour des raisons de performances au lieu de créer 
+   10 000 lignes en RAM. 
+   - Cause A : Mon précédent style CSS mettait le fond des lignes à `transparent`,
+     ce qui créait des conflits de rendu lors du recyclage.
+   - Cause B : Dans `VenteController.java`, la classe CSS `.stock-zero` n'était 
+     pas nettoyée (`remove`) lorsqu'une ligne rouge était recyclée pour devenir 
+     une ligne "vide" (scrolling tout en bas).
+
+2. ComboBox silencieux :
+   L'application du Flat Design avait supprimé le style du bouton flèche (`arrow-button`) 
+   des ComboBox, les rendant indistincts des TextField classiques.
+
+DÉCISIONS ARCHITECTURALES ET CORRECTIONS
+----------------------------------------
+1. Fix de la virtualisation (TableView) :
+   - Dans `styles.css`, j'ai forcé `.table-row-cell` à avoir un fond explicite
+     `-fx-background-color: #FFFFFF;` au lieu de `transparent`. Le moteur de
+     rendu JavaFX sait désormais exactement avec quoi peindre les lignes.
+   - Dans `VenteController.java`, j'ai ajouté `getStyleClass().remove("stock-zero");`
+     dans la condition `if (item == null || empty)`. Ainsi, une ligne morte 
+     perd sa coloration d'erreur avant d'être recyclée.
+
+2. Restauration de l'Affordance (ComboBox) :
+   - J'ai injecté un bloc CSS spécifique pour `.combo-box .arrow-button`. 
+   - Le bouton flèche a désormais un fond légèrement gris (`#F8FAFC`) et une 
+     fine bordure pour se détacher du champ texte. La flèche elle-même est 
+     passée en gris ardoise (`#64748B`) pour inciter au clic.
+
+VÉRIFICATION
+------------
+L'utilisateur peut maintenant scroller frénétiquement dans le tableau des 
+produits : aucune ligne ne disparaîtra et les couleurs resteront stables. 
+Les menus déroulants sont désormais identifiables au premier coup d'œil, 
+rendant l'onboarding d'un nouveau caissier immédiat (Zéro friction).
+
+================================================================================
+FIN DU DOCUMENT - ÉTAPE 7
+================================================================================

@@ -1,0 +1,45 @@
+================================================================================
+DOCUMENTATION TECHNIQUE - DÉSIATISATION MODULE VENTES & CAISSE
+Étape 6 : Cohérence du Design System (Couleur de Focus)
+Date : 2026-04-25
+Auteur : Ingénieur UI/UX Senior
+================================================================================
+
+OBJECTIF
+--------
+Garantir la cohérence colorimétrique absolue du Design System. 
+Lors de l'implémentation du Flat Design, la couleur par défaut du "focus" 
+(l'état d'un champ texte ou d'un menu déroulant lorsqu'il est cliqué) avait 
+été définie sur un bleu standard (`#3B82F6`). 
+L'objectif est de remplacer ce bleu par la couleur primaire "Primary" du 
+projet ("Vert Pharmacie Premium" / Emerald) pour respecter la charte graphique.
+
+ANALYSE DU PROBLÈME
+-------------------
+L'utilisation d'une couleur hors charte (le bleu) pour les retours visuels 
+(focus ring) casse l'harmonie de l'interface, surtout lorsque les actions 
+principales ("Valider", "Ajouter") sont déclinées en vert. C'est un détail 
+fondamental dans la construction d'une application de niveau SaaS.
+
+DÉCISIONS ARCHITECTURALES ET CORRECTIONS
+----------------------------------------
+Surcharge CSS (`styles.css`) :
+J'ai ciblé les pseudo-classes `:focused` des éléments de saisie :
+`.text-field:focused, .password-field:focused, .combo-box:focused`
+
+1. Modification de la bordure :
+   Remplacement de `-fx-border-color: #3B82F6` par `-fx-border-color: #10B981`.
+2. Modification de l'ombre portée (Glow/Halo) :
+   Remplacement du halo bleuté par un halo vert translucide très doux :
+   `-fx-effect: dropshadow(gaussian, rgba(16,185,129,0.2), 4, 0, 0, 0);`
+
+VÉRIFICATION
+------------
+Au prochain redémarrage, dès que l'utilisateur cliquera dans la barre de 
+recherche, dans le champ de quantité ou dans un menu déroulant, l'élément 
+s'illuminera d'un vert subtil, en parfaite résonance avec le reste de 
+l'interface (boutons, lignes sélectionnées).
+
+================================================================================
+FIN DU DOCUMENT - ÉTAPE 6
+================================================================================

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.geometry.Insets?>
+
+<SplitPane dividerPositions="0.68" prefHeight="600.0" prefWidth="1000.0" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pharmacie.controllers.PdfPreviewController">
+
+    <!-- Partie Gauche : Affichage du PDF -->
+    <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" style="-fx-background-color: #F8FAFC;">
+        <StackPane style="-fx-background-color: #F8FAFC; -fx-padding: 30;">
+            <VBox alignment="CENTER" spacing="10">
+                <ProgressIndicator fx:id="progressLoading" visible="true"/>
+                <Label fx:id="lblLoading" text="Génération de l'aperçu PDF haute définition..." style="-fx-text-fill: #64748B;"/>
+            </VBox>
+            
+            <ImageView fx:id="pdfImageView" preserveRatio="true" visible="false" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 15, 0, 0, 5);"/>
+        </StackPane>
+    </ScrollPane>
+
+    <!-- Partie Droite : Actions -->
+    <VBox spacing="30" style="-fx-background-color: white; -fx-padding: 30;">
+        <VBox alignment="CENTER" spacing="15">
+            <!-- Icône Document -->
+            <StackPane style="-fx-background-color: #ECFDF5; -fx-background-radius: 50; -fx-min-width: 80; -fx-min-height: 80; -fx-max-width: 80; -fx-max-height: 80;">
+                <SVGPath content="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2v5h5l-5-5zM6 20V4h5v7h7v9H6z" fill="#059669" scaleX="2.0" scaleY="2.0"/>
+            </StackPane>
+            
+            <Label text="Document Généré" style="-fx-font-size: 14px; -fx-text-fill: #64748B; -fx-font-weight: bold;"/>
+            <Label fx:id="lblFileName" text="document.pdf" wrapText="true" textAlignment="CENTER" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1E293B;"/>
+            <Label fx:id="lblFileSize" text="Taille: -- KB" style="-fx-font-size: 12px; -fx-text-fill: #94A3B8;"/>
+        </VBox>
+
+        <Separator/>
+
+        <VBox spacing="15" VBox.vgrow="ALWAYS">
+            <Label text="Actions" style="-fx-font-size: 14px; -fx-text-fill: #64748B; -fx-font-weight: bold;"/>
+            
+            <Button text="Enregistrer" onAction="#downloadPdf" maxWidth="Infinity" style="-fx-background-color: #059669; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 12; -fx-background-radius: 6; -fx-cursor: hand; -fx-graphic-text-gap: 8;">
+                <graphic>
+                    <SVGPath content="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z" fill="white"/>
+                </graphic>
+            </Button>
+            
+            <Button text="Imprimer" onAction="#printPdf" maxWidth="Infinity" style="-fx-background-color: #2563EB; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 12; -fx-background-radius: 6; -fx-cursor: hand; -fx-graphic-text-gap: 8;">
+                <graphic>
+                    <SVGPath content="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z" fill="white"/>
+                </graphic>
+            </Button>
+        </VBox>
+
+        <Button text="Fermer" onAction="#closeWindow" maxWidth="Infinity" style="-fx-background-color: white; -fx-text-fill: #475569; -fx-border-color: #CBD5E1; -fx-border-radius: 6; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10; -fx-cursor: hand;"/>
+    </VBox>
+
+</SplitPane>

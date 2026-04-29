@@ -8,6 +8,9 @@ import org.hibernate.service.ServiceRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.pharmacie.models.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 
 public class HibernateUtil {
     private static final Logger log = LoggerFactory.getLogger(HibernateUtil.class);
@@ -41,11 +44,35 @@ public class HibernateUtil {
                         .applySettings(configuration.getProperties()).build();
 
                 sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+                // Migration corrective : Hibernate "update" n'élargit pas les colonnes existantes.
+                // On force l'extension de la colonne motif à VARCHAR(255) si elle est encore trop courte.
+                appliquerMigrationsCorrectivese(configuration);
             } catch (Exception e) {
                 log.error("Erreur lors de la création de la SessionFactory: ", e);
                 throw new RuntimeException("Erreur critique d'initialisation Hibernate", e);
             }
         }
         return sessionFactory;
+    }
+
+    /**
+     * Migration corrective manuelle : Hibernate "hbm2ddl.auto=update" ne modifie
+     * pas la taille des colonnes existantes (uniquement les crée si absentes).
+     * Cette méthode élargit la colonne 'motif' à VARCHAR(255) si nécessaire.
+     */
+    private static void appliquerMigrationsCorrectivese(Configuration configuration) {
+        String url      = configuration.getProperty("connection.url");
+        String user     = configuration.getProperty("connection.username");
+        String password = configuration.getProperty("connection.password");
+        if (password == null) password = "";
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate(
+                "ALTER TABLE ajustements_stock MODIFY COLUMN motif VARCHAR(255) NOT NULL"
+            );
+            log.info("[Migration] Colonne 'motif' élargie à VARCHAR(255) avec succès.");
+        } catch (Exception e) {
+            log.warn("[Migration] Colonne 'motif' déjà correcte ou erreur ignorée : {}", e.getMessage());
+        }
     }
 }

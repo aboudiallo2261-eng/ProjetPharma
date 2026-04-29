@@ -49,11 +49,13 @@ C:\projetjavasout\src\main\java\com\pharmacie\utils\SyncService.java
 C:\projetjavasout\src\main\java\com\pharmacie\models\TicketEnAttente.java
 C:\projetjavasout\src\main\java\com\pharmacie\models\User.java
 C:\projetjavasout\src\main\java\com\pharmacie\controllers\ReportController.java
+C:\projetjavasout\src\main\java\com\pharmacie\utils\ExcelExportService.java
 C:\projetjavasout\src\main\java\com\pharmacie\dao\AchatDAO.java
 C:\projetjavasout\src\main\java\com\pharmacie\utils\HibernateUtil.java
 C:\projetjavasout\src\main\java\com\pharmacie\controllers\FournisseurController.java
 C:\projetjavasout\src\main\java\com\pharmacie\utils\DateUtils.java
 C:\projetjavasout\src\main\java\com\pharmacie\utils\PrinterService.java
+C:\projetjavasout\src\main\java\com\pharmacie\controllers\PdfPreviewController.java
 C:\projetjavasout\src\main\java\com\pharmacie\utils\SecuritySeeder.java
 C:\projetjavasout\src\main\java\com\pharmacie\utils\SessionManager.java
 C:\projetjavasout\src\main\java\com\pharmacie\models\Espece.java

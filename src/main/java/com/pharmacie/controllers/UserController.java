@@ -195,12 +195,17 @@ public class UserController {
         User selected = tableUsers.getSelectionModel().getSelectedItem();
         if (selected != null) {
             if (SessionManager.getCurrentUser().getId().equals(selected.getId())) {
-                showError("Vous ne pouvez pas supprimer votre propre compte.");
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Impossible de désactiver ou supprimer votre propre compte en cours d'utilisation.");
+                alert.getDialogPane().setMinHeight(javafx.scene.layout.Region.USE_PREF_SIZE);
+                alert.getDialogPane().setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
+                alert.showAndWait();
                 return;
             }
             boolean success = userDAO.delete(selected);
             if (!success) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Impossible de supprimer l'utilisateur car il a effectué des ventes ou opérations.");
+                alert.getDialogPane().setMinHeight(javafx.scene.layout.Region.USE_PREF_SIZE);
+                alert.getDialogPane().setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
                 alert.showAndWait();
             } else {
                 com.pharmacie.utils.ToastService.showSuccess(tableUsers.getScene().getWindow(), "Utilisateur Supprimé", "L'agent a été révoqué et supprimé.");
