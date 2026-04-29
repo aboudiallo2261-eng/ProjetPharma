@@ -67,7 +67,7 @@
                                     <VBox alignment="CENTER" spacing="10"><Region styleClass="icon, icon-search, icon-dark" style="-fx-min-width:32px; -fx-min-height:32px;"/><Label text="Aucun produit trouvé ou disponible" style="-fx-text-fill: #94A3B8; -fx-font-style: italic; -fx-font-size: 14px;" /></VBox>
                                 </placeholder>
                                 <columns>
-                                    <TableColumn fx:id="colStkNom" text="Produit" prefWidth="200" />
+                                    <TableColumn fx:id="colStkNom" text="Produit" prefWidth="250" />
                                     <TableColumn fx:id="colStkPrix" text="Prix (Boîte)" prefWidth="90" />
                                     <TableColumn fx:id="colStkPrixDetail" text="Prix (Détail)" prefWidth="80" />
                                     <TableColumn fx:id="colStkQte" text="Stock" prefWidth="90" minWidth="70" />

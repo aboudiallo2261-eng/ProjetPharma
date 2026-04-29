@@ -866,35 +866,52 @@ public class VenteController {
     public void ouvrirCaisse() {
         Dialog<Double> dialog = new Dialog<>();
         dialog.setTitle("Ouverture de Caisse");
-        dialog.setHeaderText("💰 Déclaration du Fond de Caisse");
+        dialog.getDialogPane().setStyle("-fx-background-color: #F8FAFC;");
 
         ButtonType btnValider = new ButtonType("Ouvrir la Caisse", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(btnValider, ButtonType.CANCEL);
 
-        javafx.scene.layout.GridPane grid = new javafx.scene.layout.GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new javafx.geometry.Insets(20, 40, 10, 10));
-
-        TextField txtFond = new TextField();
-        txtFond.setPromptText("Ex: 5000");
-        txtFond.setPrefWidth(200);
-        txtFond.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-
-        // Force numeric input
-        txtFond.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal.matches("\\d*")) {
-                txtFond.setText(newVal.replaceAll("[^\\d]", ""));
+        Platform.runLater(() -> {
+            javafx.scene.Node vBtn = dialog.getDialogPane().lookupButton(btnValider);
+            if (vBtn != null) {
+                vBtn.setStyle("-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 7 25; -fx-background-radius: 6;");
+                vBtn.setCursor(javafx.scene.Cursor.HAND);
             }
+            javafx.scene.Node cancelBtn = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+            if (cancelBtn != null) cancelBtn.setCursor(javafx.scene.Cursor.HAND);
         });
 
+        javafx.scene.layout.VBox vbox = new javafx.scene.layout.VBox(14);
+        vbox.setPadding(new javafx.geometry.Insets(24, 28, 16, 28));
+        vbox.setMinWidth(420);
+
+        Label lblTitle = new Label("Déclaration du Fond de Caisse");
+        lblTitle.setStyle("-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #0F172A;");
+
+        javafx.scene.control.Separator sep = new javafx.scene.control.Separator();
+
+        javafx.scene.layout.VBox infoBox = new javafx.scene.layout.VBox(4);
+        infoBox.setStyle("-fx-background-color: #F0FDF4; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #10B981; -fx-border-width: 1; -fx-border-radius: 8;");
+        Label lblAgent = new Label("Agent : " + (SessionManager.getCurrentUser() != null ? SessionManager.getCurrentUser().getNom() : "—"));
+        lblAgent.setStyle("-fx-font-size: 13px; -fx-text-fill: #059669; -fx-font-weight: bold;");
+        Label lblHint = new Label("Comptez les billets du tiroir puis saisissez le montant total.");
+        lblHint.setStyle("-fx-font-size: 11px; -fx-text-fill: #64748B; -fx-font-style: italic;");
+        infoBox.getChildren().addAll(lblAgent, lblHint);
+
         Label lblInst = new Label("Montant physique dans le tiroir (FCFA) :");
-        lblInst.setStyle("-fx-font-size: 14px;");
+        lblInst.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #334155;");
 
-        grid.add(lblInst, 0, 0);
-        grid.add(txtFond, 0, 1);
+        TextField txtFond = new TextField();
+        txtFond.setPromptText("Ex: 5 000");
+        txtFond.setPrefWidth(360);
+        txtFond.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-padding: 10 14; -fx-background-radius: 6;");
+        txtFond.setTextFormatter(new javafx.scene.control.TextFormatter<>(change -> {
+            String txt = change.getText();
+            return (txt.isEmpty() || txt.matches("[0-9]+")) ? change : null;
+        }));
 
-        dialog.getDialogPane().setContent(grid);
+        vbox.getChildren().addAll(lblTitle, sep, infoBox, lblInst, txtFond);
+        dialog.getDialogPane().setContent(vbox);
         Platform.runLater(() -> txtFond.requestFocus());
 
         dialog.setResultConverter(dialogButton -> {
@@ -915,7 +932,6 @@ public class VenteController {
             session.setFondDeCaisse(fond);
             session.setStatut(SessionCaisse.StatutSession.OUVERTE);
             sessionDAO.save(session);
-
             checkSessionStatus();
             logger.info("Caisse ouverte avec un fond de {}", fond);
         });
@@ -978,15 +994,18 @@ public class VenteController {
 
         Dialog<ClotureResult> dialog = new Dialog<>();
         dialog.setTitle("Clôture de Caisse (Z)");
-        // Point 8 : Header premium via DialogPane
-        dialog.getDialogPane().setStyle("-fx-background-color: white;");
+        dialog.getDialogPane().setStyle("-fx-background-color: #F8FAFC;");
 
         ButtonType btnValider = new ButtonType("Clôturer", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(btnValider, ButtonType.CANCEL);
-        // Couleur rouge danger pour le bouton de clôture
         Platform.runLater(() -> {
             javafx.scene.Node vBtn = dialog.getDialogPane().lookupButton(btnValider);
-            if (vBtn != null) vBtn.setStyle("-fx-background-color: #E74C3C; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 7 25; -fx-min-width: 120px;");
+            if (vBtn != null) {
+                vBtn.setStyle("-fx-background-color: #EF4444; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 7 25; -fx-min-width: 120px; -fx-background-radius: 6;");
+                vBtn.setCursor(javafx.scene.Cursor.HAND);
+            }
+            javafx.scene.Node cancelBtn = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+            if (cancelBtn != null) cancelBtn.setCursor(javafx.scene.Cursor.HAND);
         });
 
         javafx.scene.layout.VBox vbox = new javafx.scene.layout.VBox(16);
@@ -1011,43 +1030,39 @@ public class VenteController {
                 .filter(v -> v.getModePaiement() == Vente.ModePaiement.MIXTE)
                 .mapToDouble(v -> v.getMontantMobile() != null ? v.getMontantMobile() : 0.0).sum();
 
-        // SECTION ESPECES (fond orange)
-        javafx.scene.layout.VBox sectionEsp = new javafx.scene.layout.VBox(5);
-        sectionEsp.setStyle("-fx-background-color: #FFF9F0; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #e67e22; -fx-border-width: 1.5; -fx-border-radius: 8;");
-        Label espTitle = new Label("Tiroir Caisse - Especes");
-        espTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #e67e22;");
-        Label espFond = new Label(String.format("  Fond de caisse initial :     %,.0f FCFA", currentSession.getFondDeCaisse()));
-        Label espPures = new Label(String.format("  Ventes especes (pures) :    %,.0f FCFA", ventesPuresEsp));
-        Label espMixtes = new Label(String.format("  Part especes (%d mixtes) :  %,.0f FCFA", nbMixtes, totalMixtesEsp));
-        espMixtes.setStyle("-fx-text-fill: #d35400;");
-        Label espAttendu = new Label(String.format("  ATTENDU DANS LE TIROIR :   %,.0f FCFA", theorieEspeces));
-        espAttendu.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #2980b9;");
-        sectionEsp.getChildren().addAll(espTitle, espFond, espPures, espMixtes, new javafx.scene.control.Separator(), espAttendu);
+        // SECTION ESPECES
+        javafx.scene.layout.VBox sectionEsp = new javafx.scene.layout.VBox(6);
+        sectionEsp.setStyle("-fx-background-color: #FFFBEB; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #F59E0B; -fx-border-width: 1.5; -fx-border-radius: 8;");
+        Label espTitle = new Label("Tiroir Caisse \u2014 Esp\u00e8ces");
+        espTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #B45309;");
+        javafx.scene.layout.HBox rowFond = buildRow("Fond de caisse initial :", String.format("%,.0f FCFA", currentSession.getFondDeCaisse()), "#334155", false);
+        javafx.scene.layout.HBox rowEspPures = buildRow("Ventes esp\u00e8ces (pures) :", String.format("%,.0f FCFA", ventesPuresEsp), "#334155", false);
+        javafx.scene.layout.HBox rowEspMixtes = buildRow(String.format("Part esp\u00e8ces (%d mixtes) :", nbMixtes), String.format("%,.0f FCFA", totalMixtesEsp), "#64748B", false);
+        javafx.scene.layout.HBox rowEspAttendu = buildRow("ATTENDU DANS LE TIROIR :", String.format("%,.0f FCFA", theorieEspeces), "#3B82F6", true);
+        sectionEsp.getChildren().addAll(espTitle, rowFond, rowEspPures, rowEspMixtes, new javafx.scene.control.Separator(), rowEspAttendu);
 
-        // SECTION MOBILE (fond violet)
-        javafx.scene.layout.VBox sectionMob = new javafx.scene.layout.VBox(5);
-        sectionMob.setStyle("-fx-background-color: #F5F0FB; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #8e44ad; -fx-border-width: 1.5; -fx-border-radius: 8;");
-        Label mobTitle = new Label("Mobile Money - Digital");
-        mobTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #8e44ad;");
-        Label mobPures = new Label(String.format("  Ventes mobile (pures) :   %,.0f FCFA", ventesPuresMob));
-        Label mobMixtes = new Label(String.format("  Part mobile (%d mixtes) : %,.0f FCFA", nbMixtes, totalMixtesMob));
-        mobMixtes.setStyle("-fx-text-fill: #7d3c98;");
-        Label mobAttendu = new Label(String.format("  TOTAL MOBILE ENCAISSE :   %,.0f FCFA", totalMobile));
-        mobAttendu.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #8e44ad;");
-        Label mobAuto = new Label("  (Automatiquement valide - aucune saisie requise)");
-        mobAuto.setStyle("-fx-text-fill: #95a5a6; -fx-font-style: italic; -fx-font-size: 11px;");
-        sectionMob.getChildren().addAll(mobTitle, mobPures, mobMixtes, new javafx.scene.control.Separator(), mobAttendu, mobAuto);
+        // SECTION MOBILE
+        javafx.scene.layout.VBox sectionMob = new javafx.scene.layout.VBox(6);
+        sectionMob.setStyle("-fx-background-color: #EFF6FF; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #3B82F6; -fx-border-width: 1.5; -fx-border-radius: 8;");
+        Label mobTitle = new Label("Mobile Money \u2014 Digital");
+        mobTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #1D4ED8;");
+        javafx.scene.layout.HBox rowMobPures = buildRow("Ventes mobile (pures) :", String.format("%,.0f FCFA", ventesPuresMob), "#334155", false);
+        javafx.scene.layout.HBox rowMobMixtes = buildRow(String.format("Part mobile (%d mixtes) :", nbMixtes), String.format("%,.0f FCFA", totalMixtesMob), "#64748B", false);
+        javafx.scene.layout.HBox rowMobTotal = buildRow("TOTAL MOBILE ENCAISS\u00c9 :", String.format("%,.0f FCFA", totalMobile), "#1D4ED8", true);
+        Label mobAuto = new Label("Automatiquement valid\u00e9 \u2014 aucune saisie requise");
+        mobAuto.setStyle("-fx-text-fill: #64748B; -fx-font-style: italic; -fx-font-size: 11px;");
+        sectionMob.getChildren().addAll(mobTitle, rowMobPures, rowMobMixtes, new javafx.scene.control.Separator(), rowMobTotal, mobAuto);
 
         // SECTION INPUT COMPTAGE PHYSIQUE
         javafx.scene.layout.VBox sectionInput = new javafx.scene.layout.VBox(8);
-        sectionInput.setStyle("-fx-background-color: #F0F8FF; -fx-padding: 14; -fx-background-radius: 8; -fx-border-color: #2980b9; -fx-border-width: 1.5; -fx-border-radius: 8;");
+        sectionInput.setStyle("-fx-background-color: #F0F9FF; -fx-padding: 14; -fx-background-radius: 8; -fx-border-color: #3B82F6; -fx-border-width: 1.5; -fx-border-radius: 8;");
         Label inputTitle = new Label("Saisie du Comptage Physique");
-        inputTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #2980b9;");
-        Label inputHint = new Label("Comptez les billets et pieces du tiroir, puis entrez le total :");
-        inputHint.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 11px;");
+        inputTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #1D4ED8;");
+        Label inputHint = new Label("Comptez les billets et pi\u00e8ces du tiroir, puis entrez le total :");
+        inputHint.setStyle("-fx-text-fill: #64748B; -fx-font-size: 11px;");
         TextField txtDeclareEspeces = new TextField();
-        txtDeclareEspeces.setPromptText("Ex: 125000");
-        txtDeclareEspeces.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2C3E50; -fx-padding: 8 12; -fx-background-radius: 5;");
+        txtDeclareEspeces.setPromptText("Ex: 125 000");
+        txtDeclareEspeces.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-padding: 8 12; -fx-background-radius: 6;");
         
         Label lblDynamicEcart = new Label("");
         lblDynamicEcart.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
@@ -1066,7 +1081,7 @@ public class VenteController {
                     double declare = Double.parseDouble(newV);
                     double ecart = declare - theorieEspeces;
                     String signe = ecart >= 0 ? "+" : "";
-                    String color = ecart == 0 ? "#27ae60" : (ecart > 0 ? "#2980b9" : "#c0392b");
+                    String color = ecart == 0 ? "#10B981" : (ecart > 0 ? "#3B82F6" : "#EF4444");
                     lblDynamicEcart.setText(String.format("Écart : %s%,.0f FCFA", signe, ecart));
                     lblDynamicEcart.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: " + color + ";");
                 } catch (Exception e) {
@@ -1115,50 +1130,55 @@ public class VenteController {
 
             sessionDAO.update(currentSession);
 
-            // Point 8 : BILAN PREMIUM post-cloture
+            // BILAN PREMIUM post-cloture
             Dialog<ButtonType> bilanDialog = new Dialog<>();
-            bilanDialog.setTitle("Bilan de Cloture - Journal Z");
+            bilanDialog.setTitle("Bilan de Clôture — Journal Z");
+            bilanDialog.getDialogPane().setStyle("-fx-background-color: #F8FAFC;");
             javafx.scene.layout.VBox bilanContent = new javafx.scene.layout.VBox(14);
-            bilanContent.setPadding(new javafx.geometry.Insets(20));
-            bilanContent.setMinWidth(440);
+            bilanContent.setPadding(new javafx.geometry.Insets(24, 28, 16, 28));
+            bilanContent.setMinWidth(460);
 
-            Label bilanHdr = new Label("Caisse Fermee avec Succes");
-            bilanHdr.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #27ae60;");
+            javafx.scene.layout.HBox hdrBox = new javafx.scene.layout.HBox(10);
+            hdrBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+            Label bilanHdr = new Label("Caisse Fermée avec Succès");
+            bilanHdr.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #059669;");
+            hdrBox.getChildren().add(bilanHdr);
+
+            javafx.scene.control.Separator bilanSep = new javafx.scene.control.Separator();
 
             // BILAN ESPECES
-            javafx.scene.layout.VBox bilanEsp = new javafx.scene.layout.VBox(5);
-            bilanEsp.setStyle("-fx-background-color: #FFF9F0; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #e67e22; -fx-border-width: 1.5; -fx-border-radius: 8;");
-            Label bilanEspTitle = new Label("Tiroir Caisse - Bilan Especes");
-            bilanEspTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: #e67e22;");
-            Label bilanAtt = new Label(String.format("  Theorique attendu :  %,.0f FCFA", theorieEspeces));
-            Label bilanDec = new Label(String.format("  Compte reellement :  %,.0f FCFA", result.especes));
-            bilanDec.setStyle("-fx-font-weight: bold;");
+            javafx.scene.layout.VBox bilanEsp = new javafx.scene.layout.VBox(6);
+            bilanEsp.setStyle("-fx-background-color: #FFFBEB; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #F59E0B; -fx-border-width: 1.5; -fx-border-radius: 8;");
+            Label bilanEspTitle = new Label("Tiroir Caisse — Bilan Espèces");
+            bilanEspTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: #B45309;");
+            javafx.scene.layout.HBox bRowAtt = buildRow("Théorique attendu :", String.format("%,.0f FCFA", theorieEspeces), "#334155", false);
+            javafx.scene.layout.HBox bRowDec = buildRow("Compté réellement :", String.format("%,.0f FCFA", result.especes), "#0F172A", true);
             double ecartEsp = result.especes - theorieEspeces;
-            Label bilanEcart = new Label(String.format("  Ecart :              %s%,.0f FCFA", ecartEsp >= 0 ? "+" : "", ecartEsp));
-            bilanEcart.setStyle("-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: "
-                    + (ecartEsp < -0.5 ? "#c0392b" : ecartEsp > 0.5 ? "#27ae60" : "#7f8c8d") + ";");
-            bilanEsp.getChildren().addAll(bilanEspTitle, bilanAtt, bilanDec, new javafx.scene.control.Separator(), bilanEcart);
+            String ecartEspColor = ecartEsp < -0.5 ? "#EF4444" : ecartEsp > 0.5 ? "#10B981" : "#64748B";
+            javafx.scene.layout.HBox bRowEcart = buildRow(String.format("Écart : %s", ecartEsp >= 0 ? "+" : ""), String.format("%,.0f FCFA", ecartEsp), ecartEspColor, true);
+            bilanEsp.getChildren().addAll(bilanEspTitle, bRowAtt, bRowDec, new javafx.scene.control.Separator(), bRowEcart);
 
             // BILAN MOBILE
-            javafx.scene.layout.VBox bilanMob = new javafx.scene.layout.VBox(5);
-            bilanMob.setStyle("-fx-background-color: #F5F0FB; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #8e44ad; -fx-border-width: 1.5; -fx-border-radius: 8;");
-            Label bilanMobTitle = new Label("Mobile Money - Bilan Digital");
-            bilanMobTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: #8e44ad;");
-            Label bilanMobAmt = new Label(String.format("  Total encaisse numeriquement :  %,.0f FCFA", totalMobile));
-            bilanMobAmt.setStyle("-fx-font-weight: bold;");
-            Label bilanMobOk = new Label("  Ecart : 0 FCFA  (Tracabilite digitale garantie)");
-            bilanMobOk.setStyle("-fx-text-fill: #27ae60; -fx-font-style: italic;");
-            bilanMob.getChildren().addAll(bilanMobTitle, bilanMobAmt, bilanMobOk);
+            javafx.scene.layout.VBox bilanMob = new javafx.scene.layout.VBox(6);
+            bilanMob.setStyle("-fx-background-color: #EFF6FF; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #3B82F6; -fx-border-width: 1.5; -fx-border-radius: 8;");
+            Label bilanMobTitle = new Label("Mobile Money — Bilan Digital");
+            bilanMobTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: #1D4ED8;");
+            javafx.scene.layout.HBox bRowMobAmt = buildRow("Total encaissé numériquement :", String.format("%,.0f FCFA", totalMobile), "#0F172A", true);
+            javafx.scene.layout.HBox bRowMobOk = buildRow("Écart :", "0 FCFA — Traçabilité digitale garantie", "#10B981", false);
+            bilanMob.getChildren().addAll(bilanMobTitle, bRowMobAmt, bRowMobOk);
 
-            Label bilanFooter = new Label("Journal Z archive dans Rapports > Historique des Clotures.");
-            bilanFooter.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 11px; -fx-font-style: italic;");
+            Label bilanFooter = new Label("Journal Z archivé dans Rapports > Historique des Clôtures.");
+            bilanFooter.setStyle("-fx-text-fill: #64748B; -fx-font-size: 11px; -fx-font-style: italic;");
 
-            bilanContent.getChildren().addAll(bilanHdr, bilanEsp, bilanMob, bilanFooter);
+            bilanContent.getChildren().addAll(hdrBox, bilanSep, bilanEsp, bilanMob, bilanFooter);
             bilanDialog.getDialogPane().setContent(bilanContent);
             bilanDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
             Platform.runLater(() -> {
                 javafx.scene.Node okBtn = bilanDialog.getDialogPane().lookupButton(ButtonType.OK);
-                if (okBtn != null) okBtn.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 22;");
+                if (okBtn != null) {
+                    okBtn.setStyle("-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 22; -fx-background-radius: 6;");
+                    okBtn.setCursor(javafx.scene.Cursor.HAND);
+                }
             });
             bilanDialog.showAndWait();
 
@@ -1168,6 +1188,23 @@ public class VenteController {
 
             checkSessionStatus();
         });
+    }
+
+    /**
+     * Construit une ligne HBox avec label à gauche et valeur alignée à droite.
+     * Respect du principe Dés IAtisation : montants toujours alignés à droite.
+     */
+    private javafx.scene.layout.HBox buildRow(String label, String value, String valueColor, boolean bold) {
+        javafx.scene.layout.HBox row = new javafx.scene.layout.HBox();
+        row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        Label lblText = new Label(label);
+        lblText.setStyle("-fx-font-size: 12px; -fx-text-fill: #334155;" + (bold ? " -fx-font-weight: bold;" : ""));
+        javafx.scene.layout.Region spacer = new javafx.scene.layout.Region();
+        javafx.scene.layout.HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+        Label lblValue = new Label(value);
+        lblValue.setStyle("-fx-font-size: 12px; -fx-text-fill: " + valueColor + ";" + (bold ? " -fx-font-weight: bold;" : ""));
+        row.getChildren().addAll(lblText, spacer, lblValue);
+        return row;
     }
 
     private void initStockColumns() {
@@ -1186,8 +1223,6 @@ public class VenteController {
                 return new javafx.beans.property.SimpleStringProperty(qteTotal + " Unité(s)");
             }
         });
-
-        tableStock.setColumnResizePolicy(javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY);
 
         tableStock.setRowFactory(tv -> new TableRow<Produit>() {
             @Override

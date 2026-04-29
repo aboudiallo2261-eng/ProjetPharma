@@ -2407,3 +2407,109 @@ Caused by: java.lang.ClassNotFoundException: com.pharmacie.controllers.AchatCont
 2026-04-29 11:44:04.084 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion réussie: Administrateur
 2026-04-29 11:44:24.939 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Caisse ouverte avec un fond de 32.0
 2026-04-29 11:45:40.904 [JavaFX Application Thread] INFO  com.pharmacie.utils.PdfService - Récap ventes sauvegardé : C:\Users\TALL SIDI\AppData\Roaming\Microsoft\Windows\Network Shortcuts\RecapVentes_2026-04-29_au_2026-04-29.pdf
+2026-04-29 11:47:40.358 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Clôture Z : Espèces attendues=32 FCFA | Mobile attendu=0 FCFA | Écart caisse=12313 FCFA
+2026-04-29 11:47:45.734 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Caisse ouverte avec un fond de 1234.0
+2026-04-29 11:49:05.632 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 11:49:05.634 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 11:49:05.635 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 11:50:17.838 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-04-29 11:50:22.437 [JavaFX Application Thread] INFO  com.pharmacie.utils.HibernateUtil - [Migration] Colonne 'motif' élargie à VARCHAR(255) avec succès.
+2026-04-29 11:50:28.275 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 11:50:28.275 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 11:50:28.277 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 11:50:32.502 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion réussie: Administrateur
+2026-04-29 11:54:05.318 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 11:54:05.320 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 11:54:05.321 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 11:55:28.261 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 11:55:28.261 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 11:55:28.261 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 11:59:05.315 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 11:59:05.317 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 11:59:05.317 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:00:29.589 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:00:29.589 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:00:29.590 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:04:05.436 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:04:05.437 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:04:05.438 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:05:28.266 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:05:28.268 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:05:28.268 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:08:54.224 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:08:54.224 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:08:54.224 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:10:30.138 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:10:30.138 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:10:30.138 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:13:54.402 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:13:54.403 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:13:54.403 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:15:28.267 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:15:28.267 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:15:28.267 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:18:54.267 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:18:54.268 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:18:54.269 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:20:28.267 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:20:28.268 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:20:28.268 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:20:37.380 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 113) validée et enregistrée via VenteService !
+2026-04-29 12:24:05.315 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:24:05.317 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:24:05.317 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:25:28.438 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:25:28.439 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:25:28.440 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:25:36.488 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 114) validée et enregistrée via VenteService !
+2026-04-29 12:28:54.275 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:28:54.277 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:28:54.277 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:30:28.233 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:30:28.233 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:30:28.233 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:33:20.513 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Clôture Z : Espèces attendues=9034 FCFA | Mobile attendu=15000 FCFA | Écart caisse=3311 FCFA
+2026-04-29 12:33:21.775 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-04-29 12:33:21.775 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-29 12:33:38.687 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-04-29 12:33:43.280 [JavaFX Application Thread] INFO  com.pharmacie.utils.HibernateUtil - [Migration] Colonne 'motif' élargie à VARCHAR(255) avec succès.
+2026-04-29 12:33:54.251 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:33:54.251 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:33:54.251 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:33:55.584 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-04-29 12:34:00.224 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:34:00.225 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:34:00.225 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:34:48.991 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Caisse ouverte avec un fond de 12334.0
+2026-04-29 12:35:13.407 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 115) validée et enregistrée via VenteService !
+2026-04-29 12:37:47.353 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Clôture Z : Espèces attendues=12334 FCFA | Mobile attendu=1000 FCFA | Écart caisse=23444553 FCFA
+2026-04-29 12:38:15.577 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Caisse ouverte avec un fond de 1234.0
+2026-04-29 12:39:00.184 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:39:00.185 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:39:00.186 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:39:00.215 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:39:00.215 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:39:00.215 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:39:08.500 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Clôture Z : Espèces attendues=1234 FCFA | Mobile attendu=0 FCFA | Écart caisse=3087 FCFA
+2026-04-29 12:39:10.205 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-04-29 12:39:10.206 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-04-29 12:39:39.305 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-04-29 12:39:47.576 [JavaFX Application Thread] INFO  com.pharmacie.utils.HibernateUtil - [Migration] Colonne 'motif' élargie à VARCHAR(255) avec succès.
+2026-04-29 12:39:49.772 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:39:49.773 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:39:49.777 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:39:59.496 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion réussie: Administrateur
+2026-04-29 12:40:26.660 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Caisse ouverte avec un fond de 1234.0
+2026-04-29 12:43:54.280 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:43:54.281 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:43:54.281 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:44:49.793 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:44:49.793 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:44:49.793 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:46:09.631 [JavaFX Application Thread] INFO  com.pharmacie.utils.PdfService - Bon de commande premium généré en temp : C:\Users\TALLSI~1\AppData\Local\Temp\BonCommande_56648.pdf
+2026-04-29 12:48:54.271 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation...
+2026-04-29 12:48:54.272 [Timer-0] INFO  com.pharmacie.utils.SyncService - Envoi sécurisé des données vers le Cloud : https://api.pharmacie-veterinaire-cloud.com/sync
+2026-04-29 12:48:54.273 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchronisation vers le Cloud réussie avec succès !
+2026-04-29 12:49:46.519 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Clôture Z : Espèces attendues=1234 FCFA | Mobile attendu=0 FCFA | Écart caisse=122222 FCFA
+2026-04-29 12:49:48.234 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-04-29 12:49:48.234 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
