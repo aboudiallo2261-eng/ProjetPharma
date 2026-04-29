@@ -130,7 +130,7 @@ public class VenteController {
     @FXML
     private TableView<Vente> tableHistoriqueVentes;
     @FXML
-    private TableColumn<Vente, Long> colHistVenteId;
+    private TableColumn<Vente, String> colHistVenteId;
     @FXML
     private TableColumn<Vente, String> colHistVenteDate;
     @FXML
@@ -1676,7 +1676,7 @@ public class VenteController {
 
     private void initHistoriqueColumns() {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        colHistVenteId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colHistVenteId.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getNumeroTicketOfficiel()));
         colHistVenteDate.setCellValueFactory(cell -> new SimpleStringProperty(
                 cell.getValue().getDateVente() != null ? cell.getValue().getDateVente().format(fmt) : ""));
         colHistVenteAgent.setCellValueFactory(cell -> new SimpleStringProperty(
@@ -1963,8 +1963,12 @@ public class VenteController {
         LocalDate f = dpHistoFin.getValue();
         Long ticketId = null;
         if (txtFiltreVenteTicketId != null && !txtFiltreVenteTicketId.getText().trim().isEmpty()) {
+            String inputText = txtFiltreVenteTicketId.getText().trim();
+            if (inputText.contains("-")) {
+                inputText = inputText.substring(inputText.lastIndexOf("-") + 1);
+            }
             try {
-                ticketId = Long.parseLong(txtFiltreVenteTicketId.getText().trim());
+                ticketId = Long.parseLong(inputText);
             } catch (NumberFormatException e) {
                 // Ignore and don't filter if it's not a valid number
             }
@@ -1978,6 +1982,17 @@ public class VenteController {
 
         // Recherche optimisée directement sur le Serveur de Base de données
         List<Vente> filtered = venteDAO.findVentesByPeriode(debut, fin, ticketId, agentFiltre, modeFiltre);
+
+        // Filtrage post-recherche strict (Smart Search : anti-fraude)
+        if (txtFiltreVenteTicketId != null && !txtFiltreVenteTicketId.getText().trim().isEmpty()) {
+            String inputText = txtFiltreVenteTicketId.getText().trim();
+            // Si l'utilisateur a tapé une référence complexe (avec tirets), on exige une correspondance exacte
+            if (inputText.contains("-")) {
+                filtered = filtered.stream()
+                        .filter(v -> v.getNumeroTicketOfficiel().equalsIgnoreCase(inputText))
+                        .collect(java.util.stream.Collectors.toList());
+            }
+        }
 
         tableHistoriqueVentes.setItems(FXCollections.observableArrayList(filtered));
         mettreAJourTotalFiltre(filtered);
@@ -2002,6 +2017,23 @@ public class VenteController {
         if (dpHistoFin.getValue() != null)
             periode += "_au_" + dpHistoFin.getValue().toString();
         com.pharmacie.utils.PdfService.genererRecapitulatifVentes(new java.util.ArrayList<>(ventes), periode, stage);
+    }
+
+    @FXML
+    public void exporterHistoriqueExcel() {
+        List<Vente> ventes = tableHistoriqueVentes.getItems();
+        if (ventes == null || ventes.isEmpty()) {
+            showError("Aucune vente à exporter.");
+            return;
+        }
+        Stage stage = (Stage) tableHistoriqueVentes.getScene().getWindow();
+        String periode = "";
+        if (dpHistoDebut.getValue() != null)
+            periode += dpHistoDebut.getValue().toString();
+        if (dpHistoFin.getValue() != null)
+            periode += "_au_" + dpHistoFin.getValue().toString();
+            
+        com.pharmacie.utils.ExcelExportService.genererHistoriqueVentesExcel(new java.util.ArrayList<>(ventes), periode, stage);
     }
 
     @FXML

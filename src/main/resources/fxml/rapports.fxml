@@ -95,21 +95,21 @@
                         </Button>
                     </HBox>
 
-                    <!-- Journal détaillé des ventes - CONSTRAINED via ReportController -->
+                    <!-- Journal détaillé des ventes -->
                     <TableView fx:id="tableLignesVente" VBox.vgrow="ALWAYS" styleClass="table-view">
                         <placeholder>
                             <Label text="📄 Aucune vente ne correspond à vos critères de filtre." styleClass="table-placeholder-label"/>
                         </placeholder>
                         <columns>
-                            <TableColumn fx:id="colLvDate" text="Date Vente" prefWidth="130"/>
-                            <TableColumn fx:id="colLvTicket" text="Ticket N°" prefWidth="80"/>
-                            <TableColumn fx:id="colLvAgent" text="Caissier" prefWidth="110"/>
-                            <TableColumn fx:id="colLvProduit" text="Produit" prefWidth="180"/>
-                            <TableColumn fx:id="colLvCat" text="Catégorie" prefWidth="110"/>
-                            <TableColumn fx:id="colLvEsp" text="Espèce" prefWidth="90"/>
-                            <TableColumn fx:id="colLvQte" text="Qté" prefWidth="60" style="-fx-alignment: CENTER;"/>
-                            <TableColumn fx:id="colLvPrix" text="Prix U." prefWidth="110" style="-fx-alignment: CENTER-RIGHT; -fx-padding: 0 10 0 0;"/>
-                            <TableColumn fx:id="colLvTotal" text="Total" prefWidth="130" style="-fx-alignment: CENTER-RIGHT; -fx-padding: 0 10 0 0;"/>
+                            <TableColumn fx:id="colLvDate" text="Date Vente" prefWidth="160" minWidth="150"/>
+                            <TableColumn fx:id="colLvTicket" text="Ticket N°" prefWidth="180" minWidth="160"/>
+                            <TableColumn fx:id="colLvAgent" text="Caissier" prefWidth="150" minWidth="130"/>
+                            <TableColumn fx:id="colLvProduit" text="Produit" prefWidth="250" minWidth="200"/>
+                            <TableColumn fx:id="colLvCat" text="Catégorie" prefWidth="120" minWidth="100"/>
+                            <TableColumn fx:id="colLvEsp" text="Espèce" prefWidth="100" minWidth="90"/>
+                            <TableColumn fx:id="colLvQte" text="Qté" prefWidth="80" minWidth="60" style="-fx-alignment: CENTER;"/>
+                            <TableColumn fx:id="colLvPrix" text="Prix U." prefWidth="150" minWidth="120" style="-fx-alignment: CENTER-RIGHT; -fx-padding: 0 10 0 0;"/>
+                            <TableColumn fx:id="colLvTotal" text="Total" prefWidth="150" minWidth="120" style="-fx-alignment: CENTER-RIGHT; -fx-padding: 0 10 0 0;"/>
                         </columns>
                     </TableView>
                 </VBox>
@@ -186,18 +186,18 @@
                         </Button>
                     </HBox>
 
-                    <!-- Tableau Audit - CONSTRAINED via ReportController -->
+                    <!-- Tableau Audit - Scrollable via minWidth -->
                     <TableView fx:id="tableAudit" VBox.vgrow="ALWAYS" styleClass="table-view">
                         <placeholder>
                             <Label text="📕 Aucun mouvement de stock pour cette période." styleClass="table-placeholder-label"/>
                         </placeholder>
                         <columns>
-                            <TableColumn fx:id="colAuditDate" text="Date &amp; Heure" prefWidth="150"/>
-                            <TableColumn fx:id="colAuditType" text="Type Mouvement" prefWidth="140"/>
-                            <TableColumn fx:id="colAuditRapport" text="Produit &amp; Lot" prefWidth="170"/>
-                            <TableColumn fx:id="colAuditQte" text="Quantité" prefWidth="150" style="-fx-alignment: CENTER;"/>
-                            <TableColumn fx:id="colAuditRef" text="Référence" prefWidth="150"/>
-                            <TableColumn fx:id="colAuditUser" text="Agent" prefWidth="110"/>
+                            <TableColumn fx:id="colAuditDate" text="Date &amp; Heure" prefWidth="150" minWidth="130"/>
+                            <TableColumn fx:id="colAuditType" text="Type Mouvement" prefWidth="140" minWidth="120"/>
+                            <TableColumn fx:id="colAuditRapport" text="Produit &amp; Lot" prefWidth="200" minWidth="160"/>
+                            <TableColumn fx:id="colAuditQte" text="Quantité" prefWidth="160" minWidth="140" style="-fx-alignment: CENTER;"/>
+                            <TableColumn fx:id="colAuditRef" text="Référence" prefWidth="210" minWidth="180"/>
+                            <TableColumn fx:id="colAuditUser" text="Agent" prefWidth="120" minWidth="100"/>
                         </columns>
                     </TableView>
                 </VBox>
@@ -286,13 +286,13 @@
                             <Label text="⚙️ Aucun ajustement ou perte enregistré(e) pour cette période." styleClass="table-placeholder-label"/>
                         </placeholder>
                         <columns>
-                            <TableColumn fx:id="colAdjDate" text="Date" prefWidth="130"/>
-                            <TableColumn fx:id="colAdjProduit" text="Produit" prefWidth="160"/>
-                            <TableColumn fx:id="colAdjLot" text="N° Lot" prefWidth="100"/>
-                            <TableColumn fx:id="colAdjUser" text="Agent" prefWidth="110"/>
-                            <TableColumn fx:id="colAdjMotif" text="Motif" prefWidth="130"/>
-                            <TableColumn fx:id="colAdjQte" text="Qté" prefWidth="65" style="-fx-alignment: CENTER;"/>
-                            <TableColumn fx:id="colAdjObs" text="Observation" prefWidth="220"/>
+                            <TableColumn fx:id="colAdjDate" text="Date" prefWidth="140" minWidth="130"/>
+                            <TableColumn fx:id="colAdjProduit" text="Produit" prefWidth="180" minWidth="160"/>
+                            <TableColumn fx:id="colAdjLot" text="N° Lot" prefWidth="120" minWidth="100"/>
+                            <TableColumn fx:id="colAdjUser" text="Agent" prefWidth="130" minWidth="110"/>
+                            <TableColumn fx:id="colAdjMotif" text="Motif" prefWidth="210" minWidth="180"/>
+                            <TableColumn fx:id="colAdjQte" text="Qté" prefWidth="80" minWidth="65" style="-fx-alignment: CENTER;"/>
+                            <TableColumn fx:id="colAdjObs" text="Observation" prefWidth="250" minWidth="220"/>
                         </columns>
                     </TableView>
                 </VBox>
@@ -373,19 +373,19 @@
                         </Button>
                     </HBox>
 
-                    <!-- Tableau Clôtures - CONSTRAINED via ReportController -->
+                    <!-- Tableau Clôtures - Scrollable via minWidth -->
                     <TableView fx:id="tableClotures" VBox.vgrow="ALWAYS" styleClass="table-view">
                         <placeholder>
                             <Label text="🔐 Aucune session de caisse pour cette période." styleClass="table-placeholder-label"/>
                         </placeholder>
                         <columns>
-                            <TableColumn fx:id="colZDate" text="Date Clôture" prefWidth="175"/>
-                            <TableColumn fx:id="colZAgent" text="Agent" prefWidth="100"/>
-                            <TableColumn fx:id="colZStatut" text="Statut" prefWidth="90"/>
-                            <TableColumn fx:id="colZTheorieEsp" text="Attendu (Espèces)" prefWidth="175" style="-fx-alignment: CENTER-RIGHT; -fx-padding: 0 10 0 0;"/>
-                            <TableColumn fx:id="colZEcartEsp" text="Écart Esp." prefWidth="135"/>
-                            <TableColumn fx:id="colZTheorieMob" text="Attendu (Mobile)" prefWidth="150" style="-fx-alignment: CENTER-RIGHT; -fx-padding: 0 10 0 0;"/>
-                            <TableColumn fx:id="colZEcartMob" text="Écart Mobile" prefWidth="135"/>
+                            <TableColumn fx:id="colZDate" text="Date Clôture" prefWidth="175" minWidth="160"/>
+                            <TableColumn fx:id="colZAgent" text="Agent" prefWidth="130" minWidth="110"/>
+                            <TableColumn fx:id="colZStatut" text="Statut" prefWidth="90" minWidth="80"/>
+                            <TableColumn fx:id="colZTheorieEsp" text="Attendu (Espèces)" prefWidth="210" minWidth="190" style="-fx-alignment: CENTER-RIGHT; -fx-padding: 0 10 0 0;"/>
+                            <TableColumn fx:id="colZEcartEsp" text="Écart Esp." prefWidth="135" minWidth="115"/>
+                            <TableColumn fx:id="colZTheorieMob" text="Attendu (Mobile)" prefWidth="185" minWidth="165" style="-fx-alignment: CENTER-RIGHT; -fx-padding: 0 10 0 0;"/>
+                            <TableColumn fx:id="colZEcartMob" text="Écart Mobile" prefWidth="135" minWidth="115"/>
                         </columns>
                     </TableView>
                 </VBox>

@@ -53,4 +53,11 @@ public class Vente {
     public enum ModePaiement {
         ESPECES, MOBILE_MONEY, MIXTE
     }
+
+    public String getNumeroTicketOfficiel() {
+        if (id == null) return "NON_SAUVEGARDE";
+        if (dateVente == null) return String.valueOf(id);
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("ddMMyy-HHmm");
+        return dateVente.format(formatter) + "-" + String.format("%03d", id);
+    }
 }

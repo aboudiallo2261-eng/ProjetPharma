@@ -141,20 +141,28 @@
                         <Region HBox.hgrow="ALWAYS"/>
                         <Label text="Total : " style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #64748B;"/>
                         <Label fx:id="lblTotalAchats" text="0 FCFA" style="-fx-font-weight: bold; -fx-font-size: 20px; -fx-text-fill: #059669;"/>
-                        <Button text="🖨 Récapitulatif" onAction="#imprimerRecapitulatifAchats" styleClass="btn-action-blue"/>
-                        <Button fx:id="btnExportExcelAchats" text="📊 Exporter Excel" onAction="#exporterAchatsExcel" styleClass="btn-action-green"/>
+                        <SplitMenuButton text="Exporter" onAction="#imprimerRecapitulatifAchats"
+                                         styleClass="btn-outline" style="-fx-padding: 7 14;">
+                            <items>
+                                <MenuItem text="Récapitulatif PDF" onAction="#imprimerRecapitulatifAchats"/>
+                                <MenuItem text="Exporter Excel" onAction="#exporterAchatsExcel"/>
+                            </items>
+                        </SplitMenuButton>
                     </HBox>
                     <TableView fx:id="tableHistorique" VBox.vgrow="ALWAYS" styleClass="table-view">
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                        </columnResizePolicy>
                         <placeholder>
                             <Label text="📦 Aucun achat ne correspond à vos filtres." styleClass="table-placeholder-label"/>
                         </placeholder>
                         <columns>
-                            <TableColumn fx:id="colHistId" text="ID" prefWidth="55"/>
-                            <TableColumn fx:id="colHistDate" text="Date" prefWidth="115"/>
-                            <TableColumn fx:id="colHistFournisseur" text="Fournisseur" prefWidth="180"/>
+                            <TableColumn fx:id="colHistId" text="ID" prefWidth="80"/>
+                            <TableColumn fx:id="colHistDate" text="Date" prefWidth="150"/>
+                            <TableColumn fx:id="colHistFournisseur" text="Fournisseur" prefWidth="200"/>
                             <TableColumn fx:id="colHistRef" text="Réf Facture" prefWidth="135"/>
                             <TableColumn fx:id="colHistNbLignes" text="Nb Produits" prefWidth="90"/>
-                            <TableColumn fx:id="colHistMontant" text="Montant (FCFA)" prefWidth="145"/>
+                            <TableColumn fx:id="colHistMontant" text="Montant (FCFA)" prefWidth="150"/>
                         </columns>
                     </TableView>
                 </VBox>

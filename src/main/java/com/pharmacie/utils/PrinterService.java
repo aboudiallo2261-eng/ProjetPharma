@@ -55,7 +55,7 @@ public class PrinterService {
         ticket.append("Date: ").append(vente.getDateVente().format(formatter)).append("\n");
         String agentName = vente.getUser() != null ? vente.getUser().getNom() : "Admin";
         ticket.append("Agent: ").append(agentName).append("\n");
-        String customRef = vente.getDateVente() != null ? vente.getDateVente().format(DateTimeFormatter.ofPattern("ddMMyy-HHmm")) + "-" + String.format("%03d", vente.getId()) : String.valueOf(vente.getId());
+        String customRef = vente.getNumeroTicketOfficiel();
         ticket.append("Ticket N°: ").append(customRef).append("\n");
         ticket.append("--------------------------------\n");
         

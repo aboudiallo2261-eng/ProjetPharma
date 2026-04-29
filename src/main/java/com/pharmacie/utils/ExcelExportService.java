@@ -235,7 +235,7 @@ public class ExcelExportService {
                 }
                 cellDate.setCellStyle(dateStyle);
 
-                row.createCell(1).setCellValue("TCK-" + lv.getVente().getId());
+                row.createCell(1).setCellValue(lv.getVente().getNumeroTicketOfficiel());
                 row.createCell(2).setCellValue(lv.getVente().getUser().getNom() != null ? lv.getVente().getUser().getNom() : "");
                 row.createCell(3).setCellValue(lv.getProduit().getNom() != null ? lv.getProduit().getNom() : "");
                 row.createCell(4).setCellValue(lv.getProduit().getCategorie().getNom() != null ? lv.getProduit().getCategorie().getNom() : "");
@@ -884,6 +884,144 @@ public class ExcelExportService {
 
         } catch (Exception e) {
             logger.error("Erreur lors de l'export Ajustements Excel", e);
+            AlertUtils.showPremiumAlert(javafx.scene.control.Alert.AlertType.ERROR, 
+                "Erreur Export", "Échec de l'export", e.getMessage());
+        }
+    }
+
+    public static void genererHistoriqueVentesExcel(List<com.pharmacie.models.Vente> ventes, String periodeLabel, Stage ownerStage) {
+        if (ventes == null || ventes.isEmpty()) return;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Enregistrer l'Historique des Ventes (Excel Premium)");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Classeur Excel", "*.xlsx"));
+        
+        String nomFichier = "Historique_Ventes_" + (periodeLabel.isEmpty() ? LocalDate.now().toString() : periodeLabel.replace(" ", "_")) + ".xlsx";
+        fileChooser.setInitialFileName(nomFichier);
+
+        File fichier = fileChooser.showSaveDialog(ownerStage);
+        if (fichier == null) return;
+
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Historique des Ventes");
+
+            // 1. Définition des Styles Premium
+            CellStyle headerStyle = workbook.createCellStyle();
+            byte[] rgb = new byte[]{(byte) 5, (byte) 150, (byte) 105}; // #059669 (Emerald)
+            XSSFColor emeraldColor = new XSSFColor(rgb, null);
+            ((org.apache.poi.xssf.usermodel.XSSFCellStyle) headerStyle).setFillForegroundColor(emeraldColor);
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            
+            Font headerFont = workbook.createFont();
+            headerFont.setColor(IndexedColors.WHITE.getIndex());
+            headerFont.setBold(true);
+            headerFont.setFontName("Arial");
+            headerFont.setFontHeightInPoints((short) 11);
+            headerStyle.setFont(headerFont);
+            headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+            CellStyle numberStyle = workbook.createCellStyle();
+            DataFormat format = workbook.createDataFormat();
+            numberStyle.setDataFormat(format.getFormat("#,##0"));
+
+            CellStyle dateStyle = workbook.createCellStyle();
+            dateStyle.setDataFormat(format.getFormat("dd/mm/yyyy hh:mm"));
+
+            // 2. Création de l'En-tête
+            String[] colonnes = {
+                "ID", "Date & Heure", "Agent", "Nb Produits", "Mode Paiement", "Total (FCFA)"
+            };
+
+            Row headerRow = sheet.createRow(0);
+            headerRow.setHeightInPoints(25);
+            
+            for (int i = 0; i < colonnes.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(colonnes[i]);
+                cell.setCellStyle(headerStyle);
+            }
+
+            sheet.createFreezePane(0, 1);
+
+            // 3. Remplissage des données
+            int rowNum = 1;
+            for (com.pharmacie.models.Vente v : ventes) {
+                Row row = sheet.createRow(rowNum++);
+                
+                // ID
+                row.createCell(0).setCellValue(v.getNumeroTicketOfficiel());
+                
+                // Date & Heure
+                Cell cellDate = row.createCell(1);
+                if (v.getDateVente() != null) {
+                    cellDate.setCellValue(v.getDateVente());
+                    cellDate.setCellStyle(dateStyle);
+                } else {
+                    cellDate.setCellValue("");
+                }
+                
+                // Agent
+                row.createCell(2).setCellValue(v.getUser() != null ? v.getUser().getNom() : "");
+                
+                // Nb Produits
+                Cell cellQte = row.createCell(3);
+                int totalProduits = 0;
+                if (v.getLignesVente() != null) {
+                    for (com.pharmacie.models.LigneVente lv : v.getLignesVente()) {
+                        totalProduits += lv.getQuantiteVendue();
+                    }
+                }
+                cellQte.setCellValue(totalProduits);
+                cellQte.setCellStyle(numberStyle);
+
+                // Mode Paiement
+                row.createCell(4).setCellValue(v.getModePaiement() != null ? v.getModePaiement().toString() : "");
+
+                // Total TTC
+                Cell cellTotal = row.createCell(5);
+                cellTotal.setCellValue(v.getTotal() != null ? v.getTotal() : 0.0);
+                cellTotal.setCellStyle(numberStyle);
+            }
+
+            // 4. Ligne de Totaux
+            Row totalRow = sheet.createRow(rowNum);
+            totalRow.setHeightInPoints(20);
+            
+            CellStyle totalStyle = workbook.createCellStyle();
+            totalStyle.cloneStyleFrom(numberStyle);
+            Font totalFont = workbook.createFont();
+            totalFont.setBold(true);
+            totalStyle.setFont(totalFont);
+            
+            Cell labelTotalCell = totalRow.createCell(4);
+            labelTotalCell.setCellValue("TOTAL :");
+            labelTotalCell.setCellStyle(totalStyle);
+
+            Cell sumTotalCell = totalRow.createCell(5);
+            sumTotalCell.setCellFormula("SUM(F2:F" + rowNum + ")");
+            sumTotalCell.setCellStyle(totalStyle);
+
+            // 5. Ajustement des colonnes
+            for (int i = 0; i < colonnes.length; i++) {
+                sheet.autoSizeColumn(i);
+                int currentWidth = sheet.getColumnWidth(i);
+                sheet.setColumnWidth(i, currentWidth + 1000);
+            }
+
+            // 6. Écriture du fichier
+            try (FileOutputStream fileOut = new FileOutputStream(fichier)) {
+                workbook.write(fileOut);
+            }
+
+            logger.info("Export Excel Premium sauvegardé : {}", fichier.getAbsolutePath());
+            ToastService.showSuccess(ownerStage, "Export Premium Réussi", "Fichier Excel généré avec succès !");
+            
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(fichier);
+            }
+
+        } catch (Exception e) {
+            logger.error("Erreur lors de l'export Excel Premium", e);
             AlertUtils.showPremiumAlert(javafx.scene.control.Alert.AlertType.ERROR, 
                 "Erreur Export", "Échec de l'export", e.getMessage());
         }

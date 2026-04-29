@@ -465,7 +465,7 @@ public class PdfService {
                     String dateStr = v.getDateVente() != null ? v.getDateVente().format(formatter) : "---";
                     drawText(cs, dateStr, MARGIN + 10, y);
                     String agent = v.getUser() != null ? v.getUser().getNom() : "---";
-                    if (agent.length() > 13) agent = agent.substring(0, 13) + "...";
+                    if (agent.length() > 18) agent = agent.substring(0, 18) + "...";
                     drawText(cs, agent, MARGIN + 120, y);
                     int nb = v.getLignesVente() != null ? v.getLignesVente().size() : 0;
                     drawText(cs, String.valueOf(nb), MARGIN + 240, y);
