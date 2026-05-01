@@ -1,0 +1,43 @@
+# Fichiers de configuration locaux (SECRETS - NE JAMAIS COMMITER)
+config.properties
+
+# Dossier de compilation Maven
+target/
+
+# Sauvegardes locales
+backups/
+
+# Logs
+logs/
+
+# Fichiers IDE
+.idea/
+*.iml
+.vscode/
+
+# Snapshot JSON local (régénéré à chaque synchro)
+sync/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# ============================================================
+# PWA - Fichiers SECRETS et temporaires (ne jamais commiter)
+# ============================================================
+
+# Variables d'environnement (contiennent les clés Supabase)
+vetpharma-pwa/.env
+vetpharma-pwa/.env.*
+
+# Fichiers de test contenant des clés API en dur
+vetpharma-pwa/test-supabase.js
+
+# Dossier de dev service worker (généré automatiquement)
+vetpharma-pwa/dev-dist/
+
+# Script de conversion temporaire
+vetpharma-pwa/convert-logo.ps1
+
+# Dépendances Node (volumineuses, inutiles sur GitHub)
+vetpharma-pwa/node_modules/

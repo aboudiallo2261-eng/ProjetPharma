@@ -128,36 +128,78 @@ public class StatistiquesDAO {
     }
 
     /**
-     * Calcule en base (zéro objet en RAM) les deux métriques d'alerte du dashboard.
+     * Calcule en base (zéro objet en RAM) les deux métriques d'alerte du dashboard local.
      * @return long[2] — [0] = nb produits en dessous du seuil d'alerte,
      *                   [1] = nb lots expirés encore en stock
      */
     public long[] getAlertesKPI(LocalDate today) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            
+            LocalDate dateLimite = today.plusDays(60);
 
-            // --- 1. Lots expirés avec stock > 0 (requête directe, count MySQL) ---
+            // --- 1. Lots dont le jour avant expiration est <= 60 jours (et non déjà expirés) ---
             String hqlExpires =
                 "SELECT COUNT(l.id) FROM Lot l " +
                 "WHERE l.quantiteStock > 0 " +
                 "  AND l.dateExpiration IS NOT NULL " +
-                "  AND l.dateExpiration <= :today";
+                "  AND l.dateExpiration >= :today " +
+                "  AND l.dateExpiration <= :dateLimite";
             Long nbExpires = session.createQuery(hqlExpires, Long.class)
                 .setParameter("today", today)
+                .setParameter("dateLimite", dateLimite)
                 .uniqueResult();
 
-            // --- 2. Produits dont le stock total (hors expirés) <= seuil d'alerte ---
-            // Sous-requête : SUM du stock des lots valides par produit, comparé au seuil
+            // --- 2. Produits dont le stock total <= seuil d'alerte
+            //        On part de Lot pour exclure les produits sans aucun lot créé.
+            //        On récupère les IDs et on compte en Java (GROUP BY + uniqueResult incompatible en HQL).
             String hqlAlertes =
-                "SELECT COUNT(p.id) FROM Produit p " +
-                "WHERE COALESCE( " +
-                "    (SELECT SUM(l.quantiteStock) FROM Lot l " +
-                "     WHERE l.produit.id = p.id) " +
-                ", 0) <= COALESCE(p.seuilAlerte, 5)"; // Seuil par défaut = 5, aligné avec AlerteStockController
-            Long nbAlertes = session.createQuery(hqlAlertes, Long.class)
-                .uniqueResult();
+                "SELECT l.produit.id FROM Lot l JOIN l.produit p " +
+                "GROUP BY l.produit.id, p.seuilAlerte " +
+                "HAVING COALESCE(SUM(l.quantiteStock), 0) <= COALESCE(MAX(p.seuilAlerte), 5)";
+            long nbAlertes = session.createQuery(hqlAlertes, Long.class).list().size();
 
             return new long[]{
-                nbAlertes != null ? nbAlertes : 0L,
+                nbAlertes,
+                nbExpires != null ? nbExpires : 0L
+            };
+        }
+    }
+
+    /**
+     * Calcule en base les trois métriques d'alerte pour le Dashboard WEB (PWA).
+     * @return long[3] — [0] = nb ruptures (stock = 0),
+     *                   [1] = nb alertes (0 < stock <= seuil),
+     *                   [2] = nb lots expirés encore en stock
+     */
+    public long[] getDashboardWebAlertesKPI(LocalDate today) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            LocalDate dateLimite = today.plusDays(60);
+            
+            String hqlExpires =
+                "SELECT COUNT(l.id) FROM Lot l WHERE l.quantiteStock > 0 AND l.dateExpiration IS NOT NULL AND l.dateExpiration >= :today AND l.dateExpiration <= :dateLimite";
+            Long nbExpires = session.createQuery(hqlExpires, Long.class)
+                .setParameter("today", today)
+                .setParameter("dateLimite", dateLimite)
+                .uniqueResult();
+
+            // Ruptures : produits ayant au moins un lot, dont le stock total = 0
+            String hqlRuptures =
+                "SELECT l.produit.id FROM Lot l " +
+                "GROUP BY l.produit.id " +
+                "HAVING COALESCE(SUM(l.quantiteStock), 0) = 0";
+            long nbRuptures = session.createQuery(hqlRuptures, Long.class).list().size();
+
+            // Alertes : produits avec stock > 0 mais <= seuil
+            String hqlAlertes =
+                "SELECT l.produit.id FROM Lot l JOIN l.produit p " +
+                "GROUP BY l.produit.id, p.seuilAlerte " +
+                "HAVING COALESCE(SUM(l.quantiteStock), 0) > 0 " +
+                "  AND COALESCE(SUM(l.quantiteStock), 0) <= COALESCE(MAX(p.seuilAlerte), 5)";
+            long nbAlertes = session.createQuery(hqlAlertes, Long.class).list().size();
+
+            return new long[]{
+                nbRuptures,
+                nbAlertes,
                 nbExpires != null ? nbExpires : 0L
             };
         }
@@ -309,6 +351,119 @@ public class StatistiquesDAO {
             return session.createQuery(hql, Object[].class)
                 .setParameter("debut", debut)
                 .setParameter("fin", fin)
+                .list();
+        }
+    }
+
+    /**
+     * Retourne les N produits dont le stock total est <= seuil d'alerte. (Utilisé par le logiciel JavaFX Local)
+     * NOTE : Produit n'ayant pas de @OneToMany lots, on part de Lot → Produit.
+     * @return List de Object[] {produit.id (Long), produit.nom (String), stockTotal (Long)}
+     */
+    public List<Object[]> getProduitsEnRupture(int limit) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql =
+                "SELECT l.produit.id, l.produit.nom, COALESCE(SUM(l.quantiteStock), 0) " +
+                "FROM Lot l " +
+                "GROUP BY l.produit.id, l.produit.nom " +
+                "HAVING COALESCE(SUM(l.quantiteStock), 0) <= COALESCE(MAX(l.produit.seuilAlerte), 5) " +
+                "ORDER BY COALESCE(SUM(l.quantiteStock), 0) ASC";
+            return session.createQuery(hql, Object[].class)
+                .setMaxResults(limit)
+                .list();
+        }
+    }
+
+    /**
+     * Retourne les produits dont le stock total est = 0. (Spécifique PWA)
+     */
+    public List<Object[]> getProduitsEnRuptureTotale(int limit) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql =
+                "SELECT l.produit.id, l.produit.nom, COALESCE(SUM(l.quantiteStock), 0) " +
+                "FROM Lot l " +
+                "GROUP BY l.produit.id, l.produit.nom " +
+                "HAVING COALESCE(SUM(l.quantiteStock), 0) = 0 " +
+                "ORDER BY l.produit.nom ASC";
+            return session.createQuery(hql, Object[].class)
+                .setMaxResults(limit)
+                .list();
+        }
+    }
+
+    /**
+     * Retourne les N produits dont le stock total est > 0 et <= seuil d'alerte.
+     */
+    public List<Object[]> getProduitsEnAlerte(int limit) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql =
+                "SELECT l.produit.id, l.produit.nom, COALESCE(SUM(l.quantiteStock), 0) " +
+                "FROM Lot l " +
+                "GROUP BY l.produit.id, l.produit.nom " +
+                "HAVING COALESCE(SUM(l.quantiteStock), 0) > 0 AND COALESCE(SUM(l.quantiteStock), 0) <= COALESCE(MAX(l.produit.seuilAlerte), 5) " +
+                "ORDER BY COALESCE(SUM(l.quantiteStock), 0) ASC";
+            return session.createQuery(hql, Object[].class)
+                .setMaxResults(limit)
+                .list();
+        }
+    }
+
+    /**
+     * Détails financiers des pertes enregistrées aujourd'hui (Ajustements Négatifs pour Casse/Péremption/Erreur).
+     * @return List de Object[] {produit.nom (String), quantite (Integer), valeur (Double), motif (String)}
+     */
+    public List<Object[]> getPertesDuJourDetails(LocalDate today) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql =
+                "SELECT a.lot.produit.nom, a.lot.numeroLot, a.quantite, (cast(a.quantite as double) * a.lot.produit.prixAchat), cast(a.motif as string) " +
+                "FROM AjustementStock a " +
+                "WHERE cast(a.dateAjustement as date) = :today " +
+                "  AND a.typeAjustement = 'AJUSTEMENT_NEGATIF' " +
+                "  AND cast(a.motif as string) IN ('CASSE', 'PEREMPTION', 'ERREUR_INVENTAIRE')";
+            return session.createQuery(hql, Object[].class)
+                .setParameter("today", today)
+                .list();
+        }
+    }
+
+    /**
+     * Retourne la liste des lots périmés (dont le stock est > 0).
+     * @return List de Object[] {produit.nom, lot.numeroLot, lot.dateExpiration, lot.quantiteStock, produit.prixAchat}
+     */
+    public List<Object[]> getLotsPerimes(LocalDate today) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql =
+                "SELECT l.produit.nom, l.numeroLot, l.dateExpiration, l.quantiteStock, l.produit.prixAchat " +
+                "FROM Lot l " +
+                "WHERE l.quantiteStock > 0 " +
+                "  AND l.dateExpiration IS NOT NULL " +
+                "  AND l.dateExpiration <= :today " +
+                "ORDER BY l.dateExpiration ASC";
+            return session.createQuery(hql, Object[].class)
+                .setParameter("today", today)
+                .list();
+        }
+    }
+
+    /**
+     * Retourne la liste des lots proches de la péremption (dans les X prochains jours).
+     * @param joursAlerte Le nombre de jours d'anticipation (ex: 90 pour 3 mois)
+     * @return List de Object[] {produit.nom, lot.numeroLot, lot.dateExpiration, lot.quantiteStock, produit.prixAchat}
+     */
+    public List<Object[]> getLotsProchePeremption(LocalDate today, int joursAlerte) {
+        LocalDate dateLimite = today.plusDays(joursAlerte);
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql =
+                "SELECT l.produit.nom, l.numeroLot, l.dateExpiration, l.quantiteStock, l.produit.prixAchat " +
+                "FROM Lot l " +
+                "WHERE l.quantiteStock > 0 " +
+                "  AND l.dateExpiration IS NOT NULL " +
+                "  AND l.dateExpiration > :today " +
+                "  AND l.dateExpiration <= :dateLimite " +
+                "ORDER BY l.dateExpiration ASC";
+            return session.createQuery(hql, Object[].class)
+                .setParameter("today", today)
+                .setParameter("dateLimite", dateLimite)
                 .list();
         }
     }

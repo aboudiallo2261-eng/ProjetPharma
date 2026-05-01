@@ -153,8 +153,11 @@ public class AlerteStockController {
         }
 
         for (Produit p : produits) {
+            // On ignore les produits qui n'ont jamais eu de lot (pas de vrai stock géré)
+            if (!stockParProduit.containsKey(p.getId())) continue;
+
             int qteAlerte = p.getSeuilAlerte() != null ? p.getSeuilAlerte() : 5;
-            int qteStock  = stockParProduit.getOrDefault(p.getId(), 0);
+            int qteStock  = stockParProduit.get(p.getId());
             if (qteStock <= qteAlerte) {
                 int qteSuggerable = (qteAlerte * 2) - qteStock;
                 if (qteSuggerable < qteAlerte) qteSuggerable = qteAlerte;

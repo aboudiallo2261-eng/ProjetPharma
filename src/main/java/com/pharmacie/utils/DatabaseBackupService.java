@@ -32,8 +32,17 @@ public class DatabaseBackupService {
             Process process = pb.start();
             int processComplete = process.waitFor();
             
-            return processComplete == 0;
+            boolean success = (processComplete == 0);
+            if (success) {
+                AuditLogger.log("Backup Local MySQL", "SUCCESS");
+                logger.info("Sauvegarde MySQL réussie vers : {}", destination.getAbsolutePath());
+            } else {
+                AuditLogger.log("Backup Local MySQL", "FAILED");
+                logger.error("Échec de la sauvegarde MySQL (Code: {})", processComplete);
+            }
+            return success;
         } catch (IOException | InterruptedException e) {
+            AuditLogger.log("Backup Local MySQL", "ERROR");
             logger.error("Erreur lors de la sauvegarde de la base", e);
             return false;
         }

@@ -54,6 +54,7 @@ public class DashboardController {
     @FXML private TableView<TopProduitDTO>       tableTopProduits;
     @FXML private TableColumn<TopProduitDTO, String> colTopNom;
     @FXML private TableColumn<TopProduitDTO, Double> colTopQte;
+    @FXML private Label lblDerniereSynchro;
 
     // ── DAOs ──────────────────────────────────────────────────────────
     private final StatistiquesDAO statsDAO   = new StatistiquesDAO();
@@ -109,6 +110,42 @@ public class DashboardController {
         dpDebut.setValue(null);
         dpFin.setValue(null);
         chargerDonnees();
+    }
+
+    /** Déclenche une synchronisation manuelle vers le cloud (Supabase) */
+    @FXML
+    public void forcerSynchronisation() {
+        if (progressIndicator != null) progressIndicator.setVisible(true);
+        if (lblDerniereSynchro != null) {
+            lblDerniereSynchro.setText("Synchro en cours...");
+            lblDerniereSynchro.setStyle("-fx-font-size: 11px; -fx-text-fill: #64748b;");
+        }
+        
+        javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<Void>() {
+            @Override
+            protected Void call() {
+                com.pharmacie.utils.SyncService.synchroniser();
+                return null;
+            }
+        };
+        
+        task.setOnSucceeded(e -> {
+            if (progressIndicator != null) progressIndicator.setVisible(false);
+            if (lblDerniereSynchro != null) {
+                lblDerniereSynchro.setText("Synchro réussie à " + java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm")));
+                lblDerniereSynchro.setStyle("-fx-font-size: 11px; -fx-text-fill: #059669;"); // Emerald 600
+            }
+        });
+        
+        task.setOnFailed(e -> {
+            if (progressIndicator != null) progressIndicator.setVisible(false);
+            if (lblDerniereSynchro != null) {
+                lblDerniereSynchro.setText("Échec de la synchro");
+                lblDerniereSynchro.setStyle("-fx-font-size: 11px; -fx-text-fill: #DC2626;"); // Red 600
+            }
+        });
+        
+        new Thread(task).start();
     }
 
     // =================================================================

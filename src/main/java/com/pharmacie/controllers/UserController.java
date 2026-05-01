@@ -46,6 +46,9 @@ public class UserController {
     @FXML private TextField txtInfoEmail;
     @FXML private TextArea txtInfoMessage;
     @FXML private Label lblInfoMsg;
+    
+    // --- Onglet Sauvegarde ---
+    @FXML private TextField txtBackupPath;
 
     private UserDAO userDAO = new UserDAO();
     private ProfilDAO profilDAO = new ProfilDAO();
@@ -85,6 +88,12 @@ public class UserController {
         loadProfils();
         loadUsers();
         loadInfosPharmacie();
+        
+        // Charger le chemin de sauvegarde USB
+        String backupPath = com.pharmacie.utils.ConfigService.getBackupPath();
+        if (backupPath != null && !backupPath.isEmpty()) {
+            txtBackupPath.setText(backupPath);
+        }
     }
 
     private void loadProfils() {
@@ -356,6 +365,30 @@ public class UserController {
     }
 
     // --- LOGIQUE SAUVEGARDE BASE DE DONNEES ---
+    
+    @FXML
+    public void handleChooseBackupPath() {
+        javafx.stage.DirectoryChooser directoryChooser = new javafx.stage.DirectoryChooser();
+        directoryChooser.setTitle("Sélectionner le dossier de sauvegarde USB");
+        
+        String currentPath = com.pharmacie.utils.ConfigService.getBackupPath();
+        if (currentPath != null && !currentPath.isEmpty()) {
+            java.io.File initialDir = new java.io.File(currentPath);
+            if (initialDir.exists() && initialDir.isDirectory()) {
+                directoryChooser.setInitialDirectory(initialDir);
+            }
+        }
+        
+        javafx.stage.Window window = tableUsers.getScene().getWindow();
+        java.io.File selectedDirectory = directoryChooser.showDialog(window);
+        
+        if (selectedDirectory != null) {
+            String path = selectedDirectory.getAbsolutePath();
+            txtBackupPath.setText(path);
+            com.pharmacie.utils.ConfigService.saveBackupPath(path);
+            com.pharmacie.utils.ToastService.showSuccess(window, "Chemin Enregistré", "Les sauvegardes automatiques se feront dans :\n" + path);
+        }
+    }
     
     @FXML
     public void handleBackupDB() {

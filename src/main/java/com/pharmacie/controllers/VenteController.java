@@ -1213,64 +1213,146 @@ public class VenteController {
 
             sessionDAO.update(currentSession);
 
-            // BILAN PREMIUM post-cloture
-            Dialog<ButtonType> bilanDialog = new Dialog<>();
-            bilanDialog.setTitle("Bilan de Clôture — Journal Z");
-            bilanDialog.getDialogPane().setStyle("-fx-background-color: #F8FAFC;");
-            javafx.scene.layout.VBox bilanContent = new javafx.scene.layout.VBox(14);
-            bilanContent.setPadding(new javafx.geometry.Insets(24, 28, 16, 28));
-            bilanContent.setMinWidth(460);
-
-            javafx.scene.layout.HBox hdrBox = new javafx.scene.layout.HBox(10);
-            hdrBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
-            Label bilanHdr = new Label("Caisse Fermée avec Succès");
-            bilanHdr.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #059669;");
-            hdrBox.getChildren().add(bilanHdr);
-
-            javafx.scene.control.Separator bilanSep = new javafx.scene.control.Separator();
-
-            // BILAN ESPECES
-            javafx.scene.layout.VBox bilanEsp = new javafx.scene.layout.VBox(6);
-            bilanEsp.setStyle("-fx-background-color: #FFFBEB; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #F59E0B; -fx-border-width: 1.5; -fx-border-radius: 8;");
-            Label bilanEspTitle = new Label("Tiroir Caisse — Bilan Espèces");
-            bilanEspTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: #B45309;");
-            javafx.scene.layout.HBox bRowAtt = buildRow("Théorique attendu :", String.format("%,.0f FCFA", theorieEspeces), "#334155", false);
-            javafx.scene.layout.HBox bRowDec = buildRow("Compté réellement :", String.format("%,.0f FCFA", result.especes), "#0F172A", true);
-            double ecartEsp = result.especes - theorieEspeces;
-            String ecartEspColor = ecartEsp < -0.5 ? "#EF4444" : ecartEsp > 0.5 ? "#10B981" : "#64748B";
-            javafx.scene.layout.HBox bRowEcart = buildRow(String.format("Écart : %s", ecartEsp >= 0 ? "+" : ""), String.format("%,.0f FCFA", ecartEsp), ecartEspColor, true);
-            bilanEsp.getChildren().addAll(bilanEspTitle, bRowAtt, bRowDec, new javafx.scene.control.Separator(), bRowEcart);
-
-            // BILAN MOBILE
-            javafx.scene.layout.VBox bilanMob = new javafx.scene.layout.VBox(6);
-            bilanMob.setStyle("-fx-background-color: #EFF6FF; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #3B82F6; -fx-border-width: 1.5; -fx-border-radius: 8;");
-            Label bilanMobTitle = new Label("Mobile Money — Bilan Digital");
-            bilanMobTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: #1D4ED8;");
-            javafx.scene.layout.HBox bRowMobAmt = buildRow("Total encaissé numériquement :", String.format("%,.0f FCFA", totalMobile), "#0F172A", true);
-            javafx.scene.layout.HBox bRowMobOk = buildRow("Écart :", "0 FCFA — Traçabilité digitale garantie", "#10B981", false);
-            bilanMob.getChildren().addAll(bilanMobTitle, bRowMobAmt, bRowMobOk);
-
-            Label bilanFooter = new Label("Journal Z archivé dans Rapports > Historique des Clôtures.");
-            bilanFooter.setStyle("-fx-text-fill: #64748B; -fx-font-size: 11px; -fx-font-style: italic;");
-
-            bilanContent.getChildren().addAll(hdrBox, bilanSep, bilanEsp, bilanMob, bilanFooter);
-            bilanDialog.getDialogPane().setContent(bilanContent);
-            bilanDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-            Platform.runLater(() -> {
-                javafx.scene.Node okBtn = bilanDialog.getDialogPane().lookupButton(ButtonType.OK);
-                if (okBtn != null) {
-                    okBtn.setStyle("-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 22; -fx-background-radius: 6;");
-                    okBtn.setCursor(javafx.scene.Cursor.HAND);
-                }
-            });
-            bilanDialog.showAndWait();
-
-            logger.info("Clôture Z : Espèces attendues={} FCFA | Mobile attendu={} FCFA | Écart caisse={} FCFA",
-                    String.format("%.0f", theorieEspeces), String.format("%.0f", totalMobile),
-                    String.format("%.0f", result.especes - theorieEspeces));
-
+            runBackupAndShowBilan(theorieEspeces, totalMobile, result.especes);
             checkSessionStatus();
         });
+    }
+
+    /**
+     * Phase 1.3 : Tâche asynchrone de sauvegarde et affichage du Bilan.
+     */
+    private void runBackupAndShowBilan(double theorieEspeces, double totalMobile, double especesDeclare) {
+        String backupPath = com.pharmacie.utils.ConfigService.getBackupPath();
+        java.io.File usbDir = (backupPath != null && !backupPath.isEmpty()) ? new java.io.File(backupPath) : null;
+        boolean usbValide = (usbDir != null && usbDir.exists() && usbDir.isDirectory());
+
+        if (!usbValide) {
+            com.pharmacie.utils.AuditLogger.log("Backup USB", "WARNING: Clé USB introuvable ou non configurée");
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Attention : Clé USB de secours non détectée.\nVeuillez brancher la clé ou configurer le chemin pour garantir la sécurité de vos données.");
+            alert.setHeaderText("Alerte de Sécurité");
+            alert.showAndWait();
+            // On ne fait PAS de return ici ! On continue pour exécuter la sauvegarde LOCALE indispensable.
+        }
+
+        Alert progressAlert = new Alert(Alert.AlertType.INFORMATION);
+        progressAlert.setTitle("Sauvegarde Automatique");
+        progressAlert.setHeaderText("Sécurisation des données en cours...");
+        progressAlert.setContentText("Veuillez patienter pendant l'export de vos données.");
+        
+        javafx.scene.layout.VBox vbox = new javafx.scene.layout.VBox(15);
+        vbox.setAlignment(javafx.geometry.Pos.CENTER);
+        javafx.scene.control.ProgressIndicator pin = new javafx.scene.control.ProgressIndicator();
+        vbox.getChildren().add(pin);
+        progressAlert.getDialogPane().setContent(vbox);
+        
+        progressAlert.getDialogPane().getButtonTypes().clear();
+        progressAlert.getDialogPane().getButtonTypes().add(ButtonType.CANCEL); // Requis pour afficher, masqué ensuite
+        progressAlert.getDialogPane().lookupButton(ButtonType.CANCEL).setVisible(false);
+        progressAlert.show();
+
+        javafx.concurrent.Task<Void> backupTask = new javafx.concurrent.Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
+                String fileName = "pharmacie_backup_" + java.time.LocalDateTime.now().format(formatter) + ".sql";
+                
+                // 1. Sauvegarde LOCALE (Indispensable)
+                java.io.File localDir = new java.io.File("backups");
+                if (!localDir.exists()) {
+                    localDir.mkdirs();
+                }
+                java.io.File localDest = new java.io.File(localDir, fileName);
+                boolean localSuccess = com.pharmacie.utils.DatabaseBackupService.exportDatabase(localDest);
+                
+                // 2. Copie vers Clé USB (Priorité Haute)
+                if (localSuccess && usbValide) {
+                    try {
+                        java.io.File usbDest = new java.io.File(usbDir, fileName);
+                        java.nio.file.Files.copy(localDest.toPath(), usbDest.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                        com.pharmacie.utils.AuditLogger.log("Backup USB", "SUCCESS - Copié sur " + usbDir.getAbsolutePath());
+                    } catch (Exception e) {
+                        com.pharmacie.utils.AuditLogger.log("Backup USB", "FAILED - Erreur lors de la copie USB");
+                    }
+                }
+                
+                // 3. Synchronisation Jumeau Numérique (Phase 2)
+                // Génère le snapshot JSON des KPI dans sync/dashboard_snapshot.json
+                com.pharmacie.utils.SyncService.synchroniser();
+                
+                return null;
+            }
+        };
+
+        backupTask.setOnSucceeded(e -> {
+            progressAlert.getDialogPane().getButtonTypes().add(ButtonType.OK);
+            progressAlert.close();
+            showBilanDialog(theorieEspeces, totalMobile, especesDeclare);
+        });
+
+        backupTask.setOnFailed(e -> {
+            progressAlert.getDialogPane().getButtonTypes().add(ButtonType.OK);
+            progressAlert.close();
+            showBilanDialog(theorieEspeces, totalMobile, especesDeclare);
+        });
+
+        new Thread(backupTask).start();
+    }
+
+    private void showBilanDialog(double theorieEspeces, double totalMobile, double especesDeclare) {
+        Dialog<ButtonType> bilanDialog = new Dialog<>();
+        bilanDialog.setTitle("Bilan de Clôture — Journal Z");
+        bilanDialog.getDialogPane().setStyle("-fx-background-color: #F8FAFC;");
+        javafx.scene.layout.VBox bilanContent = new javafx.scene.layout.VBox(14);
+        bilanContent.setPadding(new javafx.geometry.Insets(24, 28, 16, 28));
+        bilanContent.setMinWidth(460);
+
+        javafx.scene.layout.HBox hdrBox = new javafx.scene.layout.HBox(10);
+        hdrBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        Label bilanHdr = new Label("Caisse Fermée avec Succès");
+        bilanHdr.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #059669;");
+        hdrBox.getChildren().add(bilanHdr);
+
+        javafx.scene.control.Separator bilanSep = new javafx.scene.control.Separator();
+
+        // BILAN ESPECES
+        javafx.scene.layout.VBox bilanEsp = new javafx.scene.layout.VBox(6);
+        bilanEsp.setStyle("-fx-background-color: #FFFBEB; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #F59E0B; -fx-border-width: 1.5; -fx-border-radius: 8;");
+        Label bilanEspTitle = new Label("Tiroir Caisse — Bilan Espèces");
+        bilanEspTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: #B45309;");
+        javafx.scene.layout.HBox bRowAtt = buildRow("Théorique attendu :", String.format("%,.0f FCFA", theorieEspeces), "#334155", false);
+        javafx.scene.layout.HBox bRowDec = buildRow("Compté réellement :", String.format("%,.0f FCFA", especesDeclare), "#0F172A", true);
+        double ecartEsp = especesDeclare - theorieEspeces;
+        String ecartEspColor = ecartEsp < -0.5 ? "#EF4444" : ecartEsp > 0.5 ? "#10B981" : "#64748B";
+        javafx.scene.layout.HBox bRowEcart = buildRow(String.format("Écart : %s", ecartEsp >= 0 ? "+" : ""), String.format("%,.0f FCFA", ecartEsp), ecartEspColor, true);
+        bilanEsp.getChildren().addAll(bilanEspTitle, bRowAtt, bRowDec, new javafx.scene.control.Separator(), bRowEcart);
+
+        // BILAN MOBILE
+        javafx.scene.layout.VBox bilanMob = new javafx.scene.layout.VBox(6);
+        bilanMob.setStyle("-fx-background-color: #EFF6FF; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #3B82F6; -fx-border-width: 1.5; -fx-border-radius: 8;");
+        Label bilanMobTitle = new Label("Mobile Money — Bilan Digital");
+        bilanMobTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: #1D4ED8;");
+        javafx.scene.layout.HBox bRowMobAmt = buildRow("Total encaissé numériquement :", String.format("%,.0f FCFA", totalMobile), "#0F172A", true);
+        javafx.scene.layout.HBox bRowMobOk = buildRow("Écart :", "0 FCFA — Traçabilité digitale garantie", "#10B981", false);
+        bilanMob.getChildren().addAll(bilanMobTitle, bRowMobAmt, bRowMobOk);
+
+        Label bilanFooter = new Label("Journal Z archivé dans Rapports > Historique des Clôtures.");
+        bilanFooter.setStyle("-fx-text-fill: #64748B; -fx-font-size: 11px; -fx-font-style: italic;");
+
+        bilanContent.getChildren().addAll(hdrBox, bilanSep, bilanEsp, bilanMob, bilanFooter);
+        bilanDialog.getDialogPane().setContent(bilanContent);
+        bilanDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        Platform.runLater(() -> {
+            javafx.scene.Node okBtn = bilanDialog.getDialogPane().lookupButton(ButtonType.OK);
+            if (okBtn != null) {
+                okBtn.setStyle("-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 22; -fx-background-radius: 6;");
+                okBtn.setCursor(javafx.scene.Cursor.HAND);
+            }
+        });
+        bilanDialog.showAndWait();
+
+        logger.info("Clôture Z : Espèces attendues={} FCFA | Mobile attendu={} FCFA | Écart caisse={} FCFA",
+                String.format("%.0f", theorieEspeces), String.format("%.0f", totalMobile),
+                String.format("%.0f", especesDeclare - theorieEspeces));
     }
 
     /**

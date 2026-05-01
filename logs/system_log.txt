@@ -1,0 +1,439 @@
+2026-05-01 14:06 - Config USB - Nouveau chemin défini : C:\Users\TALL SIDI\OneDrive\A
+2026-05-01 14:10 - Config USB - Nouveau chemin défini : C:\Users\TALL SIDI\OneDrive\A\fichierStat
+2026-05-01 14:26 - Backup Local MySQL - SUCCESS
+2026-05-01 14:28 - Backup Local MySQL - SUCCESS
+2026-05-01 14:34 - Backup Local MySQL - SUCCESS
+2026-05-01 14:36 - Config USB - Nouveau chemin défini : D:\USB Drive\projetweb
+2026-05-01 14:38 - Backup Local MySQL - SUCCESS
+2026-05-01 14:39 - Backup USB - WARNING: Clé USB introuvable ou non configurée
+2026-05-01 14:54 - Backup USB - WARNING: Clé USB introuvable ou non configurée
+2026-05-01 14:54 - Backup Local MySQL - SUCCESS
+2026-05-01 14:58 - Backup Local MySQL - SUCCESS
+2026-05-01 14:58 - Backup USB - SUCCESS - Copié sur D:\USB Drive\projetweb
+2026-05-01 15:00 - Config USB - Nouveau chemin défini : C:\Users\TALL SIDI\OneDrive\A\fichierStat
+2026-05-01 15:01 - Backup Local MySQL - SUCCESS
+2026-05-01 15:01 - Backup USB - SUCCESS - Copié sur C:\Users\TALL SIDI\OneDrive\A\fichierStat
+2026-05-01 15:14 - Config USB - Nouveau chemin défini : D:\USB Drive\projetweb
+2026-05-01 15:15 - Synchro Dashboard - STARTED
+2026-05-01 15:15 - Synchro Dashboard - ERROR: org.hibernate.query.sqm.UnknownPathException: Could not resolve attribute 'lots' of 'com.pharmacie.models.Produit' [SELECT p.id, p.nom, COALESCE(SUM(l.quantiteStock), 0) FROM Produit p LEFT JOIN p.lots l GROUP BY p.id, p.nom HAVING COALESCE(SUM(l.quantiteStock), 0) <= COALESCE(p.seuilAlerte, 5) ORDER BY COALESCE(SUM(l.quantiteStock), 0) ASC]
+2026-05-01 15:16 - Backup USB - WARNING: Clé USB introuvable ou non configurée
+2026-05-01 15:16 - Backup Local MySQL - SUCCESS
+2026-05-01 15:16 - Synchro Dashboard - STARTED
+2026-05-01 15:16 - Synchro Dashboard - ERROR: org.hibernate.query.sqm.UnknownPathException: Could not resolve attribute 'lots' of 'com.pharmacie.models.Produit' [SELECT p.id, p.nom, COALESCE(SUM(l.quantiteStock), 0) FROM Produit p LEFT JOIN p.lots l GROUP BY p.id, p.nom HAVING COALESCE(SUM(l.quantiteStock), 0) <= COALESCE(p.seuilAlerte, 5) ORDER BY COALESCE(SUM(l.quantiteStock), 0) ASC]
+2026-05-01 15:25 - Synchro Dashboard - STARTED
+2026-05-01 15:25 - Synchro Dashboard - ERROR: org.hibernate.query.sqm.UnknownPathException: Could not resolve attribute 'lots' of 'com.pharmacie.models.Produit' [SELECT p.id, p.nom, COALESCE(SUM(l.quantiteStock), 0) FROM Produit p LEFT JOIN p.lots l GROUP BY p.id, p.nom HAVING COALESCE(SUM(l.quantiteStock), 0) <= COALESCE(p.seuilAlerte, 5) ORDER BY COALESCE(SUM(l.quantiteStock), 0) ASC]
+2026-05-01 15:27 - Synchro Dashboard - STARTED
+2026-05-01 15:27 - Synchro Dashboard - SUCCESS
+2026-05-01 15:29 - Backup USB - WARNING: Clé USB introuvable ou non configurée
+2026-05-01 15:29 - Backup Local MySQL - SUCCESS
+2026-05-01 15:29 - Synchro Dashboard - STARTED
+2026-05-01 15:29 - Synchro Dashboard - SUCCESS
+2026-05-01 15:32 - Synchro Dashboard - STARTED
+2026-05-01 15:32 - Synchro Dashboard - SUCCESS
+2026-05-01 15:37 - Synchro Dashboard - STARTED
+2026-05-01 15:37 - Synchro Dashboard - SUCCESS
+2026-05-01 15:42 - Synchro Dashboard - STARTED
+2026-05-01 15:42 - Synchro Dashboard - SUCCESS
+2026-05-01 15:47 - Synchro Dashboard - STARTED
+2026-05-01 15:47 - Synchro Dashboard - SUCCESS
+2026-05-01 15:52 - Synchro Dashboard - STARTED
+2026-05-01 15:52 - Synchro Dashboard - SUCCESS
+2026-05-01 15:57 - Synchro Dashboard - STARTED
+2026-05-01 15:57 - Synchro Dashboard - SUCCESS
+2026-05-01 16:02 - Synchro Dashboard - STARTED
+2026-05-01 16:02 - Synchro Dashboard - SUCCESS
+2026-05-01 16:03 - Backup USB - WARNING: Clé USB introuvable ou non configurée
+2026-05-01 16:03 - Backup Local MySQL - SUCCESS
+2026-05-01 16:03 - Synchro Dashboard - STARTED
+2026-05-01 16:03 - Synchro Dashboard - SUCCESS
+2026-05-01 16:04 - Synchro Dashboard - STARTED
+2026-05-01 16:04 - Synchro Dashboard - SUCCESS
+2026-05-01 16:05 - Backup USB - WARNING: Clé USB introuvable ou non configurée
+2026-05-01 16:05 - Backup Local MySQL - SUCCESS
+2026-05-01 16:05 - Synchro Dashboard - STARTED
+2026-05-01 16:05 - Synchro Dashboard - SUCCESS
+2026-05-01 16:09 - Synchro Dashboard - STARTED
+2026-05-01 16:09 - Synchro Dashboard - SUCCESS
+2026-05-01 16:14 - Synchro Dashboard - STARTED
+2026-05-01 16:14 - Synchro Dashboard - SUCCESS
+2026-05-01 16:19 - Synchro Dashboard - STARTED
+2026-05-01 16:19 - Synchro Dashboard - SUCCESS
+2026-05-01 16:24 - Synchro Dashboard - STARTED
+2026-05-01 16:24 - Synchro Dashboard - SUCCESS
+2026-05-01 16:29 - Synchro Dashboard - STARTED
+2026-05-01 16:29 - Synchro Dashboard - SUCCESS
+2026-05-01 16:33 - Synchro Dashboard - STARTED
+2026-05-01 16:33 - Synchro Dashboard - SUCCESS
+2026-05-01 16:34 - Backup USB - WARNING: Clé USB introuvable ou non configurée
+2026-05-01 16:34 - Backup Local MySQL - SUCCESS
+2026-05-01 16:34 - Synchro Dashboard - STARTED
+2026-05-01 16:34 - Synchro Dashboard - SUCCESS
+2026-05-01 16:38 - Synchro Dashboard - STARTED
+2026-05-01 16:38 - Synchro Dashboard - SUCCESS
+2026-05-01 16:43 - Synchro Dashboard - STARTED
+2026-05-01 16:43 - Synchro Dashboard - SUCCESS
+2026-05-01 16:48 - Synchro Dashboard - STARTED
+2026-05-01 16:48 - Synchro Dashboard - SUCCESS
+2026-05-01 17:14 - Synchro Dashboard - STARTED
+2026-05-01 17:14 - Synchro Dashboard - SUCCESS
+2026-05-01 17:15 - Backup USB - WARNING: Clé USB introuvable ou non configurée
+2026-05-01 17:15 - Backup Local MySQL - SUCCESS
+2026-05-01 17:15 - Synchro Dashboard - STARTED
+2026-05-01 17:15 - Synchro Dashboard - SUCCESS
+2026-05-01 17:19 - Synchro Dashboard - STARTED
+2026-05-01 17:19 - Synchro Dashboard - SUCCESS
+2026-05-01 17:24 - Synchro Dashboard - STARTED
+2026-05-01 17:24 - Synchro Dashboard - SUCCESS
+2026-05-01 17:29 - Synchro Dashboard - STARTED
+2026-05-01 17:29 - Synchro Dashboard - SUCCESS
+2026-05-01 17:31 - Synchro Dashboard - STARTED
+2026-05-01 17:31 - Synchro Dashboard - SUCCESS
+2026-05-01 17:32 - Backup USB - WARNING: Clé USB introuvable ou non configurée
+2026-05-01 17:32 - Backup Local MySQL - SUCCESS
+2026-05-01 17:32 - Synchro Dashboard - STARTED
+2026-05-01 17:32 - Synchro Dashboard - SUCCESS
+2026-05-01 17:36 - Synchro Dashboard - STARTED
+2026-05-01 17:36 - Synchro Dashboard - SUCCESS
+2026-05-01 17:41 - Synchro Dashboard - STARTED
+2026-05-01 17:41 - Synchro Dashboard - SUCCESS
+2026-05-01 17:46 - Synchro Dashboard - STARTED
+2026-05-01 17:46 - Synchro Dashboard - SUCCESS
+2026-05-01 17:51 - Synchro Dashboard - STARTED
+2026-05-01 17:51 - Synchro Dashboard - SUCCESS
+2026-05-01 17:56 - Synchro Dashboard - STARTED
+2026-05-01 17:56 - Synchro Dashboard - SUCCESS
+2026-05-01 18:01 - Synchro Dashboard - STARTED
+2026-05-01 18:01 - Synchro Dashboard - SUCCESS
+2026-05-01 18:02 - Backup USB - WARNING: Clé USB introuvable ou non configurée
+2026-05-01 18:02 - Backup Local MySQL - SUCCESS
+2026-05-01 18:02 - Synchro Dashboard - STARTED
+2026-05-01 18:02 - Synchro Dashboard - SUCCESS
+2026-05-01 18:06 - Synchro Dashboard - STARTED
+2026-05-01 18:06 - Synchro Dashboard - SUCCESS
+2026-05-01 18:11 - Synchro Dashboard - STARTED
+2026-05-01 18:11 - Synchro Dashboard - SUCCESS
+2026-05-01 18:16 - Synchro Dashboard - STARTED
+2026-05-01 18:16 - Synchro Dashboard - SUCCESS
+2026-05-01 18:21 - Synchro Dashboard - STARTED
+2026-05-01 18:21 - Synchro Dashboard - SUCCESS
+2026-05-01 18:24 - Synchro Dashboard - STARTED
+2026-05-01 18:24 - Synchro Dashboard - SUCCESS
+2026-05-01 18:24 - Synchro Dashboard - STARTED
+2026-05-01 18:24 - Synchro Dashboard - SUCCESS
+2026-05-01 18:27 - Backup USB - WARNING: Clé USB introuvable ou non configurée
+2026-05-01 18:27 - Backup Local MySQL - SUCCESS
+2026-05-01 18:27 - Synchro Dashboard - STARTED
+2026-05-01 18:27 - Synchro Dashboard - SUCCESS
+2026-05-01 18:29 - Synchro Dashboard - STARTED
+2026-05-01 18:29 - Synchro Dashboard - SUCCESS
+2026-05-01 18:34 - Synchro Dashboard - STARTED
+2026-05-01 18:34 - Synchro Dashboard - SUCCESS
+2026-05-01 18:38 - Synchro Dashboard - STARTED
+2026-05-01 18:38 - Synchro Dashboard - SUCCESS
+2026-05-01 18:38 - Synchro Dashboard - STARTED
+2026-05-01 18:38 - Synchro Dashboard - SUCCESS
+2026-05-01 18:38 - Synchro Dashboard - STARTED
+2026-05-01 18:38 - Synchro Dashboard - SUCCESS
+2026-05-01 18:39 - Synchro Dashboard - STARTED
+2026-05-01 18:39 - Synchro Dashboard - SUCCESS
+2026-05-01 18:51 - Synchro Dashboard - STARTED
+2026-05-01 18:51 - Synchro Dashboard - SUCCESS
+2026-05-01 18:52 - Synchro Dashboard - STARTED
+2026-05-01 18:52 - Synchro Dashboard - SUCCESS
+2026-05-01 18:53 - Backup USB - WARNING: Clé USB introuvable ou non configurée
+2026-05-01 18:53 - Backup Local MySQL - SUCCESS
+2026-05-01 18:53 - Synchro Dashboard - STARTED
+2026-05-01 18:53 - Synchro Dashboard - SUCCESS
+2026-05-01 18:55 - Synchro Dashboard - STARTED
+2026-05-01 18:55 - Synchro Dashboard - SUCCESS
+2026-05-01 18:56 - Synchro Dashboard - STARTED
+2026-05-01 18:56 - Synchro Dashboard - SUCCESS
+2026-05-01 19:01 - Synchro Dashboard - STARTED
+2026-05-01 19:01 - Synchro Dashboard - SUCCESS
+2026-05-01 19:03 - Synchro Dashboard - STARTED
+2026-05-01 19:03 - Synchro Dashboard - SUCCESS
+2026-05-01 19:04 - Synchro Dashboard - STARTED
+2026-05-01 19:04 - Synchro Dashboard - SUCCESS
+2026-05-01 19:05 - Backup USB - WARNING: Clé USB introuvable ou non configurée
+2026-05-01 19:05 - Backup Local MySQL - SUCCESS
+2026-05-01 19:05 - Synchro Dashboard - STARTED
+2026-05-01 19:05 - Synchro Dashboard - SUCCESS
+2026-05-01 19:08 - Synchro Dashboard - STARTED
+2026-05-02 10:30 - Synchro Dashboard - STARTED
+2026-05-02 10:30 - Synchro Dashboard - SUCCESS
+2026-05-02 10:31 - Backup USB - WARNING: Clé USB introuvable ou non configurée
+2026-05-02 10:31 - Backup Local MySQL - SUCCESS
+2026-05-02 10:31 - Synchro Dashboard - STARTED
+2026-05-02 10:31 - Synchro Dashboard - SUCCESS
+2026-05-02 10:31 - Synchro Dashboard - STARTED
+2026-05-02 10:31 - Synchro Dashboard - SUCCESS
+2026-05-02 10:35 - Synchro Dashboard - STARTED
+2026-05-02 10:35 - Synchro Dashboard - SUCCESS
+2026-05-02 10:40 - Synchro Dashboard - STARTED
+2026-05-02 10:40 - Synchro Dashboard - SUCCESS
+2026-05-02 10:45 - Synchro Dashboard - STARTED
+2026-05-02 10:45 - Synchro Dashboard - SUCCESS
+2026-05-02 10:50 - Synchro Dashboard - STARTED
+2026-05-02 10:50 - Synchro Dashboard - SUCCESS
+2026-05-02 10:55 - Synchro Dashboard - STARTED
+2026-05-02 10:55 - Synchro Dashboard - SUCCESS
+2026-05-02 11:00 - Synchro Dashboard - STARTED
+2026-05-02 11:00 - Synchro Dashboard - SUCCESS
+2026-05-02 11:05 - Synchro Dashboard - STARTED
+2026-05-02 11:05 - Synchro Dashboard - SUCCESS
+2026-05-02 11:10 - Synchro Dashboard - STARTED
+2026-05-02 11:10 - Synchro Dashboard - SUCCESS
+2026-05-02 11:15 - Synchro Dashboard - STARTED
+2026-05-02 11:15 - Synchro Dashboard - SUCCESS
+2026-05-02 11:20 - Synchro Dashboard - STARTED
+2026-05-02 11:20 - Synchro Dashboard - SUCCESS
+2026-05-02 11:25 - Synchro Dashboard - STARTED
+2026-05-02 11:25 - Synchro Dashboard - SUCCESS
+2026-05-02 11:30 - Synchro Dashboard - STARTED
+2026-05-02 11:30 - Synchro Dashboard - SUCCESS
+2026-05-02 11:35 - Synchro Dashboard - STARTED
+2026-05-02 11:35 - Synchro Dashboard - SUCCESS
+2026-05-02 11:40 - Synchro Dashboard - STARTED
+2026-05-02 11:40 - Synchro Dashboard - SUCCESS
+2026-05-02 11:45 - Synchro Dashboard - STARTED
+2026-05-02 11:45 - Synchro Dashboard - SUCCESS
+2026-05-02 11:50 - Synchro Dashboard - STARTED
+2026-05-02 11:50 - Synchro Dashboard - SUCCESS
+2026-05-02 11:55 - Synchro Dashboard - STARTED
+2026-05-02 11:55 - Synchro Dashboard - SUCCESS
+2026-05-02 12:00 - Synchro Dashboard - STARTED
+2026-05-02 12:00 - Synchro Dashboard - SUCCESS
+2026-05-02 12:05 - Synchro Dashboard - STARTED
+2026-05-02 12:05 - Synchro Dashboard - SUCCESS
+2026-05-02 12:10 - Synchro Dashboard - STARTED
+2026-05-02 12:10 - Synchro Dashboard - SUCCESS
+2026-05-02 12:15 - Synchro Dashboard - STARTED
+2026-05-02 12:15 - Synchro Dashboard - SUCCESS
+2026-05-02 12:20 - Synchro Dashboard - STARTED
+2026-05-02 12:20 - Synchro Dashboard - SUCCESS
+2026-05-02 12:25 - Synchro Dashboard - STARTED
+2026-05-02 12:25 - Synchro Dashboard - SUCCESS
+2026-05-02 12:30 - Synchro Dashboard - STARTED
+2026-05-02 12:30 - Synchro Dashboard - SUCCESS
+2026-05-02 12:35 - Synchro Dashboard - STARTED
+2026-05-02 12:35 - Synchro Dashboard - SUCCESS
+2026-05-02 12:40 - Synchro Dashboard - STARTED
+2026-05-02 12:40 - Synchro Dashboard - SUCCESS
+2026-05-02 12:45 - Synchro Dashboard - STARTED
+2026-05-02 12:45 - Synchro Dashboard - SUCCESS
+2026-05-02 12:50 - Synchro Dashboard - STARTED
+2026-05-02 12:50 - Synchro Dashboard - SUCCESS
+2026-05-02 12:55 - Synchro Dashboard - STARTED
+2026-05-02 12:55 - Synchro Dashboard - SUCCESS
+2026-05-02 13:00 - Synchro Dashboard - STARTED
+2026-05-02 13:00 - Synchro Dashboard - SUCCESS
+2026-05-02 13:05 - Synchro Dashboard - STARTED
+2026-05-02 13:05 - Synchro Dashboard - SUCCESS
+2026-05-02 13:10 - Synchro Dashboard - STARTED
+2026-05-02 13:10 - Synchro Dashboard - SUCCESS
+2026-05-02 13:15 - Synchro Dashboard - STARTED
+2026-05-02 13:15 - Synchro Dashboard - SUCCESS
+2026-05-02 13:20 - Synchro Dashboard - STARTED
+2026-05-02 13:20 - Synchro Dashboard - SUCCESS
+2026-05-02 13:25 - Synchro Dashboard - STARTED
+2026-05-02 13:25 - Synchro Dashboard - SUCCESS
+2026-05-02 13:30 - Synchro Dashboard - STARTED
+2026-05-02 13:30 - Synchro Dashboard - SUCCESS
+2026-05-02 13:35 - Synchro Dashboard - STARTED
+2026-05-02 13:35 - Synchro Dashboard - SUCCESS
+2026-05-02 13:40 - Synchro Dashboard - STARTED
+2026-05-02 13:40 - Synchro Dashboard - SUCCESS
+2026-05-02 13:45 - Synchro Dashboard - STARTED
+2026-05-02 13:45 - Synchro Dashboard - SUCCESS
+2026-05-02 13:50 - Synchro Dashboard - STARTED
+2026-05-02 13:50 - Synchro Dashboard - SUCCESS
+2026-05-02 13:55 - Synchro Dashboard - STARTED
+2026-05-02 13:55 - Synchro Dashboard - SUCCESS
+2026-05-02 14:00 - Synchro Dashboard - STARTED
+2026-05-02 14:00 - Synchro Dashboard - SUCCESS
+2026-05-02 14:05 - Synchro Dashboard - STARTED
+2026-05-02 14:05 - Synchro Dashboard - SUCCESS
+2026-05-02 14:10 - Synchro Dashboard - STARTED
+2026-05-02 14:10 - Synchro Dashboard - SUCCESS
+2026-05-02 14:15 - Synchro Dashboard - STARTED
+2026-05-02 14:15 - Synchro Dashboard - SUCCESS
+2026-05-02 14:20 - Synchro Dashboard - STARTED
+2026-05-02 14:20 - Synchro Dashboard - SUCCESS
+2026-05-02 14:25 - Synchro Dashboard - STARTED
+2026-05-02 14:25 - Synchro Dashboard - SUCCESS
+2026-05-02 14:30 - Synchro Dashboard - STARTED
+2026-05-02 14:30 - Synchro Dashboard - SUCCESS
+2026-05-02 14:35 - Synchro Dashboard - STARTED
+2026-05-02 14:35 - Synchro Dashboard - SUCCESS
+2026-05-02 14:40 - Synchro Dashboard - STARTED
+2026-05-02 14:40 - Synchro Dashboard - SUCCESS
+2026-05-02 14:42 - Synchro Dashboard - STARTED
+2026-05-02 14:42 - Synchro Dashboard - SUCCESS
+2026-05-02 14:47 - Synchro Dashboard - STARTED
+2026-05-02 14:47 - Synchro Dashboard - SUCCESS
+2026-05-02 14:49 - Synchro Dashboard - STARTED
+2026-05-02 14:49 - Synchro Dashboard - SUCCESS
+2026-05-02 14:54 - Synchro Dashboard - STARTED
+2026-05-02 14:54 - Synchro Dashboard - SUCCESS
+2026-05-02 14:59 - Synchro Dashboard - STARTED
+2026-05-02 14:59 - Synchro Dashboard - SUCCESS
+2026-05-02 15:04 - Synchro Dashboard - STARTED
+2026-05-02 15:04 - Synchro Dashboard - SUCCESS
+2026-05-02 15:09 - Synchro Dashboard - STARTED
+2026-05-02 15:09 - Synchro Dashboard - SUCCESS
+2026-05-02 15:14 - Synchro Dashboard - STARTED
+2026-05-02 15:14 - Synchro Dashboard - SUCCESS
+2026-05-02 15:18 - Synchro Dashboard - STARTED
+2026-05-02 15:18 - Synchro Dashboard - ERROR: Could not locate named parameter [today], expecting one of [dateLimite]
+2026-05-02 15:22 - Synchro Dashboard - STARTED
+2026-05-02 15:22 - Synchro Dashboard - SUCCESS
+2026-05-02 15:22 - Synchro Dashboard - STARTED
+2026-05-02 15:23 - Synchro Dashboard - SUCCESS
+2026-05-02 15:27 - Synchro Dashboard - STARTED
+2026-05-02 15:27 - Synchro Dashboard - SUCCESS
+2026-05-02 15:32 - Synchro Dashboard - STARTED
+2026-05-02 15:32 - Synchro Dashboard - SUCCESS
+2026-05-02 15:36 - Synchro Dashboard - STARTED
+2026-05-02 15:36 - Synchro Dashboard - SUCCESS
+2026-05-02 15:41 - Synchro Dashboard - STARTED
+2026-05-02 15:41 - Synchro Dashboard - SUCCESS
+2026-05-02 15:46 - Synchro Dashboard - STARTED
+2026-05-02 15:47 - Synchro Dashboard - SUCCESS
+2026-05-02 15:52 - Synchro Dashboard - STARTED
+2026-05-02 15:52 - Synchro Dashboard - SUCCESS
+2026-05-02 15:57 - Synchro Dashboard - STARTED
+2026-05-02 15:57 - Synchro Dashboard - SUCCESS
+2026-05-02 16:02 - Synchro Dashboard - STARTED
+2026-05-02 16:02 - Synchro Dashboard - SUCCESS
+2026-05-02 16:07 - Synchro Dashboard - STARTED
+2026-05-02 16:07 - Synchro Dashboard - SUCCESS
+2026-05-02 16:09 - Synchro Dashboard - STARTED
+2026-05-02 16:09 - Synchro Dashboard - SUCCESS
+2026-05-02 16:11 - Synchro Dashboard - STARTED
+2026-05-02 16:11 - Synchro Dashboard - SUCCESS
+2026-05-02 16:17 - Synchro Dashboard - STARTED
+2026-05-02 16:17 - Synchro Dashboard - SUCCESS
+2026-05-02 16:22 - Synchro Dashboard - STARTED
+2026-05-02 16:22 - Synchro Dashboard - SUCCESS
+2026-05-02 16:27 - Synchro Dashboard - STARTED
+2026-05-02 16:27 - Synchro Dashboard - SUCCESS
+2026-05-02 16:31 - Synchro Dashboard - STARTED
+2026-05-02 16:31 - Synchro Dashboard - SUCCESS
+2026-05-02 16:37 - Synchro Dashboard - STARTED
+2026-05-02 16:37 - Synchro Dashboard - SUCCESS
+2026-05-02 16:41 - Synchro Dashboard - STARTED
+2026-05-02 16:41 - Synchro Dashboard - SUCCESS
+2026-05-02 16:46 - Synchro Dashboard - STARTED
+2026-05-02 16:46 - Synchro Dashboard - SUCCESS
+2026-05-02 16:52 - Synchro Dashboard - STARTED
+2026-05-02 16:52 - Synchro Dashboard - SUCCESS
+2026-05-02 16:57 - Synchro Dashboard - STARTED
+2026-05-02 16:57 - Synchro Dashboard - SUCCESS
+2026-05-02 17:00 - Synchro Dashboard - STARTED
+2026-05-02 17:00 - Synchro Dashboard - SUCCESS
+2026-05-02 17:01 - Synchro Dashboard - STARTED
+2026-05-02 17:01 - Synchro Dashboard - SUCCESS
+2026-05-02 17:06 - Synchro Dashboard - STARTED
+2026-05-02 17:06 - Synchro Dashboard - SUCCESS
+2026-05-02 17:11 - Synchro Dashboard - STARTED
+2026-05-02 17:11 - Synchro Dashboard - SUCCESS
+2026-05-02 17:12 - Synchro Dashboard - STARTED
+2026-05-02 17:12 - Synchro Dashboard - SUCCESS
+2026-05-02 17:13 - Synchro Dashboard - STARTED
+2026-05-02 17:13 - Synchro Dashboard - SUCCESS
+2026-05-02 17:17 - Synchro Dashboard - STARTED
+2026-05-02 17:17 - Synchro Dashboard - SUCCESS
+2026-05-02 17:21 - Synchro Dashboard - STARTED
+2026-05-02 17:21 - Synchro Dashboard - SUCCESS
+2026-05-02 17:26 - Synchro Dashboard - STARTED
+2026-05-02 17:26 - Synchro Dashboard - SUCCESS
+2026-05-02 17:28 - Synchro Dashboard - STARTED
+2026-05-02 17:28 - Synchro Dashboard - SUCCESS
+2026-05-02 17:29 - Synchro Dashboard - STARTED
+2026-05-02 17:29 - Synchro Dashboard - SUCCESS
+2026-05-02 17:32 - Synchro Dashboard - STARTED
+2026-05-02 17:32 - Synchro Dashboard - SUCCESS
+2026-05-02 17:38 - Synchro Dashboard - STARTED
+2026-05-02 17:38 - Synchro Dashboard - SUCCESS
+2026-05-02 17:43 - Synchro Dashboard - STARTED
+2026-05-02 17:43 - Synchro Dashboard - SUCCESS
+2026-05-02 17:48 - Synchro Dashboard - STARTED
+2026-05-02 17:48 - Synchro Dashboard - SUCCESS
+2026-05-02 17:53 - Synchro Dashboard - STARTED
+2026-05-02 17:53 - Synchro Dashboard - SUCCESS
+2026-05-02 17:58 - Synchro Dashboard - STARTED
+2026-05-02 17:58 - Synchro Dashboard - SUCCESS
+2026-05-03 14:29 - Synchro Dashboard - STARTED
+2026-05-03 14:29 - Synchro Dashboard - SUCCESS
+2026-05-03 14:30 - Synchro Dashboard - STARTED
+2026-05-03 14:30 - Synchro Dashboard - SUCCESS
+2026-05-03 14:33 - Backup USB - WARNING: Clé USB introuvable ou non configurée
+2026-05-03 14:33 - Backup Local MySQL - SUCCESS
+2026-05-03 14:33 - Synchro Dashboard - STARTED
+2026-05-03 14:33 - Synchro Dashboard - SUCCESS
+2026-05-03 14:34 - Synchro Dashboard - STARTED
+2026-05-03 14:34 - Synchro Dashboard - SUCCESS
+2026-05-03 14:39 - Synchro Dashboard - STARTED
+2026-05-03 14:39 - Synchro Dashboard - SUCCESS
+2026-05-03 14:44 - Synchro Dashboard - STARTED
+2026-05-03 14:44 - Synchro Dashboard - SUCCESS
+2026-05-03 14:49 - Synchro Dashboard - STARTED
+2026-05-03 14:49 - Synchro Dashboard - SUCCESS
+2026-05-03 14:54 - Synchro Dashboard - STARTED
+2026-05-03 14:54 - Synchro Dashboard - SUCCESS
+2026-05-03 14:59 - Synchro Dashboard - STARTED
+2026-05-03 14:59 - Synchro Dashboard - SUCCESS
+2026-05-03 15:04 - Synchro Dashboard - STARTED
+2026-05-03 15:04 - Synchro Dashboard - SUCCESS
+2026-05-03 15:09 - Synchro Dashboard - STARTED
+2026-05-03 15:09 - Synchro Dashboard - SUCCESS
+2026-05-03 15:13 - Synchro Dashboard - STARTED
+2026-05-03 15:13 - Synchro Dashboard - SUCCESS
+2026-05-03 15:14 - Synchro Dashboard - STARTED
+2026-05-03 15:14 - Synchro Dashboard - SUCCESS
+2026-05-03 15:18 - Synchro Dashboard - STARTED
+2026-05-03 15:18 - Synchro Dashboard - SUCCESS
+2026-05-03 15:23 - Synchro Dashboard - STARTED
+2026-05-03 15:23 - Synchro Dashboard - SUCCESS
+2026-05-03 15:28 - Synchro Dashboard - STARTED
+2026-05-03 15:28 - Synchro Dashboard - SUCCESS
+2026-05-03 15:33 - Synchro Dashboard - STARTED
+2026-05-03 15:33 - Synchro Dashboard - SUCCESS
+2026-05-03 15:38 - Synchro Dashboard - STARTED
+2026-05-03 15:38 - Synchro Dashboard - SUCCESS
+2026-05-03 15:43 - Synchro Dashboard - STARTED
+2026-05-03 15:43 - Synchro Dashboard - SUCCESS
+2026-05-03 15:48 - Synchro Dashboard - STARTED
+2026-05-03 15:48 - Synchro Dashboard - SUCCESS
+2026-05-03 15:52 - Synchro Dashboard - STARTED
+2026-05-03 15:52 - Synchro Dashboard - SUCCESS
+2026-05-03 15:53 - Synchro Dashboard - STARTED
+2026-05-03 16:15 - Synchro Dashboard - SUCCESS
+2026-05-03 16:18 - Synchro Dashboard - STARTED
+2026-05-03 16:18 - Synchro Dashboard - SUCCESS
+2026-05-03 16:23 - Synchro Dashboard - STARTED
+2026-05-03 16:23 - Synchro Dashboard - SUCCESS
+2026-05-03 16:28 - Synchro Dashboard - STARTED
+2026-05-03 16:28 - Synchro Dashboard - SUCCESS
+2026-05-03 16:33 - Synchro Dashboard - STARTED
+2026-05-03 16:33 - Synchro Dashboard - SUCCESS
+2026-05-03 16:34 - Synchro Dashboard - STARTED
+2026-05-03 16:34 - Synchro Dashboard - SUCCESS
+2026-05-03 16:34 - Synchro Dashboard - STARTED
+2026-05-03 16:35 - Synchro Dashboard - SUCCESS
+2026-05-03 16:39 - Synchro Dashboard - STARTED
+2026-05-03 16:39 - Synchro Dashboard - SUCCESS
+2026-05-03 16:43 - Synchro Dashboard - STARTED
+2026-05-03 16:43 - Synchro Dashboard - SUCCESS
+2026-05-03 16:44 - Synchro Dashboard - STARTED
+2026-05-03 16:44 - Synchro Dashboard - SUCCESS
+2026-05-03 16:45 - Synchro Dashboard - STARTED
+2026-05-03 16:46 - Synchro Dashboard - SUCCESS
+2026-05-03 16:49 - Synchro Dashboard - STARTED
+2026-05-03 16:49 - Synchro Dashboard - SUCCESS
+2026-05-03 16:54 - Synchro Dashboard - STARTED
+2026-05-03 16:54 - Synchro Dashboard - SUCCESS
+2026-05-03 16:59 - Synchro Dashboard - STARTED
+2026-05-03 16:59 - Synchro Dashboard - SUCCESS
+2026-05-03 17:04 - Synchro Dashboard - STARTED
+2026-05-03 17:04 - Synchro Dashboard - SUCCESS

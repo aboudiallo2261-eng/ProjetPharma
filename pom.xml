@@ -107,6 +107,14 @@
             <artifactId>logback-classic</artifactId>
             <version>1.5.0</version>
         </dependency>
+
+        <!-- Gson pour la synchronisation JSON (Phase 2 Jumeau Numérique) -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+        
         <!-- ======================= -->
         <!--  TESTS UNITAIRES (QA)   -->
         <!-- ======================= -->
