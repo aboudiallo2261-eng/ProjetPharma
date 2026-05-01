@@ -148,10 +148,8 @@ public class AlerteStockController {
 
         Map<Long, Integer> stockParProduit = new HashMap<>();
         for (Lot l : tousLesLots) {
-            if (l.getDateExpiration() == null || !l.getDateExpiration().isBefore(LocalDate.now())) {
-                stockParProduit.put(l.getProduit().getId(),
-                    stockParProduit.getOrDefault(l.getProduit().getId(), 0) + l.getQuantiteStock());
-            }
+            stockParProduit.put(l.getProduit().getId(),
+                stockParProduit.getOrDefault(l.getProduit().getId(), 0) + l.getQuantiteStock());
         }
 
         for (Produit p : produits) {
@@ -202,9 +200,9 @@ public class AlerteStockController {
                 if (selected) {
                     setStyle("-fx-text-fill: white; -fx-alignment: CENTER; -fx-font-weight: bold;");
                 } else if (item.startsWith("PERIME")) {
-                    setStyle("-fx-text-fill: #c0392b; -fx-alignment: CENTER; -fx-font-weight: bold;");
+                    setStyle("-fx-text-fill: #DC2626; -fx-alignment: CENTER; -fx-font-weight: bold;"); // Red 600
                 } else {
-                    setStyle("-fx-text-fill: #e67e22; -fx-alignment: CENTER; -fx-font-weight: bold;");
+                    setStyle("-fx-text-fill: #F59E0B; -fx-alignment: CENTER; -fx-font-weight: bold;"); // Amber 500
                 }
             }
         });
@@ -224,9 +222,9 @@ public class AlerteStockController {
                 if (selected) {
                     setStyle("-fx-text-fill: white; -fx-alignment: CENTER; -fx-font-weight: bold;");
                 } else if (item < 0) {
-                    setStyle("-fx-text-fill: #c0392b; -fx-alignment: CENTER; -fx-font-weight: bold;");
+                    setStyle("-fx-text-fill: #DC2626; -fx-alignment: CENTER; -fx-font-weight: bold;"); // Red 600
                 } else {
-                    setStyle("-fx-text-fill: #e67e22; -fx-alignment: CENTER; -fx-font-weight: bold;");
+                    setStyle("-fx-text-fill: #F59E0B; -fx-alignment: CENTER; -fx-font-weight: bold;"); // Amber 500
                 }
             }
         });
@@ -239,7 +237,7 @@ public class AlerteStockController {
         LocalDate seuilAlerte = today.plusDays(SEUIL_JOURS_ALERTE);
 
         for (Lot l : tousLesLots) {
-            if (l.getDateExpiration() == null) continue;
+            if (l.getDateExpiration() == null || l.getQuantiteStock() <= 0) continue; // On ignore les lots sans date ou dont le stock est épuisé
             LocalDate exp = l.getDateExpiration();
             if (!exp.isAfter(seuilAlerte)) { // périmé ou dans les 30 prochains jours
                 long joursRestants = ChronoUnit.DAYS.between(today, exp);

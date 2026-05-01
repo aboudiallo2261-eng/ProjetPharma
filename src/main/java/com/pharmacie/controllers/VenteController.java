@@ -236,14 +236,20 @@ public class VenteController {
             }
         });
 
-        // CHRONO: Purge automatique des tickets gelés > 30 min (Point 2)
+        // CHRONO: Purge automatique des tickets gelés > 2 heures (Point 8 & 9)
         javafx.animation.Timeline purgeChrono = new javafx.animation.Timeline(
             new javafx.animation.KeyFrame(javafx.util.Duration.minutes(1), e -> {
-                java.time.LocalTime now = java.time.LocalTime.now();
-                boolean purged = SessionManager.getFileAttente().removeIf(t -> 
-                    java.time.temporal.ChronoUnit.MINUTES.between(t.getHeure(), now) > 30
-                );
-                if (purged) {
+                boolean hadExpired = false;
+                java.util.Iterator<TicketEnAttente> it = SessionManager.getFileAttente().iterator();
+                while (it.hasNext()) {
+                    TicketEnAttente t = it.next();
+                    if (t.isExpired()) {
+                        restaurerStockReserve(t.getReservedLines());
+                        it.remove();
+                        hadExpired = true;
+                    }
+                }
+                if (hadExpired) {
                     mettreAJourBadgeTickets();
                 }
             })
@@ -574,6 +580,32 @@ public class VenteController {
         }
     }
 
+    private void nettoyerTicketsExpiresEtRestaurerStock() {
+        java.util.Iterator<TicketEnAttente> it = SessionManager.getFileAttente().iterator();
+        while (it.hasNext()) {
+            TicketEnAttente t = it.next();
+            if (t.isExpired()) {
+                restaurerStockReserve(t.getReservedLines());
+                it.remove();
+            }
+        }
+    }
+
+    private void restaurerStockReserve(java.util.List<LigneVente> reservedLines) {
+        if (reservedLines == null) return;
+        for (LigneVente lv : reservedLines) {
+            if (lv.getLot() != null) {
+                com.pharmacie.models.Lot l = lotDAO.findById(lv.getLot().getId());
+                if (l != null) {
+                    l.setQuantiteStock(l.getQuantiteStock() + lv.getQuantiteVendue());
+                    if (l.getQuantiteStock() > 0) l.setEstArchive(false);
+                    lotDAO.update(l);
+                }
+            }
+        }
+        loadStockDispo();
+    }
+
     /** Met le panier actuel en attente et le vide pour un nouveau client */
     @FXML
     public void mettreEnAttente() {
@@ -581,26 +613,70 @@ public class VenteController {
             showError("Le panier est vide. Rien à mettre en attente.");
             return;
         }
+
+        nettoyerTicketsExpiresEtRestaurerStock();
+
         double total = panier.stream().mapToDouble(LigneVente::getSousTotal).sum();
-        TicketEnAttente ticket = new TicketEnAttente(SessionManager.getNextTicketNumber(), panier, total);
+        
+        // Point 9 : Hard Hold - Réservation stricte du stock
+        java.util.List<LigneVente> reservedLines = new java.util.ArrayList<>();
+        try {
+            for (LigneVente lv : panier) {
+                int baseUnitsToDeduct = lv.getTypeUnite() == LigneVente.TypeUnite.BOITE_ENTIERE && lv.getProduit().getEstDeconditionnable() != null && lv.getProduit().getEstDeconditionnable() 
+                                        ? lv.getQuantiteVendue() * lv.getProduit().getUnitesParBoite() 
+                                        : lv.getQuantiteVendue();
+                
+                java.util.List<com.pharmacie.models.Lot> lotsDispos = lotDAO.findAll().stream()
+                    .filter(l -> l.getProduit().getId().equals(lv.getProduit().getId()) && l.getQuantiteStock() > 0)
+                    .filter(l -> l.getDateExpiration() == null || !l.getDateExpiration().isBefore(java.time.LocalDate.now()))
+                    .sorted((l1, l2) -> {
+                        if (l1.getDateExpiration() == null) return 1;
+                        if (l2.getDateExpiration() == null) return -1;
+                        return l1.getDateExpiration().compareTo(l2.getDateExpiration());
+                    }).toList();
+
+                int remaining = baseUnitsToDeduct;
+                for (com.pharmacie.models.Lot l : lotsDispos) {
+                    if (remaining <= 0) break;
+                    int taken = Math.min(l.getQuantiteStock(), remaining);
+                    l.setQuantiteStock(l.getQuantiteStock() - taken);
+                    if (l.getQuantiteStock() == 0) l.setEstArchive(true);
+                    lotDAO.update(l);
+                    
+                    LigneVente reservedLv = new LigneVente();
+                    reservedLv.setProduit(lv.getProduit());
+                    reservedLv.setLot(l);
+                    reservedLv.setQuantiteVendue(taken);
+                    reservedLines.add(reservedLv);
+                    
+                    remaining -= taken;
+                }
+            }
+            loadStockDispo();
+        } catch (Exception e) {
+            logger.error("Erreur lors de la réservation Hard Hold", e);
+        }
+
+        TicketEnAttente ticket = new TicketEnAttente(SessionManager.getNextTicketNumber(), panier, reservedLines, total);
         SessionManager.getFileAttente().add(ticket);
         panier.clear();
         calculerTotalVente();
         mettreAJourBadgeTickets();
         txtMontantRecu.clear();
-        com.pharmacie.utils.ToastService.showInfo(boxVenteMain.getScene().getWindow(), "Ticket en Attente", "Le ticket a été mis de côté avec succès.");
+        com.pharmacie.utils.ToastService.showInfo(boxVenteMain.getScene().getWindow(), "Ticket en Attente", "Le ticket a été mis de côté avec succès (Stock réservé pour 2h).");
         txtRechercheProduit.requestFocus();
     }
 
     /** Met à jour le texte du bouton avec le nombre de tickets en attente */
     private void mettreAJourBadgeTickets() {
+        nettoyerTicketsExpiresEtRestaurerStock();
         int nb = SessionManager.getFileAttente().size();
         if (nb == 0) {
-            btnTicketsEnAttente.setText("⏸ Tickets en Attente (0)");
+            btnTicketsEnAttente.setText("Tickets en Attente (0)");
             btnTicketsEnAttente.setStyle(
                     "-fx-background-color: #F39C12; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;");
         } else {
-            btnTicketsEnAttente.setText("⏸ Tickets en Attente (" + nb + ") 🔴");
+            btnTicketsEnAttente.setText("Tickets en Attente (" + nb + ") 🔴");
             btnTicketsEnAttente.setStyle(
                     "-fx-background-color: #E67E22; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15; -fx-effect: dropshadow(gaussian, #e67e22, 10, 0.5, 0, 0);");
         }
@@ -622,32 +698,95 @@ public class VenteController {
             return;
         }
 
-        // --- Construction du Dialog unique ---
+        // --- Construction du Dialog premium ---
         Dialog<Void> dialog = new Dialog<>();
-        dialog.setTitle("⏸ File d'Attente — Tickets Suspendus");
-        dialog.setHeaderText(
-            SessionManager.getFileAttente().size() + " ticket(s) en attente  •  Sélectionnez puis choisissez une action");
+        dialog.setTitle("File d'Attente");
+        dialog.getDialogPane().setStyle("-fx-background-color: #F8FAFC;");
+
+        javafx.scene.layout.VBox headerBox = new javafx.scene.layout.VBox(5);
+        headerBox.setPadding(new javafx.geometry.Insets(10, 0, 10, 0));
+        Label headerTitle = new Label("Tickets Suspendus");
+        headerTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1E293B;");
+        Label headerSub = new Label(SessionManager.getFileAttente().size() + " ticket(s) en attente • Sélectionnez puis choisissez une action");
+        headerSub.setStyle("-fx-font-size: 13px; -fx-text-fill: #64748B;");
+        headerBox.getChildren().addAll(headerTitle, headerSub);
 
         // Boutons directs (pas de deuxième popup)
-        ButtonType btnRappeler  = new ButtonType("▶ Rappeler",  ButtonBar.ButtonData.OK_DONE);
-        ButtonType btnSupprimer = new ButtonType("🗑 Supprimer", ButtonBar.ButtonData.LEFT);
+        ButtonType btnRappeler  = new ButtonType("Rappeler le Ticket",  ButtonBar.ButtonData.OK_DONE);
+        ButtonType btnSupprimer = new ButtonType("Supprimer", ButtonBar.ButtonData.LEFT);
         ButtonType btnFermer    = new ButtonType("Fermer",       ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(btnRappeler, btnSupprimer, btnFermer);
 
-        // Style du bouton Supprimer en rouge pour le différencier visuellement
-        javafx.scene.Node nodeSupp = dialog.getDialogPane().lookupButton(btnSupprimer);
-        if (nodeSupp != null)
-            nodeSupp.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;");
+        Platform.runLater(() -> {
+            javafx.scene.Node nodeRap = dialog.getDialogPane().lookupButton(btnRappeler);
+            if (nodeRap != null) {
+                nodeRap.setStyle("-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 16; -fx-background-radius: 6; -fx-min-width: 140px;");
+                nodeRap.setCursor(javafx.scene.Cursor.HAND);
+            }
+            javafx.scene.Node nodeSupp = dialog.getDialogPane().lookupButton(btnSupprimer);
+            if (nodeSupp != null) {
+                nodeSupp.setStyle("-fx-background-color: #FEF2F2; -fx-text-fill: #DC2626; -fx-font-weight: bold; -fx-border-color: #FCA5A5; -fx-border-width: 1.5; -fx-border-radius: 6; -fx-padding: 7 15; -fx-min-width: 100px;");
+                nodeSupp.setCursor(javafx.scene.Cursor.HAND);
+            }
+            javafx.scene.Node nodeFerm = dialog.getDialogPane().lookupButton(btnFermer);
+            if (nodeFerm != null) {
+                nodeFerm.setStyle("-fx-background-color: transparent; -fx-text-fill: #64748B; -fx-font-weight: bold; -fx-border-color: #CBD5E1; -fx-border-width: 1.5; -fx-border-radius: 6; -fx-padding: 7 20; -fx-min-width: 100px;");
+                nodeFerm.setCursor(javafx.scene.Cursor.HAND);
+            }
+        });
 
-        // ListView stylisée
+        // ListView stylisée premium
         javafx.scene.control.ListView<TicketEnAttente> listView = new javafx.scene.control.ListView<>();
         listView.getItems().addAll(SessionManager.getFileAttente());
         listView.getSelectionModel().selectFirst();
-        listView.setPrefHeight(220);
-        listView.setStyle("-fx-font-size: 14px; -fx-background-radius: 6;");
+        listView.setPrefHeight(250);
+        listView.setStyle("-fx-background-color: white; -fx-background-radius: 6; -fx-border-color: #E2E8F0; -fx-border-radius: 6;");
 
-        dialog.getDialogPane().setContent(listView);
-        dialog.getDialogPane().setMinWidth(520);
+        listView.setCellFactory(lv -> new javafx.scene.control.ListCell<TicketEnAttente>() {
+            @Override
+            protected void updateItem(TicketEnAttente item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                    setStyle("-fx-background-color: transparent;");
+                } else {
+                    javafx.scene.layout.HBox box = new javafx.scene.layout.HBox();
+                    box.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+                    box.setPadding(new javafx.geometry.Insets(10, 14, 10, 14));
+                    
+                    javafx.scene.layout.VBox leftBox = new javafx.scene.layout.VBox(4);
+                    Label lblId = new Label("Ticket #" + item.getNumero());
+                    lblId.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #0F172A;");
+                    Label lblDate = new Label(item.getHeure().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm")) + "  •  " + item.getLignes().size() + " articles");
+                    lblDate.setStyle("-fx-font-size: 11px; -fx-text-fill: #64748B;");
+                    leftBox.getChildren().addAll(lblId, lblDate);
+                    
+                    javafx.scene.layout.Region spacer = new javafx.scene.layout.Region();
+                    javafx.scene.layout.HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+                    
+                    Label lblTotal = new Label(String.format("%,.0f FCFA", item.getTotal()));
+                    lblTotal.setStyle("-fx-font-weight: bold; -fx-text-fill: #059669; -fx-font-size: 15px;");
+                    
+                    box.getChildren().addAll(leftBox, spacer, lblTotal);
+                    setGraphic(box);
+                    setText(null);
+                    
+                    if (isSelected()) {
+                        setStyle("-fx-background-color: #F1F5F9;");
+                    } else {
+                        setStyle("-fx-background-color: white;");
+                    }
+                }
+            }
+        });
+
+        javafx.scene.layout.VBox mainContent = new javafx.scene.layout.VBox(15);
+        mainContent.setPadding(new javafx.geometry.Insets(10));
+        mainContent.getChildren().addAll(headerBox, listView);
+
+        dialog.getDialogPane().setContent(mainContent);
+        dialog.getDialogPane().setMinWidth(480);
 
         // Flag pour savoir quel bouton a été cliqué (évite le double popup)
         final boolean[] doRappeler  = {false};
@@ -677,59 +816,10 @@ public class VenteController {
                 if (a.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) return;
             }
 
-            // Vérification stock à la volée
-            boolean stockAjuste = false;
-            StringBuilder alertMsg = new StringBuilder();
-            java.util.List<LigneVente> lignesValables = new java.util.ArrayList<>();
-            java.util.Map<Long, Integer> qteDecompte = new java.util.HashMap<>();
+            // On restaure le stock pour qu'il soit disponible lors de la validation finale
+            restaurerStockReserve(selected.getReservedLines());
 
-            for (LigneVente lv : selected.getLignes()) {
-                Long pId = lv.getProduit().getId();
-                int dispoDB     = calculerQteTotaleProduit(pId);
-                int dejaTraite  = qteDecompte.getOrDefault(pId, 0);
-                int dispoRestant = dispoDB - dejaTraite;
-
-                int baseReq = lv.getTypeUnite() == LigneVente.TypeUnite.BOITE_ENTIERE
-                        && lv.getProduit().getEstDeconditionnable() != null
-                        && lv.getProduit().getEstDeconditionnable()
-                                ? lv.getQuantiteVendue() * lv.getProduit().getUnitesParBoite()
-                                : lv.getQuantiteVendue();
-
-                if (baseReq > dispoRestant) {
-                    stockAjuste = true;
-                    if (dispoRestant <= 0) {
-                        alertMsg.append("- ").append(lv.getProduit().getNom())
-                                .append(" : en rupture (retiré).\n");
-                        continue;
-                    }
-
-                    int newQte = lv.getTypeUnite() == LigneVente.TypeUnite.BOITE_ENTIERE
-                            && lv.getProduit().getEstDeconditionnable() != null
-                            && lv.getProduit().getEstDeconditionnable()
-                                    ? dispoRestant / lv.getProduit().getUnitesParBoite()
-                                    : dispoRestant;
-
-                    if (newQte <= 0) {
-                        alertMsg.append("- ").append(lv.getProduit().getNom())
-                                .append(" : reste insuffisant pour 1 boîte (retiré).\n");
-                        continue;
-                    }
-
-                    lv.setQuantiteVendue(newQte);
-                    lv.setSousTotal(lv.getPrixUnitaire() * newQte);
-                    alertMsg.append("- ").append(lv.getProduit().getNom())
-                            .append(" : Qte réduite à ").append(newQte).append(".\n");
-                    baseReq = newQte * (lv.getTypeUnite() == LigneVente.TypeUnite.BOITE_ENTIERE
-                            && lv.getProduit().getEstDeconditionnable() != null
-                            && lv.getProduit().getEstDeconditionnable()
-                                    ? lv.getProduit().getUnitesParBoite() : 1);
-                }
-
-                qteDecompte.put(pId, dejaTraite + baseReq);
-                lignesValables.add(lv);
-            }
-
-            panier.setAll(lignesValables);
+            panier.setAll(selected.getLignes());
             calculerTotalVente();
             SessionManager.getFileAttente().remove(selected);
             mettreAJourBadgeTickets();
@@ -737,19 +827,12 @@ public class VenteController {
             com.pharmacie.utils.ToastService.showSuccess(
                 boxVenteMain.getScene().getWindow(),
                 "Ticket Rappelé",
-                "Le ticket a été restauré dans le panier."
+                "Le ticket a été restauré dans le panier (Stock débloqué)."
             );
 
-            if (stockAjuste) {
-                Alert aInfo = new Alert(Alert.AlertType.WARNING,
-                    "Certains stocks ont changé pendant l'attente :\n\n" + alertMsg,
-                    ButtonType.OK);
-                aInfo.setHeaderText("⚠️ Ajustement de stock nécessaire");
-                aInfo.showAndWait();
-            }
-
         } else if (doSupprimer[0]) {
-            // Suppression propre — pas d'impact stock
+            // Suppression propre — restauration du stock
+            restaurerStockReserve(selected.getReservedLines());
             SessionManager.getFileAttente().remove(selected);
             mettreAJourBadgeTickets();
             com.pharmacie.utils.ToastService.showInfo(
@@ -868,13 +951,13 @@ public class VenteController {
         dialog.setTitle("Ouverture de Caisse");
         dialog.getDialogPane().setStyle("-fx-background-color: #F8FAFC;");
 
-        ButtonType btnValider = new ButtonType("Ouvrir la Caisse", ButtonBar.ButtonData.OK_DONE);
+        ButtonType btnValider = new ButtonType("Ouvrir", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(btnValider, ButtonType.CANCEL);
 
         Platform.runLater(() -> {
             javafx.scene.Node vBtn = dialog.getDialogPane().lookupButton(btnValider);
             if (vBtn != null) {
-                vBtn.setStyle("-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 7 25; -fx-background-radius: 6;");
+                vBtn.setStyle("-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 7 25; -fx-min-width: 120px; -fx-background-radius: 6;");
                 vBtn.setCursor(javafx.scene.Cursor.HAND);
             }
             javafx.scene.Node cancelBtn = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
@@ -1229,15 +1312,15 @@ public class VenteController {
             protected void updateItem(Produit item, boolean empty) {
                 super.updateItem(item, empty);
                 if (item == null || empty) {
-                    setStyle("");
+                    getStyleClass().remove("stock-zero-row");
                 } else {
                     int qty = calculerQteTotaleProduit(item.getId());
                     if (qty <= 0) {
-                        // Utilisation du contrôle de fond interne pour préserver la sélection bleue
-                        setStyle(
-                                "-fx-control-inner-background: #ffcccc; -fx-control-inner-background-alt: #ffcccc; -fx-text-fill: #c0392b;");
+                        if (!getStyleClass().contains("stock-zero-row")) {
+                            getStyleClass().add("stock-zero-row");
+                        }
                     } else {
-                        setStyle("");
+                        getStyleClass().remove("stock-zero-row");
                     }
                 }
             }
@@ -1382,6 +1465,7 @@ public class VenteController {
         });
         
         tableStock.setItems(FXCollections.observableArrayList(tousLesProduitsCache));
+        tableStock.refresh(); // Force le re-dessin immédiat des cellules (colStkQte lit stockCache)
     }
 
     /**

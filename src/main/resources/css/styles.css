@@ -1298,3 +1298,8 @@
 
 /* Icone oeil visible sur l'overlay de verrouillage (fond sombre) */
 #btnTogglePin .icon { -fx-background-color: #64748B; }
+
+/* Point 2: Ligne rouge pour stock à 0 */
+.table-row-cell.stock-zero-row { -fx-background-color: #FEE2E2 !important; -fx-control-inner-background: #FEE2E2 !important; -fx-control-inner-background-alt: #FEE2E2 !important; -fx-table-cell-border-color: transparent; }
+.table-row-cell.stock-zero-row .text { -fx-fill: #DC2626 !important; }
+

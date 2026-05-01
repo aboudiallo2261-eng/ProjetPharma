@@ -157,7 +157,7 @@
                             <Label text="📦 Aucun achat ne correspond à vos filtres." styleClass="table-placeholder-label"/>
                         </placeholder>
                         <columns>
-                            <TableColumn fx:id="colHistId" text="ID" prefWidth="80"/>
+                            <!-- ID retiré (DésIAtisation), la Réf Facture suffit -->
                             <TableColumn fx:id="colHistDate" text="Date" prefWidth="150"/>
                             <TableColumn fx:id="colHistFournisseur" text="Fournisseur" prefWidth="200"/>
                             <TableColumn fx:id="colHistRef" text="Réf Facture" prefWidth="135"/>

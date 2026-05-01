@@ -151,11 +151,9 @@ public class StatistiquesDAO {
                 "SELECT COUNT(p.id) FROM Produit p " +
                 "WHERE COALESCE( " +
                 "    (SELECT SUM(l.quantiteStock) FROM Lot l " +
-                "     WHERE l.produit.id = p.id " +
-                "       AND (l.dateExpiration IS NULL OR l.dateExpiration > :today)) " +
-                ", 0) <= COALESCE(p.seuilAlerte, 0)";
+                "     WHERE l.produit.id = p.id) " +
+                ", 0) <= COALESCE(p.seuilAlerte, 5)"; // Seuil par défaut = 5, aligné avec AlerteStockController
             Long nbAlertes = session.createQuery(hqlAlertes, Long.class)
-                .setParameter("today", today)
                 .uniqueResult();
 
             return new long[]{

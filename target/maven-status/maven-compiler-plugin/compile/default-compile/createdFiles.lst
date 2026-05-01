@@ -38,6 +38,7 @@ com\pharmacie\controllers\ReportController$8.class
 com\pharmacie\utils\SessionManager.class
 com\pharmacie\controllers\UserController.class
 com\pharmacie\controllers\AlerteStockController.class
+com\pharmacie\controllers\VenteController$13.class
 com\pharmacie\controllers\AlerteStockController$3.class
 com\pharmacie\dao\LotDAO.class
 com\pharmacie\utils\SyncService.class

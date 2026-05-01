@@ -1,6 +1,6 @@
 package com.pharmacie.models;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,22 +11,38 @@ import java.util.List;
  */
 public class TicketEnAttente {
     private final int numero;
-    private final LocalTime heure;
+    private final LocalDateTime heure;
     private final List<LigneVente> lignes;
+    private final List<LigneVente> reservedLines; // Point 9 : Pour tracer les lots exacts réservés
     private final double total;
+    private final LocalDateTime expirationTime; // Point 8 : Expiration après 2 heures
 
-    public TicketEnAttente(int num, List<LigneVente> lignes, double total) {
+    public TicketEnAttente(int num, List<LigneVente> lignes, List<LigneVente> reservedLines, double total) {
         this.numero = num;
-        this.heure = LocalTime.now();
+        this.heure = LocalDateTime.now();
         this.lignes = new ArrayList<>(lignes);
+        this.reservedLines = reservedLines != null ? new ArrayList<>(reservedLines) : new ArrayList<>();
         this.total = total;
+        this.expirationTime = this.heure.plusHours(2);
+    }
+
+    public List<LigneVente> getReservedLines() {
+        return reservedLines;
+    }
+
+    public LocalDateTime getExpirationTime() {
+        return expirationTime;
+    }
+
+    public boolean isExpired() {
+        return LocalDateTime.now().isAfter(expirationTime);
     }
 
     public int getNumero() {
         return numero;
     }
 
-    public LocalTime getHeure() {
+    public LocalDateTime getHeure() {
         return heure;
     }
 

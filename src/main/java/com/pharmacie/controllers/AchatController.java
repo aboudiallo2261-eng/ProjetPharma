@@ -86,8 +86,6 @@ public class AchatController {
     @FXML
     private TableView<Achat> tableHistorique;
     @FXML
-    private TableColumn<Achat, Long> colHistId;
-    @FXML
     private TableColumn<Achat, String> colHistDate;
     @FXML
     private TableColumn<Achat, String> colHistFournisseur;
@@ -397,16 +395,12 @@ public class AchatController {
     }
 
     private void initHistoriqueColumns() {
-        colHistId.setCellValueFactory(new PropertyValueFactory<>("id"));
 
-        // CORRECTION 2 : Format date humain (ex: "15 Mar. 2024")
-        java.text.DateFormatSymbols dfs = new java.text.DateFormatSymbols(java.util.Locale.FRENCH);
+        // Format date : dd/MM/yyyy HH:mm
+        java.time.format.DateTimeFormatter dtFormatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         colHistDate.setCellValueFactory(cell -> {
-            java.time.LocalDate d = cell.getValue().getDateAchat().toLocalDate();
-            String[] mois = { "Jan.", "Fév.", "Mar.", "Avr.", "Mai", "Juin", "Juil.", "Août", "Sep.", "Oct.", "Nov.",
-                    "Déc." };
-            return new SimpleStringProperty(
-                    String.format("%02d %s %d", d.getDayOfMonth(), mois[d.getMonthValue() - 1], d.getYear()));
+            java.time.LocalDateTime dt = cell.getValue().getDateAchat();
+            return new SimpleStringProperty(dt != null ? dt.format(dtFormatter) : "");
         });
 
         colHistFournisseur
@@ -545,7 +539,7 @@ public class AchatController {
                 if (dpExpLot.getValue().isBefore(dpDateAchat.getValue())) {
                     com.pharmacie.utils.AlertUtils.showPremiumAlert(Alert.AlertType.ERROR,
                             "Erreur Réglementaire", "Date d'expiration impossible",
-                            "La date d'expiration est antérieure à la date d'achat.\nUn lot ne peut pas être déjà périmé à la réception.");
+                            "La date d'expiration est antérieure à la date du jour.\nUn lot ne peut pas être déjà périmé à la réception.");
                     return;
                 }
                 if (dpExpLot.getValue().isBefore(java.time.LocalDate.now())) {
@@ -586,7 +580,7 @@ public class AchatController {
                 alertTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #E11D48;"); // Rose 600
 
                 Label alertMsg = new Label("Attention : Le nouveau prix d'achat (" + moneyFormat.format(prix)
-                        + " FCFA) est supérieur au prix public de la boîte (" + moneyFormat.format(p.getPrixVente())
+                        + " FCFA) est supérieur au prix de vente du produit  (" + moneyFormat.format(p.getPrixVente())
                         + " FCFA).\nVous vendez à perte.\n\nSouhaitez-vous ajuster vos Prix de Vente pour ce produit de toute urgence ?");
                 alertMsg.setWrapText(true);
                 alertMsg.setStyle("-fx-font-size: 14px; -fx-text-fill: #334155; -fx-line-spacing: 5px;");
@@ -597,8 +591,8 @@ public class AchatController {
                 alertDlg.getDialogPane().setStyle(
                         "-fx-background-color: #F8FAFC; -fx-border-color: #FDA4AF; -fx-border-width: 2; -fx-border-radius: 6; -fx-background-radius: 6;");
 
-                ButtonType btnOui = new ButtonType("Oui, Ajuster", ButtonBar.ButtonData.OK_DONE);
-                ButtonType btnNon = new ButtonType("Ignorer", ButtonBar.ButtonData.CANCEL_CLOSE);
+                ButtonType btnOui = new ButtonType("Oui", ButtonBar.ButtonData.OK_DONE);
+                ButtonType btnNon = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
 
                 alertDlg.getDialogPane().getButtonTypes().addAll(btnOui, btnNon);
 
@@ -625,7 +619,7 @@ public class AchatController {
 
                     javafx.scene.layout.VBox contentBox = new javafx.scene.layout.VBox(20);
                     contentBox.setPadding(new javafx.geometry.Insets(25));
-                    contentBox.setPrefWidth(400);
+                    contentBox.setPrefWidth(480); // Élargi pour éviter la troncature du titre et des labels
 
                     Label titleLbl = new Label(
                             "Ajustement des prix pour : " + p.getNom() + (estDetail ? " (Boîte + Détail)" : ""));
@@ -642,6 +636,7 @@ public class AchatController {
 
                     Label lblBoite = new Label("Nouveau Prix Boîte (FCFA) :");
                     lblBoite.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #475569;");
+                    lblBoite.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE); // Empêche la troncature du label
                     grid.add(lblBoite, 0, 0);
                     grid.add(txtPrixBoite, 1, 0);
 
@@ -653,6 +648,7 @@ public class AchatController {
                     if (estDetail) {
                         Label lblUnite = new Label("Nouveau Prix Unité (FCFA) :");
                         lblUnite.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #475569;");
+                        lblUnite.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE); // Empêche la troncature du label
                         grid.add(lblUnite, 0, 1);
                         grid.add(txtPrixUnite, 1, 1);
 
@@ -683,12 +679,12 @@ public class AchatController {
                         javafx.scene.Node valNode = dialog.getDialogPane().lookupButton(btnValider);
                         if (valNode != null) {
                             valNode.setStyle(
-                                    "-fx-background-color: #059669; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-cursor: hand; -fx-background-radius: 6;");
+                                    "-fx-background-color: #059669; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-cursor: hand; -fx-background-radius: 6; -fx-min-width: 130px;");
                         }
                         javafx.scene.Node annNode = dialog.getDialogPane().lookupButton(btnAnnuler);
                         if (annNode != null) {
                             annNode.setStyle(
-                                    "-fx-background-color: transparent; -fx-text-fill: #64748B; -fx-font-weight: bold; -fx-border-color: #CBD5E1; -fx-border-width: 1.5; -fx-border-radius: 6; -fx-padding: 7 20; -fx-cursor: hand;");
+                                    "-fx-background-color: transparent; -fx-text-fill: #64748B; -fx-font-weight: bold; -fx-border-color: #CBD5E1; -fx-border-width: 1.5; -fx-border-radius: 6; -fx-padding: 7 20; -fx-cursor: hand; -fx-min-width: 100px;");
                         }
                     });
 
@@ -819,7 +815,8 @@ public class AchatController {
 
             Achat achat = new Achat();
             achat.setFournisseur(f);
-            achat.setDateAchat(dpDateAchat.getValue().atStartOfDay());
+            // Utiliser l'heure réelle de validation, pas minuit (00:00)
+            achat.setDateAchat(dpDateAchat.getValue().atTime(java.time.LocalTime.now()));
             achat.setReferenceFacture(txtRefFacture.getText());
             achat.setLignesAchat(new ArrayList<>()); // will be repopulated securely by service
 
@@ -874,11 +871,12 @@ public class AchatController {
 
     @FXML
     public void loadHistorique() {
-        // Point 8 : Filtre par défaut = Aujourd'hui (optimisation massive des perfs DB)
+        // Filtre par défaut = Aujourd'hui. On force toujours la date FIN à aujourd'hui
+        // pour garantir qu'un achat fraîchement validé apparaît immédiatement.
         LocalDate aujourdhui = LocalDate.now();
         if (dpAchatDebut != null && dpAchatDebut.getValue() == null)
             dpAchatDebut.setValue(aujourdhui);
-        if (dpAchatFin != null && dpAchatFin.getValue() == null)
+        if (dpAchatFin != null)
             dpAchatFin.setValue(aujourdhui);
         filtrerHistoriqueAchats();
     }
@@ -1061,12 +1059,27 @@ public class AchatController {
             }
         }
 
+        javafx.application.Platform.runLater(() -> {
+            applySuccessEffect(cmbProduit);
+            applySuccessEffect(txtQuantite);
+            applySuccessEffect(txtPrixAchat);
+        });
+
         com.pharmacie.utils.AlertUtils.showPremiumAlert(
                 javafx.scene.control.Alert.AlertType.INFORMATION,
                 "Pré-remplissage Automatique",
                 "Alerte Traitée",
                 "Le produit " + p.getNom() + " a été positionné avec la quantité minimale vitale de " + quantite
                         + ". Vous pouvez modifier avant d'ajouter au panier.");
+    }
+
+    private void applySuccessEffect(javafx.scene.Node node) {
+        if (node == null) return;
+        String originalStyle = node.getStyle();
+        node.setStyle(originalStyle + "; -fx-border-color: #10B981; -fx-border-width: 2px; -fx-border-radius: 4px;");
+        javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(3));
+        pause.setOnFinished(e -> node.setStyle(originalStyle));
+        pause.play();
     }
 
     @FXML

@@ -562,11 +562,45 @@ public class ProduitController {
      */
     @FXML
     public void quickAddCategorie() {
-        TextInputDialog dialog = new TextInputDialog();
+        Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Nouvelle Catégorie");
-        dialog.setHeaderText("Créer une catégorie rapidement");
-        dialog.setContentText("Nom de la catégorie :");
-        dialog.getEditor().setStyle("-fx-font-size: 14px;");
+        dialog.getDialogPane().setStyle("-fx-background-color: #F8FAFC;");
+
+        javafx.scene.layout.VBox vbox = new javafx.scene.layout.VBox(10);
+        vbox.setPadding(new javafx.geometry.Insets(20, 25, 10, 25));
+        
+        Label title = new Label("Créer une catégorie rapidement");
+        title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1E293B;");
+        
+        Label hint = new Label("Nom de la catégorie :");
+        hint.setStyle("-fx-text-fill: #64748B; -fx-font-size: 12px;");
+        
+        TextField txtInput = new TextField();
+        txtInput.setPromptText("Ex: Cosmétique");
+        txtInput.setStyle("-fx-font-size: 14px; -fx-padding: 8; -fx-background-radius: 4;");
+        
+        vbox.getChildren().addAll(title, hint, txtInput);
+        dialog.getDialogPane().setContent(vbox);
+        
+        ButtonType btnValider = new ButtonType("Créer", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(btnValider, ButtonType.CANCEL);
+        
+        javafx.application.Platform.runLater(() -> {
+            txtInput.requestFocus();
+            javafx.scene.Node btn = dialog.getDialogPane().lookupButton(btnValider);
+            if (btn != null) {
+                btn.setStyle("-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-padding: 6 20;");
+                btn.setCursor(javafx.scene.Cursor.HAND);
+            }
+            javafx.scene.Node cancelBtn = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+            if(cancelBtn != null) cancelBtn.setCursor(javafx.scene.Cursor.HAND);
+        });
+
+        dialog.setResultConverter(b -> {
+            if (b == btnValider) return txtInput.getText();
+            return null;
+        });
+
         dialog.showAndWait().ifPresent(rawNom -> {
             final String nom = rawNom.trim();
             if (!nom.isEmpty()) {
@@ -591,11 +625,45 @@ public class ProduitController {
      */
     @FXML
     public void quickAddEspece() {
-        TextInputDialog dialog = new TextInputDialog();
+        Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Nouvelle Espèce");
-        dialog.setHeaderText("Créer une espèce animale rapidement");
-        dialog.setContentText("Nom de l'espèce :");
-        dialog.getEditor().setStyle("-fx-font-size: 14px;");
+        dialog.getDialogPane().setStyle("-fx-background-color: #F8FAFC;");
+
+        javafx.scene.layout.VBox vbox = new javafx.scene.layout.VBox(10);
+        vbox.setPadding(new javafx.geometry.Insets(20, 25, 10, 25));
+        
+        Label title = new Label("Créer une espèce rapidement");
+        title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1E293B;");
+        
+        Label hint = new Label("Nom de l'espèce :");
+        hint.setStyle("-fx-text-fill: #64748B; -fx-font-size: 12px;");
+        
+        TextField txtInput = new TextField();
+        txtInput.setPromptText("Ex: Bovin");
+        txtInput.setStyle("-fx-font-size: 14px; -fx-padding: 8; -fx-background-radius: 4;");
+        
+        vbox.getChildren().addAll(title, hint, txtInput);
+        dialog.getDialogPane().setContent(vbox);
+        
+        ButtonType btnValider = new ButtonType("Créer", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(btnValider, ButtonType.CANCEL);
+        
+        javafx.application.Platform.runLater(() -> {
+            txtInput.requestFocus();
+            javafx.scene.Node btn = dialog.getDialogPane().lookupButton(btnValider);
+            if (btn != null) {
+                btn.setStyle("-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-padding: 6 20;");
+                btn.setCursor(javafx.scene.Cursor.HAND);
+            }
+            javafx.scene.Node cancelBtn = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+            if(cancelBtn != null) cancelBtn.setCursor(javafx.scene.Cursor.HAND);
+        });
+
+        dialog.setResultConverter(b -> {
+            if (b == btnValider) return txtInput.getText();
+            return null;
+        });
+
         dialog.showAndWait().ifPresent(rawNom -> {
             final String nom = rawNom.trim();
             if (!nom.isEmpty()) {
@@ -619,6 +687,19 @@ public class ProduitController {
         ObservableList<Categorie> cats = FXCollections.observableArrayList(categorieDAO.findAll());
         tableCategories.setItems(cats);
         cmbProdCategorie.setItems(cats);
+
+        // Actualisation dynamique du filtre Etat Stock
+        if (cmbFiltreStockCat != null) {
+            String currentVal = cmbFiltreStockCat.getValue();
+            List<String> catNames = cats.stream().map(Categorie::getNom).sorted().collect(java.util.stream.Collectors.toList());
+            catNames.add(0, "Toutes Catégories");
+            cmbFiltreStockCat.setItems(FXCollections.observableArrayList(catNames));
+            if (currentVal != null && catNames.contains(currentVal)) {
+                cmbFiltreStockCat.setValue(currentVal);
+            } else {
+                cmbFiltreStockCat.getSelectionModel().selectFirst();
+            }
+        }
     }
 
     private void populateCatForm(Categorie c) {
@@ -685,6 +766,19 @@ public class ProduitController {
         ObservableList<Espece> esps = FXCollections.observableArrayList(especeDAO.findAll());
         tableEspeces.setItems(esps);
         cmbProdEspece.setItems(esps);
+
+        // Actualisation dynamique du filtre Etat Stock
+        if (cmbFiltreStockEsp != null) {
+            String currentVal = cmbFiltreStockEsp.getValue();
+            List<String> espNames = esps.stream().map(Espece::getNom).sorted().collect(java.util.stream.Collectors.toList());
+            espNames.add(0, "Toutes Espèces");
+            cmbFiltreStockEsp.setItems(FXCollections.observableArrayList(espNames));
+            if (currentVal != null && espNames.contains(currentVal)) {
+                cmbFiltreStockEsp.setValue(currentVal);
+            } else {
+                cmbFiltreStockEsp.getSelectionModel().selectFirst();
+            }
+        }
     }
 
     private void populateEspForm(Espece e) {
