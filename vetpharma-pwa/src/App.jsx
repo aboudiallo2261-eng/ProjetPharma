@@ -14,6 +14,28 @@ function App() {
   const [session, setSession] = useState(null);
   const [currentTab, setCurrentTab] = useState('home');
   const [authLoading, setAuthLoading] = useState(true);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+  // Écoute de l'événement d'installation PWA
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault(); // Empêche l'affichage de la mini-barre native
+      setDeferredPrompt(e); // Sauvegarde l'événement pour l'utiliser plus tard
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    setDeferredPrompt(null);
+  };
 
   // Gestion de la session et de l'inactivité
   useEffect(() => {
@@ -105,6 +127,23 @@ function App() {
           {currentTab === 'alerts' && <Urgences data={raw} />}
         </main>
       </div>
+
+      {/* Bannière d'installation personnalisée PWA */}
+      {deferredPrompt && (
+        <div className="fixed bottom-20 left-4 right-4 md:bottom-6 md:left-auto md:right-6 md:w-80 rounded-2xl p-4 shadow-2xl z-50 flex items-center justify-between" 
+          style={{ background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)', border: '1px solid rgba(255,255,255,0.2)' }}>
+          <div className="text-white flex-1 mr-3">
+            <p className="text-sm font-bold tracking-tight">Installez Kaoural</p>
+            <p className="text-[11px] text-emerald-100 leading-tight mt-0.5">Accès plus rapide sans passer par le navigateur.</p>
+          </div>
+          <button 
+            onClick={handleInstallClick}
+            className="bg-white text-emerald-700 px-4 py-2 rounded-xl text-xs font-bold shadow-md active:scale-95 transition-transform shrink-0"
+          >
+            Installer
+          </button>
+        </div>
+      )}
     </div>
   );
 }
