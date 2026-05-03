@@ -194,8 +194,19 @@ public class SyncService {
             String produit = (String) row[0];
             String numeroLot = (String) row[1];
             int quantite = ((Number) row[2]).intValue();
-            long valeur = ((Number) row[3]).longValue();
+            double prixAchat = (row[3] != null) ? ((Number) row[3]).doubleValue() : 0.0;
             String motif = (String) row[4];
+            Boolean decond = (Boolean) row[5];
+            Integer unitesParBoite = (row[6] != null) ? ((Number) row[6]).intValue() : 1;
+            
+            double valeurLigne = 0.0;
+            if (Boolean.TRUE.equals(decond) && unitesParBoite != null && unitesParBoite > 0) {
+                valeurLigne = quantite * (prixAchat / unitesParBoite);
+            } else {
+                valeurLigne = quantite * prixAchat;
+            }
+            long valeur = Math.round(valeurLigne);
+
             pertesValeurJour += valeur;
             pertesList.add(new com.pharmacie.models.dto.PerteDetailDTO(produit, numeroLot, quantite, valeur, motif));
         }
@@ -265,25 +276,48 @@ public class SyncService {
             String dateExp = (row[2] != null) ? row[2].toString() : "";
             int stock = ((Number) row[3]).intValue();
             double prixAchat = (row[4] != null) ? ((Number) row[4]).doubleValue() : 0.0;
+            Boolean decond = (Boolean) row[5];
+            Integer unitesParBoite = (row[6] != null) ? ((Number) row[6]).intValue() : 1;
             
-            valeurPerimesTotale += (stock * prixAchat);
+            double valeurLigne = 0.0;
+            if (Boolean.TRUE.equals(decond) && unitesParBoite != null && unitesParBoite > 0) {
+                valeurLigne = stock * (prixAchat / unitesParBoite);
+            } else {
+                valeurLigne = stock * prixAchat;
+            }
+            
+            valeurPerimesTotale += valeurLigne;
             perimesList.add(new ProduitPerimeDTO(nom, numeroLot, dateExp, stock));
         }
         alertes.setPerimes(perimesList);
         kpiStock.setValeurPerimes(Math.round(valeurPerimesTotale));
 
-        // Proches de la péremption (Anticipation : <= 90 jours)
-        List<Object[]> prochePeremptions = statsDAO.getLotsProchePeremption(today, 90);
+        // Proches de la péremption (Anticipation : <= 60 jours selon demande utilisateur)
+        List<Object[]> prochePeremptions = statsDAO.getLotsProchePeremption(today, 60);
         List<ProduitPerimeDTO> prochePeremptionsList = new ArrayList<>();
+        double valeurARisqueTotale = 0.0;
         for (Object[] row : prochePeremptions) {
             String nom = (String) row[0];
             String numeroLot = (String) row[1];
             String dateExp = (row[2] != null) ? row[2].toString() : "";
             int stock = ((Number) row[3]).intValue();
+            double prixAchat = (row[4] != null) ? ((Number) row[4]).doubleValue() : 0.0;
+            Boolean decond = (Boolean) row[5];
+            Integer unitesParBoite = (row[6] != null) ? ((Number) row[6]).intValue() : 1;
+            
+            double valeurLigne = 0.0;
+            if (Boolean.TRUE.equals(decond) && unitesParBoite != null && unitesParBoite > 0) {
+                valeurLigne = stock * (prixAchat / unitesParBoite);
+            } else {
+                valeurLigne = stock * prixAchat;
+            }
+            valeurARisqueTotale += valeurLigne;
+            
             prochePeremptionsList.add(new ProduitPerimeDTO(nom, numeroLot, dateExp, stock));
         }
         alertes.setProchePeremptions(prochePeremptionsList);
         kpiStock.setNombreProchePeremption(prochePeremptionsList.size());
+        kpiStock.setValeurARisque(Math.round(valeurARisqueTotale));
 
         dto.setAlertes(alertes);
 

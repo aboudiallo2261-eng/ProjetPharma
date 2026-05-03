@@ -415,7 +415,7 @@ public class StatistiquesDAO {
     public List<Object[]> getPertesDuJourDetails(LocalDate today) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql =
-                "SELECT a.lot.produit.nom, a.lot.numeroLot, a.quantite, (cast(a.quantite as double) * a.lot.produit.prixAchat), cast(a.motif as string) " +
+                "SELECT a.lot.produit.nom, a.lot.numeroLot, a.quantite, a.lot.produit.prixAchat, cast(a.motif as string), a.lot.produit.estDeconditionnable, a.lot.produit.unitesParBoite " +
                 "FROM AjustementStock a " +
                 "WHERE cast(a.dateAjustement as date) = :today " +
                 "  AND a.typeAjustement = 'AJUSTEMENT_NEGATIF' " +
@@ -433,7 +433,7 @@ public class StatistiquesDAO {
     public List<Object[]> getLotsPerimes(LocalDate today) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql =
-                "SELECT l.produit.nom, l.numeroLot, l.dateExpiration, l.quantiteStock, l.produit.prixAchat " +
+                "SELECT l.produit.nom, l.numeroLot, l.dateExpiration, l.quantiteStock, l.produit.prixAchat, l.produit.estDeconditionnable, l.produit.unitesParBoite " +
                 "FROM Lot l " +
                 "WHERE l.quantiteStock > 0 " +
                 "  AND l.dateExpiration IS NOT NULL " +
@@ -454,7 +454,7 @@ public class StatistiquesDAO {
         LocalDate dateLimite = today.plusDays(joursAlerte);
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql =
-                "SELECT l.produit.nom, l.numeroLot, l.dateExpiration, l.quantiteStock, l.produit.prixAchat " +
+                "SELECT l.produit.nom, l.numeroLot, l.dateExpiration, l.quantiteStock, l.produit.prixAchat, l.produit.estDeconditionnable, l.produit.unitesParBoite " +
                 "FROM Lot l " +
                 "WHERE l.quantiteStock > 0 " +
                 "  AND l.dateExpiration IS NOT NULL " +

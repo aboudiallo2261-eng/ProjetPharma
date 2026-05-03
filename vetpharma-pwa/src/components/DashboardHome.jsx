@@ -196,11 +196,11 @@ export default function DashboardHome({ data }) {
             color="#60a5fa" 
           />
           <SummaryRow 
-            label="Valeur stock à risque" 
-            value={formatFCFA(stockData.valeurPerimes)} 
+            label="Valeur stock à risque (< 60 jrs)" 
+            value={formatFCFA(stockData.valeurARisque || 0)} 
             icon={ShieldAlert} 
             color="#f59e0b" 
-            valueColor={stockData.valeurPerimes > 0 ? '#f59e0b' : '#10b981'} 
+            valueColor={(stockData.valeurARisque || 0) > 0 ? '#f59e0b' : '#10b981'} 
           />
           <SummaryRow 
             label="Pertes du jour (casse)" 

@@ -88,6 +88,7 @@ public class DashboardSyncDTO {
         private int nombrePerimes;
         private long valeurPerimes;
         private int nombreProchePeremption;
+        private long valeurARisque;
 
         public long getValeurTotale() { return valeurTotale; }
         public void setValeurTotale(long valeurTotale) { this.valeurTotale = valeurTotale; }
@@ -106,6 +107,9 @@ public class DashboardSyncDTO {
 
         public int getNombreProchePeremption() { return nombreProchePeremption; }
         public void setNombreProchePeremption(int nombreProchePeremption) { this.nombreProchePeremption = nombreProchePeremption; }
+
+        public long getValeurARisque() { return valeurARisque; }
+        public void setValeurARisque(long valeurARisque) { this.valeurARisque = valeurARisque; }
     }
 
     public static class AlertesDTO {
