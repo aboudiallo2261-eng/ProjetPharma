@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { RefreshCcw, LogOut } from 'lucide-react';
 
 export default function TopBar({ lastSync, loading, onLogout }) {
@@ -12,9 +12,34 @@ export default function TopBar({ lastSync, loading, onLogout }) {
     return `${date} à ${time}`;
   };
 
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Cache la barre si on scrolle vers le bas (et qu'on a dépassé le haut)
+      if (currentScrollY > lastScrollY && currentScrollY > 80) {
+        setIsVisible(false);
+      } 
+      // Montre la barre si on scrolle vers le haut ou si on est tout en haut
+      else if (currentScrollY < lastScrollY || currentScrollY <= 80) {
+        setIsVisible(true);
+      }
+      
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <div className="sticky top-0 z-50 px-4 pt-4 pb-3"
+    <div className={`sticky top-0 z-50 px-4 pt-4 pb-3 transition-transform duration-300 ease-in-out`}
       style={{
+        transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
         background: 'linear-gradient(135deg, #0f172a 0%, #134e4a 100%)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
