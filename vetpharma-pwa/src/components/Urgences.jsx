@@ -59,8 +59,8 @@ export default function Urgences({ data }) {
   const displayedReappro = showAllReappro ? allReappro : reapproTop5;
 
   // 3.2 Péremption
-  const nbPerimesProches = stockData.nombrePerimes || 0; 
-  const valeurPerimes = stockData.valeurPerimes || 0;
+  const nbPerimesProches = stockData.nombreProchePeremption || 0; 
+  const valeurARisque = stockData.valeurARisque || 0;
   const perimesList = alertes.perimes || [];
   const prochePeremptionsList = alertes.prochePeremptions || [];
   
@@ -163,7 +163,7 @@ export default function Urgences({ data }) {
               </div>
               <div>
                 <p className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Valeur à risque</p>
-                <p className="text-lg font-black text-red-400 mt-1.5">{formatFCFA(valeurPerimes)}</p>
+                <p className="text-lg font-black text-red-400 mt-1.5">{formatFCFA(valeurARisque)}</p>
               </div>
             </div>
 
