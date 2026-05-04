@@ -137,10 +137,9 @@ public class StatistiquesDAO {
             int currentYear = today.getYear();
             int startYear = currentYear - 2;
 
-            String hql = "SELECT year(v.dateVente), SUM(v.montantTotal) " +
+            String hql = "SELECT year(v.dateVente), SUM(v.total) " +
                          "FROM Vente v " +
-                         "WHERE v.statut = 'VALIDEE' " +
-                         "  AND year(v.dateVente) >= :startYear " +
+                         "WHERE year(v.dateVente) >= :startYear " +
                          "GROUP BY year(v.dateVente) " +
                          "ORDER BY year(v.dateVente) ASC";
             Query<Object[]> query = session.createQuery(hql, Object[].class);

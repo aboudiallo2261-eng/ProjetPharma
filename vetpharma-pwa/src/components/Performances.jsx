@@ -105,12 +105,12 @@ export default function Performances({ data }) {
     <div className="pb-24 min-h-screen" style={{ background: 'linear-gradient(180deg, #0f172a 0%, #1e293b 100%)' }}>
       
       {/* Header avec Toggle */}
-      <div className="px-4 pt-6 mb-6 flex justify-between items-start">
+      <div className="px-4 pt-6 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-xl font-bold text-white tracking-tight">Performances</h2>
           <p className="text-xs text-slate-400 mt-0.5">Analyse et compréhension</p>
         </div>
-        <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)' }}>
+        <div className="flex gap-1 p-1 rounded-xl w-full sm:w-auto overflow-x-auto" style={{ background: 'rgba(255,255,255,0.05)' }}>
           {[
             { id: 'jour', label: 'Journalière' },
             { id: 'mois', label: 'Mensuelle' },
@@ -142,7 +142,7 @@ export default function Performances({ data }) {
           <div className="flex items-center gap-2 mb-6">
             <BarChart2 className="w-4 h-4 text-emerald-400" />
             <h3 className="text-sm font-bold text-white uppercase tracking-wider">
-              {view === 'jour' ? 'Évolution des 7 derniers jours' : 'Évolution des 3 derniers mois'}
+              {view === 'jour' ? 'Évolution des 7 derniers jours' : view === 'mois' ? 'Évolution des 3 derniers mois' : 'Évolution des 3 dernières années'}
             </h3>
           </div>
           <div className="h-48 md:h-64 w-full">
