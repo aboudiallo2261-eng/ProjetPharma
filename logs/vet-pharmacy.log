@@ -759,3 +759,166 @@ Caused by: org.hibernate.query.sqm.PathElementException: Could not resolve attri
 2026-05-04 12:49:50.706 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
 2026-05-04 12:49:50.707 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
 2026-05-04 12:49:50.917 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (4233 octets)
+2026-05-04 12:49:52.351 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 12:49:52.352 [Timer-0] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 12:55:03.947 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 12:59:50.808 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 12:59:50.809 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 12:59:51.034 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (4233 octets)
+2026-05-04 12:59:53.574 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 12:59:53.577 [Timer-0] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 13:05:01.591 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 13:05:01.591 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 13:05:01.800 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (4233 octets)
+2026-05-04 13:05:04.151 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 13:05:04.153 [Timer-0] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 13:10:01.725 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 13:10:01.725 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 13:10:01.937 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (4233 octets)
+2026-05-04 13:10:03.246 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 13:10:03.249 [Timer-0] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 13:15:01.655 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 13:15:01.655 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 13:15:01.864 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (4233 octets)
+2026-05-04 13:15:04.523 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 13:15:04.526 [Timer-0] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 13:20:04.245 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 13:20:04.246 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 13:20:04.456 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (4233 octets)
+2026-05-04 13:20:06.841 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 13:20:06.843 [Timer-0] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 13:25:06.423 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 13:25:06.423 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 13:25:06.623 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (4233 octets)
+2026-05-04 13:25:20.146 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 13:25:20.148 [Timer-0] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 13:29:50.858 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 13:29:50.858 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 13:29:51.048 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (4233 octets)
+2026-05-04 13:29:52.578 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 13:29:52.580 [Timer-0] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 13:35:01.676 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 13:35:01.676 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 13:35:01.869 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (4233 octets)
+2026-05-04 13:35:04.491 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 13:35:04.493 [Timer-0] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 13:40:01.703 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 13:40:01.703 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 13:40:01.895 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (4233 octets)
+2026-05-04 13:40:03.548 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 13:40:03.549 [Timer-0] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 13:45:01.734 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 13:45:01.734 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 13:45:01.912 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (4233 octets)
+2026-05-04 13:45:04.709 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 13:45:04.711 [Timer-0] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 13:50:01.645 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 13:50:01.646 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 13:50:01.813 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (4233 octets)
+2026-05-04 13:50:03.303 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 13:50:03.306 [Timer-0] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 13:55:01.693 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 13:55:01.695 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 13:55:01.888 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (4233 octets)
+2026-05-04 13:55:07.176 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 13:55:07.176 [Timer-0] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 14:09:38.206 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 14:09:38.208 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 14:09:38.395 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (4233 octets)
+2026-05-04 14:09:40.366 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 14:09:40.368 [Timer-0] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 14:09:41.050 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 14:09:41.050 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 14:09:41.246 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (4232 octets)
+2026-05-04 14:09:42.152 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 14:09:42.154 [Timer-0] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 14:09:50.188 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 14:09:50.189 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 14:09:50.376 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (4233 octets)
+2026-05-04 14:09:51.434 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 14:09:51.435 [Timer-0] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 20:25:57.052 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.055 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.059 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.061 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.062 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.063 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.065 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.066 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.067 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.069 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.071 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.074 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.076 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.078 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.079 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.081 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.083 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.086 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.088 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.090 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.092 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.094 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.095 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.097 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.098 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.099 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.102 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.105 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.108 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.111 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.112 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.114 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.116 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.122 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.124 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.127 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.129 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.130 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.132 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.136 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.138 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.140 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.142 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.143 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.145 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.147 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.149 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.152 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.154 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.156 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.160 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.162 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.163 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.165 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.167 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.170 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.173 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.175 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.176 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.178 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.180 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.182 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.184 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.186 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.193 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.196 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.198 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.201 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.203 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.207 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.212 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.214 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.216 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.220 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:25:57.221 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:30:01.487 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:35:01.518 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:40:01.560 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:46:46.461 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:50:01.483 [Timer-0] WARN  com.pharmacie.utils.SyncService - Pas d'accès Internet. Fonctionnement 100% hors-ligne maintenu.
+2026-05-04 20:55:02.239 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 20:55:02.240 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 20:55:02.368 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (4233 octets)
+2026-05-04 20:55:05.071 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 20:55:05.073 [Timer-0] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json

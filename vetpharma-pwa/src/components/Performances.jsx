@@ -216,16 +216,36 @@ export default function Performances({ data }) {
                 const val = prod[sortTop] || 0;
                 const pct = (val / maxBarVal) * 100;
                 const medals = ['🥇', '🥈', '🥉', '4.', '5.'];
-                const displayVal = sortTop === 'marge' ? formatFCFA(val) : `${val} unités`;
-                
+
+                // Affichage détaillé de la quantité
+                const hasBoites = (prod.quantiteBoites || 0) > 0;
+                const hasUnites = (prod.quantiteUnites || 0) > 0;
+                let qteLabel = '';
+                if (hasBoites && hasUnites) {
+                  qteLabel = `${prod.quantiteBoites} bte${prod.quantiteBoites > 1 ? 's' : ''} + ${prod.quantiteUnites} unité${prod.quantiteUnites > 1 ? 's' : ''}`;
+                } else if (hasBoites) {
+                  qteLabel = `${prod.quantiteBoites} boîte${prod.quantiteBoites > 1 ? 's' : ''}`;
+                } else if (hasUnites) {
+                  qteLabel = `${prod.quantiteUnites} unité${prod.quantiteUnites > 1 ? 's' : ''}`;
+                } else {
+                  qteLabel = `${prod.quantite || 0} unité${prod.quantite > 1 ? 's' : ''}`;
+                }
+
+                const displayVal = sortTop === 'marge' ? formatFCFA(val) : qteLabel;
+
                 return (
                   <div key={idx} className="px-4 py-3 hover:bg-white/5 transition-colors">
-                    <div className="flex justify-between items-center mb-2">
+                    <div className="flex justify-between items-start mb-2">
                       <div className="flex items-center gap-3">
                         <span className="text-lg w-6 text-center">{medals[idx]}</span>
-                        <p className="text-sm font-semibold text-slate-200 truncate max-w-[140px] sm:max-w-[200px]">{prod.nom}</p>
+                        <div>
+                          <p className="text-sm font-semibold text-slate-200 truncate max-w-[140px] sm:max-w-[200px]">{prod.nom}</p>
+                          {sortTop === 'marge' && (
+                            <p className="text-[10px] text-slate-400 mt-0.5">{qteLabel}</p>
+                          )}
+                        </div>
                       </div>
-                      <p className={`text-sm font-bold ${sortTop === 'marge' ? 'text-emerald-400' : 'text-blue-400'}`}>
+                      <p className={`text-sm font-bold shrink-0 ${sortTop === 'marge' ? 'text-emerald-400' : 'text-blue-400'}`}>
                         {displayVal}
                       </p>
                     </div>
