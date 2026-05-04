@@ -213,35 +213,14 @@ public class SyncService {
         alertes.setPertes(pertesList);
         kpiJour.setPertesValeur(pertesValeurJour);
 
-        // Top Produits (Volume) - Jour
-        List<Object[]> topProdJourData = statsDAO.getTopProduitsVolume(debutJour, maintenant, 5);
-        List<com.pharmacie.models.dto.TopProduitDTO> topProduitsJourList = new ArrayList<>();
-        for (Object[] row : topProdJourData) {
-            String nom = (String) row[0];
-            double qteDouble = (row[1] != null) ? ((Number) row[1]).doubleValue() : 0.0;
-            topProduitsJourList.add(new com.pharmacie.models.dto.TopProduitDTO(nom, (int) qteDouble, (long)(qteDouble * 1500L)));
-        }
-        dto.setTopProduitsJour(topProduitsJourList);
+        // Top Produits (Volume + Marge Réelle) - Jour
+        dto.setTopProduitsJour(construireTopProduits(statsDAO.getTopProduitsVolume(debutJour, maintenant, 5)));
 
-        // Top Produits (Volume) - Mois
-        List<Object[]> topProdMoisData = statsDAO.getTopProduitsVolume(debutMois, maintenant, 5);
-        List<com.pharmacie.models.dto.TopProduitDTO> topProduitsMoisList = new ArrayList<>();
-        for (Object[] row : topProdMoisData) {
-            String nom = (String) row[0];
-            double qteDouble = (row[1] != null) ? ((Number) row[1]).doubleValue() : 0.0;
-            topProduitsMoisList.add(new com.pharmacie.models.dto.TopProduitDTO(nom, (int) qteDouble, (long)(qteDouble * 1500L)));
-        }
-        dto.setTopProduitsMois(topProduitsMoisList);
+        // Top Produits (Volume + Marge Réelle) - Mois
+        dto.setTopProduitsMois(construireTopProduits(statsDAO.getTopProduitsVolume(debutMois, maintenant, 5)));
 
-        // Top Produits (Volume) - Annee
-        List<Object[]> topProdAnneeData = statsDAO.getTopProduitsVolume(debutAnnee, maintenant, 5);
-        List<com.pharmacie.models.dto.TopProduitDTO> topProduitsAnneeList = new ArrayList<>();
-        for (Object[] row : topProdAnneeData) {
-            String nom = (String) row[0];
-            double qteDouble = (row[1] != null) ? ((Number) row[1]).doubleValue() : 0.0;
-            topProduitsAnneeList.add(new com.pharmacie.models.dto.TopProduitDTO(nom, (int) qteDouble, (long)(qteDouble * 1500L)));
-        }
-        dto.setTopProduitsAnnee(topProduitsAnneeList);
+        // Top Produits (Volume + Marge Réelle) - Annee
+        dto.setTopProduitsAnnee(construireTopProduits(statsDAO.getTopProduitsVolume(debutAnnee, maintenant, 5)));
 
         // Historique 7 jours
         List<Object[]> hist7jData = statsDAO.getEvolutionCA(debutJour.minusDays(6), finHier);
@@ -362,6 +341,56 @@ public class SyncService {
         }
         double evolution = ((actuel - precedent) / precedent) * 100;
         return Math.round(evolution * 10.0) / 10.0;
+    }
+
+    /**
+     * Construit une liste de TopProduitDTO avec marge réelle.
+     *
+     * La requête SQL group par (nom, typeUnite), donc un même produit peut apparaître
+     * deux fois (une ligne BOITE_ENTIERE + une ligne DETAIL). On les fusionne ici en Java
+     * par nom de produit, en calculant la marge correcte selon le type d'unité :
+     *   - BOITE_ENTIERE : coût = quantite × prixAchat
+     *   - DETAIL        : coût = quantite × (prixAchat / unitesParBoite)
+     */
+    private static List<com.pharmacie.models.dto.TopProduitDTO> construireTopProduits(List<Object[]> rows) {
+        // On agrège par nom de produit (peut arriver en double si vendu boîte + détail)
+        java.util.LinkedHashMap<String, long[]> aggregation = new java.util.LinkedHashMap<>();
+        // long[0] = quantite totale, long[1] = ca total, long[2] = cout_achat total
+
+        for (Object[] row : rows) {
+            String nom              = (String) row[0];
+            double quantite         = (row[1] != null) ? ((Number) row[1]).doubleValue() : 0.0;
+            double sousTotal        = (row[2] != null) ? ((Number) row[2]).doubleValue() : 0.0;
+            double prixAchat        = (row[3] != null) ? ((Number) row[3]).doubleValue() : 0.0;
+            int    unitesParBoite   = (row[4] != null) ? ((Number) row[4]).intValue()    : 1;
+            String typeUnite        = (row[5] != null) ? row[5].toString()               : "BOITE_ENTIERE";
+
+            // Coût de revient selon le type de vente
+            double coutRevient;
+            if ("DETAIL".equals(typeUnite) && unitesParBoite > 0) {
+                coutRevient = quantite * (prixAchat / unitesParBoite);
+            } else {
+                coutRevient = quantite * prixAchat;
+            }
+
+            long[] acc = aggregation.computeIfAbsent(nom, k -> new long[3]);
+            acc[0] += Math.round(quantite);
+            acc[1] += Math.round(sousTotal);
+            acc[2] += Math.round(coutRevient);
+        }
+
+        List<com.pharmacie.models.dto.TopProduitDTO> result = new ArrayList<>();
+        for (java.util.Map.Entry<String, long[]> entry : aggregation.entrySet()) {
+            String nom    = entry.getKey();
+            long   qte    = entry.getValue()[0];
+            long   ca     = entry.getValue()[1];
+            long   cout   = entry.getValue()[2];
+            long   marge  = ca - cout;
+            result.add(new com.pharmacie.models.dto.TopProduitDTO(nom, (int) qte, marge));
+        }
+        // Trier par quantité décroissante et limiter à 5
+        result.sort((a, b) -> Integer.compare(b.getQuantite(), a.getQuantite()));
+        return result.stream().limit(5).collect(java.util.stream.Collectors.toList());
     }
 
     /**

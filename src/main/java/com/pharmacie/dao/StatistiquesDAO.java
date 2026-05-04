@@ -52,13 +52,22 @@ public class StatistiquesDAO {
 
     public List<Object[]> getTopProduitsVolume(LocalDateTime debut, LocalDateTime fin, int limit) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT lv.produit.nom, SUM(cast(lv.quantiteVendue as double)) FROM LigneVente lv JOIN lv.vente v " +
+            // On récupère : nom, quantité totale vendue, CA total (sousTotal), et coût d'achat
+            // La marge sera calculée en Java car elle dépend du type d'unité (BOITE vs DÉTAIL)
+            String hql = "SELECT lv.produit.nom, " +
+                         "SUM(cast(lv.quantiteVendue as double)), " +
+                         "SUM(lv.sousTotal), " +
+                         "MAX(lv.produit.prixAchat), " +
+                         "MAX(lv.produit.unitesParBoite), " +
+                         "lv.typeUnite " +
+                         "FROM LigneVente lv JOIN lv.vente v " +
                          "WHERE v.dateVente BETWEEN :debut AND :fin " +
-                         "GROUP BY lv.produit.nom ORDER BY SUM(cast(lv.quantiteVendue as double)) DESC";
+                         "GROUP BY lv.produit.nom, lv.typeUnite " +
+                         "ORDER BY SUM(cast(lv.quantiteVendue as double)) DESC";
             Query<Object[]> query = session.createQuery(hql, Object[].class);
             query.setParameter("debut", debut);
             query.setParameter("fin", fin);
-            query.setMaxResults(limit);
+            query.setMaxResults(limit * 2); // On prend plus car groupBy typeUnite peut dupliquer
             return query.list();
         }
     }
