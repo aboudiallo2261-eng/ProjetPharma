@@ -52,13 +52,14 @@ public class StatistiquesDAO {
 
     public List<Object[]> getTopProduitsVolume(LocalDateTime debut, LocalDateTime fin, int limit) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            // On récupère : nom, quantité totale vendue, CA total (sousTotal), et coût d'achat
-            // La marge sera calculée en Java car elle dépend du type d'unité (BOITE vs DÉTAIL)
+            // Calcul identique à getBeneficeNet() : on lit le prix du LOT EXACT vendu
+            // depuis LigneAchat, pas depuis Produit.prixAchat (qui peut avoir changé)
             String hql = "SELECT lv.produit.nom, " +
                          "SUM(cast(lv.quantiteVendue as double)), " +
                          "SUM(lv.sousTotal), " +
-                         "MAX(lv.produit.prixAchat), " +
-                         "MAX(lv.produit.unitesParBoite), " +
+                         "SUM(lv.quantiteVendue * " +
+                         "  (SELECT COALESCE(MAX(la.prixUnitaire), 0) FROM LigneAchat la WHERE la.lot.id = lv.lot.id) " +
+                         "  / (CASE WHEN lv.typeUnite = :detailType THEN COALESCE(lv.produit.unitesParBoite, 1) ELSE 1 END)), " +
                          "lv.typeUnite " +
                          "FROM LigneVente lv JOIN lv.vente v " +
                          "WHERE v.dateVente BETWEEN :debut AND :fin " +
@@ -67,7 +68,8 @@ public class StatistiquesDAO {
             Query<Object[]> query = session.createQuery(hql, Object[].class);
             query.setParameter("debut", debut);
             query.setParameter("fin", fin);
-            query.setMaxResults(limit * 2); // On prend plus car groupBy typeUnite peut dupliquer
+            query.setParameter("detailType", LigneVente.TypeUnite.DETAIL);
+            query.setMaxResults(limit * 2); // *2 car group par typeUnite peut dupliquer
             return query.list();
         }
     }

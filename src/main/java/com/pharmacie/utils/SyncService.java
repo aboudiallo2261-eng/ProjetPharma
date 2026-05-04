@@ -346,32 +346,27 @@ public class SyncService {
     /**
      * Construit une liste de TopProduitDTO avec marge réelle.
      *
-     * La requête SQL group par (nom, typeUnite), donc un même produit peut apparaître
-     * deux fois (une ligne BOITE_ENTIERE + une ligne DETAIL). On les fusionne ici en Java
-     * par nom de produit, en calculant la marge correcte selon le type d'unité :
-     *   - BOITE_ENTIERE : coût = quantite × prixAchat
-     *   - DETAIL        : coût = quantite × (prixAchat / unitesParBoite)
+     * La requête SQL retourne maintenant le coût de revient pré-calculé (row[3]),
+     * en utilisant la même formule que getBeneficeNet() :
+     *   coût = quantiteVendue × LigneAchat.prixUnitaire (du lot exact vendu)
+     *          / unitesParBoite (si vente au DETAIL)
+     *
+     * La marge = CA (row[2]) - coût (row[3])
+     *
+     * Un produit peut apparaître 2 fois (BOITE_ENTIERE + DETAIL),
+     * on les fusionne par nom.
      */
     private static List<com.pharmacie.models.dto.TopProduitDTO> construireTopProduits(List<Object[]> rows) {
-        // On agrège par nom de produit (peut arriver en double si vendu boîte + détail)
+        // On agrège par nom de produit
         java.util.LinkedHashMap<String, long[]> aggregation = new java.util.LinkedHashMap<>();
-        // long[0] = quantite totale, long[1] = ca total, long[2] = cout_achat total
+        // long[0] = quantite totale, long[1] = ca total, long[2] = cout_revient total (pré-calculé par SQL)
 
         for (Object[] row : rows) {
-            String nom              = (String) row[0];
-            double quantite         = (row[1] != null) ? ((Number) row[1]).doubleValue() : 0.0;
-            double sousTotal        = (row[2] != null) ? ((Number) row[2]).doubleValue() : 0.0;
-            double prixAchat        = (row[3] != null) ? ((Number) row[3]).doubleValue() : 0.0;
-            int    unitesParBoite   = (row[4] != null) ? ((Number) row[4]).intValue()    : 1;
-            String typeUnite        = (row[5] != null) ? row[5].toString()               : "BOITE_ENTIERE";
-
-            // Coût de revient selon le type de vente
-            double coutRevient;
-            if ("DETAIL".equals(typeUnite) && unitesParBoite > 0) {
-                coutRevient = quantite * (prixAchat / unitesParBoite);
-            } else {
-                coutRevient = quantite * prixAchat;
-            }
+            String nom         = (String) row[0];
+            double quantite    = (row[1] != null) ? ((Number) row[1]).doubleValue() : 0.0;
+            double sousTotal   = (row[2] != null) ? ((Number) row[2]).doubleValue() : 0.0;
+            double coutRevient = (row[3] != null) ? ((Number) row[3]).doubleValue() : 0.0;
+            // row[4] = typeUnite — non utilisé ici, la division est déjà faite en SQL
 
             long[] acc = aggregation.computeIfAbsent(nom, k -> new long[3]);
             acc[0] += Math.round(quantite);
@@ -381,11 +376,11 @@ public class SyncService {
 
         List<com.pharmacie.models.dto.TopProduitDTO> result = new ArrayList<>();
         for (java.util.Map.Entry<String, long[]> entry : aggregation.entrySet()) {
-            String nom    = entry.getKey();
-            long   qte    = entry.getValue()[0];
-            long   ca     = entry.getValue()[1];
-            long   cout   = entry.getValue()[2];
-            long   marge  = ca - cout;
+            String nom   = entry.getKey();
+            long   qte   = entry.getValue()[0];
+            long   ca    = entry.getValue()[1];
+            long   cout  = entry.getValue()[2];
+            long   marge = ca - cout;
             result.add(new com.pharmacie.models.dto.TopProduitDTO(nom, (int) qte, marge));
         }
         // Trier par quantité décroissante et limiter à 5
