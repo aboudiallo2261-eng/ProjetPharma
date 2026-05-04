@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Package, TrendingUp, TrendingDown, BarChart2, Award, DollarSign, Receipt, Filter } from 'lucide-react';
+import { Package, TrendingUp, TrendingDown, BarChart2, Award, DollarSign, Receipt, Filter, PackageX } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, Tooltip, XAxis } from 'recharts';
 
 const formatFCFA = (val) => {
