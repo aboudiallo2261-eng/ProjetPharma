@@ -2,10 +2,8 @@ import React from 'react';
 import { TrendingUp, TrendingDown, DollarSign, Receipt, PackageX, AlertTriangle, Clock, Wallet, ShieldAlert, HeartCrack, BarChart2 } from 'lucide-react';
 
 const formatFCFA = (val) => {
-  const n = val || 0;
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)} M FCFA`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(0)} K FCFA`;
-  return `${n.toLocaleString('fr-FR')} FCFA`;
+  const n = Math.round(val || 0);
+  return n.toLocaleString('fr-FR') + ' FCFA';
 };
 
 function PerfKpiCard({ label, value, icon: Icon, color, isTrend, trendVal }) {
