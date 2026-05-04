@@ -196,7 +196,7 @@
                             <TableColumn fx:id="colAuditType" text="Type Mouvement" prefWidth="140" minWidth="120"/>
                             <TableColumn fx:id="colAuditRapport" text="Produit &amp; Lot" prefWidth="200" minWidth="160"/>
                             <TableColumn fx:id="colAuditQte" text="Quantité" prefWidth="160" minWidth="140" style="-fx-alignment: CENTER;"/>
-                            <TableColumn fx:id="colAuditRef" text="Référence" prefWidth="210" minWidth="180"/>
+                            <TableColumn fx:id="colAuditRef" text="Référence" prefWidth="300" minWidth="250"/>
                             <TableColumn fx:id="colAuditUser" text="Agent" prefWidth="120" minWidth="100"/>
                         </columns>
                     </TableView>

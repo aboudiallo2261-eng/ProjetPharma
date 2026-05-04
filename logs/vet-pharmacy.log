@@ -1100,3 +1100,9 @@ Caused by: org.hibernate.query.sqm.PathElementException: Could not resolve attri
 2026-05-04 23:00:12.328 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
 2026-05-04 23:00:12.328 [Timer-0] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
 2026-05-04 23:01:00.624 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-05-04 23:01:45.300 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Caisse ouverte avec un fond de 1234.0
+2026-05-04 23:02:04.693 [JavaFX Application Thread] INFO  c.p.controllers.VenteController - Vente (ID: 173) validée et enregistrée via VenteService !
+2026-05-04 23:05:20.048 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 23:05:20.054 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 23:05:20.219 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (4989 octets)
+2026-05-04 23:05:21.115 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
