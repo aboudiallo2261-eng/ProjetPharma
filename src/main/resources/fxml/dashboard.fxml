@@ -20,11 +20,7 @@
                 <Label text="Tableau de Bord Analytique" styleClass="dashboard-title"/>
                 <Region HBox.hgrow="ALWAYS"/>
                 <VBox alignment="CENTER_RIGHT" spacing="2">
-                    <Button text="Pousser vers le Cloud" onAction="#forcerSynchronisation" styleClass="btn-primary">
-                        <graphic>
-                            <SVGPath content="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" styleClass="btn-icon-white"/>
-                        </graphic>
-                    </Button>
+                    <Button text="Synchroniser" onAction="#forcerSynchronisation" style="-fx-background-color: white; -fx-border-color: #059669; -fx-border-radius: 20; -fx-background-radius: 20; -fx-text-fill: #059669; -fx-font-weight: bold; -fx-padding: 6 16; -fx-cursor: hand;"/>
                     <Label fx:id="lblDerniereSynchro" text="Dernière synchro : Inconnue" style="-fx-font-size: 11px; -fx-text-fill: #64748b;"/>
                 </VBox>
                 <ProgressIndicator fx:id="progressIndicator" prefWidth="24" prefHeight="24" visible="false" managed="false"/>

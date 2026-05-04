@@ -443,11 +443,15 @@ public class ReportController {
                     setText(null);
                     setStyle("");
                 } else {
-                    LigneVente lv = getTableView().getItems().get(getIndex());
-                    if (lv.getTypeUnite() == com.pharmacie.models.LigneVente.TypeUnite.DETAIL) {
-                        setText(item + " Unité(s)");
+                    LigneVente lv = (LigneVente) getTableRow().getItem();
+                    if (lv != null) {
+                        if (lv.getTypeUnite() == com.pharmacie.models.LigneVente.TypeUnite.DETAIL) {
+                            setText(item + " Unité(s)");
+                        } else {
+                            setText(item + " Boîte(s)");
+                        }
                     } else {
-                        setText(item + " Boîte(s)");
+                        setText(String.valueOf(item));
                     }
                     setStyle("-fx-alignment: CENTER;");
                 }
@@ -494,7 +498,7 @@ public class ReportController {
                     return;
                 }
                 boolean selected = getTableRow() != null && getTableRow().isSelected();
-                AjustementStock adj = getTableView().getItems().get(getIndex());
+                AjustementStock adj = (AjustementStock) getTableRow().getItem();
                 if (adj != null && adj.getTypeAjustement() == MouvementStock.TypeMouvement.AJUSTEMENT_POSITIF) {
                     setText("+ " + item);
                     setStyle(selected
@@ -571,7 +575,7 @@ public class ReportController {
                     return;
                 }
                 boolean selected = getTableRow() != null && getTableRow().isSelected();
-                MouvementStock m = getTableView().getItems().get(getIndex());
+                MouvementStock m = (MouvementStock) getTableRow().getItem();
                 if (m != null) {
                     if (selected) {
                         setStyle("-fx-text-fill: white; -fx-font-weight: bold;");

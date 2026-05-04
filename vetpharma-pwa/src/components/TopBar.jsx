@@ -16,19 +16,19 @@ export default function TopBar({ lastSync, loading, onLogout }) {
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
-    
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
+
       // Cache la barre si on scrolle vers le bas (et qu'on a dépassé le haut)
       if (currentScrollY > lastScrollY && currentScrollY > 80) {
         setIsVisible(false);
-      } 
+      }
       // Montre la barre si on scrolle vers le haut ou si on est tout en haut
       else if (currentScrollY < lastScrollY || currentScrollY <= 80) {
         setIsVisible(true);
       }
-      
+
       lastScrollY = currentScrollY;
     };
 

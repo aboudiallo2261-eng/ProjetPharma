@@ -89,6 +89,12 @@ public class DashboardController {
         barPertes.getXAxis().setAnimated(false);
         chartEvolution.getXAxis().setAnimated(false);
 
+        // Restaure la date de dernière synchro si elle existe en mémoire globale
+        if (com.pharmacie.utils.SyncService.lastSuccessfulSync != null && lblDerniereSynchro != null) {
+            lblDerniereSynchro.setText("Dernière synchro : " + formatRelativeTime(com.pharmacie.utils.SyncService.lastSuccessfulSync));
+            lblDerniereSynchro.setStyle("-fx-font-size: 11px; -fx-text-fill: #059669;"); // Emerald 600
+        }
+
         chargerDonnees();
     }
 
@@ -132,7 +138,7 @@ public class DashboardController {
         task.setOnSucceeded(e -> {
             if (progressIndicator != null) progressIndicator.setVisible(false);
             if (lblDerniereSynchro != null) {
-                lblDerniereSynchro.setText("Synchro réussie à " + java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm")));
+                lblDerniereSynchro.setText("Dernière synchro : " + formatRelativeTime(java.time.LocalDateTime.now()));
                 lblDerniereSynchro.setStyle("-fx-font-size: 11px; -fx-text-fill: #059669;"); // Emerald 600
             }
         });
@@ -187,6 +193,21 @@ public class DashboardController {
     // Point d'entrée — Task asynchrone
     // =================================================================
     @FXML
+    private String formatRelativeTime(java.time.LocalDateTime time) {
+        if (time == null) return "Inconnue";
+        java.time.LocalDate today = java.time.LocalDate.now();
+        java.time.LocalDate targetDate = time.toLocalDate();
+        java.time.format.DateTimeFormatter timeFormatter = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
+        
+        if (targetDate.equals(today)) {
+            return "Aujourd'hui à " + time.format(timeFormatter);
+        } else if (targetDate.equals(today.minusDays(1))) {
+            return "Hier à " + time.format(timeFormatter);
+        } else {
+            return "le " + time.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+        }
+    }
+
     public void chargerDonnees() {
         LocalDateTime[] plage  = getPlageDates();
         LocalDateTime   debut  = plage[0];

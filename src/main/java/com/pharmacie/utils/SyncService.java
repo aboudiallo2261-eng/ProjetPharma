@@ -41,6 +41,9 @@ public class SyncService {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final StatistiquesDAO statsDAO = new StatistiquesDAO();
 
+    // Conserve la date de la dernière synchro réussie en mémoire pour persister l'affichage au changement d'onglet
+    public static LocalDateTime lastSuccessfulSync = null;
+
     // La configuration Supabase est désormais lue de manière sécurisée via ConfigService
 
     // --- Démon de synchronisation Cloud (inchangé) ---
@@ -101,6 +104,8 @@ public class SyncService {
             
             // Phase 3 : Envoi silencieux vers le miroir Cloud
             envoyerVersCloud(dto);
+            
+            lastSuccessfulSync = LocalDateTime.now(); // On mémorise le succès globalement
             
             AuditLogger.log("Synchro Dashboard", "SUCCESS");
             logger.info("Snapshot JSON écrit dans {}/{}", SYNC_DIR, SYNC_FILE);
