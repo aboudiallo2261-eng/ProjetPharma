@@ -53,7 +53,7 @@ public class DashboardController {
     // ── Top Produits Table ────────────────────────────────────────────
     @FXML private TableView<TopProduitDTO>       tableTopProduits;
     @FXML private TableColumn<TopProduitDTO, String> colTopNom;
-    @FXML private TableColumn<TopProduitDTO, Double> colTopQte;
+    @FXML private TableColumn<TopProduitDTO, String> colTopQte;
     @FXML private Label lblDerniereSynchro;
 
     // ── DAOs ──────────────────────────────────────────────────────────
@@ -73,7 +73,7 @@ public class DashboardController {
         cmbPeriode.getSelectionModel().select("Ce Mois");
 
         colTopNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
-        colTopQte.setCellValueFactory(new PropertyValueFactory<>("quantite"));
+        colTopQte.setCellValueFactory(new PropertyValueFactory<>("quantiteAffichee"));
 
         com.pharmacie.utils.DateUtils.bindDateFilters(dpDebut, dpFin);
 
@@ -385,12 +385,54 @@ public class DashboardController {
         // ── 4. Top 10 Table + Top 5 PieChart ────────────────────────
         ObservableList<TopProduitDTO> topList = FXCollections.observableArrayList();
         pieTopProduits.getData().clear();
-        int count = 0;
+
+        // Fusionner les ventes par boîtes et par détail
+        java.util.LinkedHashMap<String, double[]> aggregation = new java.util.LinkedHashMap<>();
         for (Object[] row : data.topData) {
-            String name = row[0] != null ? row[0].toString() : "Inconnu";
-            Double qte  = ((Number) row[1]).doubleValue();
-            topList.add(new TopProduitDTO(name, qte));
-            if (count < 5) pieTopProduits.getData().add(new PieChart.Data(name, qte));
+            String nom         = row[0] != null ? row[0].toString() : "Inconnu";
+            double quantite    = (row[1] != null) ? ((Number) row[1]).doubleValue() : 0.0;
+            String typeUnite   = (row[4] != null) ? row[4].toString() : "BOITE_ENTIERE";
+
+            double[] acc = aggregation.computeIfAbsent(nom, k -> new double[3]);
+            acc[0] += quantite; // Total
+            if ("DETAIL".equals(typeUnite)) {
+                acc[2] += quantite; // Unités
+            } else {
+                acc[1] += quantite; // Boîtes
+            }
+        }
+
+        List<TopProduitDTO> tempList = new java.util.ArrayList<>();
+        for (java.util.Map.Entry<String, double[]> entry : aggregation.entrySet()) {
+            String nom = entry.getKey();
+            double total = entry.getValue()[0];
+            double boites = entry.getValue()[1];
+            double unites = entry.getValue()[2];
+
+            String qteLabel;
+            boolean hasBoites = boites > 0;
+            boolean hasUnites = unites > 0;
+            if (hasBoites && hasUnites) {
+                qteLabel = String.format("%.0f bte%s + %.0f unité%s", boites, boites > 1 ? "s" : "", unites, unites > 1 ? "s" : "");
+            } else if (hasBoites) {
+                qteLabel = String.format("%.0f boîte%s", boites, boites > 1 ? "s" : "");
+            } else if (hasUnites) {
+                qteLabel = String.format("%.0f unité%s", unites, unites > 1 ? "s" : "");
+            } else {
+                qteLabel = String.format("%.0f unité%s", total, total > 1 ? "s" : "");
+            }
+
+            tempList.add(new TopProduitDTO(nom, qteLabel, total));
+        }
+
+        // Trier par quantité totale décroissante
+        tempList.sort((a, b) -> Double.compare(b.getQuantiteTotale(), a.getQuantiteTotale()));
+
+        int count = 0;
+        for (TopProduitDTO dto : tempList) {
+            if (count >= 10) break;
+            topList.add(dto);
+            if (count < 5) pieTopProduits.getData().add(new PieChart.Data(dto.getNom(), dto.getQuantiteTotale()));
             count++;
         }
         tableTopProduits.setItems(topList);
@@ -474,9 +516,16 @@ public class DashboardController {
     // =================================================================
     public static class TopProduitDTO {
         private final String nom;
-        private final Double quantite;
-        public TopProduitDTO(String n, Double q) { this.nom = n; this.quantite = q; }
+        private final String quantiteAffichee;
+        private final Double quantiteTotale;
+
+        public TopProduitDTO(String n, String qa, Double qt) {
+            this.nom = n;
+            this.quantiteAffichee = qa;
+            this.quantiteTotale = qt;
+        }
         public String getNom()      { return nom;      }
-        public Double getQuantite() { return quantite; }
+        public String getQuantiteAffichee() { return quantiteAffichee; }
+        public Double getQuantiteTotale() { return quantiteTotale; }
     }
 }
