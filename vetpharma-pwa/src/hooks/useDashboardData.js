@@ -6,16 +6,24 @@ export function useDashboardData(pharmacyId) {
   const [error, setError] = useState(null)
   const [lastSync, setLastSync] = useState(null)
   
-  const [dashboardData, setDashboardData] = useState({
-    kpis: {
-      jour: { chiffreAffaire: 0, benefice: 0, ventesRealisees: 0, evolutionCA: 0, pertesValeur: 0 },
-      mois: { chiffreAffaire: 0, benefice: 0, ventesRealisees: 0, evolutionCA: 0, pertesValeur: 0 },
-      stock: { valeurTotale: 0, nombreRuptures: 0, nombreAlerteStock: 0, nombrePerimes: 0, valeurPerimes: 0, nombreProchePeremption: 0 }
-    },
-    alertes: { ruptures: [], alertesStock: [], perimes: [], prochePeremptions: [], pertes: [] },
-    topProduits: [],
-    historique7Jours: [],
-    historique3Mois: []
+  const [dashboardData, setDashboardData] = useState(() => {
+    const saved = localStorage.getItem('vetpharma_dashboard_cache');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) {}
+    }
+    return {
+      kpis: {
+        jour: { chiffreAffaire: 0, benefice: 0, ventesRealisees: 0, evolutionCA: 0, pertesValeur: 0 },
+        mois: { chiffreAffaire: 0, benefice: 0, ventesRealisees: 0, evolutionCA: 0, pertesValeur: 0 },
+        stock: { valeurTotale: 0, nombreRuptures: 0, nombreAlerteStock: 0, nombrePerimes: 0, valeurPerimes: 0, nombreProchePeremption: 0 }
+      },
+      alertes: { ruptures: [], alertesStock: [], perimes: [], prochePeremptions: [], pertes: [] },
+      topProduitsJour: [],
+      topProduitsMois: [],
+      topProduitsAnnee: [],
+      historique7Jours: [],
+      historique3Mois: []
+    };
   });
 
   useEffect(() => {
@@ -41,6 +49,7 @@ export function useDashboardData(pharmacyId) {
         if (data && data.payload && isMounted) {
           setDashboardData(data.payload)
           setLastSync(data.updated_at)
+          localStorage.setItem('vetpharma_dashboard_cache', JSON.stringify(data.payload));
         }
       } catch (err) {
         if (isMounted) setError(err.message)

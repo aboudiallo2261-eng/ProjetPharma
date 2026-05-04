@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from './lib/supabaseClient';
+import { WifiOff } from 'lucide-react';
 import { useDashboardData } from './hooks/useDashboardData';
 import TopBar from './components/TopBar';
 import BottomNav from './components/BottomNav';
@@ -117,8 +118,12 @@ function App() {
         
         <main className="max-w-7xl w-full mx-auto relative pb-24 md:pb-8">
           {error && (
-            <div className="m-4 md:mx-8 p-3 bg-red-500/10 text-red-400 rounded-2xl text-sm font-medium border border-red-500/20 flex items-start gap-2">
-              <span className="font-bold">Erreur :</span> {error}
+            <div className="m-4 md:mx-8 p-3 bg-orange-500/10 text-orange-400 rounded-2xl text-sm font-medium border border-orange-500/20 flex items-start gap-3">
+              <WifiOff className="w-5 h-5 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold">Mode Hors Ligne</p>
+                <p className="text-xs text-orange-400/80 mt-0.5">Impossible de synchroniser. Affichage des dernières données connues.</p>
+              </div>
             </div>
           )}
 
