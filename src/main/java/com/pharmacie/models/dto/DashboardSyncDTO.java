@@ -12,7 +12,9 @@ public class DashboardSyncDTO {
     private AlertesDTO alertes;
     
     // Nouvelles listes d'analyse
-    private List<TopProduitDTO> topProduits;
+    private List<TopProduitDTO> topProduitsJour;
+    private List<TopProduitDTO> topProduitsMois;
+    private List<TopProduitDTO> topProduitsAnnee;
     private List<HistoriqueCADTO> historique7Jours;
     private List<HistoriqueCADTO> historique3Mois;
     private List<HistoriqueCADTO> historique3Ans;
@@ -29,8 +31,14 @@ public class DashboardSyncDTO {
     public AlertesDTO getAlertes() { return alertes; }
     public void setAlertes(AlertesDTO alertes) { this.alertes = alertes; }
 
-    public List<TopProduitDTO> getTopProduits() { return topProduits; }
-    public void setTopProduits(List<TopProduitDTO> topProduits) { this.topProduits = topProduits; }
+    public List<TopProduitDTO> getTopProduitsJour() { return topProduitsJour; }
+    public void setTopProduitsJour(List<TopProduitDTO> topProduitsJour) { this.topProduitsJour = topProduitsJour; }
+
+    public List<TopProduitDTO> getTopProduitsMois() { return topProduitsMois; }
+    public void setTopProduitsMois(List<TopProduitDTO> topProduitsMois) { this.topProduitsMois = topProduitsMois; }
+
+    public List<TopProduitDTO> getTopProduitsAnnee() { return topProduitsAnnee; }
+    public void setTopProduitsAnnee(List<TopProduitDTO> topProduitsAnnee) { this.topProduitsAnnee = topProduitsAnnee; }
 
     public List<HistoriqueCADTO> getHistorique7Jours() { return historique7Jours; }
     public void setHistorique7Jours(List<HistoriqueCADTO> historique7Jours) { this.historique7Jours = historique7Jours; }

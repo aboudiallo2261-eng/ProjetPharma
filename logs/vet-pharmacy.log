@@ -351,3 +351,195 @@ Caused by: org.hibernate.query.sqm.PathElementException: Could not resolve attri
 	at org.hibernate.query.hql.internal.SemanticQueryBuilder.buildSemanticModel(SemanticQueryBuilder.java:311)
 	at org.hibernate.query.hql.internal.StandardHqlTranslator.translate(StandardHqlTranslator.java:71)
 	... 11 common frames omitted
+2026-05-04 09:45:52.905 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 09:45:52.906 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 09:45:53.029 [Timer-0] ERROR com.pharmacie.utils.SyncService - Erreur lors de la synchronisation du dashboard
+java.lang.IllegalArgumentException: org.hibernate.query.sqm.UnknownPathException: Could not resolve attribute 'montantTotal' of 'com.pharmacie.models.Vente' [SELECT year(v.dateVente), SUM(v.montantTotal) FROM Vente v WHERE v.statut = 'VALIDEE'   AND year(v.dateVente) >= :startYear GROUP BY year(v.dateVente) ORDER BY year(v.dateVente) ASC]
+	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:143)
+	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:167)
+	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:173)
+	at org.hibernate.internal.AbstractSharedSessionContract.createQuery(AbstractSharedSessionContract.java:848)
+	at org.hibernate.internal.AbstractSharedSessionContract.createQuery(AbstractSharedSessionContract.java:136)
+	at com.pharmacie.dao.StatistiquesDAO.getHistoriqueCA3Ans(StatistiquesDAO.java:146)
+	at com.pharmacie.utils.SyncService.construireSnapshot(SyncService.java:250)
+	at com.pharmacie.utils.SyncService.synchroniser(SyncService.java:99)
+	at com.pharmacie.utils.SyncService$1.run(SyncService.java:57)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:566)
+	at java.base/java.util.TimerThread.run(Timer.java:516)
+Caused by: org.hibernate.query.sqm.UnknownPathException: Could not resolve attribute 'montantTotal' of 'com.pharmacie.models.Vente' [SELECT year(v.dateVente), SUM(v.montantTotal) FROM Vente v WHERE v.statut = 'VALIDEE'   AND year(v.dateVente) >= :startYear GROUP BY year(v.dateVente) ORDER BY year(v.dateVente) ASC]
+	at org.hibernate.query.hql.internal.StandardHqlTranslator.translate(StandardHqlTranslator.java:87)
+	at org.hibernate.query.internal.QueryInterpretationCacheStandardImpl.createHqlInterpretation(QueryInterpretationCacheStandardImpl.java:165)
+	at org.hibernate.query.internal.QueryInterpretationCacheStandardImpl.resolveHqlInterpretation(QueryInterpretationCacheStandardImpl.java:147)
+	at org.hibernate.internal.AbstractSharedSessionContract.interpretHql(AbstractSharedSessionContract.java:790)
+	at org.hibernate.internal.AbstractSharedSessionContract.createQuery(AbstractSharedSessionContract.java:840)
+	... 7 common frames omitted
+Caused by: org.hibernate.query.sqm.PathElementException: Could not resolve attribute 'montantTotal' of 'com.pharmacie.models.Vente'
+	at org.hibernate.query.sqm.SqmPathSource.getSubPathSource(SqmPathSource.java:95)
+	at org.hibernate.query.sqm.tree.domain.AbstractSqmPath.get(AbstractSqmPath.java:202)
+	at org.hibernate.query.sqm.tree.domain.AbstractSqmFrom.resolvePathPart(AbstractSqmFrom.java:196)
+	at org.hibernate.query.hql.internal.DomainPathPart.resolvePathPart(DomainPathPart.java:42)
+	at org.hibernate.query.hql.internal.BasicDotIdentifierConsumer.consumeIdentifier(BasicDotIdentifierConsumer.java:91)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSimplePath(SemanticQueryBuilder.java:5060)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitIndexedPathAccessFragment(SemanticQueryBuilder.java:5009)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitGeneralPathFragment(SemanticQueryBuilder.java:4984)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitGeneralPathExpression(SemanticQueryBuilder.java:1776)
+	at org.hibernate.grammars.hql.HqlParser$GeneralPathExpressionContext.accept(HqlParser.java:7699)
+	at org.antlr.v4.runtime.tree.AbstractParseTreeVisitor.visitChildren(AbstractParseTreeVisitor.java:46)
+	at org.hibernate.grammars.hql.HqlParserBaseVisitor.visitBarePrimaryExpression(HqlParserBaseVisitor.java:756)
+	at org.hibernate.grammars.hql.HqlParser$BarePrimaryExpressionContext.accept(HqlParser.java:7157)
+	at org.antlr.v4.runtime.tree.AbstractParseTreeVisitor.visitChildren(AbstractParseTreeVisitor.java:46)
+	at org.hibernate.grammars.hql.HqlParserBaseVisitor.visitExpressionOrPredicate(HqlParserBaseVisitor.java:896)
+	at org.hibernate.grammars.hql.HqlParser$ExpressionOrPredicateContext.accept(HqlParser.java:7927)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitFinalFunctionArgument(SemanticQueryBuilder.java:4090)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitGenericFunctionArguments(SemanticQueryBuilder.java:4067)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitGenericFunctionArguments(SemanticQueryBuilder.java:269)
+	at org.hibernate.grammars.hql.HqlParser$GenericFunctionArgumentsContext.accept(HqlParser.java:12208)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.getFunctionArguments(SemanticQueryBuilder.java:3970)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitGenericFunction(SemanticQueryBuilder.java:3849)
+	at org.hibernate.grammars.hql.HqlParser$GenericFunctionContext.accept(HqlParser.java:11842)
+	at org.antlr.v4.runtime.tree.AbstractParseTreeVisitor.visitChildren(AbstractParseTreeVisitor.java:46)
+	at org.hibernate.grammars.hql.HqlParserBaseVisitor.visitFunction(HqlParserBaseVisitor.java:1288)
+	at org.hibernate.grammars.hql.HqlParser$FunctionContext.accept(HqlParser.java:11614)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitFunctionExpression(SemanticQueryBuilder.java:1787)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitFunctionExpression(SemanticQueryBuilder.java:269)
+	at org.hibernate.grammars.hql.HqlParser$FunctionExpressionContext.accept(HqlParser.java:7579)
+	at org.antlr.v4.runtime.tree.AbstractParseTreeVisitor.visitChildren(AbstractParseTreeVisitor.java:46)
+	at org.hibernate.grammars.hql.HqlParserBaseVisitor.visitBarePrimaryExpression(HqlParserBaseVisitor.java:756)
+	at org.hibernate.grammars.hql.HqlParser$BarePrimaryExpressionContext.accept(HqlParser.java:7157)
+	at org.antlr.v4.runtime.tree.AbstractParseTreeVisitor.visitChildren(AbstractParseTreeVisitor.java:46)
+	at org.hibernate.grammars.hql.HqlParserBaseVisitor.visitExpressionOrPredicate(HqlParserBaseVisitor.java:896)
+	at org.hibernate.grammars.hql.HqlParser$ExpressionOrPredicateContext.accept(HqlParser.java:7927)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSelectableNode(SemanticQueryBuilder.java:1332)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSelection(SemanticQueryBuilder.java:1309)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSelectClause(SemanticQueryBuilder.java:1302)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuery(SemanticQueryBuilder.java:1154)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuerySpecExpression(SemanticQueryBuilder.java:941)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuerySpecExpression(SemanticQueryBuilder.java:269)
+	at org.hibernate.grammars.hql.HqlParser$QuerySpecExpressionContext.accept(HqlParser.java:1869)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSimpleQueryGroup(SemanticQueryBuilder.java:926)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSimpleQueryGroup(SemanticQueryBuilder.java:269)
+	at org.hibernate.grammars.hql.HqlParser$SimpleQueryGroupContext.accept(HqlParser.java:1740)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSelectStatement(SemanticQueryBuilder.java:443)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitStatement(SemanticQueryBuilder.java:402)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.buildSemanticModel(SemanticQueryBuilder.java:311)
+	at org.hibernate.query.hql.internal.StandardHqlTranslator.translate(StandardHqlTranslator.java:71)
+	... 11 common frames omitted
+2026-05-04 09:50:52.910 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 09:50:52.910 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 09:50:53.055 [Timer-0] ERROR com.pharmacie.utils.SyncService - Erreur lors de la synchronisation du dashboard
+java.lang.IllegalArgumentException: org.hibernate.query.sqm.UnknownPathException: Could not resolve attribute 'montantTotal' of 'com.pharmacie.models.Vente' [SELECT year(v.dateVente), SUM(v.montantTotal) FROM Vente v WHERE v.statut = 'VALIDEE'   AND year(v.dateVente) >= :startYear GROUP BY year(v.dateVente) ORDER BY year(v.dateVente) ASC]
+	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:143)
+	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:167)
+	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:173)
+	at org.hibernate.internal.AbstractSharedSessionContract.createQuery(AbstractSharedSessionContract.java:848)
+	at org.hibernate.internal.AbstractSharedSessionContract.createQuery(AbstractSharedSessionContract.java:136)
+	at com.pharmacie.dao.StatistiquesDAO.getHistoriqueCA3Ans(StatistiquesDAO.java:146)
+	at com.pharmacie.utils.SyncService.construireSnapshot(SyncService.java:250)
+	at com.pharmacie.utils.SyncService.synchroniser(SyncService.java:99)
+	at com.pharmacie.utils.SyncService$1.run(SyncService.java:57)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:566)
+	at java.base/java.util.TimerThread.run(Timer.java:516)
+Caused by: org.hibernate.query.sqm.UnknownPathException: Could not resolve attribute 'montantTotal' of 'com.pharmacie.models.Vente' [SELECT year(v.dateVente), SUM(v.montantTotal) FROM Vente v WHERE v.statut = 'VALIDEE'   AND year(v.dateVente) >= :startYear GROUP BY year(v.dateVente) ORDER BY year(v.dateVente) ASC]
+	at org.hibernate.query.hql.internal.StandardHqlTranslator.translate(StandardHqlTranslator.java:87)
+	at org.hibernate.query.internal.QueryInterpretationCacheStandardImpl.createHqlInterpretation(QueryInterpretationCacheStandardImpl.java:165)
+	at org.hibernate.query.internal.QueryInterpretationCacheStandardImpl.resolveHqlInterpretation(QueryInterpretationCacheStandardImpl.java:147)
+	at org.hibernate.internal.AbstractSharedSessionContract.interpretHql(AbstractSharedSessionContract.java:790)
+	at org.hibernate.internal.AbstractSharedSessionContract.createQuery(AbstractSharedSessionContract.java:840)
+	... 7 common frames omitted
+Caused by: org.hibernate.query.sqm.PathElementException: Could not resolve attribute 'montantTotal' of 'com.pharmacie.models.Vente'
+	at org.hibernate.query.sqm.SqmPathSource.getSubPathSource(SqmPathSource.java:95)
+	at org.hibernate.query.sqm.tree.domain.AbstractSqmPath.get(AbstractSqmPath.java:202)
+	at org.hibernate.query.sqm.tree.domain.AbstractSqmFrom.resolvePathPart(AbstractSqmFrom.java:196)
+	at org.hibernate.query.hql.internal.DomainPathPart.resolvePathPart(DomainPathPart.java:42)
+	at org.hibernate.query.hql.internal.BasicDotIdentifierConsumer.consumeIdentifier(BasicDotIdentifierConsumer.java:91)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSimplePath(SemanticQueryBuilder.java:5060)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitIndexedPathAccessFragment(SemanticQueryBuilder.java:5009)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitGeneralPathFragment(SemanticQueryBuilder.java:4984)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitGeneralPathExpression(SemanticQueryBuilder.java:1776)
+	at org.hibernate.grammars.hql.HqlParser$GeneralPathExpressionContext.accept(HqlParser.java:7699)
+	at org.antlr.v4.runtime.tree.AbstractParseTreeVisitor.visitChildren(AbstractParseTreeVisitor.java:46)
+	at org.hibernate.grammars.hql.HqlParserBaseVisitor.visitBarePrimaryExpression(HqlParserBaseVisitor.java:756)
+	at org.hibernate.grammars.hql.HqlParser$BarePrimaryExpressionContext.accept(HqlParser.java:7157)
+	at org.antlr.v4.runtime.tree.AbstractParseTreeVisitor.visitChildren(AbstractParseTreeVisitor.java:46)
+	at org.hibernate.grammars.hql.HqlParserBaseVisitor.visitExpressionOrPredicate(HqlParserBaseVisitor.java:896)
+	at org.hibernate.grammars.hql.HqlParser$ExpressionOrPredicateContext.accept(HqlParser.java:7927)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitFinalFunctionArgument(SemanticQueryBuilder.java:4090)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitGenericFunctionArguments(SemanticQueryBuilder.java:4067)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitGenericFunctionArguments(SemanticQueryBuilder.java:269)
+	at org.hibernate.grammars.hql.HqlParser$GenericFunctionArgumentsContext.accept(HqlParser.java:12208)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.getFunctionArguments(SemanticQueryBuilder.java:3970)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitGenericFunction(SemanticQueryBuilder.java:3849)
+	at org.hibernate.grammars.hql.HqlParser$GenericFunctionContext.accept(HqlParser.java:11842)
+	at org.antlr.v4.runtime.tree.AbstractParseTreeVisitor.visitChildren(AbstractParseTreeVisitor.java:46)
+	at org.hibernate.grammars.hql.HqlParserBaseVisitor.visitFunction(HqlParserBaseVisitor.java:1288)
+	at org.hibernate.grammars.hql.HqlParser$FunctionContext.accept(HqlParser.java:11614)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitFunctionExpression(SemanticQueryBuilder.java:1787)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitFunctionExpression(SemanticQueryBuilder.java:269)
+	at org.hibernate.grammars.hql.HqlParser$FunctionExpressionContext.accept(HqlParser.java:7579)
+	at org.antlr.v4.runtime.tree.AbstractParseTreeVisitor.visitChildren(AbstractParseTreeVisitor.java:46)
+	at org.hibernate.grammars.hql.HqlParserBaseVisitor.visitBarePrimaryExpression(HqlParserBaseVisitor.java:756)
+	at org.hibernate.grammars.hql.HqlParser$BarePrimaryExpressionContext.accept(HqlParser.java:7157)
+	at org.antlr.v4.runtime.tree.AbstractParseTreeVisitor.visitChildren(AbstractParseTreeVisitor.java:46)
+	at org.hibernate.grammars.hql.HqlParserBaseVisitor.visitExpressionOrPredicate(HqlParserBaseVisitor.java:896)
+	at org.hibernate.grammars.hql.HqlParser$ExpressionOrPredicateContext.accept(HqlParser.java:7927)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSelectableNode(SemanticQueryBuilder.java:1332)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSelection(SemanticQueryBuilder.java:1309)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSelectClause(SemanticQueryBuilder.java:1302)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuery(SemanticQueryBuilder.java:1154)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuerySpecExpression(SemanticQueryBuilder.java:941)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuerySpecExpression(SemanticQueryBuilder.java:269)
+	at org.hibernate.grammars.hql.HqlParser$QuerySpecExpressionContext.accept(HqlParser.java:1869)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSimpleQueryGroup(SemanticQueryBuilder.java:926)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSimpleQueryGroup(SemanticQueryBuilder.java:269)
+	at org.hibernate.grammars.hql.HqlParser$SimpleQueryGroupContext.accept(HqlParser.java:1740)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSelectStatement(SemanticQueryBuilder.java:443)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitStatement(SemanticQueryBuilder.java:402)
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.buildSemanticModel(SemanticQueryBuilder.java:311)
+	at org.hibernate.query.hql.internal.StandardHqlTranslator.translate(StandardHqlTranslator.java:71)
+	... 11 common frames omitted
+2026-05-04 09:51:18.716 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Fermeture de l'application Vet-Pharmacy...
+2026-05-04 09:51:18.716 [JavaFX Application Thread] INFO  com.pharmacie.utils.SyncService - Service de synchronisation arrêté.
+2026-05-04 09:51:58.240 [JavaFX Application Thread] INFO  com.pharmacie.MainApp - Démarrage de l'application Vet-Pharmacy...
+2026-05-04 09:52:08.901 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 09:52:08.902 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 09:52:08.933 [JavaFX Application Thread] INFO  com.pharmacie.utils.HibernateUtil - [Migration] Colonne 'motif' élargie à VARCHAR(255) avec succès.
+2026-05-04 09:52:12.174 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (3658 octets)
+2026-05-04 09:52:20.596 [JavaFX Application Thread] INFO  c.p.controllers.LoginController - Connexion Setup Admin avec ID: 1
+2026-05-04 09:52:26.874 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 09:52:26.876 [Timer-0] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 09:52:30.597 [Thread-7] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 09:52:30.798 [Thread-7] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (3658 octets)
+2026-05-04 09:52:31.725 [Thread-7] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 09:52:31.727 [Thread-7] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 09:52:33.661 [Thread-8] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 09:52:33.847 [Thread-8] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (3658 octets)
+2026-05-04 09:52:33.935 [Thread-9] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 09:52:34.095 [Thread-10] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 09:52:34.107 [Thread-9] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (3658 octets)
+2026-05-04 09:52:34.295 [Thread-10] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (3658 octets)
+2026-05-04 09:52:34.337 [Thread-11] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 09:52:34.516 [Thread-12] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 09:52:34.564 [Thread-11] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (3658 octets)
+2026-05-04 09:52:34.698 [Thread-8] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 09:52:34.700 [Thread-8] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 09:52:34.718 [Thread-13] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 09:52:34.869 [Thread-12] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (3658 octets)
+2026-05-04 09:52:34.963 [Thread-13] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (3658 octets)
+2026-05-04 09:52:35.033 [Thread-9] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 09:52:35.035 [Thread-9] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 09:52:35.384 [Thread-10] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 09:52:35.385 [Thread-10] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 09:52:35.794 [Thread-12] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 09:52:35.795 [Thread-12] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 09:52:35.821 [Thread-11] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 09:52:35.823 [Thread-11] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 09:52:35.992 [Thread-13] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 09:52:35.993 [Thread-13] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 09:57:09.486 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 09:57:09.486 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 09:57:09.659 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (3658 octets)
+2026-05-04 09:57:10.996 [Timer-0] INFO  com.pharmacie.utils.SyncService - Synchro Cloud Supabase réussie ! (Code: 200)
+2026-05-04 09:57:10.998 [Timer-0] INFO  com.pharmacie.utils.SyncService - Snapshot JSON écrit dans sync/dashboard_snapshot.json
+2026-05-04 10:02:20.379 [Timer-0] INFO  com.pharmacie.utils.SyncService - Internet détecté. Début de la synchronisation Cloud...
+2026-05-04 10:02:20.379 [Timer-0] INFO  com.pharmacie.utils.SyncService - Démarrage extraction agrégats Jumeau Numérique...
+2026-05-04 10:02:20.580 [Timer-0] INFO  com.pharmacie.utils.SyncService - Fichier JSON écrit : C:\projetjavasout\sync\dashboard_snapshot.json (3658 octets)

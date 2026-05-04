@@ -525,3 +525,25 @@
 2026-05-04 09:40 - Synchro Dashboard - ERROR: org.hibernate.query.sqm.UnknownPathException: Could not resolve attribute 'montantTotal' of 'com.pharmacie.models.Vente' [SELECT year(v.dateVente), SUM(v.montantTotal) FROM Vente v WHERE v.statut = 'VALIDEE'   AND year(v.dateVente) >= :startYear GROUP BY year(v.dateVente) ORDER BY year(v.dateVente) ASC]
 2026-05-04 09:45 - Synchro Dashboard - STARTED
 2026-05-04 09:45 - Synchro Dashboard - ERROR: org.hibernate.query.sqm.UnknownPathException: Could not resolve attribute 'montantTotal' of 'com.pharmacie.models.Vente' [SELECT year(v.dateVente), SUM(v.montantTotal) FROM Vente v WHERE v.statut = 'VALIDEE'   AND year(v.dateVente) >= :startYear GROUP BY year(v.dateVente) ORDER BY year(v.dateVente) ASC]
+2026-05-04 09:50 - Synchro Dashboard - STARTED
+2026-05-04 09:50 - Synchro Dashboard - ERROR: org.hibernate.query.sqm.UnknownPathException: Could not resolve attribute 'montantTotal' of 'com.pharmacie.models.Vente' [SELECT year(v.dateVente), SUM(v.montantTotal) FROM Vente v WHERE v.statut = 'VALIDEE'   AND year(v.dateVente) >= :startYear GROUP BY year(v.dateVente) ORDER BY year(v.dateVente) ASC]
+2026-05-04 09:52 - Synchro Dashboard - STARTED
+2026-05-04 09:52 - Synchro Dashboard - SUCCESS
+2026-05-04 09:52 - Synchro Dashboard - STARTED
+2026-05-04 09:52 - Synchro Dashboard - SUCCESS
+2026-05-04 09:52 - Synchro Dashboard - STARTED
+2026-05-04 09:52 - Synchro Dashboard - STARTED
+2026-05-04 09:52 - Synchro Dashboard - STARTED
+2026-05-04 09:52 - Synchro Dashboard - STARTED
+2026-05-04 09:52 - Synchro Dashboard - STARTED
+2026-05-04 09:52 - Synchro Dashboard - SUCCESS
+2026-05-04 09:52 - Synchro Dashboard - STARTED
+2026-05-04 09:52 - Synchro Dashboard - SUCCESS
+2026-05-04 09:52 - Synchro Dashboard - SUCCESS
+2026-05-04 09:52 - Synchro Dashboard - SUCCESS
+2026-05-04 09:52 - Synchro Dashboard - SUCCESS
+2026-05-04 09:52 - Synchro Dashboard - SUCCESS
+2026-05-04 09:57 - Synchro Dashboard - STARTED
+2026-05-04 09:57 - Synchro Dashboard - SUCCESS
+2026-05-04 10:02 - Synchro Dashboard - STARTED
+2026-05-04 10:02 - Synchro Dashboard - SUCCESS

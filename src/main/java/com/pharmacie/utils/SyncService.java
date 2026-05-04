@@ -213,17 +213,35 @@ public class SyncService {
         alertes.setPertes(pertesList);
         kpiJour.setPertesValeur(pertesValeurJour);
 
-        // Top Produits (Volume)
-        List<Object[]> topProdData = statsDAO.getTopProduitsVolume(debutMois, maintenant, 5);
-        List<com.pharmacie.models.dto.TopProduitDTO> topProduitsList = new ArrayList<>();
-        for (Object[] row : topProdData) {
+        // Top Produits (Volume) - Jour
+        List<Object[]> topProdJourData = statsDAO.getTopProduitsVolume(debutJour, maintenant, 5);
+        List<com.pharmacie.models.dto.TopProduitDTO> topProduitsJourList = new ArrayList<>();
+        for (Object[] row : topProdJourData) {
             String nom = (String) row[0];
             double qteDouble = (row[1] != null) ? ((Number) row[1]).doubleValue() : 0.0;
-            int quantite = (int) qteDouble;
-            long margeEstimee = quantite * 1500L; // Marge estimée générique pour démonstration si non requêtée
-            topProduitsList.add(new com.pharmacie.models.dto.TopProduitDTO(nom, quantite, margeEstimee));
+            topProduitsJourList.add(new com.pharmacie.models.dto.TopProduitDTO(nom, (int) qteDouble, (long)(qteDouble * 1500L)));
         }
-        dto.setTopProduits(topProduitsList);
+        dto.setTopProduitsJour(topProduitsJourList);
+
+        // Top Produits (Volume) - Mois
+        List<Object[]> topProdMoisData = statsDAO.getTopProduitsVolume(debutMois, maintenant, 5);
+        List<com.pharmacie.models.dto.TopProduitDTO> topProduitsMoisList = new ArrayList<>();
+        for (Object[] row : topProdMoisData) {
+            String nom = (String) row[0];
+            double qteDouble = (row[1] != null) ? ((Number) row[1]).doubleValue() : 0.0;
+            topProduitsMoisList.add(new com.pharmacie.models.dto.TopProduitDTO(nom, (int) qteDouble, (long)(qteDouble * 1500L)));
+        }
+        dto.setTopProduitsMois(topProduitsMoisList);
+
+        // Top Produits (Volume) - Annee
+        List<Object[]> topProdAnneeData = statsDAO.getTopProduitsVolume(debutAnnee, maintenant, 5);
+        List<com.pharmacie.models.dto.TopProduitDTO> topProduitsAnneeList = new ArrayList<>();
+        for (Object[] row : topProdAnneeData) {
+            String nom = (String) row[0];
+            double qteDouble = (row[1] != null) ? ((Number) row[1]).doubleValue() : 0.0;
+            topProduitsAnneeList.add(new com.pharmacie.models.dto.TopProduitDTO(nom, (int) qteDouble, (long)(qteDouble * 1500L)));
+        }
+        dto.setTopProduitsAnnee(topProduitsAnneeList);
 
         // Historique 7 jours
         List<Object[]> hist7jData = statsDAO.getEvolutionCA(debutJour.minusDays(6), finHier);

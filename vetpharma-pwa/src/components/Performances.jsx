@@ -97,7 +97,11 @@ export default function Performances({ data }) {
   const hasChart = chartData.some(d => d.ca > 0);
 
   // Top 5 Produits
-  const topProduitsRaw = data?.topProduits || [];
+  const topProduitsRaw = view === 'jour' 
+    ? (data?.topProduitsJour || [])
+    : view === 'mois'
+      ? (data?.topProduitsMois || [])
+      : (data?.topProduitsAnnee || []);
   const topProduits = [...topProduitsRaw].sort((a, b) => (b[sortTop] || 0) - (a[sortTop] || 0)).slice(0, 5);
   const maxBarVal = Math.max(...topProduits.map(p => p[sortTop] || 0), 1);
 
@@ -191,8 +195,8 @@ export default function Performances({ data }) {
         <div className="rounded-3xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
           <div className="px-4 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
             <div className="flex items-center gap-2">
-              <Award className="w-4 h-4 text-amber-400 shrink-0" />
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider">Top 5 des produits les plus vendus</h3>
+              <PackageX className="w-4 h-4 text-orange-400 shrink-0" />
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider">Top 5 Produits ({view === 'jour' ? 'Jour' : view === 'mois' ? 'Mois' : 'Année'})</h3>
             </div>
             
             {/* Toggle Tri */}
