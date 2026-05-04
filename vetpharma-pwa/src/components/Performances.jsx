@@ -3,10 +3,8 @@ import { Package, TrendingUp, TrendingDown, BarChart2, Award, DollarSign, Receip
 import { ResponsiveContainer, AreaChart, Area, Tooltip, XAxis } from 'recharts';
 
 const formatFCFA = (val) => {
-  const n = val || 0;
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)} M FCFA`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(0)} K FCFA`;
-  return `${n.toLocaleString('fr-FR')} FCFA`;
+  const n = Math.round(val || 0);
+  return n.toLocaleString('fr-FR') + ' FCFA';
 };
 
 function PerfKpiCard({ label, value, icon: Icon, color, isTrend, trendVal }) {
