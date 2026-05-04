@@ -105,15 +105,16 @@ public class VenteService {
                 lotDAO.update(l);
                 
                 // Préparation LOG AUDIT TRAIL : VENTE
-                auditTrailList.add(new MouvementStock(
+                MouvementStock mvt = new MouvementStock(
                      lv.getProduit(),
                      l,
                      SessionManager.getCurrentUser(),
                      MouvementStock.TypeMouvement.VENTE,
                      -taken,
                      LocalDateTime.now(),
-                     "" // Référence sera remplie juste après avoir eu l'ID de la Vente
-                ));
+                     lv.getTypeUnite().name() // On stocke temporairement le type d'unité ici
+                );
+                auditTrailList.add(mvt);
                 
                 baseUnitsToDeduct -= taken;
                 lv.setLot(l); // Lien avec le lot impacté
@@ -134,7 +135,9 @@ public class VenteService {
                 now.getHour(), now.getMinute(), vente.getId());
                 
         for(MouvementStock mvt : auditTrailList) {
-            mvt.setReference(ticketRef);
+            String tempType = mvt.getReference();
+            String suffix = "DETAIL".equals(tempType) ? " (Vente au Détail)" : " (Vente en Boîte)";
+            mvt.setReference(ticketRef + suffix);
             mouvementDAO.save(mvt);
         }
 

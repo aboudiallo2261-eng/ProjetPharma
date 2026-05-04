@@ -632,7 +632,10 @@ public class ReportController {
             String prefix = m.getQuantite() > 0 ? "+ " : (m.getQuantite() < 0 ? "- " : "");
             int qteAbs = Math.abs(m.getQuantite());
             String formatee = qteAbs + " Unité(s)";
-            if (p.getEstDeconditionnable() != null && p.getEstDeconditionnable() && p.getUnitesParBoite() != null
+            boolean estVenteDetail = m.getReference() != null && m.getReference().contains("(Vente au Détail)");
+            
+            // Si c'est explicitement une vente au détail, on force l'affichage en unités.
+            if (!estVenteDetail && p.getEstDeconditionnable() != null && p.getEstDeconditionnable() && p.getUnitesParBoite() != null
                     && p.getUnitesParBoite() > 0) {
                 int boites = qteAbs / p.getUnitesParBoite();
                 int unites = qteAbs % p.getUnitesParBoite();
