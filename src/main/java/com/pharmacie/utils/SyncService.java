@@ -246,6 +246,16 @@ public class SyncService {
         }
         dto.setHistorique3Mois(hist3mList);
 
+        // Historique 3 ans
+        List<Object[]> hist3aData = statsDAO.getHistoriqueCA3Ans(today);
+        List<com.pharmacie.models.dto.HistoriqueCADTO> hist3aList = new ArrayList<>();
+        for (Object[] row : hist3aData) {
+            String yearStr = row[0].toString();
+            long ca = (row[1] != null) ? ((Number) row[1]).longValue() : 0L;
+            hist3aList.add(new com.pharmacie.models.dto.HistoriqueCADTO(yearStr, ca));
+        }
+        dto.setHistorique3Ans(hist3aList);
+
         List<Object[]> ruptures = statsDAO.getProduitsEnRuptureTotale(10);
         List<ProduitRuptureDTO> rupturesList = new ArrayList<>();
         for (Object[] row : ruptures) {

@@ -128,6 +128,28 @@ public class StatistiquesDAO {
     }
 
     /**
+     * Historique du Chiffre d'Affaires sur les 3 dernières années.
+     * @param today la date de référence.
+     * @return List de Object[] où Object[0] = année (Integer), Object[1] = Montant (Double)
+     */
+    public List<Object[]> getHistoriqueCA3Ans(LocalDate today) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            int currentYear = today.getYear();
+            int startYear = currentYear - 2;
+
+            String hql = "SELECT year(v.dateVente), SUM(v.montantTotal) " +
+                         "FROM Vente v " +
+                         "WHERE v.statut = 'VALIDEE' " +
+                         "  AND year(v.dateVente) >= :startYear " +
+                         "GROUP BY year(v.dateVente) " +
+                         "ORDER BY year(v.dateVente) ASC";
+            Query<Object[]> query = session.createQuery(hql, Object[].class);
+            query.setParameter("startYear", startYear);
+            return query.list();
+        }
+    }
+
+    /**
      * Calcule en base (zéro objet en RAM) les deux métriques d'alerte du dashboard local.
      * @return long[2] — [0] = nb produits en dessous du seuil d'alerte,
      *                   [1] = nb lots expirés encore en stock

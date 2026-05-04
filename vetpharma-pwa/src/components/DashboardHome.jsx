@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TrendingUp, TrendingDown, DollarSign, Receipt, PackageX, AlertTriangle, Clock, Wallet, ShieldAlert, HeartCrack, BarChart2 } from 'lucide-react';
 
 const formatFCFA = (val) => {
@@ -44,53 +44,25 @@ function SummaryRow({ label, value, icon: Icon, color, valueColor = 'white' }) {
 }
 
 export default function DashboardHome({ data }) {
-  const [view, setView] = useState('jour'); // 'jour' | 'mois' | 'annee'
-
-  // Sécurisation de l'accès aux données avec fallback sécurisé
+  const alertes = data?.alertes || {};
   const kpis = data?.kpis || {};
   const stockData = kpis.stock || {};
-  const currentKpi = view === 'jour'
-    ? (kpis.jour || {})
-    : view === 'mois'
-      ? (kpis.mois || {})
-      : (kpis.annee || {});
+  const currentKpi = kpis.jour || {};
 
   const ca = currentKpi.chiffreAffaire || 0;
   const marge = currentKpi.benefice || 0;
   const ventes = currentKpi.ventesRealisees || 0;
   const evolution = currentKpi.evolutionCA || 0;
 
-  // Labels dynamiques selon la vue
-  const labelVentes = view === 'jour' ? 'Tickets du jour' : view === 'mois' ? 'Tickets du mois' : "Tickets de l'année";
-  const labelMarge  = view === 'jour' ? 'Marge du jour'   : view === 'mois' ? 'Marge du mois'   : "Marge annuelle";
-  const labelCA     = view === 'annee' ? `1er Jan → Aujourd'hui` : '';
-
   const margeRate = ca > 0 ? ((marge / ca) * 100).toFixed(1) : '0.0';
 
   return (
     <div className="pb-24 min-h-screen" style={{ background: 'linear-gradient(180deg, #0f172a 0%, #1e293b 100%)' }}>
       
-      {/* Header avec Toggle */}
-      <div className="px-4 pt-6 mb-4 flex justify-between items-start">
-        <div>
-          <h2 className="text-xl font-bold text-white tracking-tight">Vue d'ensemble</h2>
-        </div>
-        <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)' }}>
-          {[
-            { id: 'jour',  label: "Auj." },
-            { id: 'mois',  label: 'Ce Mois' },
-            { id: 'annee', label: 'Année' },
-          ].map(({ id, label }) => (
-            <button key={id} onClick={() => setView(id)}
-              className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
-              style={{
-                background: view === id ? 'rgba(255,255,255,0.15)' : 'transparent',
-                color: view === id ? 'white' : 'rgba(255,255,255,0.5)',
-              }}>
-              {label}
-            </button>
-          ))}
-        </div>
+      {/* Header avec Titre */}
+      <div className="px-4 pt-6 mb-4">
+        <h2 className="text-xl font-bold text-white tracking-tight">Vue d'ensemble d'aujourd'hui</h2>
+        <p className="text-xs text-slate-400 mt-0.5">Indicateurs opérationnels en temps réel</p>
       </div>
 
       {/* Cartes KPI (Style Performances) */}

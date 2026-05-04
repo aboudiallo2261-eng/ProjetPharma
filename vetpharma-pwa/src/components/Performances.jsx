@@ -40,7 +40,11 @@ export default function Performances({ data }) {
   useEffect(() => { setMounted(true); }, []);
 
   const kpis = data?.kpis || {};
-  const currentKpi = view === 'jour' ? (kpis.jour || {}) : (kpis.mois || {});
+  const currentKpi = view === 'jour' 
+    ? (kpis.jour || {}) 
+    : view === 'mois' 
+      ? (kpis.mois || {}) 
+      : (kpis.annee || {});
 
   const ca = currentKpi.chiffreAffaire || 0;
   const marge = currentKpi.benefice || 0;
@@ -50,6 +54,7 @@ export default function Performances({ data }) {
   // Préparation des données pour le graphique
   const raw7 = data?.historique7Jours || [];
   const raw3 = data?.historique3Mois || [];
+  const raw3Ans = data?.historique3Ans || [];
   
   let chartData = [];
   if (view === 'jour') {
@@ -64,7 +69,7 @@ export default function Performances({ data }) {
         ca: found ? found.ca : 0
       });
     }
-  } else {
+  } else if (view === 'mois') {
     // raw3 contains dates like '2026-03'
     const refDate = raw3.length > 0 ? new Date(raw3[raw3.length - 1].date + '-01') : new Date();
     for (let i = 2; i >= 0; i--) {
@@ -73,6 +78,17 @@ export default function Performances({ data }) {
       const found = raw3.find(item => item.date === dateStr);
       chartData.push({
         name: dateStr.split('-').reverse().join('/'),
+        ca: found ? found.ca : 0
+      });
+    }
+  } else {
+    // raw3Ans contains dates like '2024'
+    const refDate = raw3Ans.length > 0 ? parseInt(raw3Ans[raw3Ans.length - 1].date) : new Date().getFullYear();
+    for (let i = 2; i >= 0; i--) {
+      const yearStr = String(refDate - i);
+      const found = raw3Ans.find(item => item.date === yearStr);
+      chartData.push({
+        name: yearStr,
         ca: found ? found.ca : 0
       });
     }
@@ -95,14 +111,18 @@ export default function Performances({ data }) {
           <p className="text-xs text-slate-400 mt-0.5">Analyse et compréhension</p>
         </div>
         <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)' }}>
-          {['jour', 'mois'].map(v => (
-            <button key={v} onClick={() => setView(v)}
+          {[
+            { id: 'jour', label: 'Journalière' },
+            { id: 'mois', label: 'Mensuelle' },
+            { id: 'annee', label: 'Annuelle' }
+          ].map(v => (
+            <button key={v.id} onClick={() => setView(v.id)}
               className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
               style={{
-                background: view === v ? 'rgba(255,255,255,0.15)' : 'transparent',
-                color: view === v ? 'white' : 'rgba(255,255,255,0.5)',
+                background: view === v.id ? 'rgba(255,255,255,0.15)' : 'transparent',
+                color: view === v.id ? 'white' : 'rgba(255,255,255,0.5)',
               }}>
-              {v === 'jour' ? "Journalière" : 'Mensuelle'}
+              {v.label}
             </button>
           ))}
         </div>

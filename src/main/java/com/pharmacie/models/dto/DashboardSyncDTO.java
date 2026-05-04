@@ -15,6 +15,7 @@ public class DashboardSyncDTO {
     private List<TopProduitDTO> topProduits;
     private List<HistoriqueCADTO> historique7Jours;
     private List<HistoriqueCADTO> historique3Mois;
+    private List<HistoriqueCADTO> historique3Ans;
 
     public DashboardSyncDTO() {}
 
@@ -36,6 +37,9 @@ public class DashboardSyncDTO {
 
     public List<HistoriqueCADTO> getHistorique3Mois() { return historique3Mois; }
     public void setHistorique3Mois(List<HistoriqueCADTO> historique3Mois) { this.historique3Mois = historique3Mois; }
+
+    public List<HistoriqueCADTO> getHistorique3Ans() { return historique3Ans; }
+    public void setHistorique3Ans(List<HistoriqueCADTO> historique3Ans) { this.historique3Ans = historique3Ans; }
 
     // --- CLASSES INTERNES ---
 
