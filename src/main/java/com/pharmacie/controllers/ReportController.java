@@ -443,7 +443,12 @@ public class ReportController {
                     setText(null);
                     setStyle("");
                 } else {
-                    setText(String.valueOf(item));
+                    LigneVente lv = getTableView().getItems().get(getIndex());
+                    if (lv.getTypeUnite() == com.pharmacie.models.LigneVente.TypeUnite.DETAIL) {
+                        setText(item + " Unité(s)");
+                    } else {
+                        setText(item + " Boîte(s)");
+                    }
                     setStyle("-fx-alignment: CENTER;");
                 }
             }
