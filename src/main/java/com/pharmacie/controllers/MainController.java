@@ -96,38 +96,59 @@ public class MainController {
         }
     }
 
+    private void setActiveMenu(Button activeBtn) {
+        Button[] allButtons = {btnDashboard, btnVentes, btnProduits, btnAchats, btnFournisseurs, btnRapports, btnUsers};
+        for (Button btn : allButtons) {
+            if (btn != null) {
+                btn.getStyleClass().remove("active-menu");
+            }
+        }
+        if (activeBtn != null) {
+            if (!activeBtn.getStyleClass().contains("active-menu")) {
+                activeBtn.getStyleClass().add("active-menu");
+            }
+        }
+    }
+
     @FXML
     public void showDashboard() {
+        setActiveMenu(btnDashboard);
         loadView("/fxml/dashboard.fxml");
     }
 
     @FXML
     public void showSales() {
+        setActiveMenu(btnVentes);
         loadView("/fxml/ventes.fxml");
     }
 
     @FXML
     public void showProducts() {
+        setActiveMenu(btnProduits);
         loadView("/fxml/produits.fxml");
     }
 
     @FXML
     public void showPurchases() {
+        setActiveMenu(btnAchats);
         loadView("/fxml/achats.fxml");
     }
 
     @FXML
     public void showFournisseurs() {
+        setActiveMenu(btnFournisseurs);
         loadView("/fxml/fournisseurs.fxml");
     }
 
     @FXML
     public void showReports() {
+        setActiveMenu(btnRapports);
         loadView("/fxml/rapports.fxml");
     }
 
     @FXML
     public void showUsers() {
+        setActiveMenu(btnUsers);
         loadView("/fxml/users.fxml");
     }
 

@@ -1303,3 +1303,15 @@
 .table-row-cell.stock-zero-row { -fx-background-color: #FEE2E2 !important; -fx-control-inner-background: #FEE2E2 !important; -fx-control-inner-background-alt: #FEE2E2 !important; -fx-table-cell-border-color: transparent; }
 .table-row-cell.stock-zero-row .text { -fx-fill: #DC2626 !important; }
 
+/* État Actif Fixe (Menu sélectionné) */
+.active-menu {
+    -fx-background-color: #334155;
+    -fx-text-fill: #FFFFFF;
+    -fx-border-color: transparent transparent transparent #22C55E;
+    -fx-border-width: 0 0 0 4;
+    -fx-border-radius: 8;
+}
+
+.active-menu .menu-icon {
+    -fx-stroke: #22C55E;
+}
