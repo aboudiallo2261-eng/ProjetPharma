@@ -110,10 +110,10 @@ public class LoginController {
                 logger.info("Connexion réussie: {}", user.getNom());
                 MainApp.showMainLayout();
             } else {
-                showError("Mot de passe incorrect.");
+                showError("Identifiant ou mot de passe incorrect.");
             }
         } else {
-            showError("Identifiant introuvable.");
+            showError("Identifiant ou mot de passe incorrect.");
         }
     }
 
