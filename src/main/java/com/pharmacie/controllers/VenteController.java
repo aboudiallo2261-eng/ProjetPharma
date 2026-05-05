@@ -1264,19 +1264,43 @@ public class VenteController {
                 java.io.File localDest = new java.io.File(localDir, fileName);
                 boolean localSuccess = com.pharmacie.utils.DatabaseBackupService.exportDatabase(localDest);
                 
-                // 2. Copie vers Clé USB (Priorité Haute)
-                if (localSuccess && usbValide) {
-                    try {
-                        java.io.File usbDest = new java.io.File(usbDir, fileName);
-                        java.nio.file.Files.copy(localDest.toPath(), usbDest.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-                        com.pharmacie.utils.AuditLogger.log("Backup USB", "SUCCESS - Copié sur " + usbDir.getAbsolutePath());
-                    } catch (Exception e) {
-                        com.pharmacie.utils.AuditLogger.log("Backup USB", "FAILED - Erreur lors de la copie USB");
+                if (localSuccess && localDest.exists() && localDest.length() > 0) {
+                    com.pharmacie.utils.AuditLogger.log("BACKUP_SQL", "SUCCESS");
+                    
+                    // 2. Copie vers Clé USB (Priorité Haute, format .sql)
+                    if (usbValide) {
+                        try {
+                            java.io.File usbDest = new java.io.File(usbDir, fileName);
+                            java.nio.file.Files.copy(localDest.toPath(), usbDest.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                            com.pharmacie.utils.AuditLogger.log("BACKUP_USB", "SUCCESS - Copié sur " + usbDir.getAbsolutePath());
+                        } catch (Exception e) {
+                            com.pharmacie.utils.AuditLogger.log("BACKUP_USB", "FAILED - Erreur lors de la copie USB");
+                        }
                     }
+
+                    // 3. Phase 5 - Sauvegarde Google Drive (Format .zip)
+                    try {
+                        java.io.File zipFile = com.pharmacie.utils.ZipUtils.compressSqlToZip(localDest);
+                        if (zipFile != null && zipFile.exists() && zipFile.length() > 0) {
+                            boolean driveSuccess = com.pharmacie.utils.GoogleDriveService.uploadBackup(zipFile);
+                            if (driveSuccess) {
+                                com.pharmacie.utils.AuditLogger.log("BACKUP_DRIVE", "SUCCESS");
+                            } else {
+                                com.pharmacie.utils.AuditLogger.log("BACKUP_DRIVE", "FAILED - Erreur upload");
+                            }
+                            // Nettoyage du .zip local après l'upload
+                            zipFile.delete(); 
+                        } else {
+                            com.pharmacie.utils.AuditLogger.log("BACKUP_DRIVE", "FAILED - Echec compression ZIP");
+                        }
+                    } catch (Exception e) {
+                        com.pharmacie.utils.AuditLogger.log("BACKUP_DRIVE", "ERROR - " + e.getMessage());
+                    }
+                } else {
+                    com.pharmacie.utils.AuditLogger.log("BACKUP_SQL", "FAILED - Fichier vide ou non créé");
                 }
                 
-                // 3. Synchronisation Jumeau Numérique (Phase 2)
-                // Génère le snapshot JSON des KPI dans sync/dashboard_snapshot.json
+                // 4. Synchronisation Jumeau Numérique (Phase 2)
                 com.pharmacie.utils.SyncService.synchroniser();
                 
                 return null;

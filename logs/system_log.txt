@@ -793,3 +793,329 @@
 2026-05-05 00:45 - Synchro Dashboard - SUCCESS
 2026-05-05 00:49 - Synchro Dashboard - STARTED
 2026-05-05 00:49 - Synchro Dashboard - SUCCESS
+2026-05-05 00:51 - Synchro Dashboard - STARTED
+2026-05-05 00:52 - Synchro Dashboard - SUCCESS
+2026-05-05 12:31 - Synchro Dashboard - STARTED
+2026-05-05 12:31 - Synchro Dashboard - SUCCESS
+2026-05-05 12:32 - Backup USB - WARNING: Clé USB introuvable ou non configurée
+2026-05-05 12:32 - Backup Local MySQL - SUCCESS
+2026-05-05 12:32 - BACKUP_SQL - SUCCESS
+2026-05-05 12:32 - BACKUP_DRIVE - FAILED - Erreur upload
+2026-05-05 12:32 - Synchro Dashboard - STARTED
+2026-05-05 12:32 - Synchro Dashboard - SUCCESS
+2026-05-05 12:36 - Synchro Dashboard - STARTED
+2026-05-05 12:36 - Synchro Dashboard - SUCCESS
+2026-05-05 12:41 - Synchro Dashboard - STARTED
+2026-05-05 12:41 - Synchro Dashboard - SUCCESS
+2026-05-05 12:46 - Synchro Dashboard - STARTED
+2026-05-05 12:46 - Synchro Dashboard - SUCCESS
+2026-05-05 12:51 - Synchro Dashboard - STARTED
+2026-05-05 12:51 - Synchro Dashboard - SUCCESS
+2026-05-05 12:56 - Synchro Dashboard - STARTED
+2026-05-05 12:56 - Synchro Dashboard - SUCCESS
+2026-05-05 12:57 - Synchro Dashboard - STARTED
+2026-05-05 12:57 - Synchro Dashboard - SUCCESS
+2026-05-05 12:57 - Backup Local MySQL - SUCCESS
+2026-05-05 12:57 - BACKUP_SQL - SUCCESS (Manuel)
+2026-05-05 12:58 - BACKUP_DRIVE - FAILED - Erreur upload (Manuel)
+2026-05-05 13:02 - Synchro Dashboard - STARTED
+2026-05-05 13:02 - Synchro Dashboard - SUCCESS
+2026-05-05 13:07 - Synchro Dashboard - STARTED
+2026-05-05 13:07 - Synchro Dashboard - SUCCESS
+2026-05-05 13:12 - Synchro Dashboard - STARTED
+2026-05-05 13:12 - Synchro Dashboard - SUCCESS
+2026-05-05 13:17 - Synchro Dashboard - STARTED
+2026-05-05 13:17 - Synchro Dashboard - SUCCESS
+2026-05-05 13:17 - Backup Local MySQL - SUCCESS
+2026-05-05 13:17 - BACKUP_SQL - SUCCESS (Manuel)
+2026-05-05 13:18 - BACKUP_DRIVE - FAILED - Erreur upload (Manuel)
+2026-05-05 13:22 - Synchro Dashboard - STARTED
+2026-05-05 13:22 - Synchro Dashboard - SUCCESS
+2026-05-05 13:27 - Synchro Dashboard - STARTED
+2026-05-05 13:27 - Synchro Dashboard - SUCCESS
+2026-05-05 13:32 - Synchro Dashboard - STARTED
+2026-05-05 13:32 - Synchro Dashboard - SUCCESS
+2026-05-05 13:33 - Backup Local MySQL - SUCCESS
+2026-05-05 13:33 - BACKUP_SQL - SUCCESS (Manuel)
+2026-05-05 13:34 - BACKUP_DRIVE - FAILED - Erreur upload (Manuel)
+2026-05-05 13:37 - Synchro Dashboard - STARTED
+2026-05-05 13:37 - Synchro Dashboard - SUCCESS
+2026-05-05 13:42 - Synchro Dashboard - STARTED
+2026-05-05 13:42 - Synchro Dashboard - SUCCESS
+2026-05-05 13:47 - Synchro Dashboard - STARTED
+2026-05-05 13:47 - Synchro Dashboard - SUCCESS
+2026-05-05 13:52 - Synchro Dashboard - STARTED
+2026-05-05 13:52 - Synchro Dashboard - SUCCESS
+2026-05-05 13:57 - Synchro Dashboard - STARTED
+2026-05-05 13:57 - Synchro Dashboard - SUCCESS
+2026-05-05 14:02 - Synchro Dashboard - STARTED
+2026-05-05 14:02 - Synchro Dashboard - SUCCESS
+2026-05-05 14:07 - Synchro Dashboard - STARTED
+2026-05-05 14:07 - Synchro Dashboard - SUCCESS
+2026-05-05 14:12 - Synchro Dashboard - STARTED
+2026-05-05 14:12 - Synchro Dashboard - SUCCESS
+2026-05-05 14:17 - Synchro Dashboard - STARTED
+2026-05-05 14:17 - Synchro Dashboard - SUCCESS
+2026-05-05 14:22 - Synchro Dashboard - STARTED
+2026-05-05 14:22 - Synchro Dashboard - SUCCESS
+2026-05-05 14:27 - Synchro Dashboard - STARTED
+2026-05-05 14:27 - Synchro Dashboard - SUCCESS
+2026-05-05 14:32 - Synchro Dashboard - STARTED
+2026-05-05 14:32 - Synchro Dashboard - SUCCESS
+2026-05-05 14:37 - Synchro Dashboard - STARTED
+2026-05-05 14:37 - Synchro Dashboard - SUCCESS
+2026-05-05 14:42 - Synchro Dashboard - STARTED
+2026-05-05 14:42 - Synchro Dashboard - SUCCESS
+2026-05-05 14:47 - Synchro Dashboard - STARTED
+2026-05-05 14:47 - Synchro Dashboard - SUCCESS
+2026-05-05 14:52 - Synchro Dashboard - STARTED
+2026-05-05 14:52 - Synchro Dashboard - SUCCESS
+2026-05-05 14:57 - Synchro Dashboard - STARTED
+2026-05-05 14:57 - Synchro Dashboard - SUCCESS
+2026-05-05 15:02 - Synchro Dashboard - STARTED
+2026-05-05 15:02 - Synchro Dashboard - SUCCESS
+2026-05-05 15:07 - Synchro Dashboard - STARTED
+2026-05-05 15:07 - Synchro Dashboard - SUCCESS
+2026-05-05 15:12 - Synchro Dashboard - STARTED
+2026-05-05 15:12 - Synchro Dashboard - SUCCESS
+2026-05-05 15:17 - Synchro Dashboard - STARTED
+2026-05-05 15:17 - Synchro Dashboard - SUCCESS
+2026-05-05 15:22 - Synchro Dashboard - STARTED
+2026-05-05 15:22 - Synchro Dashboard - SUCCESS
+2026-05-05 15:27 - Synchro Dashboard - STARTED
+2026-05-05 15:27 - Synchro Dashboard - SUCCESS
+2026-05-05 15:32 - Synchro Dashboard - STARTED
+2026-05-05 15:32 - Synchro Dashboard - SUCCESS
+2026-05-05 15:37 - Synchro Dashboard - STARTED
+2026-05-05 15:37 - Synchro Dashboard - SUCCESS
+2026-05-05 15:42 - Synchro Dashboard - STARTED
+2026-05-05 15:42 - Synchro Dashboard - SUCCESS
+2026-05-05 15:47 - Synchro Dashboard - STARTED
+2026-05-05 15:47 - Synchro Dashboard - SUCCESS
+2026-05-05 15:52 - Synchro Dashboard - STARTED
+2026-05-05 15:52 - Synchro Dashboard - SUCCESS
+2026-05-05 15:57 - Synchro Dashboard - STARTED
+2026-05-05 15:57 - Synchro Dashboard - SUCCESS
+2026-05-05 16:02 - Synchro Dashboard - STARTED
+2026-05-05 16:02 - Synchro Dashboard - SUCCESS
+2026-05-05 16:07 - Synchro Dashboard - STARTED
+2026-05-05 16:07 - Synchro Dashboard - SUCCESS
+2026-05-05 16:12 - Synchro Dashboard - STARTED
+2026-05-05 16:12 - Synchro Dashboard - SUCCESS
+2026-05-05 16:17 - Synchro Dashboard - STARTED
+2026-05-05 16:17 - Synchro Dashboard - SUCCESS
+2026-05-05 16:22 - Synchro Dashboard - STARTED
+2026-05-05 16:22 - Synchro Dashboard - SUCCESS
+2026-05-05 16:27 - Synchro Dashboard - STARTED
+2026-05-05 16:27 - Synchro Dashboard - SUCCESS
+2026-05-05 16:32 - Synchro Dashboard - STARTED
+2026-05-05 16:32 - Synchro Dashboard - SUCCESS
+2026-05-05 16:37 - Synchro Dashboard - STARTED
+2026-05-05 16:37 - Synchro Dashboard - SUCCESS
+2026-05-05 16:42 - Synchro Dashboard - STARTED
+2026-05-05 16:42 - Synchro Dashboard - SUCCESS
+2026-05-05 16:47 - Synchro Dashboard - STARTED
+2026-05-05 16:47 - Synchro Dashboard - SUCCESS
+2026-05-05 16:52 - Synchro Dashboard - STARTED
+2026-05-05 16:52 - Synchro Dashboard - SUCCESS
+2026-05-05 16:57 - Synchro Dashboard - STARTED
+2026-05-05 16:57 - Synchro Dashboard - SUCCESS
+2026-05-05 17:02 - Synchro Dashboard - STARTED
+2026-05-05 17:02 - Synchro Dashboard - SUCCESS
+2026-05-05 17:07 - Synchro Dashboard - STARTED
+2026-05-05 17:07 - Synchro Dashboard - SUCCESS
+2026-05-05 17:12 - Synchro Dashboard - STARTED
+2026-05-05 17:12 - Synchro Dashboard - SUCCESS
+2026-05-05 17:17 - Synchro Dashboard - STARTED
+2026-05-05 17:17 - Synchro Dashboard - SUCCESS
+2026-05-05 17:22 - Synchro Dashboard - STARTED
+2026-05-05 17:22 - Synchro Dashboard - SUCCESS
+2026-05-05 17:27 - Synchro Dashboard - STARTED
+2026-05-05 17:27 - Synchro Dashboard - SUCCESS
+2026-05-05 17:32 - Synchro Dashboard - STARTED
+2026-05-05 17:32 - Synchro Dashboard - SUCCESS
+2026-05-05 17:37 - Synchro Dashboard - STARTED
+2026-05-05 17:37 - Synchro Dashboard - SUCCESS
+2026-05-05 17:42 - Synchro Dashboard - STARTED
+2026-05-05 17:42 - Synchro Dashboard - SUCCESS
+2026-05-05 17:47 - Synchro Dashboard - STARTED
+2026-05-05 17:47 - Synchro Dashboard - SUCCESS
+2026-05-05 17:52 - Synchro Dashboard - STARTED
+2026-05-05 17:52 - Synchro Dashboard - SUCCESS
+2026-05-05 17:57 - Synchro Dashboard - STARTED
+2026-05-05 17:57 - Synchro Dashboard - SUCCESS
+2026-05-05 18:02 - Synchro Dashboard - STARTED
+2026-05-05 18:02 - Synchro Dashboard - SUCCESS
+2026-05-05 18:07 - Synchro Dashboard - STARTED
+2026-05-05 18:07 - Synchro Dashboard - SUCCESS
+2026-05-05 18:12 - Synchro Dashboard - STARTED
+2026-05-05 18:12 - Synchro Dashboard - SUCCESS
+2026-05-05 18:17 - Synchro Dashboard - STARTED
+2026-05-05 18:17 - Synchro Dashboard - SUCCESS
+2026-05-05 18:22 - Synchro Dashboard - STARTED
+2026-05-05 18:22 - Synchro Dashboard - SUCCESS
+2026-05-05 18:27 - Synchro Dashboard - STARTED
+2026-05-05 18:27 - Synchro Dashboard - SUCCESS
+2026-05-05 18:32 - Synchro Dashboard - STARTED
+2026-05-05 18:32 - Synchro Dashboard - SUCCESS
+2026-05-05 18:37 - Synchro Dashboard - STARTED
+2026-05-05 18:37 - Synchro Dashboard - SUCCESS
+2026-05-05 18:42 - Synchro Dashboard - STARTED
+2026-05-05 18:42 - Synchro Dashboard - SUCCESS
+2026-05-05 18:47 - Synchro Dashboard - STARTED
+2026-05-05 18:47 - Synchro Dashboard - SUCCESS
+2026-05-06 06:01 - Synchro Dashboard - STARTED
+2026-05-06 06:02 - Synchro Dashboard - SUCCESS
+2026-05-06 06:02 - Synchro Dashboard - STARTED
+2026-05-06 06:02 - Synchro Dashboard - SUCCESS
+2026-05-06 06:02 - Synchro Dashboard - STARTED
+2026-05-06 06:02 - Synchro Dashboard - SUCCESS
+2026-05-06 06:02 - Synchro Dashboard - STARTED
+2026-05-06 06:02 - Synchro Dashboard - SUCCESS
+2026-05-06 06:02 - Synchro Dashboard - STARTED
+2026-05-06 06:02 - Synchro Dashboard - SUCCESS
+2026-05-06 06:02 - Synchro Dashboard - STARTED
+2026-05-06 06:02 - Synchro Dashboard - SUCCESS
+2026-05-06 06:02 - Synchro Dashboard - STARTED
+2026-05-06 06:02 - Synchro Dashboard - SUCCESS
+2026-05-06 06:02 - Synchro Dashboard - STARTED
+2026-05-06 06:02 - Synchro Dashboard - SUCCESS
+2026-05-06 06:02 - Synchro Dashboard - STARTED
+2026-05-06 06:02 - Synchro Dashboard - SUCCESS
+2026-05-06 06:02 - Synchro Dashboard - STARTED
+2026-05-06 06:02 - Synchro Dashboard - SUCCESS
+2026-05-06 06:02 - Synchro Dashboard - STARTED
+2026-05-06 06:02 - Synchro Dashboard - SUCCESS
+2026-05-06 06:02 - Synchro Dashboard - STARTED
+2026-05-06 06:02 - Synchro Dashboard - SUCCESS
+2026-05-06 06:02 - Synchro Dashboard - STARTED
+2026-05-06 06:02 - Synchro Dashboard - SUCCESS
+2026-05-06 06:02 - Synchro Dashboard - STARTED
+2026-05-06 06:02 - Synchro Dashboard - SUCCESS
+2026-05-06 06:02 - Synchro Dashboard - STARTED
+2026-05-06 06:02 - Synchro Dashboard - SUCCESS
+2026-05-06 06:02 - Synchro Dashboard - STARTED
+2026-05-06 06:02 - Synchro Dashboard - SUCCESS
+2026-05-06 06:02 - Synchro Dashboard - STARTED
+2026-05-06 06:02 - Synchro Dashboard - SUCCESS
+2026-05-06 06:02 - Synchro Dashboard - STARTED
+2026-05-06 06:02 - Synchro Dashboard - SUCCESS
+2026-05-06 06:02 - Synchro Dashboard - STARTED
+2026-05-06 06:02 - Synchro Dashboard - SUCCESS
+2026-05-06 06:02 - Synchro Dashboard - STARTED
+2026-05-06 06:02 - Synchro Dashboard - SUCCESS
+2026-05-06 06:02 - Synchro Dashboard - STARTED
+2026-05-06 06:03 - Synchro Dashboard - SUCCESS
+2026-05-06 06:07 - Synchro Dashboard - STARTED
+2026-05-06 06:07 - Synchro Dashboard - SUCCESS
+2026-05-06 06:12 - Synchro Dashboard - STARTED
+2026-05-06 06:12 - Synchro Dashboard - SUCCESS
+2026-05-06 06:17 - Synchro Dashboard - STARTED
+2026-05-06 06:17 - Synchro Dashboard - SUCCESS
+2026-05-06 06:22 - Synchro Dashboard - STARTED
+2026-05-06 06:22 - Synchro Dashboard - SUCCESS
+2026-05-06 06:27 - Synchro Dashboard - STARTED
+2026-05-06 06:27 - Synchro Dashboard - SUCCESS
+2026-05-06 06:32 - Synchro Dashboard - STARTED
+2026-05-06 06:32 - Synchro Dashboard - SUCCESS
+2026-05-06 06:32 - Backup Local MySQL - SUCCESS
+2026-05-06 06:32 - BACKUP_SQL - SUCCESS (Manuel)
+2026-05-06 06:32 - BACKUP_DRIVE - FAILED - Erreur upload (Manuel)
+2026-05-06 06:37 - Synchro Dashboard - STARTED
+2026-05-06 06:37 - Synchro Dashboard - SUCCESS
+2026-05-06 06:42 - Synchro Dashboard - STARTED
+2026-05-06 06:42 - Synchro Dashboard - SUCCESS
+2026-05-06 06:47 - Synchro Dashboard - STARTED
+2026-05-06 06:47 - Synchro Dashboard - SUCCESS
+2026-05-06 06:54 - Synchro Dashboard - STARTED
+2026-05-06 06:54 - Synchro Dashboard - SUCCESS
+2026-05-06 06:55 - Backup Local MySQL - SUCCESS
+2026-05-06 06:55 - BACKUP_SQL - SUCCESS (Manuel)
+2026-05-06 06:59 - Synchro Dashboard - STARTED
+2026-05-06 06:59 - Synchro Dashboard - SUCCESS
+2026-05-06 07:04 - Synchro Dashboard - STARTED
+2026-05-06 07:04 - Synchro Dashboard - SUCCESS
+2026-05-06 07:09 - Synchro Dashboard - STARTED
+2026-05-06 07:09 - Synchro Dashboard - SUCCESS
+2026-05-06 07:14 - Synchro Dashboard - STARTED
+2026-05-06 07:14 - Synchro Dashboard - SUCCESS
+2026-05-06 07:19 - Synchro Dashboard - STARTED
+2026-05-06 07:19 - Synchro Dashboard - SUCCESS
+2026-05-06 07:20 - Backup Local MySQL - SUCCESS
+2026-05-06 07:20 - BACKUP_SQL - SUCCESS (Manuel)
+2026-05-06 07:21 - Synchro Dashboard - STARTED
+2026-05-06 07:22 - Synchro Dashboard - SUCCESS
+2026-05-06 07:22 - Backup Local MySQL - SUCCESS
+2026-05-06 07:22 - BACKUP_SQL - SUCCESS (Manuel)
+2026-05-06 07:23 - BACKUP_DRIVE - SUCCESS (Manuel)
+2026-05-06 07:24 - Backup Local MySQL - SUCCESS
+2026-05-06 07:24 - BACKUP_SQL - SUCCESS (Manuel)
+2026-05-06 07:24 - BACKUP_DRIVE - SUCCESS (Manuel)
+2026-05-06 07:24 - Backup Local MySQL - SUCCESS
+2026-05-06 07:24 - BACKUP_SQL - SUCCESS (Manuel)
+2026-05-06 07:24 - BACKUP_DRIVE - SUCCESS (Manuel)
+2026-05-06 07:24 - Backup Local MySQL - SUCCESS
+2026-05-06 07:24 - BACKUP_SQL - SUCCESS (Manuel)
+2026-05-06 07:24 - BACKUP_DRIVE - FAILED - Erreur upload (Manuel)
+2026-05-06 07:32 - Synchro Dashboard - STARTED
+2026-05-06 07:32 - Synchro Dashboard - SUCCESS
+2026-05-06 07:36 - Synchro Dashboard - STARTED
+2026-05-06 07:36 - Synchro Dashboard - SUCCESS
+2026-05-06 07:37 - Config USB - Nouveau chemin défini : D:\USB Drive\projetweb
+2026-05-06 07:37 - Backup Local MySQL - SUCCESS
+2026-05-06 07:37 - BACKUP_SQL - SUCCESS (Manuel)
+2026-05-06 07:37 - BACKUP_DRIVE - SUCCESS (Manuel)
+2026-05-06 07:38 - Backup Local MySQL - SUCCESS
+2026-05-06 07:38 - BACKUP_SQL - SUCCESS
+2026-05-06 07:38 - BACKUP_USB - SUCCESS - Copié sur D:\USB Drive\projetweb
+2026-05-06 07:38 - BACKUP_DRIVE - SUCCESS
+2026-05-06 07:38 - Synchro Dashboard - STARTED
+2026-05-06 07:38 - Synchro Dashboard - SUCCESS
+2026-05-06 07:40 - Backup Local MySQL - SUCCESS
+2026-05-06 07:40 - BACKUP_SQL - SUCCESS
+2026-05-06 07:40 - BACKUP_USB - SUCCESS - Copié sur D:\USB Drive\projetweb
+2026-05-06 07:40 - BACKUP_DRIVE - SUCCESS
+2026-05-06 07:40 - Synchro Dashboard - STARTED
+2026-05-06 07:40 - Synchro Dashboard - SUCCESS
+2026-05-06 07:41 - Synchro Dashboard - STARTED
+2026-05-06 07:41 - Synchro Dashboard - SUCCESS
+2026-05-06 07:47 - Backup Local MySQL - SUCCESS
+2026-05-06 07:47 - BACKUP_SQL - SUCCESS
+2026-05-06 07:47 - BACKUP_USB - SUCCESS - Copié sur D:\USB Drive\projetweb
+2026-05-06 07:47 - BACKUP_DRIVE - FAILED - Erreur upload
+2026-05-06 07:47 - Synchro Dashboard - STARTED
+2026-05-06 07:47 - Synchro Dashboard - SUCCESS
+2026-05-06 07:49 - Backup Local MySQL - SUCCESS
+2026-05-06 07:49 - BACKUP_SQL - SUCCESS
+2026-05-06 07:49 - BACKUP_USB - SUCCESS - Copié sur D:\USB Drive\projetweb
+2026-05-06 07:49 - BACKUP_DRIVE - FAILED - Erreur upload
+2026-05-06 07:49 - Synchro Dashboard - STARTED
+2026-05-06 07:49 - Synchro Dashboard - SUCCESS
+2026-05-06 07:50 - Backup Local MySQL - SUCCESS
+2026-05-06 07:50 - BACKUP_SQL - SUCCESS
+2026-05-06 07:50 - BACKUP_USB - SUCCESS - Copié sur D:\USB Drive\projetweb
+2026-05-06 07:51 - BACKUP_DRIVE - SUCCESS
+2026-05-06 07:51 - Synchro Dashboard - STARTED
+2026-05-06 07:51 - Synchro Dashboard - SUCCESS
+2026-05-06 07:51 - Backup Local MySQL - SUCCESS
+2026-05-06 07:51 - BACKUP_SQL - SUCCESS
+2026-05-06 07:51 - BACKUP_USB - SUCCESS - Copié sur D:\USB Drive\projetweb
+2026-05-06 07:51 - BACKUP_DRIVE - SUCCESS
+2026-05-06 07:51 - Synchro Dashboard - STARTED
+2026-05-06 07:52 - Synchro Dashboard - SUCCESS
+2026-05-06 07:57 - Synchro Dashboard - STARTED
+2026-05-06 07:57 - Synchro Dashboard - SUCCESS
+2026-05-06 08:02 - Synchro Dashboard - STARTED
+2026-05-06 08:02 - Synchro Dashboard - SUCCESS
+2026-05-06 08:07 - Synchro Dashboard - STARTED
+2026-05-06 08:07 - Synchro Dashboard - SUCCESS
+2026-05-06 08:11 - Synchro Dashboard - STARTED
+2026-05-06 08:12 - Synchro Dashboard - SUCCESS
+2026-05-06 08:17 - Synchro Dashboard - STARTED
+2026-05-06 08:17 - Synchro Dashboard - SUCCESS
+2026-05-06 08:21 - Synchro Dashboard - STARTED
+2026-05-06 08:21 - Synchro Dashboard - SUCCESS
+2026-05-06 08:32 - Synchro Dashboard - STARTED
+2026-05-06 08:32 - Synchro Dashboard - SUCCESS
+2026-05-06 08:36 - Synchro Dashboard - STARTED
+2026-05-06 08:36 - Synchro Dashboard - SUCCESS

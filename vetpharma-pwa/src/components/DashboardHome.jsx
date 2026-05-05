@@ -1,10 +1,6 @@
 import React from 'react';
 import { TrendingUp, TrendingDown, DollarSign, Receipt, PackageX, AlertTriangle, Clock, Wallet, ShieldAlert, HeartCrack, BarChart2 } from 'lucide-react';
-
-const formatFCFA = (val) => {
-  const n = Math.round(val || 0);
-  return n.toLocaleString('fr-FR') + ' FCFA';
-};
+import { formatFCFA } from '../lib/formatters';
 
 function PerfKpiCard({ label, value, icon: Icon, color, isTrend, trendVal }) {
   const isPos = trendVal >= 0;

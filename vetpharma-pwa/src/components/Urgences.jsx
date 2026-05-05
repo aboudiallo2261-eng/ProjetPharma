@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import { PackageX, AlertTriangle, Clock, CheckCircle2, HeartCrack, ChevronDown, ChevronUp } from 'lucide-react';
-
-const formatFCFA = (val) => {
-  const n = Math.round(val || 0);
-  return n.toLocaleString('fr-FR') + ' FCFA';
-};
+import { formatFCFA } from '../lib/formatters';
 
 const daysUntil = (dateStr) => {
   if (!dateStr) return null;

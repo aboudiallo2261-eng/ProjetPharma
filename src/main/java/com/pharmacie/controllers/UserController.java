@@ -405,9 +405,37 @@ public class UserController {
         
         if (file != null) {
             boolean success = com.pharmacie.utils.DatabaseBackupService.exportDatabase(file);
-            if (success) {
-                com.pharmacie.utils.ToastService.showSuccess(txtInfoNom.getScene().getWindow(), "Sauvegarde Réussie", "Base de données exportée dans :\n" + file.getName());
+            if (success && file.exists() && file.length() > 0) {
+                com.pharmacie.utils.AuditLogger.log("BACKUP_SQL", "SUCCESS (Manuel)");
+                
+                // 3. Phase 5 - Sauvegarde Google Drive (Format .zip)
+                boolean driveSuccess = false;
+                try {
+                    java.io.File zipFile = com.pharmacie.utils.ZipUtils.compressSqlToZip(file);
+                    if (zipFile != null && zipFile.exists() && zipFile.length() > 0) {
+                        driveSuccess = com.pharmacie.utils.GoogleDriveService.uploadBackup(zipFile);
+                        if (driveSuccess) {
+                            com.pharmacie.utils.AuditLogger.log("BACKUP_DRIVE", "SUCCESS (Manuel)");
+                        } else {
+                            com.pharmacie.utils.AuditLogger.log("BACKUP_DRIVE", "FAILED - Erreur upload (Manuel)");
+                        }
+                        zipFile.delete(); 
+                    } else {
+                        com.pharmacie.utils.AuditLogger.log("BACKUP_DRIVE", "FAILED - Echec compression ZIP (Manuel)");
+                    }
+                } catch (Exception e) {
+                    com.pharmacie.utils.AuditLogger.log("BACKUP_DRIVE", "ERROR - " + e.getMessage() + " (Manuel)");
+                }
+
+                if (driveSuccess) {
+                    com.pharmacie.utils.ToastService.showSuccess(txtInfoNom.getScene().getWindow(), "Sauvegarde Complète", "Fichier sauvegardé en local ET synchronisé avec succès sur Google Drive !");
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "Le fichier a bien été sauvegardé sur cet ordinateur, MAIS l'envoi vers Google Drive a échoué.\nVeuillez vérifier la connexion internet.");
+                    alert.setHeaderText("Alerte: Échec Cloud");
+                    alert.show();
+                }
             } else {
+                com.pharmacie.utils.AuditLogger.log("BACKUP_SQL", "FAILED (Manuel) - Fichier vide");
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Erreur lors de la sauvegarde.\nVérifiez que mysqldump est installé et accessible sur ce PC.");
                 alert.setHeaderText("Echec du Backup");
                 alert.show();

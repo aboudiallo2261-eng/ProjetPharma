@@ -115,6 +115,23 @@
             <version>2.10.1</version>
         </dependency>
         
+        <!-- Google Drive API (Phase 5 - Sauvegarde Cloud) -->
+        <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.oauth-client</groupId>
+            <artifactId>google-oauth-client-jetty</artifactId>
+            <version>1.34.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-drive</artifactId>
+            <version>v3-rev20230822-2.0.0</version>
+        </dependency>
+        
         <!-- ======================= -->
         <!--  TESTS UNITAIRES (QA)   -->
         <!-- ======================= -->

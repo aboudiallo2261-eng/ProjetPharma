@@ -1,6 +1,14 @@
 # Fichiers de configuration locaux (SECRETS - NE JAMAIS COMMITER)
 config.properties
 
+# ============================================================
+# GOOGLE DRIVE BACKUP - SECRETS (ne jamais commiter !)
+# ============================================================
+# Clé OAuth2 privée Google (contient client_secret)
+src/main/resources/credentials.json
+# Jeton d'accès personnel sauvegardé après la 1ère connexion
+tokens/
+
 # Dossier de compilation Maven
 target/
 

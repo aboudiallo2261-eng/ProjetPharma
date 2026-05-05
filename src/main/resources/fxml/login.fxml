@@ -66,7 +66,7 @@
         </VBox>
 
         <!-- Bouton Connexion -->
-        <Button text="Se Connecter" onAction="#handleLogin" maxWidth="350" styleClass="button-primary">
+        <Button text="Se Connecter" onAction="#handleLogin" defaultButton="true" maxWidth="350" styleClass="button-primary">
             <VBox.margin>
                 <Insets top="10"/>
             </VBox.margin>
