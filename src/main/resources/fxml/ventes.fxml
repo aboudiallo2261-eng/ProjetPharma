@@ -119,7 +119,7 @@
                                 <HBox spacing="8" alignment="CENTER_LEFT">
                                     <Label text="Paiement :" prefWidth="72" style="-fx-font-weight:bold;"/>
                                     <ComboBox fx:id="cmbModePaiement" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                                    <CheckBox fx:id="chkImprimerRecu" text="Imprimer" selected="false" style="-fx-font-size:11px;"/>
+                                    <CheckBox fx:id="chkImprimerRecu" text="Imprimer" selected="false" style="-fx-font-size:11px;" minWidth="-Infinity"/>
                                 </HBox>
                                 <!-- Ligne 2: Montant reçu Simple -->
                                 <HBox fx:id="boxPaiementSimple" spacing="8" alignment="CENTER_LEFT">

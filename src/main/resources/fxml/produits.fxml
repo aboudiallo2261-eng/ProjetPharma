@@ -175,7 +175,7 @@
                     
                     <!-- Ligne 2 -->
                     <Label text="Statut :" styleClass="filter-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                    <ComboBox fx:id="cmbFiltreStockStatut" promptText="Tous Statuts" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#filtrerStock"/>
+                    <ComboBox fx:id="cmbFiltreStockStatut" promptText="Tous Statuts" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#onFiltreStatutChanged"/>
 
                     <Label text="Expire :" styleClass="filter-label" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
                     <DatePicker fx:id="dpFiltreExpAvant" promptText="Avant le..." maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="1" onAction="#filtrerStock"/>

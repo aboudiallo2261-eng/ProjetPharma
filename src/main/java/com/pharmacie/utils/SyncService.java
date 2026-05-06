@@ -258,24 +258,26 @@ public class SyncService {
         }
         dto.setHistorique3Ans(hist3aList);
 
-        List<Object[]> ruptures = statsDAO.getProduitsEnRuptureTotale(10);
+        List<Object[]> ruptures = statsDAO.getProduitsEnRuptureTotale();
         List<ProduitRuptureDTO> rupturesList = new ArrayList<>();
         for (Object[] row : ruptures) {
             Long id = (Long) row[0];
             String nom = (String) row[1];
             int stock = ((Number) row[2]).intValue();
-            rupturesList.add(new ProduitRuptureDTO(id, nom, stock));
+            int seuil = ((Number) row[3]).intValue();
+            rupturesList.add(new ProduitRuptureDTO(id, nom, stock, seuil));
         }
         alertes.setRuptures(rupturesList);
 
         // Alertes stock
-        List<Object[]> alertesStockData = statsDAO.getProduitsEnAlerte(10);
+        List<Object[]> alertesStockData = statsDAO.getProduitsEnAlerte();
         List<ProduitRuptureDTO> alertesStockList = new ArrayList<>();
         for (Object[] row : alertesStockData) {
             Long id = (Long) row[0];
             String nom = (String) row[1];
             int stock = ((Number) row[2]).intValue();
-            alertesStockList.add(new ProduitRuptureDTO(id, nom, stock));
+            int seuil = ((Number) row[3]).intValue();
+            alertesStockList.add(new ProduitRuptureDTO(id, nom, stock, seuil));
         }
         alertes.setAlertesStock(alertesStockList);
 

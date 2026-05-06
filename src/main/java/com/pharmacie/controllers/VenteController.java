@@ -200,7 +200,24 @@ public class VenteController {
             if (btnMettreEnAttente != null)
                 btnMettreEnAttente.setDisable(isVide);
 
+            // Désactivation des paiements et de l'impression si panier vide
+            if (cmbModePaiement != null) cmbModePaiement.setDisable(isVide);
+            if (chkImprimerRecu != null) chkImprimerRecu.setDisable(isVide);
+            if (txtMontantRecu != null) {
+                txtMontantRecu.setDisable(isVide);
+                if (isVide) txtMontantRecu.clear();
+            }
+            if (txtMontantEspeces != null) {
+                txtMontantEspeces.setDisable(isVide);
+                if (isVide) txtMontantEspeces.clear();
+            }
+            if (txtMontantMobile != null) {
+                txtMontantMobile.setDisable(isVide);
+                if (isVide) txtMontantMobile.clear();
+            }
+
             if (isVide) {
+                if (cmbModePaiement != null) cmbModePaiement.getSelectionModel().select(Vente.ModePaiement.ESPECES);
                 btnAnnulerVente.setStyle("-fx-background-color: #BDC3C7; -fx-text-fill: white; -fx-padding: 8 15;");
                 if (btnValiderVente != null)
                     btnValiderVente.setStyle(
@@ -220,6 +237,12 @@ public class VenteController {
             btnValiderVente.setDisable(true);
         if (btnMettreEnAttente != null)
             btnMettreEnAttente.setDisable(true);
+            
+        if (cmbModePaiement != null) cmbModePaiement.setDisable(true);
+        if (chkImprimerRecu != null) chkImprimerRecu.setDisable(true);
+        if (txtMontantRecu != null) txtMontantRecu.setDisable(true);
+        if (txtMontantEspeces != null) txtMontantEspeces.setDisable(true);
+        if (txtMontantMobile != null) txtMontantMobile.setDisable(true);
             
         // Style dynamique pour btnRetirerDuPanier
         if (btnRetirerDuPanier != null) {

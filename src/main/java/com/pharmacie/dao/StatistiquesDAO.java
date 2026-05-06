@@ -407,36 +407,34 @@ public class StatistiquesDAO {
     }
 
     /**
-     * Retourne les produits dont le stock total est = 0. (Spécifique PWA)
+     * Retourne TOUS les produits dont le stock total est = 0. (Spécifique PWA)
+     * Inclut le seuilAlerte réel de chaque produit.
      */
-    public List<Object[]> getProduitsEnRuptureTotale(int limit) {
+    public List<Object[]> getProduitsEnRuptureTotale() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql =
-                "SELECT l.produit.id, l.produit.nom, COALESCE(SUM(l.quantiteStock), 0) " +
+                "SELECT l.produit.id, l.produit.nom, COALESCE(SUM(l.quantiteStock), 0), COALESCE(MAX(l.produit.seuilAlerte), 5) " +
                 "FROM Lot l " +
                 "GROUP BY l.produit.id, l.produit.nom " +
                 "HAVING COALESCE(SUM(l.quantiteStock), 0) = 0 " +
                 "ORDER BY l.produit.nom ASC";
-            return session.createQuery(hql, Object[].class)
-                .setMaxResults(limit)
-                .list();
+            return session.createQuery(hql, Object[].class).list();
         }
     }
 
     /**
-     * Retourne les N produits dont le stock total est > 0 et <= seuil d'alerte.
+     * Retourne TOUS les produits dont le stock total est > 0 et <= seuil d'alerte.
+     * Inclut le seuilAlerte réel de chaque produit.
      */
-    public List<Object[]> getProduitsEnAlerte(int limit) {
+    public List<Object[]> getProduitsEnAlerte() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql =
-                "SELECT l.produit.id, l.produit.nom, COALESCE(SUM(l.quantiteStock), 0) " +
+                "SELECT l.produit.id, l.produit.nom, COALESCE(SUM(l.quantiteStock), 0), COALESCE(MAX(l.produit.seuilAlerte), 5) " +
                 "FROM Lot l " +
                 "GROUP BY l.produit.id, l.produit.nom " +
                 "HAVING COALESCE(SUM(l.quantiteStock), 0) > 0 AND COALESCE(SUM(l.quantiteStock), 0) <= COALESCE(MAX(l.produit.seuilAlerte), 5) " +
                 "ORDER BY COALESCE(SUM(l.quantiteStock), 0) ASC";
-            return session.createQuery(hql, Object[].class)
-                .setMaxResults(limit)
-                .list();
+            return session.createQuery(hql, Object[].class).list();
         }
     }
 

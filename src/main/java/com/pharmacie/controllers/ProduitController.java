@@ -288,6 +288,18 @@ public class ProduitController {
         txtSearchProd.textProperty().addListener((obs, oldV, newV) -> searchProduit());
         txtSearchStock.textProperty().addListener((obs, oldV, newV) -> filtrerStock());
 
+        // Fix UX DatePicker : Si l'utilisateur efface la date au clavier, on reset le filtre
+        if (dpFiltreExpAvant != null) {
+            dpFiltreExpAvant.getEditor().textProperty().addListener((obs, oldV, newV) -> {
+                if (newV == null || newV.trim().isEmpty()) {
+                    if (dpFiltreExpAvant.getValue() != null) {
+                        dpFiltreExpAvant.setValue(null);
+                        filtrerStock();
+                    }
+                }
+            });
+        }
+
         tableEtatStock.getSelectionModel().selectedItemProperty().addListener((obs, old, newVal) -> {
             if (btnAjustementStock != null) {
                 btnAjustementStock.setDisable(newVal == null);
@@ -843,6 +855,11 @@ public class ProduitController {
     @FXML
     public void loadEtatStock() {
         boolean inclureArchives = chkInclureArchives != null && chkInclureArchives.isSelected();
+        // Solution 2: Forcer l'inclusion des stocks épuisés si le filtre "Rupture" est sélectionné
+        if (cmbFiltreStockStatut != null && "Rupture (Vide)".equals(cmbFiltreStockStatut.getValue())) {
+            inclureArchives = true;
+        }
+        
         // #2 : Filtre les lots au niveau SQL avec JOIN FETCH pour tuer le problème N+1
         List<Lot> lots = lotDAO.findActiveLotsWithDetails(inclureArchives);
         java.util.Map<Long, Long> mapQtesVendues = lotDAO.getQuantitesVenduesParLot();
@@ -954,6 +971,12 @@ public class ProduitController {
         EtatStockDTO selected = tableEtatStock.getSelectionModel().getSelectedItem();
         if (selected != null)
             showLotDetail(selected);
+    }
+
+    @FXML
+    public void onFiltreStatutChanged() {
+        // Solution 2: Recharger depuis la BDD lorsqu'on change de statut pour inclure/exclure automatiquement les ruptures
+        loadEtatStock();
     }
 
     @FXML
@@ -1084,7 +1107,7 @@ public class ProduitController {
 
         TableView<com.pharmacie.models.MouvementStock> tableMvt = new TableView<>();
         tableMvt.setPrefHeight(280);
-        tableMvt.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableMvt.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         tableMvt.setStyle("-fx-border-color: #CBD5E1; -fx-border-radius: 4; -fx-background-radius: 4;");
 
         TableColumn<com.pharmacie.models.MouvementStock, String> colDate = new TableColumn<>("Date");
@@ -1124,35 +1147,46 @@ public class ProduitController {
         colAgent.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(
                 c.getValue().getUser() != null ? c.getValue().getUser().getNom() : "—"));
 
+        colDate.setPrefWidth(130);
+        colType.setPrefWidth(140);
+        colQte.setPrefWidth(160);
+        colRef.setPrefWidth(400); // Colonne très large pour scroll
+        colAgent.setPrefWidth(130);
+
         tableMvt.getColumns().addAll(colDate, colType, colQte, colRef, colAgent);
         tableMvt.setItems(FXCollections.observableArrayList(mouvements));
 
         tableMvt.setRowFactory(tv -> new TableRow<>() {
+            {
+                // Les listeners sont attachés UNE SEULE FOIS à la création de la ligne (évite le bug de disparition)
+                selectedProperty().addListener((obs, wasSelected, isNowSelected) -> updateStyle(getItem(), isEmpty()));
+                hoverProperty().addListener((obs, wasHovered, isNowHovered) -> updateStyle(getItem(), isEmpty()));
+            }
+
             @Override
             protected void updateItem(com.pharmacie.models.MouvementStock item, boolean empty) {
                 super.updateItem(item, empty);
-                Runnable updateStyle = () -> {
-                    if (item == null || empty) {
-                        setStyle("");
-                        return;
-                    }
+                updateStyle(item, empty);
+            }
 
-                    if (isSelected() || isHover()) {
-                        setStyle(""); // Laisse le CSS global (.table-row-cell:selected / :hover) agir !
-                        return;
-                    }
+            private void updateStyle(com.pharmacie.models.MouvementStock item, boolean empty) {
+                if (item == null || empty) {
+                    setStyle("");
+                    return;
+                }
 
-                    switch (item.getTypeMouvement()) {
-                        case ACHAT -> setStyle("-fx-background-color: #E0F2FE;"); // Sky 100 (bleu clair)
-                        case VENTE -> setStyle("-fx-background-color: #FFFFFF;"); // White
-                        case AJUSTEMENT_NEGATIF -> setStyle("-fx-background-color: #FEF2F2;"); // Red 50
-                        case AJUSTEMENT_POSITIF -> setStyle("-fx-background-color: #F0FDF4;"); // Emerald 50
-                        default -> setStyle("");
-                    }
-                };
-                selectedProperty().addListener((obs, wasSelected, isNowSelected) -> updateStyle.run());
-                hoverProperty().addListener((obs, wasHovered, isNowHovered) -> updateStyle.run());
-                updateStyle.run();
+                if (isSelected() || isHover()) {
+                    setStyle(""); // Laisse le CSS global agir
+                    return;
+                }
+
+                switch (item.getTypeMouvement()) {
+                    case ACHAT -> setStyle("-fx-background-color: #E0F2FE;"); // Sky 100 (bleu clair)
+                    case VENTE -> setStyle("-fx-background-color: #FFFFFF;"); // White
+                    case AJUSTEMENT_NEGATIF -> setStyle("-fx-background-color: #FEF2F2;"); // Red 50
+                    case AJUSTEMENT_POSITIF -> setStyle("-fx-background-color: #F0FDF4;"); // Emerald 50
+                    default -> setStyle("");
+                }
             }
         });
 
