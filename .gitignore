@@ -49,3 +49,9 @@ vetpharma-pwa/convert-logo.ps1
 
 # Dépendances Node (volumineuses, inutiles sur GitHub)
 vetpharma-pwa/node_modules/
+
+# Artefacts de build et exports locaux (racine)
+*.class
+maven_output.txt
+Export_Ventes.csv
+Journal_Ventes.csv
