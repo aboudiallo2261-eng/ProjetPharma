@@ -167,6 +167,7 @@ public class VenteController {
     private ProduitDAO produitDAO = new ProduitDAO();
     private LotDAO lotDAO = new LotDAO();
     private com.pharmacie.dao.VenteDAO venteDAO = new com.pharmacie.dao.VenteDAO();
+    private final com.pharmacie.services.CaisseService caisseService = new com.pharmacie.services.CaisseService();
     private MouvementDAO mouvementDAO = new MouvementDAO();
 
     private boolean isUpdatingHistoriqueFiltres = false;
@@ -1050,35 +1051,12 @@ public class VenteController {
             return;
         }
 
-        // Calcul rigoureux des encaissements de la session.
-        // Règle d'or : pour les ventes MIXTES, on décompose via les champs
-        // montantEspeces / montantMobile persistés en DB. Sans cela, l'argent mixte
-        // disparaît des totaux de clôture et crée des écarts fictifs.
-        List<Vente> ventesSession = venteDAO.findBySessionCaisse(currentSession.getId());
-
-        double totalEspeces = ventesSession.stream().mapToDouble(v -> {
-            if (v.getModePaiement() == Vente.ModePaiement.ESPECES) {
-                // Monopaiement Espèces : le montant net est le total de la vente
-                return v.getTotal() != null ? v.getTotal() : 0.0;
-            } else if (v.getModePaiement() == Vente.ModePaiement.MIXTE) {
-                // Paiement MIXTE : on récupère la part espèces exacte (normalisée à l'encaissement)
-                return v.getMontantEspeces() != null ? v.getMontantEspeces() : 0.0;
-            }
-            return 0.0; // MOBILE_MONEY ne rentre pas dans le tiroir physique
-        }).sum();
-
-        double totalMobile = ventesSession.stream().mapToDouble(v -> {
-            if (v.getModePaiement() == Vente.ModePaiement.MOBILE_MONEY) {
-                // Monopaiement Mobile : le montant net est le total de la vente
-                return v.getTotal() != null ? v.getTotal() : 0.0;
-            } else if (v.getModePaiement() == Vente.ModePaiement.MIXTE) {
-                // Paiement MIXTE : on récupère la part mobile exacte (normalisée à l'encaissement)
-                return v.getMontantMobile() != null ? v.getMontantMobile() : 0.0;
-            }
-            return 0.0;
-        }).sum();
-
-        double theorieEspeces = currentSession.getFondDeCaisse() + totalEspeces;
+        // Calculs de clôture délégués au service métier (testable sans UI ni DB).
+        // Règle d'or des MIXTES : décomposition via montantEspeces / montantMobile persistés.
+        com.pharmacie.services.CaisseService.BilanCloture bilan =
+                caisseService.calculerBilanCloture(currentSession);
+        double totalMobile = bilan.totalMobile();
+        double theorieEspeces = bilan.especesAttenduesTiroir();
 
         class ClotureResult {
             Double especes;
@@ -1110,23 +1088,12 @@ public class VenteController {
         vbox.setPadding(new javafx.geometry.Insets(20));
         vbox.setMinWidth(480);
 
-        // Point 8 : Sections visuelles differenciees Especes / Mobile
-        double ventesPuresEsp = ventesSession.stream()
-                .filter(v -> v.getModePaiement() == Vente.ModePaiement.ESPECES)
-                .mapToDouble(Vente::getTotal).sum();
-        double ventesPuresMob = ventesSession.stream()
-                .filter(v -> v.getModePaiement() == Vente.ModePaiement.MOBILE_MONEY)
-                .mapToDouble(Vente::getTotal).sum();
-        // Variables MIXTES (réinjectées après refactoring)
-        long nbMixtes = ventesSession.stream()
-                .filter(v -> v.getModePaiement() == Vente.ModePaiement.MIXTE)
-                .count();
-        double totalMixtesEsp = ventesSession.stream()
-                .filter(v -> v.getModePaiement() == Vente.ModePaiement.MIXTE)
-                .mapToDouble(v -> v.getMontantEspeces() != null ? v.getMontantEspeces() : 0.0).sum();
-        double totalMixtesMob = ventesSession.stream()
-                .filter(v -> v.getModePaiement() == Vente.ModePaiement.MIXTE)
-                .mapToDouble(v -> v.getMontantMobile() != null ? v.getMontantMobile() : 0.0).sum();
+        // Point 8 : Sections visuelles differenciees Especes / Mobile (valeurs du bilan)
+        double ventesPuresEsp = bilan.ventesPuresEspeces();
+        double ventesPuresMob = bilan.ventesPuresMobile();
+        long nbMixtes = bilan.nbVentesMixtes();
+        double totalMixtesEsp = bilan.partEspecesMixtes();
+        double totalMixtesMob = bilan.partMobileMixtes();
 
         // SECTION ESPECES
         javafx.scene.layout.VBox sectionEsp = new javafx.scene.layout.VBox(6);

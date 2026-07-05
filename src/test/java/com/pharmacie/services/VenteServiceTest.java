@@ -151,6 +151,33 @@ class VenteServiceTest {
           .hasMessageContaining("CONCURRENCE");
     }
 
+    @Test
+    @DisplayName("Vente au DÉTAIL : quantité comptée en unités, sans multiplication par boîte")
+    void testVenteDetailSansMultiplication() {
+        // Produit déconditionnable (12 unités/boîte) vendu au DÉTAIL :
+        // 5 unités demandées ne doivent PAS devenir 5×12=60.
+        Produit p = creerProduitDeconditionnable(4L, "Amoxicilline 250mg", 12);
+
+        LigneVente lv = new LigneVente();
+        lv.setProduit(p);
+        lv.setQuantiteVendue(5);
+        lv.setTypeUnite(LigneVente.TypeUnite.DETAIL);
+        lv.setPrixUnitaire(200.0);
+        lv.setSousTotal(1000.0);
+
+        Map<Long, Integer> cacheDispo = new HashMap<>();
+        cacheDispo.put(4L, 4); // ← 4 unités dispo, 5 demandées → concurrence
+
+        assertThatThrownBy(() -> venteService.validerVente(
+                List.of(lv),
+                Vente.ModePaiement.ESPECES,
+                1000.0, 0.0, 1000.0, 0.0,
+                new SessionCaisse(),
+                cacheDispo
+        )).isInstanceOf(Exception.class)
+          .hasMessageContaining("Requis: 5"); // bien 5 unités, pas 60
+    }
+
     // ═══════════════════════════════════════════════════════════════════
     // HELPERS — Création de produits de test
     // ═══════════════════════════════════════════════════════════════════
