@@ -8,9 +8,6 @@ import org.hibernate.service.ServiceRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.pharmacie.models.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
 
 public class HibernateUtil {
     private static final Logger log = LoggerFactory.getLogger(HibernateUtil.class);
@@ -61,9 +58,11 @@ public class HibernateUtil {
                         .applySettings(configuration.getProperties()).build();
 
                 sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-                // Migration corrective : Hibernate "update" n'élargit pas les colonnes existantes.
-                // On force l'extension de la colonne motif à VARCHAR(255) si elle est encore trop courte.
-                appliquerMigrationsCorrectivese(configuration);
+
+                // Migrations Flyway APRÈS le build de la SessionFactory :
+                // hbm2ddl "update" crée d'abord les tables/colonnes manquantes,
+                // puis Flyway applique les correctifs versionnés (db/migration/V*.sql).
+                executerMigrationsFlyway(dbUrl, dbUser, dbPass);
             } catch (Exception e) {
                 log.error("Erreur lors de la création de la SessionFactory: ", e);
                 throw new RuntimeException("Erreur critique d'initialisation Hibernate", e);
@@ -73,53 +72,31 @@ public class HibernateUtil {
     }
 
     /**
-     * Migration corrective manuelle : Hibernate "hbm2ddl.auto=update" ne modifie
-     * pas la taille des colonnes existantes (uniquement les crée si absentes).
-     * Cette méthode élargit la colonne 'motif' à VARCHAR(255) si nécessaire.
+     * Applique les migrations de schéma versionnées (src/main/resources/db/migration).
+     *
+     * <p>Stratégie hybride : Hibernate "hbm2ddl.auto=update" continue de créer les
+     * tables/colonnes manquantes, et Flyway gère tout ce que "update" ne sait pas
+     * faire (élargissement de colonnes, backfill de données, index...).</p>
+     *
+     * <p><b>Règle pour la suite</b> : toute nouvelle évolution de schéma ou de données
+     * doit être un fichier V&lt;n&gt;__description.sql — plus jamais de SQL dans le code.</p>
+     *
+     * <p>{@code baselineOnMigrate} : les bases existantes (créées avant Flyway) sont
+     * automatiquement baselinées en V1 au premier démarrage, puis V2+ s'appliquent.</p>
      */
-    private static void appliquerMigrationsCorrectivese(Configuration configuration) {
-        String url      = configuration.getProperty("connection.url");
-        String user     = configuration.getProperty("connection.username");
-        String password = configuration.getProperty("connection.password");
-        if (password == null) password = "";
-        try (Connection conn = DriverManager.getConnection(url, user, password);
-             Statement stmt = conn.createStatement()) {
-            // Migration 1 : Élargir la colonne motif
-            stmt.executeUpdate(
-                "ALTER TABLE ajustements_stock MODIFY COLUMN motif VARCHAR(255) NOT NULL"
-            );
-            log.info("[Migration] Colonne 'motif' élargie à VARCHAR(255) avec succès.");
-        } catch (Exception e) {
-            log.warn("[Migration] Colonne 'motif' déjà correcte ou erreur ignorée : {}", e.getMessage());
-        }
-
-        // Migration 2 : Peupler lot.prix_achat pour les lots existants (rétrocompatibilité)
-        // Source primaire : LigneAchat.prixUnitaire (le prix RÉEL payé pour ce lot)
-        // Fallback : Produit.prixAchat (le dernier prix connu)
-        try (Connection conn = DriverManager.getConnection(url, user, password);
-             Statement stmt = conn.createStatement()) {
-            // Étape A : Depuis LigneAchat (source fiable)
-            int updated = stmt.executeUpdate(
-                "UPDATE lots l " +
-                "INNER JOIN lignes_achat la ON la.lot_id = l.id " +
-                "SET l.prix_achat = la.prixUnitaire " +
-                "WHERE l.prix_achat IS NULL"
-            );
-            if (updated > 0) {
-                log.info("[Migration] {} lot(s) peuplé(s) avec prix_achat depuis LigneAchat.", updated);
-            }
-            // Étape B : Fallback produit.prixAchat pour les lots orphelins (sans LigneAchat)
-            int fallback = stmt.executeUpdate(
-                "UPDATE lots l " +
-                "INNER JOIN produits p ON l.produit_id = p.id " +
-                "SET l.prix_achat = p.prixAchat " +
-                "WHERE l.prix_achat IS NULL AND p.prixAchat IS NOT NULL AND p.prixAchat > 0"
-            );
-            if (fallback > 0) {
-                log.info("[Migration] {} lot(s) peuplé(s) avec prix_achat depuis Produit (fallback).", fallback);
-            }
-        } catch (Exception e) {
-            log.warn("[Migration] Migration lot.prix_achat ignorée : {}", e.getMessage());
+    private static void executerMigrationsFlyway(String url, String user, String password) {
+        org.flywaydb.core.api.output.MigrateResult result = org.flywaydb.core.Flyway.configure()
+                .dataSource(url, user, password != null ? password : "")
+                .locations("classpath:db/migration")
+                .baselineOnMigrate(true)
+                .baselineVersion("1")
+                .load()
+                .migrate();
+        if (result.migrationsExecuted > 0) {
+            log.info("[Flyway] {} migration(s) appliquée(s). Version du schéma : {}",
+                    result.migrationsExecuted, result.targetSchemaVersion);
+        } else {
+            log.info("[Flyway] Schéma à jour (aucune migration en attente).");
         }
     }
 }

@@ -10,9 +10,14 @@ public class DatabaseBackupService {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseBackupService.class);
 
     public static boolean exportDatabase(File destination) {
-        String dbUser = "root";
-        String dbPass = "";
+        // Identifiants lus depuis config.properties — cohérent avec HibernateUtil
+        String dbUser = ConfigService.getDbUsername();
+        String dbPass = ConfigService.getDbPassword();
         String dbName = "pharmacie_vet_db";
+        if (dbUser == null) {
+            logger.error("db.username manquant dans config.properties — sauvegarde annulée.");
+            return false;
+        }
 
         try {
             // Recherche de mysqldump

@@ -1,6 +1,5 @@
 package com.pharmacie.services;
 
-import com.pharmacie.dao.LotDAO;
 import com.pharmacie.models.Achat;
 import com.pharmacie.models.LigneAchat;
 import com.pharmacie.models.Lot;
@@ -30,7 +29,6 @@ import org.slf4j.LoggerFactory;
 public class AchatService {
 
     private static final Logger logger = LoggerFactory.getLogger(AchatService.class);
-    private LotDAO lotDAO = new LotDAO();
 
     /**
      * Valide l'intégralité d'un achat dans une stricte transaction ACID.
@@ -74,8 +72,6 @@ public class AchatService {
 
             session.persist(achat);
 
-            List<Lot> existingLotsInDB = lotDAO.findAll();
-
             for (LigneAchat l : panier) {
 
                 // ── Déconditionnement ─────────────────────────────────────────
@@ -87,15 +83,19 @@ public class AchatService {
                 }
 
                 // ── Lot : existant ou nouveau ─────────────────────────────────
-                Optional<Lot> existant = existingLotsInDB.stream()
-                        .filter(lot -> lot.getProduit().getId().equals(l.getProduit().getId())
-                                && lot.getNumeroLot().equals(l.getLot().getNumeroLot()))
-                        .findFirst();
+                // Requête ciblée (produit + numéro de lot) DANS la session transactionnelle :
+                // le lot retourné est déjà managé, plus besoin de merge ni de charger tous les lots.
+                Optional<Lot> existant = session.createQuery(
+                        "FROM Lot lot WHERE lot.produit.id = :produitId AND lot.numeroLot = :numeroLot",
+                        Lot.class)
+                    .setParameter("produitId", l.getProduit().getId())
+                    .setParameter("numeroLot", l.getLot().getNumeroLot())
+                    .setMaxResults(1)
+                    .uniqueResultOptional();
 
                 Lot lotDb;
                 if (existant.isPresent()) {
-                    // POINT 1 : session.merge() remplace session.update() (deprecated Hibernate 6)
-                    lotDb = session.merge(existant.get());
+                    lotDb = existant.get();
                     lotDb.setQuantiteStock(lotDb.getQuantiteStock() + stockToAdd);
                     if (lotDb.getQuantiteStock() > 0) {
                         lotDb.setEstArchive(false); // Désarchive si réalimenté

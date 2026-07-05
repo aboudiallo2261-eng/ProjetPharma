@@ -108,6 +108,18 @@
             <version>1.5.0</version>
         </dependency>
 
+        <!-- Flyway : migrations de schéma versionnées (remplace les migrations manuelles) -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>11.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-mysql</artifactId>
+            <version>11.1.0</version>
+        </dependency>
+
         <!-- Gson pour la synchronisation JSON (Phase 2 Jumeau Numérique) -->
         <dependency>
             <groupId>com.google.code.gson</groupId>

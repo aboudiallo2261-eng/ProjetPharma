@@ -27,6 +27,49 @@ public class LotDAO extends GenericDAO<Lot> {
         }
     }
 
+    /**
+     * Lots disponibles d'un produit, triés FEFO (First Expired First Out).
+     * Remplace les anciens findAll().stream().filter() qui chargeaient TOUS les lots.
+     */
+    public java.util.List<Lot> findLotsDisponibles(Long produitId) {
+        try (org.hibernate.Session session = com.pharmacie.utils.HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                "FROM Lot l WHERE l.produit.id = :produitId " +
+                "AND l.quantiteStock > 0 " +
+                "AND (l.dateExpiration IS NULL OR l.dateExpiration >= :today) " +
+                "ORDER BY l.dateExpiration ASC NULLS LAST", Lot.class)
+            .setParameter("produitId", produitId)
+            .setParameter("today", java.time.LocalDate.now())
+            .list();
+        } catch (Exception e) {
+            logger.error("Erreur DAO findLotsDisponibles", e);
+            return java.util.Collections.emptyList();
+        }
+    }
+
+    /**
+     * Stock total non périmé par produit, agrégé côté base de données.
+     * Une seule requête GROUP BY au lieu de charger tous les lots en mémoire.
+     */
+    public java.util.Map<Long, Integer> getStockDisponibleParProduit() {
+        try (org.hibernate.Session session = com.pharmacie.utils.HibernateUtil.getSessionFactory().openSession()) {
+            java.util.List<Object[]> results = session.createQuery(
+                "SELECT l.produit.id, SUM(l.quantiteStock) FROM Lot l " +
+                "WHERE l.dateExpiration IS NULL OR l.dateExpiration >= :today " +
+                "GROUP BY l.produit.id", Object[].class)
+            .setParameter("today", java.time.LocalDate.now())
+            .list();
+            java.util.Map<Long, Integer> map = new java.util.HashMap<>();
+            for (Object[] row : results) {
+                map.put((Long) row[0], ((Number) row[1]).intValue());
+            }
+            return map;
+        } catch (Exception e) {
+            logger.error("Erreur DAO getStockDisponibleParProduit", e);
+            return java.util.Collections.emptyMap();
+        }
+    }
+
     public java.util.Map<Long, Long> getQuantitesVenduesParLot() {
         try (org.hibernate.Session session = com.pharmacie.utils.HibernateUtil.getSessionFactory().openSession()) {
             java.util.List<Object[]> results = session.createQuery(

@@ -649,14 +649,9 @@ public class VenteController {
                                         ? lv.getQuantiteVendue() * lv.getProduit().getUnitesParBoite() 
                                         : lv.getQuantiteVendue();
                 
-                java.util.List<com.pharmacie.models.Lot> lotsDispos = lotDAO.findAll().stream()
-                    .filter(l -> l.getProduit().getId().equals(lv.getProduit().getId()) && l.getQuantiteStock() > 0)
-                    .filter(l -> l.getDateExpiration() == null || !l.getDateExpiration().isBefore(java.time.LocalDate.now()))
-                    .sorted((l1, l2) -> {
-                        if (l1.getDateExpiration() == null) return 1;
-                        if (l2.getDateExpiration() == null) return -1;
-                        return l1.getDateExpiration().compareTo(l2.getDateExpiration());
-                    }).toList();
+                // Requête FEFO ciblée par produit (remplace le chargement de tous les lots)
+                java.util.List<com.pharmacie.models.Lot> lotsDispos =
+                        lotDAO.findLotsDisponibles(lv.getProduit().getId());
 
                 int remaining = baseUnitsToDeduct;
                 for (com.pharmacie.models.Lot l : lotsDispos) {
@@ -1059,10 +1054,7 @@ public class VenteController {
         // Règle d'or : pour les ventes MIXTES, on décompose via les champs
         // montantEspeces / montantMobile persistés en DB. Sans cela, l'argent mixte
         // disparaît des totaux de clôture et crée des écarts fictifs.
-        List<Vente> ventesSession = venteDAO.findAll().stream()
-                .filter(v -> v.getSessionCaisse() != null
-                        && v.getSessionCaisse().getId().equals(currentSession.getId()))
-                .collect(Collectors.toList());
+        List<Vente> ventesSession = venteDAO.findBySessionCaisse(currentSession.getId());
 
         double totalEspeces = ventesSession.stream().mapToDouble(v -> {
             if (v.getModePaiement() == Vente.ModePaiement.ESPECES) {
@@ -1604,10 +1596,8 @@ public class VenteController {
      */
     private void rebuildStockCache() {
         stockCache.clear();
-        java.time.LocalDate today = java.time.LocalDate.now();
-        lotDAO.findAll().stream()
-                .filter(l -> l.getDateExpiration() == null || !l.getDateExpiration().isBefore(today))
-                .forEach(l -> stockCache.merge(l.getProduit().getId(), l.getQuantiteStock(), Integer::sum));
+        // Agrégation SUM/GROUP BY côté base : une seule requête, aucun lot chargé en RAM
+        stockCache.putAll(lotDAO.getStockDisponibleParProduit());
     }
 
     /** Filtre combiné Texte + Catégorie + Espèce — en temps réel depuis RAM */

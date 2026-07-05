@@ -27,10 +27,9 @@ public class MainApp extends Application {
         primaryStage.setOnCloseRequest(event -> {
             if (com.pharmacie.utils.SessionManager.getCurrentUser() != null) {
                 com.pharmacie.dao.SessionCaisseDAO sessionDAO = new com.pharmacie.dao.SessionCaisseDAO();
-                boolean isCaisseOpen = sessionDAO.findAll().stream()
-                        .anyMatch(s -> s.getUser().getId()
-                                .equals(com.pharmacie.utils.SessionManager.getCurrentUser().getId())
-                                && s.getStatut() == com.pharmacie.models.SessionCaisse.StatutSession.OUVERTE);
+                boolean isCaisseOpen = sessionDAO
+                        .findSessionOuverteByUser(com.pharmacie.utils.SessionManager.getCurrentUser())
+                        .isPresent();
 
                 if (isCaisseOpen) {
                     com.pharmacie.utils.AlertUtils.showPremiumAlert(

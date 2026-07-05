@@ -58,4 +58,17 @@ public class VenteDAO extends GenericDAO<Vente> {
             return query.list();
         }
     }
+
+    /**
+     * Ventes d'une session de caisse donnée (pour la clôture Z).
+     * Remplace findAll().stream().filter() qui chargeait tout l'historique des ventes.
+     */
+    public List<Vente> findBySessionCaisse(Long sessionCaisseId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                "FROM Vente v WHERE v.sessionCaisse.id = :sessionId", Vente.class)
+            .setParameter("sessionId", sessionCaisseId)
+            .list();
+        }
+    }
 }

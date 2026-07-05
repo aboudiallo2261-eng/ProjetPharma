@@ -129,20 +129,25 @@ Les DAOs spécialisés (ex: `LigneVenteDAO`) **étendent** ce genericDAO pour aj
 
 ### Configuration de la Base de Données
 
-Créez la base et configurez le fichier Hibernate :
+Créez un utilisateur MySQL **dédié** (jamais `root` en production) :
 
 ```sql
-CREATE DATABASE pharmacie_vet CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'vetpharma_app'@'localhost' IDENTIFIED BY 'UnMotDePasseFort';
+GRANT ALL PRIVILEGES ON pharmacie_vet_db.* TO 'vetpharma_app'@'localhost';
 ```
 
-Modifiez `src/main/resources/hibernate.cfg.xml` :
-```xml
-<property name="hibernate.connection.url">
-    jdbc:mysql://localhost:3306/pharmacie_vet?useSSL=false&serverTimezone=UTC
-</property>
-<property name="hibernate.connection.username">votre_user</property>
-<property name="hibernate.connection.password">votre_mdp</property>
+Copiez ensuite le modèle de configuration et renseignez vos identifiants :
+
+```powershell
+Copy-Item config.properties.example config.properties
+# puis éditez config.properties (db.url, db.username, db.password)
 ```
+
+> 🔒 `config.properties` est **gitignoré** : les identifiants ne sont jamais versionnés.
+> `hibernate.cfg.xml` ne contient plus aucun secret.
+
+La base est créée automatiquement au premier lancement (`createDatabaseIfNotExist`),
+et les migrations de schéma sont gérées par **Flyway** (`src/main/resources/db/migration/`).
 
 ### Lancement
 
@@ -154,20 +159,30 @@ Modifiez `src/main/resources/hibernate.cfg.xml` :
 .\mvnw test
 ```
 
-Au **premier lancement**, Hibernate crée automatiquement toutes les tables (`ddl-auto=update`) et `SecuritySeeder` initialise les profils et le super-administrateur par défaut.
+Au **premier lancement**, Hibernate crée automatiquement toutes les tables (`ddl-auto=update`),
+Flyway applique les migrations correctives, et `SecuritySeeder` initialise les profils et le
+super-administrateur par défaut.
 
 **Identifiants par défaut :**
 | Identifiant | Mot de passe |
 |---|---|
 | `admin` | `admin` |
 
-> ⚠️ **Changez le mot de passe par défaut dès le premier lancement en production.**
+> 🔒 Le changement de ce mot de passe est **imposé automatiquement** au premier login
+> (dialogue bloquant, 8 caractères minimum).
+
+### Packaging Windows (production)
+
+```powershell
+.\scripts\package.ps1              # app portable : dist\VetPharma\VetPharma.exe (JVM embarquée)
+.\scripts\package.ps1 -Type msi    # installateur MSI (requiert WiX Toolset)
+```
 
 ---
 
 ## 🧪 Tests Unitaires
 
-Le projet comprend une suite de tests unitaires couvrant les couches les plus critiques (logique métier et session). Les DAOs sont **isolés avec Mockito** : aucun accès base de données n'est requis pour exécuter les tests.
+Le projet comprend une suite de tests couvrant les couches les plus critiques (logique métier, session, hachage BCrypt). Note : certains tests initialisent Hibernate et nécessitent donc **MySQL démarré** avec un `config.properties` valide.
 
 ```bash
 .\mvnw test

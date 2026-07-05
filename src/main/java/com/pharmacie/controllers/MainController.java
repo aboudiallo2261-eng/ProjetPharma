@@ -156,9 +156,9 @@ public class MainController {
     public void handleLogout() {
         if (SessionManager.getCurrentUser() != null) {
             com.pharmacie.dao.SessionCaisseDAO sessionDAO = new com.pharmacie.dao.SessionCaisseDAO();
-            boolean isCaisseOpen = sessionDAO.findAll().stream()
-                    .anyMatch(s -> s.getUser().getId().equals(SessionManager.getCurrentUser().getId())
-                            && s.getStatut() == com.pharmacie.models.SessionCaisse.StatutSession.OUVERTE);
+            boolean isCaisseOpen = sessionDAO
+                    .findSessionOuverteByUser(SessionManager.getCurrentUser())
+                    .isPresent();
 
             if (isCaisseOpen) {
                 javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
