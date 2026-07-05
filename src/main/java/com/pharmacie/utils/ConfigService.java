@@ -53,9 +53,18 @@ public class ConfigService {
         return getProperty("supabase.url");
     }
 
+    /** Clé héritée à pouvoirs complets — conservée uniquement pour la transition. */
     public static String getSupabaseKey() {
         return getProperty("supabase.key");
     }
+
+    // --- Synchronisation Cloud à droits restreints (RLS) ---
+    // La clé anon est publique par nature ; les droits viennent du compte de synchro,
+    // limité par les politiques RLS à l'upsert de pharmacy_dashboard_sync.
+
+    public static String getSupabaseAnonKey()      { return getProperty("supabase.anon.key"); }
+    public static String getSupabaseSyncEmail()    { return getProperty("supabase.sync.email"); }
+    public static String getSupabaseSyncPassword() { return getProperty("supabase.sync.password"); }
 
     /**
      * Enregistre le chemin de sauvegarde USB.

@@ -10,8 +10,16 @@ db.username=vetpharma_app
 db.password=CHANGEZ_MOI
 
 # --- Synchronisation Cloud Supabase (dashboard mobile) ---
+# Mode recommandé : compte de synchro à droits restreints (RLS).
+# La clé anon est celle de la PWA ; les droits viennent du compte sync,
+# limité par les politiques RLS au seul upsert de pharmacy_dashboard_sync.
 supabase.url=https\://VOTRE_PROJET.supabase.co/rest/v1/pharmacy_dashboard_sync?on_conflict\=pharmacy_id
-supabase.key=VOTRE_CLE_RESTREINTE
+supabase.anon.key=VOTRE_CLE_ANON_PUBLIQUE
+supabase.sync.email=sync@vetpharma.local
+supabase.sync.password=MOT_DE_PASSE_DU_COMPTE_SYNC
+
+# Mode hérité (déconseillé — clé à pouvoirs complets) :
+# supabase.key=NE_PLUS_UTILISER
 
 # --- Sauvegarde USB ---
 backup.usb.path=D\:\\CheminVersUSB

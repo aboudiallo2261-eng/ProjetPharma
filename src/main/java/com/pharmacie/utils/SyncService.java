@@ -419,6 +419,13 @@ public class SyncService {
     /**
      * Envoie le JSON généré vers la base de données Supabase via l'API REST.
      * Utilise un Upsert (merge-duplicates) basé sur l'identifiant de la pharmacie.
+     *
+     * <p><b>Sécurité (droits restreints)</b> : le mode nominal s'authentifie avec un
+     * compte de synchronisation dédié (supabase.sync.email / supabase.sync.password)
+     * via la clé anon. Les politiques RLS côté Supabase limitent ce compte au seul
+     * upsert de la table pharmacy_dashboard_sync — aucune clé à pouvoirs complets
+     * ne circule plus. L'ancienne clé (supabase.key) n'est utilisée qu'en secours
+     * tant que la migration n'est pas terminée.</p>
      */
     private static void envoyerVersCloud(DashboardSyncDTO dto) {
         if (!new SyncService().isInternetAvailable()) {
@@ -427,19 +434,50 @@ public class SyncService {
         }
 
         String supabaseUrl = ConfigService.getSupabaseUrl();
-        String supabaseKey = ConfigService.getSupabaseKey();
-
-        if (supabaseUrl == null || supabaseKey == null || supabaseUrl.isEmpty() || supabaseKey.isEmpty()) {
-            logger.error("Configuration Supabase manquante dans config.properties. Annulation de la synchronisation.");
+        if (supabaseUrl == null || supabaseUrl.isEmpty()) {
+            logger.error("Configuration Supabase manquante (supabase.url). Annulation de la synchronisation.");
             return;
+        }
+
+        // ── Détermination du mode d'authentification ──────────────────────
+        String anonKey      = ConfigService.getSupabaseAnonKey();
+        String syncEmail    = ConfigService.getSupabaseSyncEmail();
+        String syncPassword = ConfigService.getSupabaseSyncPassword();
+
+        String apiKey;
+        String bearerToken;
+        if (anonKey != null && !anonKey.isEmpty()
+                && syncEmail != null && !syncEmail.isEmpty()
+                && syncPassword != null && !syncPassword.isEmpty()) {
+            // Mode nominal : compte de synchro à droits restreints (RLS)
+            bearerToken = obtenirTokenSync(supabaseUrl, anonKey, syncEmail, syncPassword);
+            if (bearerToken == null) {
+                logger.error("Authentification du compte de synchro Supabase impossible. Envoi annulé.");
+                return;
+            }
+            apiKey = anonKey;
+        } else {
+            // Mode hérité (transition) : clé unique à pouvoirs complets
+            String legacyKey = ConfigService.getSupabaseKey();
+            if (legacyKey == null || legacyKey.isEmpty()) {
+                logger.error("Configuration Supabase incomplète : renseignez supabase.anon.key + "
+                        + "supabase.sync.email + supabase.sync.password (ou supabase.key en mode hérité).");
+                return;
+            }
+            logger.warn("Synchro en MODE HÉRITÉ avec la clé à pouvoirs complets. "
+                    + "Migrez vers le compte de synchro restreint (voir config.properties.example).");
+            apiKey = legacyKey;
+            bearerToken = legacyKey;
         }
 
         try {
             URL url = new URL(supabaseUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(8000);
+            conn.setReadTimeout(15000);
             conn.setRequestMethod("POST");
-            conn.setRequestProperty("apikey", supabaseKey);
-            conn.setRequestProperty("Authorization", "Bearer " + supabaseKey);
+            conn.setRequestProperty("apikey", apiKey);
+            conn.setRequestProperty("Authorization", "Bearer " + bearerToken);
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("Prefer", "resolution=merge-duplicates"); // Upsert
             conn.setDoOutput(true);
@@ -462,6 +500,55 @@ public class SyncService {
             }
         } catch (Exception e) {
             logger.error("Erreur de connexion à Supabase: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Authentifie le compte de synchronisation auprès de Supabase Auth
+     * (grant_type=password) et retourne le jeton d'accès JWT, ou null en cas d'échec.
+     *
+     * <p>Le jeton n'est pas mis en cache : une synchro a lieu toutes les 5 minutes,
+     * un login par synchro est simple et évite toute gestion d'expiration.</p>
+     */
+    private static String obtenirTokenSync(String supabaseUrl, String anonKey,
+                                           String email, String password) {
+        try {
+            // supabase.url pointe sur .../rest/v1/... — on en déduit l'URL de base du projet
+            int idxRest = supabaseUrl.indexOf("/rest/");
+            String baseUrl = (idxRest > 0) ? supabaseUrl.substring(0, idxRest) : supabaseUrl;
+
+            URL url = new URL(baseUrl + "/auth/v1/token?grant_type=password");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(8000);
+            conn.setReadTimeout(15000);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("apikey", anonKey);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setDoOutput(true);
+
+            com.google.gson.JsonObject credentials = new com.google.gson.JsonObject();
+            credentials.addProperty("email", email);
+            credentials.addProperty("password", password);
+            try (java.io.OutputStream os = conn.getOutputStream()) {
+                os.write(credentials.toString().getBytes("utf-8"));
+            }
+
+            int code = conn.getResponseCode();
+            if (code < 200 || code >= 300) {
+                logger.error("Échec login compte de synchro Supabase (HTTP {}). "
+                        + "Vérifiez supabase.sync.email / supabase.sync.password.", code);
+                return null;
+            }
+
+            try (java.io.InputStreamReader reader =
+                         new java.io.InputStreamReader(conn.getInputStream(), "utf-8")) {
+                com.google.gson.JsonObject reponse =
+                        com.google.gson.JsonParser.parseReader(reader).getAsJsonObject();
+                return reponse.has("access_token") ? reponse.get("access_token").getAsString() : null;
+            }
+        } catch (Exception e) {
+            logger.error("Erreur d'authentification Supabase : {}", e.getMessage());
+            return null;
         }
     }
 }
