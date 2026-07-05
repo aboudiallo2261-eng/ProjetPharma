@@ -1,0 +1,104 @@
+@startuml Synchronisation_Jumeau_Numerique
+!theme plain
+title **Diagramme de Séquence — Synchronisation du Jumeau Numérique**\n(Desktop → Supabase → PWA Propriétaire)
+
+skinparam sequenceArrowThickness 2
+skinparam maxMessageSize 220
+skinparam responseMessageBelowArrow true
+
+participant "Système\n(Timer / post-clôture)" as SYS #LightBlue
+participant ":SyncService" as SS #LightGreen
+database ":StatistiquesDAO" as SDAO #LightCoral
+entity ":DashboardSyncDTO" as DTO #Lavender
+participant ":ConfigService" as CS #LightGray
+participant ":AuditLogger" as AL #LightGray
+participant "Système de\nFichiers" as FS #Silver
+database "Supabase\n(Cloud S5)" as SB #LightSkyBlue
+actor "Propriétaire\n(A5 — PWA)" as Owner #PaleGreen
+
+== Déclenchement ==
+
+SYS -> SS : synchroniser()
+activate SS
+SS -> AL : log("Synchro Dashboard",\n"STARTED")
+
+== Construction du Snapshot ==
+
+SS -> SS : construireSnapshot()
+activate SS #LightGreen
+
+group KPIs Financiers (Jour / Mois / Année)
+    SS -> SDAO : getChiffreAffairesTotal\n(debutJour, now)
+    SS -> SDAO : getBeneficeNet\n(debutJour, now)
+    SS -> SDAO : getNombreVentes\n(debutJour, now)
+    note right : Répété pour :\n• Mois (vs mois précédent)\n• Année (vs année N-1)
+    SS -> SS : calculerEvolution\n(actuel, précédent)
+end
+
+group KPIs Stock
+    SS -> SDAO : getValeurTotaleStock(today)
+    SS -> SDAO : getDashboardWebAlertesKPI\n(today)
+    note right : Retourne :\n[ruptures, alertes, périmés]
+end
+
+group Alertes détaillées
+    SS -> SDAO : getPertesDuJourDetails(today)
+    SS -> SDAO : getProduitsEnRuptureTotale(50)
+    SS -> SDAO : getProduitsEnAlerte(50)
+    SS -> SDAO : getLotsPerimes(today)
+    SS -> SDAO : getLotsProchePeremption\n(today, 60)
+end
+
+group Analyses
+    SS -> SDAO : getTopProduitsVolume\n(debut, fin, 5)
+    note right : ×3 périodes :\nJour, Mois, Année
+    SS -> SDAO : getEvolutionCA(7j)
+    SS -> SDAO : getEvolutionCAMensuelle(3m)
+    SS -> SDAO : getHistoriqueCA3Ans(today)
+end
+
+SS -> DTO ** : assemble toutes\nles données
+deactivate SS
+
+== Écriture JSON Locale ==
+
+SS -> FS : ecrireJson(dto)\n→ sync/dashboard_snapshot.json
+FS --> SS : fichier écrit
+
+== Envoi Cloud ==
+
+SS -> SS : isInternetAvailable()\n(ping google.com)
+
+alt Pas d'Internet
+    SS -> AL : log("Pas d'accès Internet.\nReporté.")
+else Internet disponible
+    SS -> CS : getSupabaseUrl()
+    SS -> CS : getSupabaseKey()
+
+    alt Config manquante
+        SS -> AL : log("Config Supabase\nmanquante. Annulé.")
+    else Config OK
+        SS -> SB : HTTP POST\n(Upsert merge-duplicates)\n{pharmacy_id, updated_at,\npayload: dto}
+        alt Code 2xx
+            SB --> SS : 200 OK
+            SS -> AL : log("Synchro Cloud",\n"SUCCESS")
+        else Code 4xx/5xx
+            SB --> SS : erreur
+            SS -> AL : log("Synchro Cloud",\n"ERROR: code")
+        end
+    end
+end
+
+SS -> SS : lastSuccessfulSync = now
+SS -> AL : log("Synchro Dashboard",\n"SUCCESS")
+deactivate SS
+
+== Consultation PWA (asynchrone) ==
+
+note over SB, Owner : La PWA React lit les données\ndepuis Supabase en temps réel\n(architecture UNIDIRECTIONNELLE)
+
+Owner -> SB : fetch(dashboard_snapshot)
+SB --> Owner : JSON (KPIs, Alertes,\nTop Produits, Historiques)
+Owner -> Owner : affiche dashboard\nmobile/tablette
+
+@enduml

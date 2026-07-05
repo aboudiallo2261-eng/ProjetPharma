@@ -1,0 +1,135 @@
+@startuml Validation_Vente_ACID_FEFO
+!theme plain
+title **Diagramme de Séquence — Validation d'une Vente**\n(Transaction ACID + Débit FEFO)
+
+skinparam sequenceArrowThickness 2
+skinparam maxMessageSize 220
+skinparam sequenceGroupBorderThickness 2
+skinparam responseMessageBelowArrow true
+
+actor "Caissier\n(A2)" as User #LightBlue
+participant ":VenteController" as VC #LightYellow
+participant ":VenteService" as VS #LightGreen
+participant ":SessionManager" as SM #Wheat
+database ":Session\n(Hibernate)" as DB #LightCoral
+entity ":Vente" as V #Lavender
+entity ":LigneVente" as LV #Lavender
+entity ":Lot" as Lot #Lavender
+entity ":MouvementStock" as MVT #Lavender
+participant ":PrinterService" as PS #LightGray
+participant ":ToastService" as TS #LightGray
+
+== Phase 1 — Validation UI ==
+
+User -> VC : validerVente()
+activate VC
+
+VC -> VC : vérifie panier non vide
+VC -> VC : calcule totalAPayer
+
+alt Mode ESPECES
+    VC -> VC : mEspeces = totalAPayer\nmMobile = 0
+else Mode MOBILE_MONEY
+    VC -> VC : mEspeces = 0\nmMobile = totalAPayer
+else Mode MIXTE
+    VC -> VC : monnaie déduite du cash\nmEspeces = total - mMobile
+end
+
+VC -> VC : vérifie montantReçu ≥ totalAPayer
+
+alt Montant insuffisant
+    VC --> User : showError("Montant insuffisant")
+else Montant OK
+end
+
+== Phase 2 — Appel Service ==
+
+VC -> VS : validerVente(panier, mode,\nmEsp, mMob, reçu, monnaie,\nsession, cacheStock)
+activate VS
+
+== Phase 3 — Vérification JAT (anti-concurrence) ==
+
+VS -> VS : calcule requiredByProduct\n(unités de base × unitesParBoite\nsi déconditionnable)
+VS -> VS : compare cacheDispoStock\nvs quantités requises
+
+alt Stock changé (concurrence)
+    VS --> VC : throw Exception\n"ALERTE MAJEURE DE CONCURRENCE"
+    VC --> User : showError(message)
+else Stock cohérent
+end
+
+== Phase 4 — Transaction ACID ==
+
+VS -> DB : openSession()
+activate DB
+VS -> DB : beginTransaction()
+
+note over DB #FFCCCC : **DÉBUT TRANSACTION ACID**
+
+VS -> V ** : new Vente()
+VS -> V : setUser, setDateVente,\nsetModePaiement, setMontants,\nsetTotal
+VS -> SM : getCurrentUser()
+VS -> DB : get(SessionCaisse, id)
+VS -> V : setSessionCaisse(managed)
+VS -> DB : persist(vente)
+
+== Phase 5 — Boucle FEFO par LigneVente ==
+
+loop Pour chaque LigneVente du panier
+
+    VS -> VS : calculerUnitsDeBase(lv)\n[BOITE × unitesParBoite\nsi déconditionnable]
+
+    VS -> DB : HQL "FROM Lot\nWHERE produit = :id\nAND stock > 0\nAND exp >= today\nORDER BY exp ASC\nNULLS LAST"
+    DB --> VS : lotsDispos (triés FEFO)
+
+    loop Pour chaque Lot disponible [tant que unitsToDeduct > 0]
+        VS -> Lot : setQuantiteStock(stock - taken)
+        opt Lot épuisé (stock == 0)
+            VS -> Lot : setEstArchive(true)
+        end
+        VS -> MVT ** : new MouvementStock\n(VENTE, -taken, lot, user)
+    end
+
+    alt Stock restant insuffisant (unitsToDeduct > 0)
+        VS -> DB : **rollback()**
+        note over DB #FF9999 : **ROLLBACK COMPLET**
+        VS --> VC : throw Exception\n"Stock insuffisant pour [produit]"
+        VC --> User : showError(message)
+    else Stock OK
+        VS -> LV : setVente(vente), setLot(lot)
+        VS -> DB : persist(ligneVente)
+    end
+end
+
+== Phase 6 — Audit Trail ==
+
+VS -> VS : génère ticketRef\n"TK-DDMMYYYY-HHMM-XXX"
+
+loop Pour chaque MouvementStock
+    VS -> MVT : setReference(ticketRef\n+ suffixe Boîte/Détail)
+    VS -> DB : persist(mouvement)
+end
+
+== Phase 7 — Commit ==
+
+VS -> DB : **commit()**
+note over DB #CCFFCC : **COMMIT — TOUT OU RIEN**
+deactivate DB
+VS --> VC : return vente
+deactivate VS
+
+== Phase 8 — Post-traitement ==
+
+opt Impression activée (checkbox cochée)
+    VC -> PS : imprimerTicket(vente)
+    PS --> VC : ticket ESC/POS envoyé
+end
+
+VC -> VC : panier.clear()
+VC -> VC : loadStockDispo()
+VC -> VC : loadHistoriqueVentes()
+VC -> TS : showSuccess("Vente validée")
+TS --> User : notification Toast
+deactivate VC
+
+@enduml

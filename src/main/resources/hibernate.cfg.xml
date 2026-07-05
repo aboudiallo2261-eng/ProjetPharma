@@ -16,9 +16,9 @@
         <!-- SQL dialect -->
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
 
-        <!-- Echo all executed SQL to stdout -->
-        <property name="show_sql">true</property>
-        <property name="format_sql">true</property>
+        <!-- Désactivé en production pour la sécurité et les performances (activer pour debug uniquement) -->
+        <property name="show_sql">false</property>
+        <property name="format_sql">false</property>
 
         <!-- Drop and re-create the database schema on startup for early development (change to update later) -->
         <property name="hbm2ddl.auto">update</property>

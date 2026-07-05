@@ -3,11 +3,15 @@ package com.pharmacie.dao;
 import com.pharmacie.models.AjustementStock;
 import com.pharmacie.utils.HibernateUtil;
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
 
 public class AjustementStockDAO extends GenericDAO<AjustementStock> {
+
+    private static final Logger logger = LoggerFactory.getLogger(AjustementStockDAO.class);
 
     public AjustementStockDAO() {
         super(AjustementStock.class);
@@ -30,7 +34,7 @@ public class AjustementStockDAO extends GenericDAO<AjustementStock> {
                 AjustementStock.class)
             .list();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erreur DAO findAllWithDetails (AjustementStock)", e);
             return Collections.emptyList();
         }
     }

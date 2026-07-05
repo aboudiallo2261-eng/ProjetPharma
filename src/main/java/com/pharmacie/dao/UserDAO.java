@@ -4,8 +4,13 @@ import com.pharmacie.models.User;
 import com.pharmacie.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UserDAO extends GenericDAO<User> {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserDAO.class);
+
     public UserDAO() {
         super(User.class);
     }
@@ -16,7 +21,7 @@ public class UserDAO extends GenericDAO<User> {
             query.setParameter("ident", identifiant);
             return query.uniqueResult();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erreur DAO findByIdentifiant pour '{}'", identifiant, e);
             return null;
         }
     }

@@ -258,7 +258,7 @@ public class SyncService {
         }
         dto.setHistorique3Ans(hist3aList);
 
-        List<Object[]> ruptures = statsDAO.getProduitsEnRuptureTotale();
+        List<Object[]> ruptures = statsDAO.getProduitsEnRuptureTotale(50);
         List<ProduitRuptureDTO> rupturesList = new ArrayList<>();
         for (Object[] row : ruptures) {
             Long id = (Long) row[0];
@@ -270,7 +270,7 @@ public class SyncService {
         alertes.setRuptures(rupturesList);
 
         // Alertes stock
-        List<Object[]> alertesStockData = statsDAO.getProduitsEnAlerte();
+        List<Object[]> alertesStockData = statsDAO.getProduitsEnAlerte(50);
         List<ProduitRuptureDTO> alertesStockList = new ArrayList<>();
         for (Object[] row : alertesStockData) {
             Long id = (Long) row[0];

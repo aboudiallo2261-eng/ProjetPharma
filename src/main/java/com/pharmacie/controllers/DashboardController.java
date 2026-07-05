@@ -26,6 +26,8 @@ import java.util.List;
 
 public class DashboardController {
 
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(DashboardController.class);
+
     // ── Header ────────────────────────────────────────────────────────
     @FXML private ProgressIndicator progressIndicator;
     @FXML private ComboBox<String>  cmbPeriode;
@@ -47,7 +49,6 @@ public class DashboardController {
     @FXML private LineChart<String, Number> chartEvolution;
     @FXML private BarChart<String, Number>  barCategorie;
     @FXML private BarChart<String, Number>  barEspece;
-    @FXML private BarChart<String, Number>  barPertes;
     @FXML private PieChart                  pieTopProduits;
 
     // ── Top Produits Table ────────────────────────────────────────────
@@ -86,7 +87,6 @@ public class DashboardController {
         // tout en conservant animated="true" dans le FXML pour la montée fluide des barres de statistiques.
         barCategorie.getXAxis().setAnimated(false);
         barEspece.getXAxis().setAnimated(false);
-        barPertes.getXAxis().setAnimated(false);
         chartEvolution.getXAxis().setAnimated(false);
 
         // Restaure la date de dernière synchro si elle existe en mémoire globale
@@ -95,6 +95,8 @@ public class DashboardController {
             lblDerniereSynchro.setStyle("-fx-font-size: 11px; -fx-text-fill: #059669;"); // Emerald 600
         }
 
+        // Hydrater les DatePickers avec la période par défaut ("Ce Mois")
+        majDatePickersDePeriode();
         chargerDonnees();
     }
 
@@ -102,19 +104,45 @@ public class DashboardController {
     // Actions header
     // =================================================================
 
-    /** Quand l'utlisateur change la période prédéfinie → réinitialise les date pickers */
+    /**
+     * Hydrate les DatePickers selon la période sélectionnée dans le ComboBox.
+     * Pour "Tout", les champs sont laissés vides (pas de contrainte de date).
+     */
+    private void majDatePickersDePeriode() {
+        LocalDate today = LocalDate.now();
+        String periode = cmbPeriode.getValue();
+        if (periode == null) periode = "Ce Mois";
+
+        if ("Tout".equals(periode)) {
+            dpDebut.setValue(null);
+            dpFin.setValue(null);
+            return;
+        }
+
+        LocalDate debut = switch (periode) {
+            case "Aujourd'hui"       -> today;
+            case "7 Derniers Jours"  -> today.minusDays(7);
+            case "30 Derniers Jours" -> today.minusDays(30);
+            case "Ce Mois"           -> today.withDayOfMonth(1);
+            case "Cette Année"       -> today.withDayOfYear(1);
+            default                  -> today.withDayOfMonth(1);
+        };
+        dpDebut.setValue(debut);
+        dpFin.setValue(today);
+    }
+
+    /** Quand l'utilisateur change la période prédéfinie — hydrate les DatePickers avec les vraies dates */
     @FXML
     public void onPeriodeChange() {
-        dpDebut.setValue(null);
-        dpFin.setValue(null);
+        majDatePickersDePeriode();
         chargerDonnees();
     }
 
-    /** Remet le sélecteur de plage libre à vide et revient à la période du ComboBox */
+    /** Remet à la période par défaut ("Ce Mois") et hydrate les DatePickers */
     @FXML
     public void reinitialiserPlage() {
-        dpDebut.setValue(null);
-        dpFin.setValue(null);
+        cmbPeriode.getSelectionModel().select("Ce Mois");
+        majDatePickersDePeriode();
         chargerDonnees();
     }
 
@@ -249,7 +277,6 @@ public class DashboardController {
                 data.catData   = statsDAO.getCAByCategorie(debut, fin);
                 data.espData   = statsDAO.getCAByEspece(debut, fin);
                 data.topData   = statsDAO.getTopProduitsVolume(debut, fin, 10);
-                data.pertesData = statsDAO.getPertesParMotif(debut, fin);
 
                 return data;
             }
@@ -264,8 +291,7 @@ public class DashboardController {
 
         task.setOnFailed(e -> {
             Throwable ex = task.getException();
-            System.err.println("[Dashboard] Erreur : " + ex.getMessage());
-            ex.printStackTrace();
+            logger.error("[Dashboard] Erreur lors du chargement des données", ex);
             // --- Feedback visible pour le diagnostic ---
             javafx.application.Platform.runLater(() -> {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -457,31 +483,9 @@ public class DashboardController {
             count++;
         }
         tableTopProduits.setItems(topList);
-
-        // ── 5. BarChart Pertes par Motif ─────────────────────────────
-        barPertes.getData().clear();
-        XYChart.Series<String, Number> seriesPertes = new XYChart.Series<>();
-        seriesPertes.setName("Unités retirées");
-        for (Object[] row : data.pertesData) {
-            String motifLabel = row[0] != null ? row[0].toString() : "Autre";
-            // row[0] = enum name → on traduit en label lisible
-            motifLabel = traduireMotif(motifLabel);
-            Long totalUnites = ((Number) row[2]).longValue();
-            seriesPertes.getData().add(new XYChart.Data<>(motifLabel, totalUnites));
-        }
-        barPertes.getData().add(seriesPertes);
     }
 
-    /** Traduit le nom de l'enum MotifAjustement en libellé lisible */
-    private String traduireMotif(String enumName) {
-        return switch (enumName) {
-            case "CASSE"            -> "Casse";
-            case "PEREMPTION"       -> "Péremption";
-            case "ERREUR_INVENTAIRE"-> "Erreur inventaire";
-            case "USAGE_INTERNE"    -> "Usage interne";
-            default                 -> "Autre";
-        };
-    }
+
 
     // =================================================================
     // Détail alertes — Ouverture de la modale Premium
@@ -502,8 +506,7 @@ public class DashboardController {
             
             modalStage.showAndWait();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("[Dashboard] Erreur lors de l'ouverture de la modale d'alertes.");
+            logger.error("[Dashboard] Erreur lors de l'ouverture de la modale d'alertes", e);
         }
     }
 
@@ -529,7 +532,7 @@ public class DashboardController {
         boolean         mensuel;
         boolean         horaire;
         List<Object[]>  evolutionCA, evolutionAchats;
-        List<Object[]>  catData, espData, topData, pertesData;
+        List<Object[]>  catData, espData, topData;
     }
 
     // =================================================================

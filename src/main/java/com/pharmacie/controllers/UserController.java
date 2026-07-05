@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.mindrot.jbcrypt.BCrypt;
+import com.pharmacie.utils.AlertUtils;
 
 import java.util.List;
 
@@ -21,6 +22,13 @@ public class UserController {
     @FXML private TextField txtIdentifiant;
     @FXML private TextField txtEmail;
     @FXML private PasswordField txtMotDePasse;
+    @FXML private TextField txtMotDePasseVisible;
+    @FXML private PasswordField txtConfirmMotDePasse;
+    @FXML private TextField txtConfirmMotDePasseVisible;
+    @FXML private ToggleButton btnTogglePassword;
+    @FXML private javafx.scene.shape.SVGPath iconPassword;
+    @FXML private ToggleButton btnToggleConfirmPassword;
+    @FXML private javafx.scene.shape.SVGPath iconConfirmPassword;
     @FXML private ComboBox<Profil> cmbProfil;
     @FXML private Label lblErrorText;
     @FXML private Button btnSaveUser;
@@ -35,6 +43,7 @@ public class UserController {
     @FXML private TextField txtProfilNom;
     @FXML private TextField txtProfilDesc;
     @FXML private CheckBox chkDashboard, chkVentes, chkStock, chkAchats, chkFournisseurs, chkRapports, chkParametres;
+    @FXML private Label lblProfilError;
     @FXML private Button btnSaveProfil;
     @FXML private TableView<Profil> tableProfils;
     @FXML private TableColumn<Profil, String> colProfilNom, colProfilDesc;
@@ -49,6 +58,9 @@ public class UserController {
     
     // --- Onglet Sauvegarde ---
     @FXML private TextField txtBackupPath;
+
+    private static final String PATH_EYE = "M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z";
+    private static final String PATH_EYE_SLASH = "M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12-.708.708z";
 
     private UserDAO userDAO = new UserDAO();
     private ProfilDAO profilDAO = new ProfilDAO();
@@ -94,6 +106,48 @@ public class UserController {
         if (backupPath != null && !backupPath.isEmpty()) {
             txtBackupPath.setText(backupPath);
         }
+
+        // Lier le champ de texte visible au champ de mot de passe caché
+        txtMotDePasseVisible.textProperty().bindBidirectional(txtMotDePasse.textProperty());
+        txtConfirmMotDePasseVisible.textProperty().bindBidirectional(txtConfirmMotDePasse.textProperty());
+    }
+
+    @FXML
+    public void togglePasswordVisibility() {
+        if (btnTogglePassword.isSelected()) {
+            txtMotDePasseVisible.setVisible(true);
+            txtMotDePasseVisible.setManaged(true);
+            txtMotDePasse.setVisible(false);
+            txtMotDePasse.setManaged(false);
+            iconPassword.setContent(PATH_EYE_SLASH);
+            iconPassword.setFill(javafx.scene.paint.Color.web("#3B82F6"));
+        } else {
+            txtMotDePasseVisible.setVisible(false);
+            txtMotDePasseVisible.setManaged(false);
+            txtMotDePasse.setVisible(true);
+            txtMotDePasse.setManaged(true);
+            iconPassword.setContent(PATH_EYE);
+            iconPassword.setFill(javafx.scene.paint.Color.web("#94A3B8"));
+        }
+    }
+
+    @FXML
+    public void toggleConfirmPasswordVisibility() {
+        if (btnToggleConfirmPassword.isSelected()) {
+            txtConfirmMotDePasseVisible.setVisible(true);
+            txtConfirmMotDePasseVisible.setManaged(true);
+            txtConfirmMotDePasse.setVisible(false);
+            txtConfirmMotDePasse.setManaged(false);
+            iconConfirmPassword.setContent(PATH_EYE_SLASH);
+            iconConfirmPassword.setFill(javafx.scene.paint.Color.web("#3B82F6"));
+        } else {
+            txtConfirmMotDePasseVisible.setVisible(false);
+            txtConfirmMotDePasseVisible.setManaged(false);
+            txtConfirmMotDePasse.setVisible(true);
+            txtConfirmMotDePasse.setManaged(true);
+            iconConfirmPassword.setContent(PATH_EYE);
+            iconConfirmPassword.setFill(javafx.scene.paint.Color.web("#94A3B8"));
+        }
     }
 
     private void loadProfils() {
@@ -126,6 +180,7 @@ public class UserController {
         }
         
         txtMotDePasse.clear();
+        txtConfirmMotDePasse.clear();
         btnSaveUser.setText("Mettre à jour");
         lblErrorText.setVisible(false);
     }
@@ -137,6 +192,7 @@ public class UserController {
         txtIdentifiant.clear();
         txtEmail.clear();
         txtMotDePasse.clear();
+        txtConfirmMotDePasse.clear();
         cmbProfil.getSelectionModel().clearSelection();
         btnSaveUser.setText("Enregistrer l'agent");
         lblErrorText.setVisible(false);
@@ -145,24 +201,46 @@ public class UserController {
 
     @FXML
     public void handleSave() {
-        String nom = txtNom.getText();
-        String identifiant = txtIdentifiant.getText();
-        String email = txtEmail.getText();
+        String nom = txtNom.getText().trim();
+        String identifiant = txtIdentifiant.getText().trim();
+        String email = txtEmail.getText().trim();
         String password = txtMotDePasse.getText();
+        String confirmPassword = txtConfirmMotDePasse.getText();
         Profil profil = cmbProfil.getValue();
 
-        if (nom.isEmpty() || identifiant.isEmpty() || profil == null) {
-            showError("Le nom, identifiant et profil sont obligatoires.");
+        if (nom.isEmpty()) {
+            showErrorEffect(txtNom);
+            showError("Le nom complet est obligatoire.");
+            txtNom.requestFocus();
+            return;
+        }
+        if (identifiant.isEmpty()) {
+            showErrorEffect(txtIdentifiant);
+            showError("L'identifiant de connexion est obligatoire.");
+            txtIdentifiant.requestFocus();
+            return;
+        }
+        if (profil == null) {
+            showError("Veuillez sélectionner un profil d'accès.");
+            return;
+        }
+        
+        if (!password.isEmpty() && !password.equals(confirmPassword)) {
+            showError("Les mots de passe ne correspondent pas.");
             return;
         }
 
         if (selectedUser == null) { // CREATE
             if (password.isEmpty()) {
-                showError("Mot de passe obligatoire pour un nouvel agent.");
+                showErrorEffect(txtMotDePasse);
+                showError("Le mot de passe est obligatoire pour un nouvel agent.");
                 return;
             }
+            // Seul l'identifiant doit être unique (pas le nom complet)
             if (userDAO.findAll().stream().anyMatch(u -> u.getIdentifiant().equalsIgnoreCase(identifiant))) {
+                showErrorEffect(txtIdentifiant);
                 showError("Cet identifiant est déjà pris ! Veuillez en choisir un autre.");
+                txtIdentifiant.requestFocus();
                 return;
             }
             User newUser = new User();
@@ -174,9 +252,12 @@ public class UserController {
             userDAO.save(newUser);
             com.pharmacie.utils.ToastService.showSuccess(tableUsers.getScene().getWindow(), "Utilisateur Créé", "L'agent a été ajouté avec succès.");
         } else { // UPDATE
+            // Seul l'identifiant doit être unique en modification (pas le nom)
             if (!selectedUser.getIdentifiant().equalsIgnoreCase(identifiant) && 
                 userDAO.findAll().stream().anyMatch(u -> u.getIdentifiant().equalsIgnoreCase(identifiant))) {
+                showErrorEffect(txtIdentifiant);
                 showError("Impossible de modifier : cet identifiant appartient déjà à un autre agent !");
+                txtIdentifiant.requestFocus();
                 return;
             }
             selectedUser.setNom(nom);
@@ -231,6 +312,28 @@ public class UserController {
         lblErrorText.setVisible(true);
     }
 
+    private void showProfilError(String message) {
+        if (lblProfilError != null) {
+            lblProfilError.setText(message);
+            lblProfilError.setVisible(true);
+        }
+    }
+
+    private void showErrorEffect(javafx.scene.Node node) {
+        if (node == null) return;
+        String originalStyle = node.getStyle();
+        node.setStyle(originalStyle + "; -fx-border-color: #E74C3C; -fx-border-width: 2px; -fx-border-radius: 4px;");
+        javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(2));
+        pause.setOnFinished(e -> node.setStyle(originalStyle));
+        javafx.animation.TranslateTransition shake = new javafx.animation.TranslateTransition(javafx.util.Duration.millis(60), node);
+        shake.setFromX(0); shake.setByX(8);
+        shake.setCycleCount(6);
+        shake.setAutoReverse(true);
+        shake.setOnFinished(e -> node.setTranslateX(0));
+        new javafx.animation.ParallelTransition(shake).play();
+        pause.play();
+    }
+
     // --- LOGIQUE PROFIL ---
 
     private void populateProfilForm(Profil p) {
@@ -265,17 +368,27 @@ public class UserController {
         
         btnSaveProfil.setText("Enregistrer Profil");
         tableProfils.getSelectionModel().clearSelection();
+        if (lblProfilError != null) lblProfilError.setVisible(false);
     }
 
     @FXML
     public void saveProfil() {
-        String nom = txtProfilNom.getText();
+        String nom = txtProfilNom.getText().trim();
         if (nom.isEmpty()) {
-            // Afficher alerte
+            showErrorEffect(txtProfilNom);
+            showProfilError("Le nom du profil est obligatoire.");
+            txtProfilNom.requestFocus();
             return;
         }
 
         if (selectedProfil == null) {
+            boolean doublon = profilDAO.findAll().stream().anyMatch(p -> p.getNom() != null && p.getNom().trim().equalsIgnoreCase(nom));
+            if (doublon) {
+                showErrorEffect(txtProfilNom);
+                showProfilError("Un profil avec le nom \"" + nom + "\" existe déjà.");
+                txtProfilNom.requestFocus();
+                return;
+            }
             Profil p = new Profil(nom, txtProfilDesc.getText());
             p.setCanAccessDashboard(chkDashboard.isSelected());
             p.setCanAccessVentes(chkVentes.isSelected());
@@ -287,6 +400,14 @@ public class UserController {
             profilDAO.save(p);
             com.pharmacie.utils.ToastService.showSuccess(tableProfils.getScene().getWindow(), "Profil Créé", "Le nouveau rôle a été enregistré.");
         } else {
+            final Long currentId = selectedProfil.getId();
+            boolean doublon = profilDAO.findAll().stream().anyMatch(p -> p.getNom() != null && p.getNom().trim().equalsIgnoreCase(nom) && !p.getId().equals(currentId));
+            if (doublon) {
+                showErrorEffect(txtProfilNom);
+                showProfilError("Un autre profil avec le nom \"" + nom + "\" existe déjà.");
+                txtProfilNom.requestFocus();
+                return;
+            }
             selectedProfil.setNom(nom);
             selectedProfil.setDescription(txtProfilDesc.getText());
             selectedProfil.setCanAccessDashboard(chkDashboard.isSelected());

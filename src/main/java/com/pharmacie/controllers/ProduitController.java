@@ -907,7 +907,10 @@ public class ProduitController {
                     : Long.MAX_VALUE; // Pas de date = pas de limite
 
             int qteInitiale = qtesInitAchetees.getOrDefault(lot.getId(), lot.getQuantiteStock());
-            Double pAchatB = p.getPrixAchat() != null ? p.getPrixAchat() : 0.0;
+            // Prix d'achat RÉEL du lot (pas le prix global du produit qui change à chaque achat)
+            // Fallback vers produit.prixAchat pour les lots créés avant la migration
+            Double pAchatB = lot.getPrixAchat() != null ? lot.getPrixAchat()
+                    : (p.getPrixAchat() != null ? p.getPrixAchat() : 0.0);
             Double pAchatU = null;
             if (p.getEstDeconditionnable() != null && p.getEstDeconditionnable() && p.getUnitesParBoite() != null
                     && p.getUnitesParBoite() > 0) {

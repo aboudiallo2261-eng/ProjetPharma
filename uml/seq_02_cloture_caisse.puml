@@ -1,0 +1,105 @@
+@startuml Cloture_Caisse_Journal_Z
+!theme plain
+title **Diagramme de Séquence — Clôture de Caisse (Journal Z)**\n(Bilan comptable + Chaîne de sauvegarde 4 niveaux)
+
+skinparam sequenceArrowThickness 2
+skinparam maxMessageSize 220
+skinparam responseMessageBelowArrow true
+
+actor "Caissier\n(A2)" as User #LightBlue
+participant ":VenteController" as VC #LightYellow
+participant ":SessionManager" as SM #Wheat
+database ":SessionCaisseDAO" as SCDAO #LightCoral
+database ":VenteDAO" as VDAO #LightCoral
+entity ":SessionCaisse" as SC #Lavender
+participant ":DatabaseBackup\nService" as BKP #PaleGreen
+participant ":GoogleDrive\nService" as GDS #PaleGreen
+participant ":SyncService" as SYNC #PaleGreen
+participant ":AuditLogger" as AL #LightGray
+participant ":ConfigService" as CS #LightGray
+database "Supabase\n(Cloud)" as SB #LightSkyBlue
+entity "Clé USB\n(S3)" as USB #Silver
+
+== Phase 1 — Pré-vérifications ==
+
+User -> VC : cloturerCaisse()
+activate VC
+
+VC -> SM : getFileAttente()
+alt Tickets en attente non vides
+    VC --> User : showError("IMPOSSIBLE\nTickets en attente !")
+else Aucun ticket en attente
+end
+
+== Phase 2 — Calculs financiers ==
+
+VC -> VDAO : findAll()
+VDAO --> VC : liste ventes
+VC -> VC : filtre par sessionId
+VC -> VC : calcule totalEspeces\n(ESPECES pures + parts MIXTES)
+VC -> VC : calcule totalMobile\n(MOBILE pures + parts MIXTES)
+VC -> VC : théorieEspeces =\nfondDeCaisse + totalEspeces
+
+== Phase 3 — Dialogue de clôture ==
+
+VC -> User : Dialog "Clôture de Caisse"\n(sections Espèces / Mobile)
+note right of User : Affiche théorique attendu\nCalcul écart en temps réel\n(listener dynamique)
+User -> VC : saisit comptage physique\n+ confirme
+
+== Phase 4 — Persistance ==
+
+VC -> SC : setDateCloture(now)
+VC -> SC : setTotalEspecesAttendu(théorie)
+VC -> SC : setEspecesDeclare(comptage)
+VC -> SC : setEcartEspeces(comptage - théorie)
+VC -> SC : setTotalMobileAttendu(totalMobile)
+VC -> SC : setStatut(**FERMEE**)
+VC -> SCDAO : update(sessionCaisse)
+
+== Phase 5 — Chaîne de sauvegarde (Thread asynchrone) ==
+
+VC -> VC : runBackupAndShowBilan()\nnew Thread(Task)
+
+group #LightYellow Étape 1 — Sauvegarde Locale
+    VC -> BKP : exportDatabase(localPath)
+    BKP --> VC : fichier .sql créé
+    VC -> AL : log("BACKUP_SQL", "SUCCESS")
+end
+
+group #LightCyan Étape 2 — Copie USB
+    VC -> CS : getBackupPath()
+    alt USB détectée
+        VC -> USB : Files.copy(local → USB)
+        VC -> AL : log("BACKUP_USB", "SUCCESS")
+    else USB non détectée
+        VC -> AL : log("BACKUP_USB", "WARNING")
+        VC --> User : Alert Warning\n(non bloquant)
+    end
+end
+
+group #LightGreen Étape 3 — Google Drive
+    VC -> VC : ZipUtils.compress(sql → zip)
+    VC -> GDS : uploadBackup(zipFile)
+    alt Upload réussi
+        VC -> AL : log("BACKUP_DRIVE", "SUCCESS")
+    else Échec
+        VC -> AL : log("BACKUP_DRIVE", "ERROR")
+    end
+end
+
+group #Lavender Étape 4 — Synchronisation Cloud
+    VC -> SYNC : synchroniser()
+    SYNC -> SYNC : construireSnapshot()
+    SYNC -> SYNC : ecrireJson() → fichier local
+    SYNC -> SB : HTTP POST\n(Upsert JSON)
+    SB --> SYNC : 2xx OK
+    SYNC -> AL : log("SYNCHRO", "SUCCESS")
+end
+
+== Phase 6 — Bilan Z ==
+
+VC -> User : Dialog Bilan Z\n(espèces, mobile, écarts,\ntotal ventes)
+VC -> VC : checkSessionStatus()
+deactivate VC
+
+@enduml

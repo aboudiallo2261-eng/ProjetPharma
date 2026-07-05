@@ -1,0 +1,45 @@
+@startuml Ouverture_Caisse
+!theme plain
+title **Diagramme de Séquence — Ouverture de Caisse**\n(Initialisation session comptable)
+
+skinparam sequenceArrowThickness 2
+skinparam maxMessageSize 220
+skinparam responseMessageBelowArrow true
+
+actor "Caissier\n(A2)" as User #LightBlue
+participant ":VenteController" as VC #LightYellow
+participant ":SessionManager" as SM #Wheat
+database ":SessionCaisseDAO" as SCDAO #LightCoral
+entity ":SessionCaisse" as SC #Lavender
+
+User -> VC : clique "Ouvrir Caisse"\n(ouvrirCaisse())
+activate VC
+
+VC -> User : Dialog\n"Déclaration Fond de Caisse"\n(agent affiché, champ FCFA)
+
+alt Annulation
+    User -> VC : ferme le Dialog
+    VC --> User : rien ne change
+else Confirmation
+    User -> VC : saisit montant\n+ confirme
+end
+
+VC -> SM : getCurrentUser()
+SM --> VC : currentUser
+
+VC -> SC ** : new SessionCaisse()
+VC -> SC : setUser(currentUser)
+VC -> SC : setDateOuverture(now)
+VC -> SC : setFondDeCaisse(montant)
+VC -> SC : setStatut(**OUVERTE**)
+
+VC -> SCDAO : save(sessionCaisse)
+SCDAO --> VC : session persistée
+
+VC -> VC : currentSession = session
+VC -> VC : checkSessionStatus()\n→ active l'interface de vente\n(boutons, panier, etc.)
+deactivate VC
+
+note over VC : L'interface POS est\nmaintenant opérationnelle.\nLe fond de caisse est inclus\ndans le théorique à la clôture.
+
+@enduml

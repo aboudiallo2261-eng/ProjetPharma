@@ -148,6 +148,17 @@ public class AchatController {
         if (btnValiderAchat != null)
             btnValiderAchat.disableProperty()
                     .bind(javafx.beans.binding.Bindings.isEmpty(panier).or(isProcessingTransaction));
+
+        // Désactiver la case "Imprimer Bon" quand le panier est vide
+        if (chkImprimerBon != null) {
+            chkImprimerBon.setDisable(true);
+            panier.addListener((javafx.collections.ListChangeListener<LigneAchat>) c -> {
+                boolean isEmpty = panier.isEmpty();
+                chkImprimerBon.setDisable(isEmpty);
+                if (isEmpty) chkImprimerBon.setSelected(false);
+            });
+        }
+
         if (btnViderPanier != null) {
             btnViderPanier.disableProperty().bind(javafx.beans.binding.Bindings.isEmpty(panier));
             // Point 6 : Couleur dynamique du bouton Vider (rouge = actif, gris = panier
@@ -284,7 +295,21 @@ public class AchatController {
 
     private void initPanierColumns() {
         colPanierProd.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getProduit().getNom()));
+
+        // Colonne Numéro de Lot — éditable directement dans le tableau
         colPanierLot.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getLot().getNumeroLot()));
+        colPanierLot.setCellFactory(TextFieldTableCell.forTableColumn());
+        colPanierLot.setOnEditCommit(event -> {
+            String newLot = event.getNewValue();
+            if (newLot != null && !newLot.trim().isEmpty()) {
+                event.getRowValue().getLot().setNumeroLot(newLot.trim());
+            } else {
+                com.pharmacie.utils.AlertUtils.showPremiumAlert(Alert.AlertType.WARNING,
+                        "Valeur invalide", "Numéro de lot requis",
+                        "Le numéro de lot ne peut pas être vide.");
+            }
+            tableLignesPanier.refresh();
+        });
 
         // FIX 2: Colonnes Qté et Prix éditables directement dans le tableau
         colPanierQte.setCellValueFactory(new PropertyValueFactory<>("quantiteAchetee"));
@@ -483,6 +508,15 @@ public class AchatController {
                 return;
             }
 
+            String refFacture = txtRefFacture.getText() == null ? "" : txtRefFacture.getText().trim();
+            if (refFacture.isEmpty()) {
+                showErrorEffect(txtRefFacture);
+                com.pharmacie.utils.AlertUtils.showPremiumAlert(Alert.AlertType.WARNING, "Champ Manquant",
+                        "Référence de facture manquante",
+                        "Veuillez renseigner la référence de la facture avant d'ajouter des produits au panier.");
+                return;
+            }
+
             Produit p = cmbProduit.getValue();
             String numLot = txtNumLot.getText().trim();
             String qteText = txtQuantite.getText().trim();
@@ -574,20 +608,30 @@ public class AchatController {
 
                 javafx.scene.layout.VBox alertContent = new javafx.scene.layout.VBox(15);
                 alertContent.setPadding(new javafx.geometry.Insets(25));
-                alertContent.setPrefWidth(450);
+                // Largeur adaptive : min 420px, max 600px
+                alertContent.setMinWidth(420);
+                alertContent.setPrefWidth(500);
+                alertContent.setMaxWidth(600);
 
                 Label alertTitle = new Label("Le prix d'achat dépasse votre prix de vente !");
                 alertTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #E11D48;"); // Rose 600
+                alertTitle.setWrapText(true);
+                alertTitle.setMaxWidth(Double.MAX_VALUE);
 
                 Label alertMsg = new Label("Attention : Le nouveau prix d'achat (" + moneyFormat.format(prix)
                         + " FCFA) est supérieur au prix de vente du produit  (" + moneyFormat.format(p.getPrixVente())
                         + " FCFA).\nVous vendez à perte.\n\nSouhaitez-vous ajuster vos Prix de Vente pour ce produit de toute urgence ?");
                 alertMsg.setWrapText(true);
+                alertMsg.setMaxWidth(Double.MAX_VALUE);
                 alertMsg.setStyle("-fx-font-size: 14px; -fx-text-fill: #334155; -fx-line-spacing: 5px;");
 
                 alertContent.getChildren().addAll(alertTitle, alertMsg);
 
                 alertDlg.getDialogPane().setContent(alertContent);
+                // Forcer le DialogPane à s'adapter à son contenu (corrige le texte tronqué)
+                alertDlg.getDialogPane().setMinWidth(480);
+                alertDlg.getDialogPane().setPrefWidth(540);
+                alertDlg.getDialogPane().setMinHeight(javafx.scene.layout.Region.USE_PREF_SIZE);
                 alertDlg.getDialogPane().setStyle(
                         "-fx-background-color: #F8FAFC; -fx-border-color: #FDA4AF; -fx-border-width: 2; -fx-border-radius: 6; -fx-background-radius: 6;");
 
@@ -631,7 +675,7 @@ public class AchatController {
                     grid.setVgap(15);
 
                     TextField txtPrixBoite = new TextField(
-                            String.valueOf(p.getPrixVente() != null ? p.getPrixVente() : ""));
+                            p.getPrixVente() != null ? String.format("%.0f", p.getPrixVente()) : "");
                     txtPrixBoite.setStyle("-fx-font-size: 14px; -fx-padding: 8;");
 
                     Label lblBoite = new Label("Nouveau Prix Boîte (FCFA) :");
@@ -641,7 +685,8 @@ public class AchatController {
                     grid.add(txtPrixBoite, 1, 0);
 
                     final TextField txtPrixUnite = new TextField(
-                            estDetail ? String.valueOf(p.getPrixVenteUnite() != null ? p.getPrixVenteUnite() : "")
+                            estDetail && p.getPrixVenteUnite() != null
+                                    ? String.format("%.0f", p.getPrixVenteUnite())
                                     : "");
                     txtPrixUnite.setStyle("-fx-font-size: 14px; -fx-padding: 8;");
 
@@ -656,8 +701,8 @@ public class AchatController {
                         txtPrixBoite.textProperty().addListener((obs, oldVal, newVal) -> {
                             try {
                                 if (p.getUnitesParBoite() != null && p.getUnitesParBoite() > 0) {
-                                    double np = Double.parseDouble(newVal);
-                                    txtPrixUnite.setText(String.valueOf(Math.round(np / p.getUnitesParBoite())));
+                                    double np = Double.parseDouble(newVal.replace(" ", ""));
+                                    txtPrixUnite.setText(String.format("%.0f", Math.round((double) np / p.getUnitesParBoite())));
                                 }
                             } catch (Exception e) {
                             }
@@ -803,11 +848,14 @@ public class AchatController {
         isProcessingTransaction.set(true);
         try {
             Fournisseur f = cmbFournisseur.getValue();
+            String refFacture = txtRefFacture.getText() == null ? "" : txtRefFacture.getText().trim();
+
             if (f == null || dpDateAchat.getValue() == null) {
                 if (f == null)
                     showErrorEffect(cmbFournisseur);
                 if (dpDateAchat.getValue() == null)
                     showErrorEffect(dpDateAchat);
+                    
                 com.pharmacie.utils.AlertUtils.showPremiumAlert(javafx.scene.control.Alert.AlertType.ERROR, "Erreur",
                         "Champs Manquants", "Fournisseur et Date d'achat sont obligatoires.");
                 return;
@@ -817,7 +865,7 @@ public class AchatController {
             achat.setFournisseur(f);
             // Utiliser l'heure réelle de validation, pas minuit (00:00)
             achat.setDateAchat(dpDateAchat.getValue().atTime(java.time.LocalTime.now()));
-            achat.setReferenceFacture(txtRefFacture.getText());
+            achat.setReferenceFacture(refFacture);
             achat.setLignesAchat(new ArrayList<>()); // will be repopulated securely by service
 
             boolean success = achatService.enregistrerCommandeTransactionnelle(achat, new ArrayList<>(panier));
@@ -960,17 +1008,14 @@ public class AchatController {
     public void imprimerBonDeCommande() {
         Achat selected = tableHistorique.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
-                    javafx.scene.control.Alert.AlertType.WARNING);
-            alert.setTitle("Aucun achat sélectionné");
-            alert.setHeaderText("Sélection requise");
-            alert.setContentText(
-                    "Veuillez cliquer sur une ligne dans le tableau pour sélectionner l'achat à imprimer.");
-            alert.showAndWait();
+            com.pharmacie.utils.AlertUtils.showPremiumAlert(
+                javafx.scene.control.Alert.AlertType.WARNING,
+                "Aucun achat sélectionné", "Sélection requise",
+                "Veuillez cliquer sur une ligne dans le tableau pour sélectionner l'achat à imprimer.");
             return;
         }
-        Stage stage = (Stage) tableHistorique.getScene().getWindow();
-        com.pharmacie.utils.PdfService.genererBonDeCommande(selected, stage);
+        // Impression directe sans aperçu
+        new Thread(() -> com.pharmacie.utils.PdfService.imprimerBonDeCommandeDirectement(selected)).start();
     }
 
     @FXML

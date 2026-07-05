@@ -84,25 +84,7 @@ public class LoginController {
             return;
         }
 
-        // Temporary hardcoded admin to allow first login if DB is empty
-        if (identifiant.equals("admin") && password.equals("admin")) {
-            User admin = userDAO.findByIdentifiant("admin");
-            if (admin == null) {
-                admin = new User();
-                admin.setNom("Administrateur Setup");
-                admin.setIdentifiant("admin");
-                admin.setEmail("admin@pharmacie.com");
-                admin.setMotDePasseHash(BCrypt.hashpw("admin", BCrypt.gensalt()));
-                admin.setProfil(new com.pharmacie.dao.ProfilDAO().findByNom("SUPER-ADMIN"));
-                userDAO.save(admin);
-                admin = userDAO.findByIdentifiant("admin"); // Assure la récupération de l'ID généré
-            }
-            SessionManager.setCurrentUser(admin);
-            logger.info("Connexion Setup Admin avec ID: {}", admin.getId());
-            MainApp.showMainLayout();
-            return;
-        }
-
+        // Authentification BCrypt standard — pas de bypass hardcodé
         User user = userDAO.findByIdentifiant(identifiant);
         if (user != null) {
             if (BCrypt.checkpw(password, user.getMotDePasseHash())) {

@@ -1,0 +1,94 @@
+@startuml Enregistrement_Achat_ACID
+!theme plain
+title **Diagramme de Séquence — Enregistrement d'un Achat Fournisseur**\n(Transaction ACID + Déconditionnement + Merge Lots)
+
+skinparam sequenceArrowThickness 2
+skinparam maxMessageSize 220
+skinparam responseMessageBelowArrow true
+
+actor "Gestionnaire\nde Stock (A3)" as User #LightBlue
+participant ":AchatController" as AC #LightYellow
+participant ":AchatService" as AS #LightGreen
+participant ":SessionManager" as SM #Wheat
+database ":Session\n(Hibernate)" as DB #LightCoral
+database ":LotDAO" as LDAO #LightCoral
+entity ":Achat" as A #Lavender
+entity ":LigneAchat" as LA #Lavender
+entity ":Lot" as Lot #Lavender
+entity ":Produit" as P #Lavender
+entity ":MouvementStock" as MVT #Lavender
+participant ":ToastService" as TS #LightGray
+
+== Phase 1 — Saisie ==
+
+User -> AC : remplit formulaire\n(fournisseur, réf facture,\nlignes d'achat)
+AC -> AC : valide données
+AC -> A ** : new Achat(fournisseur,\ndate, référence)
+AC -> AS : enregistrerCommande\nTransactionnelle(achat, panier)
+activate AS
+
+== Phase 2 — Transaction ACID ==
+
+AS -> DB : openSession()
+activate DB
+AS -> DB : beginTransaction()
+note over DB #FFCCCC : **DÉBUT TRANSACTION ACID**
+
+AS -> DB : persist(achat)
+AS -> LDAO : findAll()
+LDAO --> AS : existingLotsInDB
+
+== Phase 3 — Boucle par LigneAchat ==
+
+loop Pour chaque LigneAchat du panier
+
+    == Déconditionnement ==
+    AS -> P : getEstDeconditionnable()
+    alt Produit déconditionnable
+        AS -> AS : stockToAdd = qté\n× unitesParBoite
+    else Non déconditionnable
+        AS -> AS : stockToAdd = qté
+    end
+
+    == Lot : Merge ou Création ==
+    AS -> AS : cherche lot existant\n(même produit + même n° lot)
+
+    alt Lot existant trouvé
+        AS -> DB : merge(lotExistant)
+        AS -> Lot : setQuantiteStock\n(stock + stockToAdd)
+        AS -> Lot : setEstArchive(false)\n[si stock > 0]
+        AS -> Lot : setPrixAchat(prixUnitaire)
+    else Nouveau lot
+        AS -> Lot : setQuantiteStock(stockToAdd)
+        AS -> Lot : setPrixAchat(prixUnitaire)
+        AS -> DB : persist(lot)
+    end
+
+    == Liaison ==
+    AS -> LA : setLot(lotDb)
+    AS -> LA : setAchat(achat)
+    AS -> DB : persist(ligneAchat)
+
+    == Audit Trail ==
+    AS -> SM : getCurrentUser()
+    AS -> MVT ** : new MouvementStock\n(ACHAT, +stockToAdd, lot, ref)
+    AS -> DB : persist(mouvement)
+
+    == Prix de référence ==
+    AS -> DB : merge(produit)
+    AS -> P : setPrixAchat(prixUnitaire)
+
+end
+
+== Phase 4 — Commit ==
+
+AS -> DB : **commit()**
+note over DB #CCFFCC : **COMMIT — TOUT OU RIEN**
+deactivate DB
+AS --> AC : return true
+deactivate AS
+
+AC -> TS : showSuccess\n("Commande enregistrée")
+TS --> User : notification Toast
+
+@enduml

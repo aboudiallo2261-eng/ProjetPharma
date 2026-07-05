@@ -364,6 +364,194 @@ public class PdfService {
         }
     }
 
+    /**
+     * Imprime directement le bon de commande sur l'imprimante par défaut
+     * sans ouvrir de fenêtre d'aperçu. Identique à genererBonDeCommande() mais
+     * envoie le flux PDF directement au spool d'impression Windows.
+     */
+    public static void imprimerBonDeCommandeDirectement(Achat achat) {
+        String nomFichier = "BonCommande_" + (achat.getReferenceFacture() != null ? achat.getReferenceFacture() : achat.getId()) + ".pdf";
+        File fichier = new File(System.getProperty("java.io.tmpdir"), nomFichier);
+
+        // Génération + impression dans un thread séparé pour ne pas bloquer l'UI
+        Thread t = new Thread(() -> {
+            try {
+                // 1. Générer le fichier PDF dans le dossier temp
+                genererFichierBonDeCommande(achat, fichier);
+
+                // 2. Afficher la boîte de dialogue de sélection d'imprimante (PrinterJob)
+                //    Fonctionne indépendamment d'Edge ou d'Adobe.
+                try (org.apache.pdfbox.pdmodel.PDDocument document = org.apache.pdfbox.Loader.loadPDF(fichier)) {
+                    java.awt.print.PrinterJob job = java.awt.print.PrinterJob.getPrinterJob();
+                    job.setPageable(new org.apache.pdfbox.printing.PDFPageable(document));
+                    // printDialog() = fenêtre de sélection d'imprimante Windows native
+                    if (job.printDialog()) {
+                        job.print();
+                        logger.info("Bon de commande imprimé avec succès.");
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("Erreur lors de l'impression du bon de commande", e);
+                javafx.application.Platform.runLater(() ->
+                    com.pharmacie.utils.AlertUtils.showPremiumAlert(
+                        javafx.scene.control.Alert.AlertType.ERROR,
+                        "Erreur Impression", "Impossible d'imprimer le bon de commande",
+                        e.getMessage()));
+            }
+        });
+        t.setDaemon(true);
+        t.start();
+    }
+
+    /**
+     * Génère le fichier PDF du bon de commande dans un emplacement donné
+     * sans ouvrir la modale d'aperçu. Partagé par genererBonDeCommande() et imprimerBonDeCommandeDirectement().
+     */
+    private static void genererFichierBonDeCommande(Achat achat, File fichier) throws Exception {
+        try (PDDocument document = new PDDocument()) {
+            PDPage page = new PDPage(PDRectangle.A4);
+            document.addPage(page);
+
+            org.apache.pdfbox.pdmodel.font.PDFont fontBold;
+            org.apache.pdfbox.pdmodel.font.PDFont fontNormal;
+            org.apache.pdfbox.pdmodel.font.PDFont fontOblique;
+            try {
+                File reg = new File("src/main/resources/fonts/Inter-Regular.ttf");
+                File bold = new File("src/main/resources/fonts/Inter-Bold.ttf");
+                if (reg.exists() && bold.exists()) {
+                    fontNormal = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, reg);
+                    fontBold   = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, bold);
+                    fontOblique = fontNormal;
+                } else {
+                    fontBold    = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                    fontNormal  = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+                    fontOblique = new PDType1Font(Standard14Fonts.FontName.HELVETICA_OBLIQUE);
+                }
+            } catch (Exception e) {
+                fontBold    = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                fontNormal  = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+                fontOblique = new PDType1Font(Standard14Fonts.FontName.HELVETICA_OBLIQUE);
+            }
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            com.pharmacie.models.PharmacieInfo info = new com.pharmacie.dao.PharmacieInfoDAO().getInfo();
+            String nomPharma = (info != null && info.getNom() != null && !info.getNom().isEmpty()) ? info.getNom() : "PHARMACIE VETERINAIRE";
+            String adrPharma = (info != null && info.getAdresse() != null) ? info.getAdresse() : "Adresse non définie";
+            String telPharma = (info != null && info.getTelephone() != null) ? info.getTelephone() : "Tel non défini";
+
+            try (PDPageContentStream cs = new PDPageContentStream(document, page)) {
+                float y = PAGE_HEIGHT - MARGIN;
+                float currentX = MARGIN;
+                try {
+                    File logoFile = new File("src/main/resources/images/logo1.jpeg");
+                    if (logoFile.exists()) {
+                        org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject logo =
+                            org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject.createFromFile(logoFile.getAbsolutePath(), document);
+                        float scale = 50f / logo.getHeight();
+                        float width = logo.getWidth() * scale;
+                        cs.drawImage(logo, currentX, y - 50, width, 50);
+                        currentX += width + 15;
+                    }
+                } catch (Exception e) { logger.warn("Logo introuvable", e); }
+
+                cs.setNonStrokingColor(java.awt.Color.decode("#1E293B"));
+                cs.setFont(nomPharma.length() > 25 ? fontBold : fontBold, nomPharma.length() > 25 ? 12 : 14);
+                drawText(cs, nomPharma.toUpperCase(), currentX, y - 15);
+                cs.setFont(fontNormal, 9);
+                cs.setNonStrokingColor(java.awt.Color.decode("#64748B"));
+                drawText(cs, adrPharma, currentX, y - 30);
+                drawText(cs, "Tel: " + telPharma, currentX, y - 45);
+
+                cs.setFont(fontBold, 20);
+                cs.setNonStrokingColor(java.awt.Color.decode("#059669"));
+                String titre = "BON DE COMMANDE";
+                float titreWidth = fontBold.getStringWidth(titre) / 1000 * 20;
+                float titreX = PAGE_WIDTH - MARGIN - titreWidth;
+                drawText(cs, titre, titreX, y - 15);
+                cs.setFont(fontBold, 9);
+                cs.setNonStrokingColor(java.awt.Color.decode("#334155"));
+                String ref = achat.getReferenceFacture() != null ? achat.getReferenceFacture() : String.valueOf(achat.getId());
+                drawText(cs, "RÉFÉRENCE : " + ref, titreX, y - 35);
+                String date = achat.getDateAchat() != null ? achat.getDateAchat().toLocalDate().format(formatter) : "---";
+                drawText(cs, "DATE : " + date, titreX, y - 50);
+                y -= 90;
+
+                cs.setLineWidth(1f);
+                cs.setStrokingColor(java.awt.Color.decode("#E2E8F0"));
+                cs.moveTo(MARGIN, y); cs.lineTo(PAGE_WIDTH - MARGIN, y); cs.stroke();
+                y -= 30;
+
+                drawFilledRect(cs, MARGIN, y - 40, 250, 50, java.awt.Color.decode("#F8FAFC"));
+                cs.setLineWidth(1f); cs.setStrokingColor(java.awt.Color.decode("#CBD5E1"));
+                cs.addRect(MARGIN, y - 40, 250, 50); cs.stroke();
+                cs.setFont(fontBold, 10); cs.setNonStrokingColor(java.awt.Color.decode("#64748B"));
+                drawText(cs, "DESTINATAIRE (FOURNISSEUR)", MARGIN + 10, y);
+                cs.setFont(fontBold, 12); cs.setNonStrokingColor(java.awt.Color.decode("#1E293B"));
+                drawText(cs, achat.getFournisseur().getNom(), MARGIN + 10, y - 18);
+                cs.setFont(fontNormal, 10);
+                String contact = achat.getFournisseur().getTelephone() != null ? achat.getFournisseur().getTelephone() : "Non renseigné";
+                drawText(cs, "Contact: " + contact, MARGIN + 10, y - 32);
+                y -= 70;
+
+                drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 22, java.awt.Color.decode("#059669"));
+                cs.setFont(fontBold, 9); cs.setNonStrokingColor(java.awt.Color.WHITE);
+                drawText(cs, "DÉSIGNATION PRODUIT", MARGIN + 10, y);
+                drawText(cs, "N° LOT",              MARGIN + 230, y);
+                drawText(cs, "QTE",                  MARGIN + 310, y);
+                drawText(cs, "PRIX U.",              MARGIN + 360, y);
+                drawText(cs, "SOUS-TOTAL",           MARGIN + 430, y);
+                y -= 25;
+
+                double grandTotal = 0;
+                boolean pair = false;
+                for (LigneAchat l : achat.getLignesAchat()) {
+                    cs.setFont(fontNormal, 9); cs.setNonStrokingColor(java.awt.Color.decode("#334155"));
+                    if (pair) drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 20, java.awt.Color.decode("#F8FAFC"));
+                    String nomProd = l.getProduit().getNom();
+                    if (nomProd.length() > 38) nomProd = nomProd.substring(0, 38) + "...";
+                    double sousTotal = l.getQuantiteAchetee() * l.getPrixUnitaire();
+                    grandTotal += sousTotal;
+                    cs.setNonStrokingColor(java.awt.Color.decode("#334155"));
+                    drawText(cs, nomProd, MARGIN + 10, y);
+                    drawText(cs, l.getLot().getNumeroLot(), MARGIN + 230, y);
+                    cs.setFont(fontBold, 9);
+                    drawText(cs, String.valueOf(l.getQuantiteAchetee()), MARGIN + 310, y);
+                    cs.setFont(fontNormal, 9);
+                    drawText(cs, String.format("%.0f", l.getPrixUnitaire()), MARGIN + 360, y);
+                    cs.setFont(fontBold, 9); cs.setNonStrokingColor(java.awt.Color.decode("#0F172A"));
+                    drawText(cs, String.format("%.0f FCFA", sousTotal), MARGIN + 430, y);
+                    cs.setLineWidth(0.5f); cs.setStrokingColor(java.awt.Color.decode("#E2E8F0"));
+                    cs.moveTo(MARGIN, y - 5); cs.lineTo(PAGE_WIDTH - MARGIN, y - 5); cs.stroke();
+                    y -= 20; pair = !pair;
+                }
+
+                y -= 20;
+                drawFilledRect(cs, PAGE_WIDTH - MARGIN - 240, y - 10, 240, 30, java.awt.Color.decode("#F1F5F9"));
+                cs.setLineWidth(1f); cs.setStrokingColor(java.awt.Color.decode("#059669"));
+                cs.moveTo(PAGE_WIDTH - MARGIN - 240, y - 10); cs.lineTo(PAGE_WIDTH - MARGIN - 240, y + 20); cs.stroke();
+                cs.setFont(fontBold, 11); cs.setNonStrokingColor(java.awt.Color.decode("#059669"));
+                drawText(cs, "MONTANT TOTAL :", PAGE_WIDTH - MARGIN - 230, y - 1);
+                cs.setFont(fontBold, 13); cs.setNonStrokingColor(java.awt.Color.decode("#0F172A"));
+                String strTotal = String.format("%.0f FCFA", grandTotal);
+                float totalW = fontBold.getStringWidth(strTotal) / 1000 * 13;
+                drawText(cs, strTotal, PAGE_WIDTH - MARGIN - totalW - 10, y - 1);
+                y -= 40;
+
+                cs.setFont(fontOblique, 9); cs.setNonStrokingColor(java.awt.Color.decode("#64748B"));
+                drawText(cs, "TVA non applicable, ou mention exonérée selon l'article en vigueur.", MARGIN, y);
+                y -= 60;
+                cs.setFont(fontBold, 10); cs.setNonStrokingColor(java.awt.Color.decode("#1E293B"));
+                drawText(cs, "Signature Fournisseur :", MARGIN, y);
+                drawText(cs, "Cachet et Signature Pharmacie :", MARGIN + 300, y);
+                y -= 40;
+                cs.setLineWidth(1f); cs.setStrokingColor(java.awt.Color.decode("#CBD5E1"));
+                cs.moveTo(MARGIN, y); cs.lineTo(MARGIN + 150, y); cs.stroke();
+                cs.moveTo(MARGIN + 300, y); cs.lineTo(MARGIN + 480, y); cs.stroke();
+            }
+            document.save(fichier);
+        }
+    }
+
     private static void drawText(PDPageContentStream cs, String text, float x, float y) throws IOException {
         cs.beginText();
         cs.newLineAtOffset(x, y);

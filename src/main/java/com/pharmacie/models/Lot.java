@@ -37,4 +37,16 @@ public class Lot {
      */
     @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
     private Boolean estArchive = false;
+
+    /**
+     * Prix d'achat unitaire (par boîte) au moment de la commande de CE lot.
+     * Chaque lot conserve son propre prix d'achat, indépendamment des achats ultérieurs.
+     * Cela garantit que le calcul de bénéfice et la valorisation du stock
+     * utilisent le coût réel d'acquisition, pas le dernier prix fournisseur.
+     *
+     * <p>Nullable pour rétrocompatibilité avec les lots créés avant cette migration.
+     * Dans ce cas, le système utilise {@code Produit.prixAchat} comme fallback.</p>
+     */
+    @Column(name = "prix_achat")
+    private Double prixAchat;
 }

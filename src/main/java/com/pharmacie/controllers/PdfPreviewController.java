@@ -132,10 +132,15 @@ public class PdfPreviewController {
                 try (PDDocument document = Loader.loadPDF(pdfFile)) {
                     PrinterJob job = PrinterJob.getPrinterJob();
                     job.setPageable(new PDFPageable(document));
-
-                    // Impression silencieuse vers l'imprimante par défaut
-                    Platform.runLater(() -> ToastService.showSuccess(dialogStage, "Impression en cours", "Le document a été envoyé à l'imprimante par défaut."));
-                    job.print();
+                    // Affiche la boîte de dialogue de sélection d'imprimante
+                    // L'utilisateur choisit son imprimante A4 et clique Imprimer/OK
+                    if (job.printDialog()) {
+                        job.print();
+                        Platform.runLater(() -> ToastService.showSuccess(
+                            dialogStage, "Impression lancée",
+                            "Le document a été envoyé à l'imprimante sélectionnée."));
+                    }
+                    // Si l'utilisateur annule, on ne fait rien
                 }
                 return null;
             }
@@ -143,7 +148,10 @@ public class PdfPreviewController {
 
         printTask.setOnFailed(e -> {
             logger.error("Erreur d'impression", printTask.getException());
-            AlertUtils.showPremiumAlert(javafx.scene.control.Alert.AlertType.ERROR, "Erreur d'impression", "L'impression a échoué", printTask.getException().getMessage());
+            AlertUtils.showPremiumAlert(
+                javafx.scene.control.Alert.AlertType.ERROR,
+                "Erreur d'impression", "L'impression a échoué",
+                printTask.getException().getMessage());
         });
 
         Thread thread = new Thread(printTask);

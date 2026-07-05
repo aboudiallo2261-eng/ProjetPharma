@@ -1,8 +1,12 @@
 package com.pharmacie.dao;
 
 import com.pharmacie.models.PharmacieInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PharmacieInfoDAO extends GenericDAO<PharmacieInfo> {
+
+    private static final Logger logger = LoggerFactory.getLogger(PharmacieInfoDAO.class);
     
     public PharmacieInfoDAO() {
         super(PharmacieInfo.class);
@@ -15,7 +19,7 @@ public class PharmacieInfoDAO extends GenericDAO<PharmacieInfo> {
                     .setMaxResults(1)
                     .uniqueResult();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erreur DAO getInfo", e);
             return null;
         }
     }

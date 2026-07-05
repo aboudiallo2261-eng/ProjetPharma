@@ -67,12 +67,42 @@ public class HibernateUtil {
         if (password == null) password = "";
         try (Connection conn = DriverManager.getConnection(url, user, password);
              Statement stmt = conn.createStatement()) {
+            // Migration 1 : Élargir la colonne motif
             stmt.executeUpdate(
                 "ALTER TABLE ajustements_stock MODIFY COLUMN motif VARCHAR(255) NOT NULL"
             );
             log.info("[Migration] Colonne 'motif' élargie à VARCHAR(255) avec succès.");
         } catch (Exception e) {
             log.warn("[Migration] Colonne 'motif' déjà correcte ou erreur ignorée : {}", e.getMessage());
+        }
+
+        // Migration 2 : Peupler lot.prix_achat pour les lots existants (rétrocompatibilité)
+        // Source primaire : LigneAchat.prixUnitaire (le prix RÉEL payé pour ce lot)
+        // Fallback : Produit.prixAchat (le dernier prix connu)
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             Statement stmt = conn.createStatement()) {
+            // Étape A : Depuis LigneAchat (source fiable)
+            int updated = stmt.executeUpdate(
+                "UPDATE lots l " +
+                "INNER JOIN lignes_achat la ON la.lot_id = l.id " +
+                "SET l.prix_achat = la.prixUnitaire " +
+                "WHERE l.prix_achat IS NULL"
+            );
+            if (updated > 0) {
+                log.info("[Migration] {} lot(s) peuplé(s) avec prix_achat depuis LigneAchat.", updated);
+            }
+            // Étape B : Fallback produit.prixAchat pour les lots orphelins (sans LigneAchat)
+            int fallback = stmt.executeUpdate(
+                "UPDATE lots l " +
+                "INNER JOIN produits p ON l.produit_id = p.id " +
+                "SET l.prix_achat = p.prixAchat " +
+                "WHERE l.prix_achat IS NULL AND p.prixAchat IS NOT NULL AND p.prixAchat > 0"
+            );
+            if (fallback > 0) {
+                log.info("[Migration] {} lot(s) peuplé(s) avec prix_achat depuis Produit (fallback).", fallback);
+            }
+        } catch (Exception e) {
+            log.warn("[Migration] Migration lot.prix_achat ignorée : {}", e.getMessage());
         }
     }
 }

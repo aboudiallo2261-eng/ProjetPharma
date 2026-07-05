@@ -100,9 +100,11 @@ public class AchatService {
                     if (lotDb.getQuantiteStock() > 0) {
                         lotDb.setEstArchive(false); // Désarchive si réalimenté
                     }
+                    lotDb.setPrixAchat(l.getPrixUnitaire()); // Prix d'achat RÉEL de ce lot
                 } else {
                     lotDb = l.getLot();
                     lotDb.setQuantiteStock(stockToAdd);
+                    lotDb.setPrixAchat(l.getPrixUnitaire()); // Prix d'achat RÉEL de ce lot
                     session.persist(lotDb);
                 }
 

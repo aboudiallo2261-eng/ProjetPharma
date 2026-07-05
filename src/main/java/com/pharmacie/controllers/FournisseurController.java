@@ -122,15 +122,37 @@ public class FournisseurController {
         }
 
         if (selectedFournisseur == null) {
+            // Vérification doublon : aucun autre fournisseur avec le même nom
+            boolean doublon = fournisseurDAO.findAll().stream()
+                .anyMatch(f -> f.getNom() != null && f.getNom().trim().equalsIgnoreCase(nom));
+            if (doublon) {
+                showErrorEffect(txtNom);
+                showError("Un fournisseur avec le nom \"" + nom + "\" existe déjà dans le système.");
+                txtNom.requestFocus();
+                return;
+            }
             Fournisseur f = new Fournisseur();
             fillFournisseurDetails(f);
             fournisseurDAO.save(f);
             com.pharmacie.utils.ToastService.showSuccess(tableFournisseurs.getScene().getWindow(), "Fournisseur Créé", "La fiche fournisseur a été ajoutée avec succès.");
         } else {
+            // Vérification doublon en modification : exclure le fournisseur en cours d'édition
+            final Long currentId = selectedFournisseur.getId();
+            boolean doublon = fournisseurDAO.findAll().stream()
+                .anyMatch(f -> f.getNom() != null
+                        && f.getNom().trim().equalsIgnoreCase(nom)
+                        && !f.getId().equals(currentId));
+            if (doublon) {
+                showErrorEffect(txtNom);
+                showError("Un autre fournisseur avec le nom \"" + nom + "\" existe déjà.");
+                txtNom.requestFocus();
+                return;
+            }
             fillFournisseurDetails(selectedFournisseur);
             fournisseurDAO.update(selectedFournisseur);
             com.pharmacie.utils.ToastService.showSuccess(tableFournisseurs.getScene().getWindow(), "Fournisseur Modifié", "Les informations ont été mises à jour.");
         }
+
 
         handleReset();
         loadFournisseurs();

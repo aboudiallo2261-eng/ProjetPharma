@@ -3,11 +3,16 @@ package com.pharmacie.dao;
 import com.pharmacie.models.Achat;
 import com.pharmacie.utils.HibernateUtil;
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
 
 public class AchatDAO extends GenericDAO<Achat> {
+
+    private static final Logger logger = LoggerFactory.getLogger(AchatDAO.class);
+
     public AchatDAO() {
         super(Achat.class);
     }
@@ -25,8 +30,9 @@ public class AchatDAO extends GenericDAO<Achat> {
                 "ORDER BY a.dateAchat DESC", Achat.class)
             .list();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erreur DAO findAllWithDetails", e);
             return Collections.emptyList();
         }
     }
 }
+

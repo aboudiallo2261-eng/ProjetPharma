@@ -4,9 +4,14 @@ import com.pharmacie.models.Produit;
 import com.pharmacie.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public class ProduitDAO extends GenericDAO<Produit> {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProduitDAO.class);
+
     public ProduitDAO() {
         super(Produit.class);
     }
@@ -17,7 +22,7 @@ public class ProduitDAO extends GenericDAO<Produit> {
             query.setParameter("nom", "%" + nom + "%");
             return query.list();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erreur DAO rechercherParNom pour '{}'", nom, e);
             return null;
         }
     }

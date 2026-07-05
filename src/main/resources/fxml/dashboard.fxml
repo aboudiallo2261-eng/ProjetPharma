@@ -165,14 +165,6 @@
                 </VBox>
             </HBox>
 
-            <!-- PERTES -->
-            <VBox styleClass="card, chart-box">
-                <Label text="Pertes &amp; Ajustements par Motif" styleClass="section-title"/>
-                <BarChart fx:id="barPertes" prefHeight="240" animated="true" styleClass="premium-chart">
-                    <xAxis><CategoryAxis label="Motif"/></xAxis>
-                    <yAxis><NumberAxis label="Unités retirées"/></yAxis>
-                </BarChart>
-            </VBox>
         </VBox>
 
     </VBox>

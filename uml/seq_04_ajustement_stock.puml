@@ -1,0 +1,74 @@
+@startuml Ajustement_Stock
+!theme plain
+title **Diagramme de Séquence — Ajustement de Stock**\n(Retrait / Perte / Ajout + Audit Trail)
+
+skinparam sequenceArrowThickness 2
+skinparam maxMessageSize 220
+skinparam responseMessageBelowArrow true
+
+actor "Gestionnaire\nde Stock (A3)" as User #LightBlue
+participant ":ProduitController" as PC #LightYellow
+participant ":SessionManager" as SM #Wheat
+database ":LotDAO" as LDAO #LightCoral
+database ":AjustementStockDAO" as ADAO #LightCoral
+database ":MouvementDAO" as MDAO #LightCoral
+entity ":Lot" as Lot #Lavender
+entity ":AjustementStock" as ADJ #Lavender
+entity ":MouvementStock" as MVT #Lavender
+participant ":ToastService" as TS #LightGray
+
+== Phase 1 — Sélection ==
+
+User -> PC : sélectionne lot\n+ clique "Ajustement"
+PC -> LDAO : findById(lotId)
+LDAO --> PC : lot
+
+== Phase 2 — Dialogue ==
+
+PC -> User : Dialog Ajustement\n(toggle Retrait/Ajout,\nmotif, quantité)
+
+note right of User : Motifs Retrait :\nCasse, Péremption,\nUsage Interne\n\nMotifs Ajout :\nExcédent Inventaire,\nRetour Interne
+
+opt Motif = PEREMPTION
+    PC -> PC : qté = stock total\n(champ désactivé)
+end
+
+User -> PC : confirme\n(opération, motif,\nqté, observation)
+
+alt Retrait ET qté > stock
+    PC --> User : showError("Quantité\nsupérieure au stock")
+else Validation OK
+end
+
+== Phase 3 — Persistance ==
+
+PC -> SM : getCurrentUser()
+PC -> ADJ ** : new AjustementStock\n(lot, user, date, qté,\nmotif, type)
+PC -> ADAO : save(ajustement)
+
+alt Type = AJUSTEMENT_POSITIF
+    PC -> Lot : setQuantiteStock\n(stock + qté)
+    opt Lot archivé ET stock > 0
+        PC -> Lot : setEstArchive(false)
+    end
+else Type = AJUSTEMENT_NEGATIF
+    PC -> Lot : setQuantiteStock\n(stock - qté)
+    opt Stock ≤ 0
+        PC -> Lot : setEstArchive(true)
+    end
+end
+
+PC -> LDAO : update(lot)
+
+== Phase 4 — Audit Trail ==
+
+PC -> MVT ** : new MouvementStock\n(produit, lot, user,\ntype, ±qté,\n"Ajustement: motif")
+PC -> MDAO : save(mouvement)
+
+== Phase 5 — Retour UI ==
+
+PC -> TS : showSuccess\n("Stock ajusté")
+TS --> User : notification Toast
+PC -> PC : loadEtatStock()
+
+@enduml

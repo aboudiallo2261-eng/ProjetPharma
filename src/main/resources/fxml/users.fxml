@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.SVGPath?>
 <?import javafx.geometry.Insets?>
 
 <ScrollPane fitToWidth="true" styleClass="root" style="-fx-background-color: #ECF0F1;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pharmacie.controllers.UserController">
@@ -44,6 +45,7 @@
                     </VBox>
                     
                     <Region VBox.vgrow="ALWAYS"/>
+                    <Label fx:id="lblProfilError" styleClass="error-label" visible="false" wrapText="true"/>
                     <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
                         <Button text="Réinitialiser" onAction="#resetProfilForm" styleClass="pos-btn" style="-fx-background-color: transparent; -fx-border-color: #CBD5E1; -fx-border-radius: 6; -fx-text-fill: #64748B; -fx-font-size: 14px; -fx-padding: 8 15;">
                             <graphic><Region styleClass="icon icon-refresh icon-dark"/></graphic>
@@ -86,24 +88,49 @@
                     <Separator/>
 
                     <VBox spacing="6">
-                        <Label text="Nom complet *" style="-fx-text-fill: #475569; -fx-font-weight: 700; -fx-font-size: 13px;"/>
+                        <Label text="Nom complet *" minWidth="-Infinity" style="-fx-text-fill: #475569; -fx-font-weight: 700; -fx-font-size: 13px;"/>
                         <TextField fx:id="txtNom" promptText="Sera imprimé sur les factures"/>
                     </VBox>
 
                     <HBox spacing="12">
                         <VBox spacing="6" HBox.hgrow="ALWAYS">
-                            <Label text="Identifiant Connexion *" style="-fx-text-fill: #475569; -fx-font-weight: 700; -fx-font-size: 13px;"/>
+                            <Label text="Identifiant / Login *" minWidth="-Infinity" style="-fx-text-fill: #475569; -fx-font-weight: 700; -fx-font-size: 13px;"/>
                             <TextField fx:id="txtIdentifiant" promptText="Sans espace"/>
                         </VBox>
                         <VBox spacing="6" HBox.hgrow="ALWAYS">
-                            <Label text="Email" style="-fx-text-fill: #475569; -fx-font-weight: 700; -fx-font-size: 13px;"/>
+                            <Label text="Email" minWidth="-Infinity" style="-fx-text-fill: #475569; -fx-font-weight: 700; -fx-font-size: 13px;"/>
                             <TextField fx:id="txtEmail"/>
                         </VBox>
                     </HBox>
 
                     <VBox spacing="6">
-                        <Label text="Mot de passe *" style="-fx-text-fill: #475569; -fx-font-weight: 700; -fx-font-size: 13px;"/>
-                        <PasswordField fx:id="txtMotDePasse" promptText="Laisser vide si pas de changement"/>
+                        <Label text="Mot de passe *" minWidth="-Infinity" style="-fx-text-fill: #475569; -fx-font-weight: 700; -fx-font-size: 13px;"/>
+                        <HBox alignment="CENTER_LEFT" spacing="5">
+                            <StackPane HBox.hgrow="ALWAYS">
+                                <PasswordField fx:id="txtMotDePasse" promptText="Vide si inchangé" style="-fx-background-color: #F8FAFC; -fx-border-color: #CBD5E1; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8 12;"/>
+                                <TextField fx:id="txtMotDePasseVisible" promptText="Vide si inchangé" visible="false" managed="false" style="-fx-background-color: #F8FAFC; -fx-border-color: #CBD5E1; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8 12;"/>
+                            </StackPane>
+                            <ToggleButton fx:id="btnTogglePassword" onAction="#togglePasswordVisibility" styleClass="eye-toggle">
+                                <graphic>
+                                    <SVGPath fx:id="iconPassword" content="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" style="-fx-fill: #94A3B8;"/>
+                                </graphic>
+                            </ToggleButton>
+                        </HBox>
+                    </VBox>
+                    
+                    <VBox spacing="6">
+                        <Label text="Confirmer le mot de passe *" minWidth="-Infinity" style="-fx-text-fill: #475569; -fx-font-weight: 700; -fx-font-size: 13px;"/>
+                        <HBox alignment="CENTER_LEFT" spacing="5">
+                            <StackPane HBox.hgrow="ALWAYS">
+                                <PasswordField fx:id="txtConfirmMotDePasse" promptText="Confirmer mot de passe" style="-fx-background-color: #F8FAFC; -fx-border-color: #CBD5E1; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8 12;"/>
+                                <TextField fx:id="txtConfirmMotDePasseVisible" promptText="Confirmer mot de passe" visible="false" managed="false" style="-fx-background-color: #F8FAFC; -fx-border-color: #CBD5E1; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8 12;"/>
+                            </StackPane>
+                            <ToggleButton fx:id="btnToggleConfirmPassword" onAction="#toggleConfirmPasswordVisibility" styleClass="eye-toggle">
+                                <graphic>
+                                    <SVGPath fx:id="iconConfirmPassword" content="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" style="-fx-fill: #94A3B8;"/>
+                                </graphic>
+                            </ToggleButton>
+                        </HBox>
                     </VBox>
 
                     <VBox spacing="6">
