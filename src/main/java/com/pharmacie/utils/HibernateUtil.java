@@ -22,6 +22,23 @@ public class HibernateUtil {
                 Configuration configuration = new Configuration();
                 configuration.configure("hibernate.cfg.xml");
 
+                // Sécurité : les identifiants BDD ne sont plus dans hibernate.cfg.xml (versionné).
+                // Ils sont lus depuis config.properties (gitignoré). Voir config.properties.example.
+                String dbUrl  = ConfigService.getDbUrl();
+                String dbUser = ConfigService.getDbUsername();
+                String dbPass = ConfigService.getDbPassword();
+                if (dbUrl == null || dbUser == null) {
+                    throw new IllegalStateException(
+                        "Identifiants BDD manquants : renseignez db.url, db.username et db.password "
+                        + "dans config.properties (modèle fourni : config.properties.example).");
+                }
+                configuration.setProperty("connection.url", dbUrl);
+                configuration.setProperty("hibernate.connection.url", dbUrl);
+                configuration.setProperty("connection.username", dbUser);
+                configuration.setProperty("hibernate.connection.username", dbUser);
+                configuration.setProperty("connection.password", dbPass != null ? dbPass : "");
+                configuration.setProperty("hibernate.connection.password", dbPass != null ? dbPass : "");
+
                 // Mappings
                 configuration.addAnnotatedClass(PharmacieInfo.class);
                 configuration.addAnnotatedClass(Profil.class);

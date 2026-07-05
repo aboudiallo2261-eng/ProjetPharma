@@ -60,8 +60,20 @@ public class SecuritySeeder {
                 admin.setMotDePasseHash(BCrypt.hashpw("admin", BCrypt.gensalt()));
                 admin.setRole("ADMIN");
                 admin.setProfil(superAdmin);
+                admin.setMustChangePassword(true); // Changement obligatoire au 1er login
                 userDAO.save(admin);
-                logger.info("Compte admin par défaut créé. Identifiant: admin | Mot de passe: admin (à changer en production)");
+                logger.info("Compte admin par défaut créé. Identifiant: admin | Mot de passe: admin (changement forcé au 1er login)");
+            } else {
+                // Installations existantes : si le compte 'admin' utilise encore le mot de
+                // passe par défaut, on force son changement à la prochaine connexion.
+                User adminExistant = userDAO.findByIdentifiant("admin");
+                if (adminExistant != null
+                        && !Boolean.TRUE.equals(adminExistant.getMustChangePassword())
+                        && BCrypt.checkpw("admin", adminExistant.getMotDePasseHash())) {
+                    adminExistant.setMustChangePassword(true);
+                    userDAO.update(adminExistant);
+                    logger.warn("Le compte 'admin' utilise encore le mot de passe par défaut — changement forcé à la prochaine connexion.");
+                }
             }
             
             // 3. Initialiser les Infos de la Pharmacie par défaut

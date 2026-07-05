@@ -1,0 +1,17 @@
+# ============================================================
+# MODÈLE de configuration — copier vers config.properties
+# config.properties est GITIGNORÉ : il contient les secrets locaux.
+# NE JAMAIS mettre de vraies valeurs dans CE fichier (il est versionné).
+# ============================================================
+
+# --- Base de données MySQL (utilisateur dédié, PAS root) ---
+db.url=jdbc\:mysql\://localhost\:3306/pharmacie_vet_db?serverTimezone\=UTC&useSSL\=false&allowPublicKeyRetrieval\=true&createDatabaseIfNotExist\=true
+db.username=vetpharma_app
+db.password=CHANGEZ_MOI
+
+# --- Synchronisation Cloud Supabase (dashboard mobile) ---
+supabase.url=https\://VOTRE_PROJET.supabase.co/rest/v1/pharmacy_dashboard_sync?on_conflict\=pharmacy_id
+supabase.key=VOTRE_CLE_RESTREINTE
+
+# --- Sauvegarde USB ---
+backup.usb.path=D\:\\CheminVersUSB

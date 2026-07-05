@@ -29,24 +29,32 @@ public class ConfigService {
         }
     }
 
-    public static String getSupabaseUrl() {
+    /**
+     * Lit une propriété quelconque du fichier de configuration.
+     * @return La valeur, ou null si absente ou fichier illisible.
+     */
+    private static String getProperty(String key) {
         Properties prop = new Properties();
         try (InputStream input = new FileInputStream(CONFIG_FILE)) {
             prop.load(input);
-            return prop.getProperty("supabase.url");
+            return prop.getProperty(key);
         } catch (IOException ex) {
             return null;
         }
     }
 
+    // --- Connexion base de données (SECRETS : jamais dans le code ni dans git) ---
+
+    public static String getDbUrl()      { return getProperty("db.url"); }
+    public static String getDbUsername() { return getProperty("db.username"); }
+    public static String getDbPassword() { return getProperty("db.password"); }
+
+    public static String getSupabaseUrl() {
+        return getProperty("supabase.url");
+    }
+
     public static String getSupabaseKey() {
-        Properties prop = new Properties();
-        try (InputStream input = new FileInputStream(CONFIG_FILE)) {
-            prop.load(input);
-            return prop.getProperty("supabase.key");
-        } catch (IOException ex) {
-            return null;
-        }
+        return getProperty("supabase.key");
     }
 
     /**

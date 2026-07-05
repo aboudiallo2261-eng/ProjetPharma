@@ -5,10 +5,9 @@
 <hibernate-configuration>
     <session-factory>
         <!-- Database connection settings -->
+        <!-- SÉCURITÉ : url, username et password sont injectés au démarrage par HibernateUtil
+             depuis config.properties (fichier local NON versionné — voir config.properties.example). -->
         <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-        <property name="connection.url">jdbc:mysql://localhost:3306/pharmacie_vet_db?serverTimezone=UTC&amp;useSSL=false&amp;allowPublicKeyRetrieval=true&amp;createDatabaseIfNotExist=true</property>
-        <property name="connection.username">root</property>
-        <property name="connection.password"></property>
 
         <!-- JDBC connection pool (use the built-in) -->
         <property name="connection.pool_size">10</property>

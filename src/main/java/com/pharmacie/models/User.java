@@ -33,4 +33,12 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "profil_id")
     private Profil profil;
+
+    /**
+     * Force le changement de mot de passe à la prochaine connexion.
+     * Positionné à true pour le compte admin par défaut (admin/admin) et
+     * lors d'une réinitialisation de mot de passe par un administrateur.
+     */
+    @Column(name = "must_change_password", nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
+    private Boolean mustChangePassword = false;
 }

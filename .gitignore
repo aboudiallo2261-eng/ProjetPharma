@@ -55,3 +55,6 @@ vetpharma-pwa/node_modules/
 maven_output.txt
 Export_Ventes.csv
 Journal_Ventes.csv
+
+# Sortie du packaging jpackage
+dist/
