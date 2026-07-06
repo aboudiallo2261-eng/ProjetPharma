@@ -24,6 +24,14 @@ public class MainApp extends Application {
         primaryStage = stage;
         primaryStage.setTitle("Pharmacie Vétérinaire - Gestion");
 
+        // Icône de la fenêtre et de la barre des tâches (plusieurs tailles pour un rendu net)
+        for (String taille : new String[]{"32", "64", "256"}) {
+            var flux = MainApp.class.getResourceAsStream("/images/logo_" + taille + ".png");
+            if (flux != null) {
+                primaryStage.getIcons().add(new javafx.scene.image.Image(flux));
+            }
+        }
+
         primaryStage.setOnCloseRequest(event -> {
             if (com.pharmacie.utils.SessionManager.getCurrentUser() != null) {
                 com.pharmacie.dao.SessionCaisseDAO sessionDAO = new com.pharmacie.dao.SessionCaisseDAO();
@@ -51,6 +59,7 @@ public class MainApp extends Application {
     public void stop() throws Exception {
         log.info("Fermeture de l'application Vet-Pharmacy...");
         syncService.stopSyncDaemon();
+        com.pharmacie.utils.NotificationService.arreter();
         super.stop();
     }
 
@@ -73,6 +82,9 @@ public class MainApp extends Application {
 
     public static void showMainLayout() {
         try {
+            // Notifications Windows (péremptions/ruptures) — démarrées après login, idempotent
+            com.pharmacie.utils.NotificationService.demarrer();
+
             FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/fxml/main_layout.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root, 1024, 768);

@@ -46,6 +46,7 @@ $jpackageArgs = @(
     "--main-jar", "vet-pharmacy-1.0-SNAPSHOT.jar",
     "--main-class", "com.pharmacie.Launcher",
     "--dest", "dist",
+    "--icon", "packaging\vetpharma.ico",
     "--java-options", "-Dfile.encoding=UTF-8"
 )
 if ($Type -ne "app-image") {
