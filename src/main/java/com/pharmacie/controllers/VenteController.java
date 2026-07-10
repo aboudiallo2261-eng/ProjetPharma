@@ -1863,6 +1863,13 @@ public class VenteController {
             com.pharmacie.utils.ToastService.showSuccess(boxVenteMain.getScene().getWindow(), "Vente Validée", "Le ticket a été encaissé et enregistré avec succès !");
             logger.info("Vente (ID: {}) validée et enregistrée via VenteService !", vente.getId());
 
+            // Notification Windows immédiate si cette vente fait passer un produit
+            // en rupture ou sous son seuil d'alerte (asynchrone, ne bloque pas la caisse)
+            java.util.Set<Long> produitsVendus = vente.getLignesVente().stream()
+                    .map(lv -> lv.getProduit().getId())
+                    .collect(java.util.stream.Collectors.toSet());
+            com.pharmacie.utils.NotificationService.verifierProduitsApresVente(produitsVendus);
+
             txtRechercheProduit.requestFocus();
 
         } catch (Exception e) {
