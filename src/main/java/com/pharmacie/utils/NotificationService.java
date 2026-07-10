@@ -224,8 +224,12 @@ public class NotificationService {
 
     /**
      * Affiche un toast Windows natif via PowerShell/WinRT.
-     * Le script est passé encodé en Base64 UTF-16LE (-EncodedCommand) :
-     * aucun problème d'échappement ni d'accents.
+     *
+     * <p>XML ToastGeneric construit à la main avec le logo de l'application en
+     * {@code appLogoOverride} (rond, à gauche du texte) — bien plus fiable que
+     * l'icône d'identité AUMID, que Windows ignore parfois. Le script est passé
+     * encodé en Base64 UTF-16LE (-EncodedCommand) : aucun problème
+     * d'échappement ni d'accents.</p>
      *
      * @return true si la commande a été lancée, false pour utiliser le repli AWT.
      */
@@ -235,12 +239,25 @@ public class NotificationService {
             return false;
         }
         try {
+            Path logo = extraireLogo();
+            String imageXml = "";
+            if (logo != null) {
+                // Chemin absolu brut : le format le plus fiable pour le moteur de toasts
+                imageXml = "<image placement=\"appLogoOverride\" hint-crop=\"circle\" src=\""
+                        + echapperXml(logo.toAbsolutePath().toString()) + "\"/>";
+            }
+            String toastXml =
+                "<toast><visual><binding template=\"ToastGeneric\">" +
+                "<text>" + echapperXml(titre) + "</text>" +
+                "<text>" + echapperXml(message) + "</text>" +
+                imageXml +
+                "</binding></visual></toast>";
+
             String script =
                 "[Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null\n" +
-                "$xml = [Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent([Windows.UI.Notifications.ToastTemplateType]::ToastText02)\n" +
-                "$t = $xml.GetElementsByTagName('text')\n" +
-                "$t.Item(0).AppendChild($xml.CreateTextNode('" + echapperPs(titre) + "')) | Out-Null\n" +
-                "$t.Item(1).AppendChild($xml.CreateTextNode('" + echapperPs(message) + "')) | Out-Null\n" +
+                "[Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom, ContentType = WindowsRuntime] | Out-Null\n" +
+                "$xml = New-Object Windows.Data.Xml.Dom.XmlDocument\n" +
+                "$xml.LoadXml('" + toastXml.replace("'", "''") + "')\n" +
                 "$toast = [Windows.UI.Notifications.ToastNotification]::new($xml)\n" +
                 "[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier('" + APP_ID + "').Show($toast)\n";
             String encode = Base64.getEncoder().encodeToString(script.getBytes(StandardCharsets.UTF_16LE));
@@ -255,9 +272,33 @@ public class NotificationService {
         }
     }
 
-    /** Doublage des apostrophes pour les littéraux PowerShell entre quotes simples. */
-    private static String echapperPs(String s) {
-        return s == null ? "" : s.replace("'", "''").replace("\r", " ").replace("\n", " — ");
+    /** Échappement XML pour le contenu des toasts (les retours ligne restent gérés par le toast). */
+    private static String echapperXml(String s) {
+        return s == null ? "" : s.replace("&", "&amp;").replace("<", "&lt;")
+                .replace(">", "&gt;").replace("\"", "&quot;").replace("\r", "");
+    }
+
+    /**
+     * Extrait le logo vers un chemin stable du profil utilisateur (une seule fois)
+     * pour qu'il soit lisible par le moteur de notifications Windows.
+     */
+    private static Path extraireLogo() {
+        try {
+            Path dossier = Path.of(System.getProperty("user.home"), ".vetpharma");
+            Files.createDirectories(dossier);
+            Path logo = dossier.resolve("logo_64.png");
+            if (!Files.exists(logo)) {
+                try (var in = NotificationService.class.getResourceAsStream("/images/logo_64.png")) {
+                    if (in == null) {
+                        return null;
+                    }
+                    Files.copy(in, logo);
+                }
+            }
+            return logo;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**
@@ -271,22 +312,14 @@ public class NotificationService {
             return;
         }
         try {
-            // Extraire le logo vers un chemin stable pour l'IconUri du toast
-            Path dossier = Path.of(System.getProperty("user.home"), ".vetpharma");
-            Files.createDirectories(dossier);
-            Path logo = dossier.resolve("logo_64.png");
-            if (!Files.exists(logo)) {
-                try (var in = NotificationService.class.getResourceAsStream("/images/logo_64.png")) {
-                    if (in != null) {
-                        Files.copy(in, logo);
-                    }
-                }
-            }
+            Path logo = extraireLogo();
             String cle = "HKCU\\Software\\Classes\\AppUserModelId\\" + APP_ID;
             new ProcessBuilder("reg", "add", cle, "/v", "DisplayName", "/t", "REG_SZ",
                     "/d", nomPharmacie(), "/f").start().waitFor();
-            new ProcessBuilder("reg", "add", cle, "/v", "IconUri", "/t", "REG_SZ",
-                    "/d", logo.toAbsolutePath().toString(), "/f").start().waitFor();
+            if (logo != null) {
+                new ProcessBuilder("reg", "add", cle, "/v", "IconUri", "/t", "REG_SZ",
+                        "/d", logo.toAbsolutePath().toString(), "/f").start().waitFor();
+            }
             appIdEnregistre = true;
             logger.info("Identité de notification '{}' enregistrée (HKCU).", APP_ID);
         } catch (Exception e) {
