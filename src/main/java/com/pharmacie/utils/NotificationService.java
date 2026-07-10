@@ -53,6 +53,26 @@ public class NotificationService {
     private static Timer timer;
     private static boolean demarre = false;
     private static boolean appIdEnregistre = false;
+    private static String nomPharmacie = null;
+
+    /**
+     * Nom de l'enseigne configuré dans Paramètres (PharmacieInfo), utilisé comme
+     * marque des notifications. Chaque pharmacie voit SON nom, pas celui du logiciel.
+     * Chargé une fois, repli sur "VetPharma" si indisponible.
+     */
+    private static synchronized String nomPharmacie() {
+        if (nomPharmacie == null) {
+            try {
+                com.pharmacie.models.PharmacieInfo info = new com.pharmacie.dao.PharmacieInfoDAO().getInfo();
+                nomPharmacie = (info != null && info.getNom() != null && !info.getNom().isBlank())
+                        ? info.getNom().trim()
+                        : "VetPharma";
+            } catch (Exception e) {
+                return "VetPharma"; // pas de cache : on retentera au prochain appel
+            }
+        }
+        return nomPharmacie;
+    }
 
     /** Produits déjà notifiés (anti-spam) — purgé à chaque bilan périodique. */
     private static final Set<String> dejaNotifies = java.util.concurrent.ConcurrentHashMap.newKeySet();
@@ -71,7 +91,7 @@ public class NotificationService {
                         : new java.awt.image.BufferedImage(16, 16, java.awt.image.BufferedImage.TYPE_INT_ARGB);
                 trayIcon = new TrayIcon(image);
                 trayIcon.setImageAutoSize(true);
-                trayIcon.setToolTip("VetPharma — Gestion de Pharmacie Vétérinaire");
+                trayIcon.setToolTip(nomPharmacie() + " — Gestion de Pharmacie Vétérinaire");
                 SystemTray.getSystemTray().add(trayIcon);
             }
 
@@ -143,7 +163,7 @@ public class NotificationService {
                     }
                 }
                 if (!lignes.isEmpty()) {
-                    notifier("VetPharma — Alerte stock après vente",
+                    notifier(nomPharmacie() + " — Alerte stock après vente",
                             String.join("\n", lignes),
                             rupture ? TrayIcon.MessageType.ERROR : TrayIcon.MessageType.WARNING);
                     logger.info("Notification post-vente émise : {}", String.join(" | ", lignes));
@@ -174,7 +194,7 @@ public class NotificationService {
             if (alertesStock > 0) lignes.add(alertesStock + " produit(s) sous le seuil d'alerte");
 
             if (!lignes.isEmpty()) {
-                notifier("VetPharma — Alertes Stock", String.join("\n", lignes),
+                notifier(nomPharmacie() + " — Alertes Stock", String.join("\n", lignes),
                         (perimes > 0 || ruptures > 0) ? TrayIcon.MessageType.ERROR
                                                       : TrayIcon.MessageType.WARNING);
                 logger.info("Notification Windows émise : {} périmés, {} ruptures, {} alertes.",
@@ -264,7 +284,7 @@ public class NotificationService {
             }
             String cle = "HKCU\\Software\\Classes\\AppUserModelId\\" + APP_ID;
             new ProcessBuilder("reg", "add", cle, "/v", "DisplayName", "/t", "REG_SZ",
-                    "/d", "VetPharma", "/f").start().waitFor();
+                    "/d", nomPharmacie(), "/f").start().waitFor();
             new ProcessBuilder("reg", "add", cle, "/v", "IconUri", "/t", "REG_SZ",
                     "/d", logo.toAbsolutePath().toString(), "/f").start().waitFor();
             appIdEnregistre = true;
