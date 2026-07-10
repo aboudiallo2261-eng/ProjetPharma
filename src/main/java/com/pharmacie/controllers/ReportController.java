@@ -633,6 +633,7 @@ public class ReportController {
             return new SimpleStringProperty(nom + lot);
         });
         colAuditRef.setCellValueFactory(new PropertyValueFactory<>("reference"));
+        com.pharmacie.utils.TableUtils.tooltipSurColonnes(colAuditRapport, colAuditRef);
         colAuditUser.setCellValueFactory(v -> new SimpleStringProperty(v.getValue().getUser().getNom()));
 
         colAuditQte.setCellValueFactory(v -> {

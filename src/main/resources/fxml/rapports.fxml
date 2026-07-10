@@ -105,8 +105,8 @@
                             <TableColumn fx:id="colLvTicket" text="Ticket N°" prefWidth="180" minWidth="160"/>
                             <TableColumn fx:id="colLvAgent" text="Caissier" prefWidth="150" minWidth="130"/>
                             <TableColumn fx:id="colLvProduit" text="Produit" prefWidth="250" minWidth="200"/>
-                            <TableColumn fx:id="colLvCat" text="Catégorie" prefWidth="120" minWidth="100"/>
-                            <TableColumn fx:id="colLvEsp" text="Espèce" prefWidth="100" minWidth="90"/>
+                            <TableColumn fx:id="colLvCat" text="Catégorie" prefWidth="180" minWidth="160"/>
+                            <TableColumn fx:id="colLvEsp" text="Espèce" prefWidth="125" minWidth="115"/>
                             <TableColumn fx:id="colLvQte" text="Qté" prefWidth="80" minWidth="60" style="-fx-alignment: CENTER;"/>
                             <TableColumn fx:id="colLvPrix" text="Prix U." prefWidth="150" minWidth="120" style="-fx-alignment: CENTER-RIGHT; -fx-padding: 0 10 0 0;"/>
                             <TableColumn fx:id="colLvTotal" text="Total" prefWidth="150" minWidth="120" style="-fx-alignment: CENTER-RIGHT; -fx-padding: 0 10 0 0;"/>
@@ -192,10 +192,10 @@
                             <Label text="📕 Aucun mouvement de stock pour cette période." styleClass="table-placeholder-label"/>
                         </placeholder>
                         <columns>
-                            <TableColumn fx:id="colAuditDate" text="Date &amp; Heure" prefWidth="150" minWidth="130"/>
+                            <TableColumn fx:id="colAuditDate" text="Date &amp; Heure" prefWidth="165" minWidth="150"/>
                             <TableColumn fx:id="colAuditType" text="Type Mouvement" prefWidth="140" minWidth="120"/>
-                            <TableColumn fx:id="colAuditRapport" text="Produit &amp; Lot" prefWidth="200" minWidth="160"/>
-                            <TableColumn fx:id="colAuditQte" text="Quantité" prefWidth="160" minWidth="140" style="-fx-alignment: CENTER;"/>
+                            <TableColumn fx:id="colAuditRapport" text="Produit &amp; Lot" prefWidth="300" minWidth="260"/>
+                            <TableColumn fx:id="colAuditQte" text="Quantité" prefWidth="110" minWidth="95" style="-fx-alignment: CENTER;"/>
                             <TableColumn fx:id="colAuditRef" text="Référence" prefWidth="300" minWidth="250"/>
                             <TableColumn fx:id="colAuditUser" text="Agent" prefWidth="120" minWidth="100"/>
                         </columns>
@@ -292,7 +292,7 @@
                             <TableColumn fx:id="colAdjUser" text="Agent" prefWidth="130" minWidth="110"/>
                             <TableColumn fx:id="colAdjMotif" text="Motif" prefWidth="210" minWidth="180"/>
                             <TableColumn fx:id="colAdjQte" text="Qté" prefWidth="80" minWidth="65" style="-fx-alignment: CENTER;"/>
-                            <TableColumn fx:id="colAdjObs" text="Observation" prefWidth="250" minWidth="220"/>
+                            <TableColumn fx:id="colAdjObs" text="Observations" prefWidth="260" minWidth="230"/>
                         </columns>
                     </TableView>
                 </VBox>

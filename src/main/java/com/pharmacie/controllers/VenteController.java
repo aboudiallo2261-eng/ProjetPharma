@@ -1389,9 +1389,10 @@ public class VenteController {
                     && p.getUnitesParBoite() > 0) {
                 int boites = qteTotal / p.getUnitesParBoite();
                 int unites = qteTotal % p.getUnitesParBoite();
-                return new javafx.beans.property.SimpleStringProperty(boites + " Bte(s) et " + unites + " Unité(s)");
+                // Format compact pour tenir dans la colonne sans troncature
+                return new javafx.beans.property.SimpleStringProperty(boites + " bte + " + unites + " unit.");
             } else {
-                return new javafx.beans.property.SimpleStringProperty(qteTotal + " Unité(s)");
+                return new javafx.beans.property.SimpleStringProperty(qteTotal + " unité(s)");
             }
         });
 
@@ -1426,6 +1427,8 @@ public class VenteController {
         tablePanierVente.setEditable(true);
         tablePanierVente.setColumnResizePolicy(javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY);
         colPanVenteProd.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getProduit().getNom()));
+        com.pharmacie.utils.TableUtils.tooltipSurColonnes(colPanVenteProd);
+        com.pharmacie.utils.TableUtils.tooltipSurColonnes(colStkNom);
 
         colPanVenteQte.setCellValueFactory(new PropertyValueFactory<>("quantiteVendue"));
         // Point 4 : CellFactory avec TextFormatter pour n'accepter QUE des chiffres positifs

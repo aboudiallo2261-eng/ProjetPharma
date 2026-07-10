@@ -165,6 +165,7 @@ public class ProduitController {
     private void initTableColumns() {
         colProdId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colProdNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
+        com.pharmacie.utils.TableUtils.tooltipSurColonnes(colProdNom);
         colProdCat.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(
                 cellData.getValue().getCategorie().getNom()));
         colProdEsp.setCellValueFactory(

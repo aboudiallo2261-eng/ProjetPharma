@@ -65,11 +65,11 @@
                     <TableView fx:id="tableProduits" VBox.vgrow="ALWAYS" style="-fx-border-color: #E2E8F0; -fx-background-radius: 6; -fx-border-radius: 6;">
                         <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
                         <columns>
-                            <TableColumn fx:id="colProdId" text="ID" prefWidth="50" />
-                            <TableColumn fx:id="colProdNom" text="Nom" prefWidth="200" />
-                            <TableColumn fx:id="colProdCat" text="Catégorie" prefWidth="100" />
-                            <TableColumn fx:id="colProdEsp" text="Espèce" prefWidth="100" />
-                            <TableColumn fx:id="colProdPrixVente" text="P. Vente" prefWidth="80" />
+                            <TableColumn fx:id="colProdId" text="ID" prefWidth="45" minWidth="40" maxWidth="55" />
+                            <TableColumn fx:id="colProdNom" text="Nom" prefWidth="320" minWidth="240" />
+                            <TableColumn fx:id="colProdCat" text="Catégorie" prefWidth="150" minWidth="120" />
+                            <TableColumn fx:id="colProdEsp" text="Espèce" prefWidth="125" minWidth="105" />
+                            <TableColumn fx:id="colProdPrixVente" text="P. Vente" prefWidth="90" minWidth="80" maxWidth="110" />
                         </columns>
                     </TableView>
                 </VBox>
@@ -214,7 +214,7 @@
                             <Label text="Aucun produit ne correspond à vos filtres." styleClass="table-placeholder-label"/>
                         </placeholder>
                         <columns>
-                            <TableColumn fx:id="colStockProd" text="Produit" prefWidth="160"/>
+                            <TableColumn fx:id="colStockProd" text="Produit" prefWidth="260" minWidth="220"/>
                             <TableColumn fx:id="colStockLot" text="N° Lot" prefWidth="110"/>
                             <TableColumn fx:id="colStockExp" text="Expiration" prefWidth="100"/>
                             <TableColumn fx:id="colStockJours" text="Jours Rest." prefWidth="90"/>

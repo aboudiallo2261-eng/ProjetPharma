@@ -136,7 +136,7 @@
                     <Label text="CA par Catégorie" styleClass="section-title"/>
                     <BarChart fx:id="barCategorie" prefHeight="260" animated="true" styleClass="premium-chart">
                         <xAxis><CategoryAxis label="Catégorie"/></xAxis>
-                        <yAxis><NumberAxis label="CA (FCFA)"/></yAxis>
+                        <yAxis><NumberAxis label="FCFA"/></yAxis>
                     </BarChart>
                 </VBox>
                 <VBox HBox.hgrow="ALWAYS" styleClass="card, chart-box">
@@ -153,9 +153,10 @@
                 <VBox HBox.hgrow="ALWAYS" styleClass="card, chart-box">
                     <Label text="Top 10 Produits (Volume Vendu)" styleClass="section-title"/>
                     <TableView fx:id="tableTopProduits" VBox.vgrow="ALWAYS" prefHeight="260" styleClass="table-view">
+                        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
                         <columns>
-                            <TableColumn fx:id="colTopNom" text="Produit" prefWidth="300"/>
-                            <TableColumn fx:id="colTopQte" text="Unités" prefWidth="120"/>
+                            <TableColumn fx:id="colTopNom" text="Produit" prefWidth="300" minWidth="240"/>
+                            <TableColumn fx:id="colTopQte" text="Unités" prefWidth="95" minWidth="85" maxWidth="115"/>
                         </columns>
                     </TableView>
                 </VBox>

@@ -159,10 +159,10 @@
                     <TableView fx:id="tableUsers" VBox.vgrow="ALWAYS" style="-fx-border-color: #E2E8F0; -fx-background-radius: 6; -fx-border-radius: 6;">
                         <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
                         <columns>
-                            <TableColumn fx:id="colNom" text="Identité" prefWidth="200"/>
-                            <TableColumn fx:id="colIdentifiant" text="Login" prefWidth="150"/>
-                            <TableColumn fx:id="colEmail" text="Email" prefWidth="150"/>
-                            <TableColumn fx:id="colRole" text="Profil Assigné" prefWidth="150"/>
+                            <TableColumn fx:id="colNom" text="Identité" prefWidth="160" minWidth="130"/>
+                            <TableColumn fx:id="colIdentifiant" text="Login" prefWidth="105" minWidth="90" maxWidth="130"/>
+                            <TableColumn fx:id="colEmail" text="Email" prefWidth="200" minWidth="165"/>
+                            <TableColumn fx:id="colRole" text="Profil Assigné" prefWidth="130" minWidth="115"/>
                         </columns>
                     </TableView>
                 </VBox>

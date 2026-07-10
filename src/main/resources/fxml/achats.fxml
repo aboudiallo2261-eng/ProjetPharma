@@ -59,11 +59,11 @@
                             <Label text="🛒 Le panier est vide. Ajoutez des produits." styleClass="table-placeholder-label"/>
                         </placeholder>
                         <columns>
-                            <TableColumn fx:id="colPanierProd" text="Produit" prefWidth="200"/>
-                            <TableColumn fx:id="colPanierLot" text="Lot" prefWidth="120"/>
-                            <TableColumn fx:id="colPanierQte" text="Qté" prefWidth="70"/>
-                            <TableColumn fx:id="colPanierPrix" text="Prix U." prefWidth="100"/>
-                            <TableColumn fx:id="colPanierSousTotal" text="Sous-Total" prefWidth="120"/>
+                            <TableColumn fx:id="colPanierProd" text="Produit" prefWidth="210" minWidth="170"/>
+                            <TableColumn fx:id="colPanierLot" text="Lot" prefWidth="100" minWidth="85"/>
+                            <TableColumn fx:id="colPanierQte" text="Qté" prefWidth="52" minWidth="45" maxWidth="65"/>
+                            <TableColumn fx:id="colPanierPrix" text="Prix U." prefWidth="85" minWidth="75" maxWidth="105"/>
+                            <TableColumn fx:id="colPanierSousTotal" text="Sous-Total" prefWidth="100" minWidth="88" maxWidth="120"/>
                         </columns>
                     </TableView>
                     <HBox alignment="CENTER_RIGHT" spacing="20">

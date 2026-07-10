@@ -40,6 +40,8 @@ public class FournisseurController {
         colContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
         colTelephone.setCellValueFactory(new PropertyValueFactory<>("telephone"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+        // Infobulle au survol pour les valeurs plus larges que leur colonne
+        com.pharmacie.utils.TableUtils.tooltipSurColonnes(colNom, colContact, colEmail);
 
         loadFournisseurs();
 
