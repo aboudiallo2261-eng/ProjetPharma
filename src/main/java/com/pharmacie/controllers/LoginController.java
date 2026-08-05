@@ -84,6 +84,15 @@ public class LoginController {
             return;
         }
 
+        // Diagnostic technique AVANT toute conclusion sur les identifiants :
+        // une base injoignable ne doit jamais s'afficher comme « mot de passe incorrect ».
+        String problemeBdd = com.pharmacie.utils.HibernateUtil.diagnostiquerConnexion();
+        if (problemeBdd != null) {
+            logger.error("Connexion impossible à la base de données : {}", problemeBdd);
+            showError(problemeBdd);
+            return;
+        }
+
         // Authentification BCrypt standard — pas de bypass hardcodé
         User user = userDAO.findByIdentifiant(identifiant);
         if (user != null) {

@@ -72,6 +72,35 @@ public class HibernateUtil {
     }
 
     /**
+     * Vérifie que la base de données est joignable.
+     *
+     * <p>Permet de distinguer une vraie erreur d'identifiants d'une panne technique
+     * (MySQL éteint, mot de passe BDD désynchronisé dans config.properties...) —
+     * sans ce test, toute panne s'affichait à tort comme « identifiants incorrects ».</p>
+     *
+     * @return {@code null} si la base répond, sinon un message explicatif pour l'utilisateur.
+     */
+    public static String diagnostiquerConnexion() {
+        String url  = ConfigService.getDbUrl();
+        String user = ConfigService.getDbUsername();
+        String pass = ConfigService.getDbPassword();
+        if (url == null || user == null) {
+            return "Configuration de la base absente : vérifiez le fichier config.properties "
+                 + "(db.url, db.username, db.password) à côté de l'application.";
+        }
+        try (java.sql.Connection c = java.sql.DriverManager.getConnection(url, user, pass != null ? pass : "")) {
+            return c.isValid(3) ? null : "La base de données ne répond pas.";
+        } catch (Exception e) {
+            String message = e.getMessage() != null ? e.getMessage() : "";
+            if (message.contains("Access denied") || message.contains("cc") || message.contains("refus")) {
+                return "Connexion à la base refusée : le mot de passe de db.password dans "
+                     + "config.properties ne correspond pas à celui de l'utilisateur MySQL.";
+            }
+            return "Base de données injoignable : vérifiez que MySQL (WAMP) est démarré.";
+        }
+    }
+
+    /**
      * Applique les migrations de schéma versionnées (src/main/resources/db/migration).
      *
      * <p>Stratégie hybride : Hibernate "hbm2ddl.auto=update" continue de créer les
