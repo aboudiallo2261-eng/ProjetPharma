@@ -20,17 +20,15 @@
                     <Separator />
                     <TextField fx:id="txtProdNom" promptText="Nom du produit *"/>
                     
-                    <HBox spacing="8">
-                        <!-- Catégorie + bouton ajout rapide -->
-                        <HBox spacing="4" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT">
-                            <ComboBox fx:id="cmbProdCategorie" promptText="Catégorie *" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
-                            <Button text="+" onAction="#quickAddCategorie" styleClass="btn-quick-add"/>
-                        </HBox>
-                        <!-- Espèce + bouton ajout rapide -->
-                        <HBox spacing="4" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT">
-                            <ComboBox fx:id="cmbProdEspece" promptText="Espèce *" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
-                            <Button text="+" onAction="#quickAddEspece" styleClass="btn-quick-add"/>
-                        </HBox>
+                    <!-- Catégorie et Espèce sur des lignes distinctes : sur une seule ligne,
+                         les libellés étaient tronqués faute de largeur (panneau étroit + bouton +). -->
+                    <HBox spacing="4" alignment="CENTER_LEFT">
+                        <ComboBox fx:id="cmbProdCategorie" promptText="Catégorie *" prefWidth="10" minWidth="150" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                        <Button text="+" onAction="#quickAddCategorie" styleClass="btn-quick-add"/>
+                    </HBox>
+                    <HBox spacing="4" alignment="CENTER_LEFT">
+                        <ComboBox fx:id="cmbProdEspece" promptText="Espèce *" prefWidth="10" minWidth="150" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                        <Button text="+" onAction="#quickAddEspece" styleClass="btn-quick-add"/>
                     </HBox>
                     
                     <HBox spacing="10">

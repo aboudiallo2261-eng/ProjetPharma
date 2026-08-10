@@ -58,9 +58,9 @@
                             <!-- Filtres par Catégorie et Espèce -->
                             <HBox spacing="8" alignment="CENTER_LEFT">
                                 <Label text="Catég. :" style="-fx-font-weight: bold;" minWidth="-Infinity"/>
-                                <ComboBox fx:id="cmbFiltreCategorie" HBox.hgrow="ALWAYS" maxWidth="Infinity" promptText="Toutes les catégories"/>
+                                <ComboBox fx:id="cmbFiltreCategorie" HBox.hgrow="ALWAYS" prefWidth="10" minWidth="120" maxWidth="Infinity" promptText="Toutes catégories"/>
                                 <Label text="Espèce :" style="-fx-font-weight: bold;" minWidth="-Infinity"/>
-                                <ComboBox fx:id="cmbFiltreEspece" HBox.hgrow="ALWAYS" maxWidth="Infinity" promptText="Toutes les espèces"/>
+                                <ComboBox fx:id="cmbFiltreEspece" HBox.hgrow="ALWAYS" prefWidth="10" minWidth="120" maxWidth="Infinity" promptText="Toutes espèces"/>
                             </HBox>
                             <TableView fx:id="tableStock" VBox.vgrow="ALWAYS" style="-fx-border-color: #CBD5E1;">
                                 <placeholder>
