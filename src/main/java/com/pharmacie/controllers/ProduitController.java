@@ -336,6 +336,7 @@ public class ProduitController {
     // --- LOGIQUE PRODUITS ---
     private void loadProduits() {
         tableProduits.getItems().setAll(produitDAO.findAll());
+        com.pharmacie.utils.TableUtils.ajusterAvecDefilement(tableProduits);
     }
 
     private void populateProdForm(Produit p) {
@@ -530,6 +531,7 @@ public class ProduitController {
         String query = txtSearchProd.getText();
         if (query != null && !query.isEmpty()) {
             tableProduits.getItems().setAll(produitDAO.rechercherParNom(query));
+            com.pharmacie.utils.TableUtils.ajusterAvecDefilement(tableProduits);
         } else {
             loadProduits();
         }
@@ -1024,6 +1026,8 @@ public class ProduitController {
                 .toList();
 
         tableEtatStock.setItems(FXCollections.observableArrayList(filtered));
+        // 11 colonnes : ecran d'analyse, defilement horizontal assume
+        com.pharmacie.utils.TableUtils.ajusterAvecDefilement(tableEtatStock);
 
         // #7 : Calcul et affichage de la valeur financière totale du stock visible
         // (Alignement UX Ventes)

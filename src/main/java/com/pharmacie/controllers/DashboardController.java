@@ -483,6 +483,7 @@ public class DashboardController {
             count++;
         }
         tableTopProduits.setItems(topList);
+        com.pharmacie.utils.TableUtils.ajusterSansDefilement(tableTopProduits);
     }
 
 

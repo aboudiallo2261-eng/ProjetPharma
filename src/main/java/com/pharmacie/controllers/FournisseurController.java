@@ -56,6 +56,7 @@ public class FournisseurController {
         try {
             List<Fournisseur> list = fournisseurDAO.findAll();
             tableFournisseurs.setItems(FXCollections.observableArrayList(list));
+        com.pharmacie.utils.TableUtils.ajusterAvecDefilement(tableFournisseurs);
         } catch(Exception e) {
             logger.error("Erreur DAO loadFournisseurs", e);
         }

@@ -1556,6 +1556,8 @@ public class VenteController {
         });
         
         tableStock.setItems(FXCollections.observableArrayList(tousLesProduitsCache));
+        // Caisse : tout doit rester visible d'un coup d'oeil, jamais de defilement horizontal
+        com.pharmacie.utils.TableUtils.ajusterSansDefilement(tableStock);
         tableStock.refresh(); // Force le re-dessin immédiat des cellules (colStkQte lit stockCache)
     }
 
@@ -1584,6 +1586,7 @@ public class VenteController {
                         || (p.getEspece() != null && p.getEspece().getId().equals(espFiltre.getId())))
                 .collect(Collectors.toList());
         tableStock.setItems(FXCollections.observableArrayList(filtres));
+        com.pharmacie.utils.TableUtils.ajusterSansDefilement(tableStock);
     }
 
     @FXML
@@ -2164,6 +2167,7 @@ public class VenteController {
 
         List<Vente> todaySales = venteDAO.findVentesByPeriode(startOfDay, endOfDay, null, null, null);
         tableHistoriqueVentes.setItems(FXCollections.observableArrayList(todaySales));
+        com.pharmacie.utils.TableUtils.ajusterAvecDefilement(tableHistoriqueVentes);
         mettreAJourTotalFiltre(todaySales);
     }
 
@@ -2210,6 +2214,7 @@ public class VenteController {
         }
 
         tableHistoriqueVentes.setItems(FXCollections.observableArrayList(filtered));
+        com.pharmacie.utils.TableUtils.ajusterAvecDefilement(tableHistoriqueVentes);
         mettreAJourTotalFiltre(filtered);
     }
 

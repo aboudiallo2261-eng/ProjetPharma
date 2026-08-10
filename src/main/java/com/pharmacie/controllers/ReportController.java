@@ -835,6 +835,7 @@ public class ReportController {
             double filteredCA = currentPeriodLines.stream().mapToDouble(LigneVente::getSousTotal).sum();
             com.pharmacie.utils.AnimationUtils.animerValeurMonetaire(lblTotalFiltre, filteredCA, "");
             tableLignesVente.setItems(FXCollections.observableArrayList(currentPeriodLines));
+        com.pharmacie.utils.TableUtils.ajusterAvecDefilement(tableLignesVente);
             boolean hasData = !currentPeriodLines.isEmpty();
             if (btnExportPdfVentes != null)
                 btnExportPdfVentes.setDisable(!hasData);
@@ -915,6 +916,7 @@ public class ReportController {
         task.setOnSucceeded(e -> {
             currentAjustements = task.getValue();
             tableAjustements.setItems(FXCollections.observableArrayList(currentAjustements));
+        com.pharmacie.utils.TableUtils.ajusterAvecDefilement(tableAjustements);
             // Mise à jour du compteur — même pattern que lblTotalFiltre du Journal des
             // Ventes
             if (lblTotalAjustements != null) {
@@ -968,6 +970,7 @@ public class ReportController {
         Long userId = cmbAuditUser.getValue() != null ? cmbAuditUser.getValue().getId() : null;
         List<MouvementStock> res = mouvementDAO.rechercher(debut, fin, prodId, type, userId);
         tableAudit.setItems(FXCollections.observableArrayList(res));
+        com.pharmacie.utils.TableUtils.ajusterAvecDefilement(tableAudit);
         // Mise à jour du compteur dynamique — même pattern que les autres onglets
         if (lblTotalAudit != null) {
             int count = res.size();
@@ -1017,6 +1020,7 @@ public class ReportController {
         }).collect(Collectors.toList());
 
         tableClotures.setItems(FXCollections.observableArrayList(currentClotures));
+        com.pharmacie.utils.TableUtils.ajusterAvecDefilement(tableClotures);
         // Mise à jour du compteur de sessions — même pattern que les autres onglets
         if (lblTotalClotures != null) {
             int count = list.size();

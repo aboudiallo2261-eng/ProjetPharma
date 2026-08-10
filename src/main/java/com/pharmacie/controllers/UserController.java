@@ -153,12 +153,14 @@ public class UserController {
     private void loadProfils() {
         List<Profil> profils = profilDAO.findAll();
         tableProfils.setItems(FXCollections.observableArrayList(profils));
+        com.pharmacie.utils.TableUtils.ajusterSansDefilement(tableProfils);
         cmbProfil.setItems(FXCollections.observableArrayList(profils));
     }
 
     private void loadUsers() {
         List<User> users = userDAO.findAll();
         tableUsers.setItems(FXCollections.observableArrayList(users));
+        com.pharmacie.utils.TableUtils.ajusterAvecDefilement(tableUsers);
     }
 
     // --- LOGIQUE UTILISATEUR ---

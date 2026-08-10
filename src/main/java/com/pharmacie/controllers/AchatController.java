@@ -416,6 +416,7 @@ public class AchatController {
             }
         });
         tableLignesPanier.setItems(panier);
+        com.pharmacie.utils.TableUtils.ajusterSansDefilement(tableLignesPanier);
         // Note : pas de CONSTRAINED ici, prefWidth gère l'équilibre
     }
 

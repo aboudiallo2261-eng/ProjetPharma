@@ -167,6 +167,7 @@ public class AlerteStockController {
 
         filteredAlertes = new FilteredList<>(alertesMasterData, p -> true);
         tableAlertes.setItems(filteredAlertes);
+        com.pharmacie.utils.TableUtils.ajusterAvecDefilement(tableAlertes);
         lblTotalAlertes.setText(String.valueOf(alertesMasterData.size()));
     }
 
@@ -256,6 +257,7 @@ public class AlerteStockController {
 
         filteredPerimes = new FilteredList<>(perimesMasterData, p -> true);
         tablePerimes.setItems(filteredPerimes);
+        com.pharmacie.utils.TableUtils.ajusterAvecDefilement(tablePerimes);
         lblTotalPerimes.setText(String.valueOf(perimesMasterData.size()));
     }
 
