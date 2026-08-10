@@ -18,6 +18,18 @@ Set-Location $projectRoot
 
 $appVersion = "1.0.0"
 
+# Contrôle préalable : une application ouverte verrouille ses propres fichiers dans dist\,
+# et la suppression échouait alors sur une erreur Windows incompréhensible.
+$enCours = Get-Process VetPharma -ErrorAction SilentlyContinue
+if ($enCours) {
+    Write-Host ""
+    Write-Host "  L'application VetPharma est actuellement ouverte." -ForegroundColor Yellow
+    Write-Host "  Ses fichiers sont verrouilles par Windows : fermez-la puis relancez ce script." -ForegroundColor Yellow
+    Write-Host "  (PID concerne(s) : $($enCours.Id -join ', '))" -ForegroundColor DarkGray
+    Write-Host ""
+    exit 1
+}
+
 Write-Host "[1/4] Compilation et packaging Maven (tests inclus)..." -ForegroundColor Cyan
 & .\mvnw.cmd -q clean package
 if ($LASTEXITCODE -ne 0) { throw "Échec du build Maven." }
