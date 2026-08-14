@@ -56,6 +56,9 @@ public class DashboardController {
     @FXML private TableColumn<TopProduitDTO, String> colTopNom;
     @FXML private TableColumn<TopProduitDTO, String> colTopQte;
     @FXML private Label lblDerniereSynchro;
+    @FXML private javafx.scene.control.Button btnSynchroniser;
+    @FXML private javafx.scene.control.Button btnReinitialiser;
+    @FXML private javafx.scene.control.Button btnAppliquer;
 
     // ── DAOs ──────────────────────────────────────────────────────────
     private final StatistiquesDAO statsDAO   = new StatistiquesDAO();
@@ -77,6 +80,8 @@ public class DashboardController {
         colTopQte.setCellValueFactory(new PropertyValueFactory<>("quantiteAffichee"));
 
         com.pharmacie.utils.DateUtils.bindDateFilters(dpDebut, dpFin);
+
+        installerInfobullesDashboard();
 
         javafx.event.EventHandler<javafx.event.ActionEvent> loadEvent = e -> chargerDonnees();
         dpDebut.setOnAction(loadEvent);
@@ -540,6 +545,69 @@ public class DashboardController {
                         equiperPart(part.getNode(), texte);
                     }
                 }));
+    }
+
+    /**
+     * Documente les indicateurs et les filtres du tableau de bord.
+     *
+     * <p>Un chiffre seul se prête à l'interprétation : « Bénéfice Net Estimé » ne dit
+     * pas s'il inclut les charges, « Recettes Espèces » ne dit pas si la part espèces
+     * des paiements mixtes est comptée. Ces infobulles répondent à ces questions sans
+     * encombrer l'écran, et évitent autant de mauvaises lectures des chiffres.</p>
+     */
+    private void installerInfobullesDashboard() {
+        // --- Indicateurs financiers ---
+        aider(lblCA, "Total encaissé sur la période : ventes réglées en espèces, "
+                + "mobile money et paiements mixtes.");
+        aider(lblBenefice, "Chiffre d'affaires moins le coût d'achat réel des produits vendus "
+                + "(prix payé au fournisseur pour chaque lot).\n"
+                + "Estimation : les charges (loyer, salaires, électricité) ne sont pas déduites.");
+        aider(lblVolume, "Nombre de tickets de vente enregistrés sur la période.");
+        aider(lblAlertes, "À gauche : produits dont le stock est sous leur seuil d'alerte.\n"
+                + "À droite : lots périmés ou proches de la péremption.\n"
+                + "Cliquez sur la carte pour ouvrir le centre d'alertes.");
+
+        // --- Indicateurs de trésorerie et de stock ---
+        aider(lblValeurStock, "Valeur d'achat du stock disponible aujourd'hui, lots périmés exclus.\n"
+                + "C'est l'argent immobilisé dans les rayons — indépendant de la période choisie.");
+        aider(lblEspeces, "Argent liquide encaissé sur la période, part espèces des paiements "
+                + "mixtes comprise.\nC'est le montant qui doit se retrouver dans le tiroir-caisse.");
+        aider(lblMobile, "Encaissements par mobile money sur la période, part mobile des "
+                + "paiements mixtes comprise.");
+
+        // --- Filtres ---
+        aider(cmbPeriode, "Raccourcis de période (aujourd'hui, cette semaine, ce mois...).\n"
+                + "Choisissez « Personnalisé » pour fixer vos propres dates ci-contre.");
+        aider(dpDebut, "Premier jour de la période analysée (inclus).");
+        aider(dpFin, "Dernier jour de la période analysée (inclus).");
+        aider(btnReinitialiser, "Revient à la période affichée par défaut.");
+        aider(btnAppliquer, "Recalcule tous les indicateurs et graphiques sur la période choisie.");
+        aider(btnSynchroniser, "Envoie un instantané des indicateurs vers le tableau de bord "
+                + "mobile.\nNécessite une connexion Internet ; sinon l'envoi est reporté.");
+        aider(lblDerniereSynchro, "Date du dernier envoi réussi vers le tableau de bord mobile.");
+    }
+
+    /**
+     * Attache une infobulle explicative à un élément, ainsi qu'à la carte qui le
+     * contient : la zone de survol couvre alors toute la carte et non le seul texte.
+     */
+    private void aider(javafx.scene.control.Control element, String explication) {
+        if (element == null) {
+            return;
+        }
+        javafx.scene.control.Tooltip infobulle = new javafx.scene.control.Tooltip(explication);
+        infobulle.setShowDelay(javafx.util.Duration.millis(250));
+        infobulle.setHideDelay(javafx.util.Duration.seconds(10));
+        infobulle.setWrapText(true);
+        infobulle.setMaxWidth(340);
+        element.setTooltip(infobulle);
+
+        // Les valeurs KPI sont de simples libellés dans une carte : on étend la zone
+        // sensible au conteneur pour que l'infobulle soit facile à déclencher.
+        if (element instanceof Label && element.getParent() != null
+                && element.getParent().getParent() != null) {
+            javafx.scene.control.Tooltip.install(element.getParent().getParent(), infobulle);
+        }
     }
 
     /**
