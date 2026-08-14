@@ -410,6 +410,10 @@ public class DashboardController {
                 seriesAchats.getData().add(new XYChart.Data<>(row[0].toString(), (Number) row[1]));
         }
         chartEvolution.getData().addAll(seriesCA, seriesAchats);
+        // Chaque point indique sa période et son montant : sans cela, il fallait
+        // estimer la valeur à l'œil en la reportant sur l'axe vertical.
+        equiperSerie(seriesCA, "Chiffre d'affaires");
+        equiperSerie(seriesAchats, "Coût des achats");
 
         // ── 2. BarChart Catégorie ────────────────────────────────────
         barCategorie.getData().clear();
@@ -419,6 +423,7 @@ public class DashboardController {
             seriesCat.getData().add(new XYChart.Data<>(
                 row[0] != null ? row[0].toString() : "Inconnu", (Number) row[1]));
         barCategorie.getData().add(seriesCat);
+        equiperSerie(seriesCat, "Catégorie");
 
         // ── 3. BarChart Espèce ───────────────────────────────────────
         barEspece.getData().clear();
@@ -428,6 +433,7 @@ public class DashboardController {
             seriesEsp.getData().add(new XYChart.Data<>(
                 row[0] != null ? row[0].toString() : "Inconnu", (Number) row[1]));
         barEspece.getData().add(seriesEsp);
+        equiperSerie(seriesEsp, "Espèce");
 
         // ── 4. Top 10 Table + Top 5 PieChart ────────────────────────
         ObservableList<TopProduitDTO> topList = FXCollections.observableArrayList();
@@ -534,6 +540,41 @@ public class DashboardController {
                         equiperPart(part.getNode(), texte);
                     }
                 }));
+    }
+
+    /**
+     * Équipe chaque point (ou barre) d'une série d'une infobulle « libellé + montant ».
+     *
+     * @param serie    Série dont les données doivent être documentées
+     * @param intitule Nature de l'abscisse : « Catégorie », « Espèce », ou le nom de
+     *                 la courbe pour le graphique d'évolution
+     */
+    private void equiperSerie(XYChart.Series<String, Number> serie, String intitule) {
+        for (XYChart.Data<String, Number> donnee : serie.getData()) {
+            double montant = (donnee.getYValue() != null) ? donnee.getYValue().doubleValue() : 0;
+            String texte = intitule + " : " + donnee.getXValue()
+                    + "\n" + String.format("%,.0f", montant).replace(',', ' ') + " FCFA";
+            if (donnee.getNode() != null) {
+                equiperPart(donnee.getNode(), texte);
+            } else {
+                donnee.nodeProperty().addListener((obs, ancien, noeud) -> {
+                    if (noeud != null) {
+                        equiperPart(noeud, texte);
+                    }
+                });
+            }
+        }
+        // Même précaution que pour le camembert : certains nœuds n'existent
+        // qu'après le cycle de rendu suivant.
+        javafx.application.Platform.runLater(() -> {
+            for (XYChart.Data<String, Number> donnee : serie.getData()) {
+                if (donnee.getNode() != null) {
+                    double montant = (donnee.getYValue() != null) ? donnee.getYValue().doubleValue() : 0;
+                    equiperPart(donnee.getNode(), intitule + " : " + donnee.getXValue()
+                            + "\n" + String.format("%,.0f", montant).replace(',', ' ') + " FCFA");
+                }
+            }
+        });
     }
 
     /** Attache l'infobulle au nœud d'une part et signale qu'elle est survolable. */
