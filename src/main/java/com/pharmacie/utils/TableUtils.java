@@ -67,6 +67,23 @@ public final class TableUtils {
         // Différé : les cellules doivent être rendues pour que leur texte soit mesurable.
         Platform.runLater(() -> {
             try {
+                // Au tout premier affichage, le tableau n'est pas encore dimensionné
+                // (getWidth() == 0) : impossible de savoir s'il y aura débordement.
+                // On réessaie dès que sa largeur réelle est connue.
+                if (table.getWidth() <= 0) {
+                    table.widthProperty().addListener(new javafx.beans.value.ChangeListener<Number>() {
+                        @Override
+                        public void changed(javafx.beans.value.ObservableValue<? extends Number> obs,
+                                            Number ancienne, Number nouvelle) {
+                            if (nouvelle.doubleValue() > 0) {
+                                table.widthProperty().removeListener(this);
+                                appliquer(table, autoriserDefilement);
+                            }
+                        }
+                    });
+                    return;
+                }
+
                 double totalRequis = 0;
                 double[] largeurs = new double[table.getColumns().size()];
 
@@ -77,7 +94,10 @@ public final class TableUtils {
                     }
                     double requise = mesurerColonne(table, colonne);
                     // On respecte les bornes déjà posées dans le FXML (min/max métier).
-                    requise = Math.max(requise, colonne.getMinWidth());
+                    // Le minWidth d'origine est mémorisé au premier passage : comme on le
+                    // réécrit ensuite, s'en resservir tel quel empêcherait toute réduction
+                    // après un filtre qui ne laisse que des valeurs courtes.
+                    requise = Math.max(requise, minWidthInitial(colonne));
                     requise = Math.min(requise, Math.min(colonne.getMaxWidth(), LARGEUR_MAX_COLONNE));
                     largeurs[i] = requise;
                     totalRequis += requise;
@@ -88,10 +108,14 @@ public final class TableUtils {
 
                 if (debordement && autoriserDefilement) {
                     // Chaque colonne garde sa largeur idéale → défilement horizontal.
+                    // minWidth est fixé en plus de prefWidth : sans cela, le recalcul de
+                    // mise en page peut recomprimer la colonne et retronquer le texte.
                     table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
                     for (int i = 0; i < table.getColumns().size(); i++) {
                         if (largeurs[i] > 0) {
-                            table.getColumns().get(i).setPrefWidth(largeurs[i]);
+                            TableColumn<?, ?> colonne = table.getColumns().get(i);
+                            colonne.setMinWidth(largeurs[i]);
+                            colonne.setPrefWidth(largeurs[i]);
                         }
                     }
                 } else {
@@ -110,6 +134,23 @@ public final class TableUtils {
                         .warn("Ajustement des colonnes ignoré : {}", e.getMessage());
             }
         });
+    }
+
+    /** Clé de mémorisation de la contrainte de largeur minimale définie dans le FXML. */
+    private static final String CLE_MIN_INITIAL = "vetpharma.minWidthInitial";
+
+    /**
+     * Largeur minimale voulue par le FXML, mémorisée au premier ajustement.
+     * Indispensable car {@link #appliquer} réécrit ensuite {@code minWidth}.
+     */
+    private static double minWidthInitial(TableColumn<?, ?> colonne) {
+        Object memorise = colonne.getProperties().get(CLE_MIN_INITIAL);
+        if (memorise instanceof Double valeur) {
+            return valeur;
+        }
+        double initial = colonne.getMinWidth();
+        colonne.getProperties().put(CLE_MIN_INITIAL, initial);
+        return initial;
     }
 
     /** Largeur nécessaire à une colonne : le plus large entre son en-tête et ses cellules. */
