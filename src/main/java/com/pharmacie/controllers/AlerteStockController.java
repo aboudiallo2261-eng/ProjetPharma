@@ -246,9 +246,11 @@ public class AlerteStockController {
             if (!exp.isAfter(seuilAlerte)) { // périmé ou dans les 30 prochains jours
                 long joursRestants = ChronoUnit.DAYS.between(today, exp);
                 String statut = joursRestants < 0 ? "PERIME" : "Expire dans " + joursRestants + "j";
+                Long idCategorie = (l.getProduit().getCategorie() != null)
+                        ? l.getProduit().getCategorie().getId() : null;
                 perimesMasterData.add(new LotPerimeModel(
                     l.getProduit().getNom(), l.getNumeroLot(),
-                    exp.format(FMT_DATE), l.getQuantiteStock(), statut, joursRestants));
+                    exp.format(FMT_DATE), l.getQuantiteStock(), statut, joursRestants, idCategorie));
             }
         }
 
@@ -277,8 +279,10 @@ public class AlerteStockController {
 
         if (filteredPerimes != null) {
             filteredPerimes.setPredicate(lot -> {
+                boolean matchCat = (cat == null)
+                        || (lot.getCategorieId() != null && lot.getCategorieId().equals(cat.getId()));
                 boolean matchNom = search.isEmpty() || lot.getNomProduit().toLowerCase().contains(search);
-                return matchNom;
+                return matchCat && matchNom;
             });
             lblTotalPerimes.setText(String.valueOf(filteredPerimes.size()));
         }
@@ -324,15 +328,20 @@ public class AlerteStockController {
         private final int     qte;
         private final String  statut;
         private final long    joursRestants;
+        /** Categorie du produit : sans elle, le filtre par categorie ne pouvait pas
+         *  s'appliquer a ce tableau, qui restait complet pendant que les ruptures
+         *  etaient filtrees. */
+        private final Long    categorieId;
 
         public LotPerimeModel(String nomProduit, String numLot, String dateExpStr,
-                              int qte, String statut, long joursRestants) {
+                              int qte, String statut, long joursRestants, Long categorieId) {
             this.nomProduit    = nomProduit;
             this.numLot        = numLot;
             this.dateExpStr    = dateExpStr;
             this.qte           = qte;
             this.statut        = statut;
             this.joursRestants = joursRestants;
+            this.categorieId   = categorieId;
         }
 
         public String  getNomProduit()    { return nomProduit; }
@@ -341,5 +350,6 @@ public class AlerteStockController {
         public int     getQte()           { return qte; }
         public String  getStatut()        { return statut; }
         public long    getJoursRestants() { return joursRestants; }
+        public Long    getCategorieId()   { return categorieId; }
     }
 }

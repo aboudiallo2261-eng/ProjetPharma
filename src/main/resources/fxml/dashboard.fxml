@@ -162,7 +162,7 @@
                 </VBox>
                 <VBox HBox.hgrow="ALWAYS" styleClass="card, chart-box">
                     <Label text="Top 5 Produits (Parts de Volume)" styleClass="section-title"/>
-                    <PieChart fx:id="pieTopProduits" prefHeight="260" animated="true"/>
+                    <PieChart fx:id="pieTopProduits" prefHeight="300" animated="true"/>
                 </VBox>
             </HBox>
 

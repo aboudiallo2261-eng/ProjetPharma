@@ -432,6 +432,11 @@ public class DashboardController {
         // ── 4. Top 10 Table + Top 5 PieChart ────────────────────────
         ObservableList<TopProduitDTO> topList = FXCollections.observableArrayList();
         pieTopProduits.getData().clear();
+        // Les etiquettes disposees autour du camembert se chevauchent des que les
+        // noms sont longs, et masquaient la legende. On s'appuie sur la legende seule.
+        pieTopProduits.setLabelsVisible(false);
+        pieTopProduits.setLegendVisible(true);
+        pieTopProduits.setLegendSide(javafx.geometry.Side.BOTTOM);
 
         // Fusionner les ventes par boîtes et par détail
         java.util.LinkedHashMap<String, double[]> aggregation = new java.util.LinkedHashMap<>();
@@ -479,11 +484,25 @@ public class DashboardController {
         for (TopProduitDTO dto : tempList) {
             if (count >= 10) break;
             topList.add(dto);
-            if (count < 5) pieTopProduits.getData().add(new PieChart.Data(dto.getNom(), dto.getQuantiteTotale()));
+            if (count < 5) {
+                PieChart.Data part = new PieChart.Data(dto.getNom(), dto.getQuantiteTotale());
+                pieTopProduits.getData().add(part);
+                // La part est rendue apres l'ajout : on attend son noeud pour l'infobulle.
+                part.nodeProperty().addListener((obs, ancien, noeud) -> {
+                    if (noeud != null) {
+                        javafx.scene.control.Tooltip infobulle = new javafx.scene.control.Tooltip(
+                                dto.getNom() + "\n" + dto.getQuantiteAffichee());
+                        infobulle.setShowDelay(javafx.util.Duration.millis(200));
+                        javafx.scene.control.Tooltip.install(noeud, infobulle);
+                    }
+                });
+            }
             count++;
         }
         tableTopProduits.setItems(topList);
-        com.pharmacie.utils.TableUtils.ajusterSansDefilement(tableTopProduits);
+        // Tableau de consultation aux libelles longs : on privilegie la lisibilite
+        // du nom complet, quitte a proposer un defilement horizontal.
+        com.pharmacie.utils.TableUtils.ajusterAvecDefilement(tableTopProduits);
     }
 
 
