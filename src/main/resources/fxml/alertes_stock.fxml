@@ -123,8 +123,7 @@
                         <TableColumn fx:id="colPerimLot" text="N° Lot" prefWidth="140"/>
                         <TableColumn fx:id="colPerimExp" text="Expiration" prefWidth="130" style="-fx-alignment: CENTER; -fx-font-weight: bold;"/>
                         <TableColumn fx:id="colPerimQte" text="Stock Restant" prefWidth="120" style="-fx-alignment: CENTER-RIGHT;"/>
-                        <TableColumn fx:id="colPerimStatut" text="Statut" prefWidth="140" style="-fx-alignment: CENTER;"/>
-                        <TableColumn fx:id="colPerimJours" text="Jours Restants" prefWidth="130" style="-fx-alignment: CENTER; -fx-font-weight: bold;"/>
+                        <TableColumn fx:id="colPerimStatut" text="Statut" prefWidth="210" minWidth="180" style="-fx-alignment: CENTER;"/>
                     </columns>
                 </TableView>
             </VBox>

@@ -1565,7 +1565,7 @@ public class PdfService {
                     y = PAGE_HEIGHT - MARGIN;
                 }
                 if (pair) {
-                    drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 16, Color.decode("#FEF2F2"));
+                    drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 16, Color.decode("#F1F5F9"));
                 }
                 cs.setFont(fontNormal, 8);
                 cs.setNonStrokingColor(Color.decode("#334155"));
@@ -1581,8 +1581,8 @@ public class PdfService {
 
                 boolean rupture = a.getStockActuel() <= 0;
                 cs.setFont(fontBold, 8);
-                cs.setNonStrokingColor(rupture ? Color.decode("#DC2626") : Color.decode("#D97706"));
-                drawText(cs, rupture ? "RUPTURE" : String.valueOf(a.getStockActuel()), MARGIN + 330, y);
+                cs.setNonStrokingColor(rupture ? Color.decode("#B91C1C") : Color.decode("#92400E"));
+                drawText(cs, rupture ? "(!) RUPTURE" : String.valueOf(a.getStockActuel()), MARGIN + 330, y);
 
                 cs.setFont(fontNormal, 8);
                 cs.setNonStrokingColor(Color.decode("#334155"));
@@ -1617,7 +1617,7 @@ public class PdfService {
             drawText(cs, "A RETIRER DES RAYONS  -  " + perimes.size() + " lot(s) concerne(s)", MARGIN, y);
             y -= 18;
 
-            drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 20, Color.decode("#D97706"));
+            drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 20, Color.decode("#92400E"));
             cs.setFont(fontBold, 9);
             cs.setNonStrokingColor(Color.WHITE);
             drawText(cs, "PRODUIT", MARGIN + 8, y);
@@ -1637,7 +1637,7 @@ public class PdfService {
                     y = PAGE_HEIGHT - MARGIN;
                 }
                 if (pair) {
-                    drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 16, Color.decode("#FFFBEB"));
+                    drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 16, Color.decode("#F1F5F9"));
                 }
                 cs.setFont(fontNormal, 8);
                 cs.setNonStrokingColor(Color.decode("#334155"));
@@ -1655,8 +1655,9 @@ public class PdfService {
 
                 boolean perime = l.getJoursRestants() < 0;
                 cs.setFont(fontBold, 8);
-                cs.setNonStrokingColor(perime ? Color.decode("#DC2626") : Color.decode("#D97706"));
-                drawText(cs, perime ? "PERIME" : l.getJoursRestants() + " j", MARGIN + 430, y);
+                cs.setNonStrokingColor(perime ? Color.decode("#B91C1C") : Color.decode("#92400E"));
+                drawText(cs, perime ? "(!) PERIME " + Math.abs(l.getJoursRestants()) + "j"
+                                    : "Expire " + l.getJoursRestants() + "j", MARGIN + 425, y);
 
                 y -= 16;
                 pair = !pair;

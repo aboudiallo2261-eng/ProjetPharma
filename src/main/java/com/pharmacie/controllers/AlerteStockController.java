@@ -52,7 +52,6 @@ public class AlerteStockController {
     @FXML private TableColumn<LotPerimeModel, String>  colPerimExp;
     @FXML private TableColumn<LotPerimeModel, Integer> colPerimQte;
     @FXML private TableColumn<LotPerimeModel, String>  colPerimStatut;
-    @FXML private TableColumn<LotPerimeModel, Long>    colPerimJours;
 
     private ProduitDAO  produitDAO  = new ProduitDAO();
     private LotDAO      lotDAO      = new LotDAO();
@@ -184,10 +183,6 @@ public class AlerteStockController {
         colPerimExp.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDateExpStr()));
         colPerimQte.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getQte()).asObject());
         colPerimStatut.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatut()));
-        colPerimJours.setCellValueFactory(data -> {
-            long j = data.getValue().getJoursRestants();
-            return new javafx.beans.property.SimpleLongProperty(j).asObject();
-        });
 
         // Code couleur sur la colonne Statut (rouge = périmé, orange = proche)
         colPerimStatut.setCellFactory(col -> new TableCell<LotPerimeModel, String>() {
@@ -211,27 +206,6 @@ public class AlerteStockController {
             }
         });
 
-        // Colonne Jours Restants : négatif = rouge, positif = orange
-        colPerimJours.setCellFactory(col -> new TableCell<LotPerimeModel, Long>() {
-            {
-                tableRowProperty().addListener((obs, o, n) -> {
-                    if (n != null) n.selectedProperty().addListener((obs2, was, is) -> { if (!isEmpty()) updateItem(getItem(), false); });
-                });
-            }
-            @Override protected void updateItem(Long item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) { setText(null); setStyle(""); return; }
-                boolean selected = getTableRow() != null && getTableRow().isSelected();
-                setText(item < 0 ? item + " j" : "+" + item + " j");
-                if (selected) {
-                    setStyle("-fx-text-fill: white; -fx-alignment: CENTER; -fx-font-weight: bold;");
-                } else if (item < 0) {
-                    setStyle("-fx-text-fill: #DC2626; -fx-alignment: CENTER; -fx-font-weight: bold;"); // Red 600
-                } else {
-                    setStyle("-fx-text-fill: #F59E0B; -fx-alignment: CENTER; -fx-font-weight: bold;"); // Amber 500
-                }
-            }
-        });
     }
 
     private void chargerPerimes() {
@@ -245,7 +219,13 @@ public class AlerteStockController {
             LocalDate exp = l.getDateExpiration();
             if (!exp.isAfter(seuilAlerte)) { // périmé ou dans les 30 prochains jours
                 long joursRestants = ChronoUnit.DAYS.between(today, exp);
-                String statut = joursRestants < 0 ? "PERIME" : "Expire dans " + joursRestants + "j";
+                // Le statut se suffit a lui-meme : il porte l'etat ET le nombre de jours,
+                // ce qui rend la colonne « Jours restants » superflue.
+                long ecart = Math.abs(joursRestants);
+                String unite = (ecart > 1) ? " jours" : " jour";
+                String statut = (joursRestants < 0)
+                        ? "PERIME il y a " + ecart + unite
+                        : (joursRestants == 0 ? "PERIME aujourd'hui" : "Expire dans " + ecart + unite);
                 Long idCategorie = (l.getProduit().getCategorie() != null)
                         ? l.getProduit().getCategorie().getId() : null;
                 perimesMasterData.add(new LotPerimeModel(
