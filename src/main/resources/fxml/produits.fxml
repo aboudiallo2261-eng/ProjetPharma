@@ -99,8 +99,8 @@
                     <TableView fx:id="tableCategories" VBox.vgrow="ALWAYS" style="-fx-border-color: #E2E8F0; -fx-background-radius: 6; -fx-border-radius: 6;">
                         <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
                         <columns>
-                            <TableColumn fx:id="colCatId" text="ID" prefWidth="50" />
-                            <TableColumn fx:id="colCatNom" text="Nom" prefWidth="200" />
+                            <TableColumn fx:id="colCatId" text="ID" prefWidth="55" minWidth="45" maxWidth="70" />
+                            <TableColumn fx:id="colCatNom" text="Nom" prefWidth="320" minWidth="200" />
                         </columns>
                     </TableView>
                 </VBox>
@@ -132,8 +132,8 @@
                     <TableView fx:id="tableEspeces" VBox.vgrow="ALWAYS" style="-fx-border-color: #E2E8F0; -fx-background-radius: 6; -fx-border-radius: 6;">
                         <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
                         <columns>
-                            <TableColumn fx:id="colEspId" text="ID" prefWidth="50" />
-                            <TableColumn fx:id="colEspNom" text="Nom" prefWidth="200" />
+                            <TableColumn fx:id="colEspId" text="ID" prefWidth="55" minWidth="45" maxWidth="70" />
+                            <TableColumn fx:id="colEspNom" text="Nom" prefWidth="320" minWidth="200" />
                         </columns>
                     </TableView>
                 </VBox>

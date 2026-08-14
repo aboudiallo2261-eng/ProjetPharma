@@ -701,6 +701,7 @@ public class ProduitController {
     private void loadCategories() {
         ObservableList<Categorie> cats = FXCollections.observableArrayList(categorieDAO.findAll());
         tableCategories.setItems(cats);
+        com.pharmacie.utils.TableUtils.ajusterSansDefilement(tableCategories);
         cmbProdCategorie.setItems(cats);
 
         // Actualisation dynamique du filtre Etat Stock
@@ -780,6 +781,7 @@ public class ProduitController {
     private void loadEspeces() {
         ObservableList<Espece> esps = FXCollections.observableArrayList(especeDAO.findAll());
         tableEspeces.setItems(esps);
+        com.pharmacie.utils.TableUtils.ajusterSansDefilement(tableEspeces);
         cmbProdEspece.setItems(esps);
 
         // Actualisation dynamique du filtre Etat Stock
