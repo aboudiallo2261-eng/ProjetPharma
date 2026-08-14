@@ -481,24 +481,23 @@ public class DashboardController {
         tempList.sort((a, b) -> Double.compare(b.getQuantiteTotale(), a.getQuantiteTotale()));
 
         int count = 0;
+        java.util.Map<PieChart.Data, String> libellesParts = new java.util.LinkedHashMap<>();
         for (TopProduitDTO dto : tempList) {
             if (count >= 10) break;
             topList.add(dto);
             if (count < 5) {
                 PieChart.Data part = new PieChart.Data(dto.getNom(), dto.getQuantiteTotale());
+                part.setName(dto.getNom() + " — " + dto.getQuantiteAffichee());
                 pieTopProduits.getData().add(part);
-                // La part est rendue apres l'ajout : on attend son noeud pour l'infobulle.
-                part.nodeProperty().addListener((obs, ancien, noeud) -> {
-                    if (noeud != null) {
-                        javafx.scene.control.Tooltip infobulle = new javafx.scene.control.Tooltip(
-                                dto.getNom() + "\n" + dto.getQuantiteAffichee());
-                        infobulle.setShowDelay(javafx.util.Duration.millis(200));
-                        javafx.scene.control.Tooltip.install(noeud, infobulle);
-                    }
-                });
+                libellesParts.put(part, dto.getNom() + "\n" + dto.getQuantiteAffichee());
             }
             count++;
         }
+        // Infobulles installées APRÈS coup : JavaFX crée le nœud d'une part au moment
+        // de l'ajout ou au layout suivant selon les cas. Un écouteur posé après l'ajout
+        // ne se déclenchait donc jamais quand le nœud existait déjà — d'où l'absence
+        // d'infobulle. On traite ici les nœuds présents et on écoute pour les autres.
+        installerInfobullesParts(libellesParts);
         tableTopProduits.setItems(topList);
         // Tableau de consultation aux libelles longs : on privilegie la lisibilite
         // du nom complet, quitte a proposer un defilement horizontal.
@@ -506,6 +505,44 @@ public class DashboardController {
     }
 
 
+
+    /**
+     * Installe une infobulle (nom + quantité) sur chaque part du camembert.
+     *
+     * <p>Le nœud graphique d'une {@link PieChart.Data} peut être créé au moment de
+     * l'ajout ou seulement au layout suivant. Poser un écouteur après l'ajout laissait
+     * donc passer les parts déjà rendues : aucune infobulle n'apparaissait. On équipe
+     * ici les nœuds déjà présents et on écoute pour ceux qui restent à créer.</p>
+     */
+    private void installerInfobullesParts(java.util.Map<PieChart.Data, String> libelles) {
+        libelles.forEach((part, texte) -> {
+            if (part.getNode() != null) {
+                equiperPart(part.getNode(), texte);
+            } else {
+                part.nodeProperty().addListener((obs, ancien, noeud) -> {
+                    if (noeud != null) {
+                        equiperPart(noeud, texte);
+                    }
+                });
+            }
+        });
+        // Filet de sécurité : après le prochain cycle de rendu, on repasse sur les
+        // parts dont le nœud vient d'apparaître sans notification exploitable.
+        javafx.application.Platform.runLater(() ->
+                libelles.forEach((part, texte) -> {
+                    if (part.getNode() != null) {
+                        equiperPart(part.getNode(), texte);
+                    }
+                }));
+    }
+
+    /** Attache l'infobulle au nœud d'une part et signale qu'elle est survolable. */
+    private void equiperPart(javafx.scene.Node noeud, String texte) {
+        javafx.scene.control.Tooltip infobulle = new javafx.scene.control.Tooltip(texte);
+        infobulle.setShowDelay(javafx.util.Duration.millis(150));
+        javafx.scene.control.Tooltip.install(noeud, infobulle);
+        noeud.setCursor(javafx.scene.Cursor.HAND);
+    }
 
     // =================================================================
     // Détail alertes — Ouverture de la modale Premium
