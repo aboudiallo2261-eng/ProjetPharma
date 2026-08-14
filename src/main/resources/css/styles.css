@@ -1344,3 +1344,26 @@
 
 /* [ignoring loop detection] */
 
+
+/* ============================================================
+   INFOBULLES (tooltips)
+   Sans style explicite, elles héritaient de la couleur de texte
+   de l'application : texte vert sur fond sombre, illisible.
+   ============================================================ */
+.tooltip {
+    -fx-background-color: #1E293B;      /* Slate-800 */
+    -fx-background-radius: 6;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 12.5px;
+    -fx-font-weight: normal;
+    -fx-padding: 7 11 7 11;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.35), 8, 0, 0, 3);
+}
+
+/* Le libellé interne porte sa propre couleur : il faut le forcer aussi. */
+.tooltip .label,
+.tooltip > .label,
+.tooltip Text {
+    -fx-text-fill: #FFFFFF;
+    -fx-fill: #FFFFFF;
+}

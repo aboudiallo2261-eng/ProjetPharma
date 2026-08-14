@@ -187,13 +187,21 @@ public final class TableUtils {
         return largeur;
     }
 
+    /**
+     * Largeur d'un texte, mesurée <b>en gras</b>.
+     *
+     * <p>La ligne sélectionnée est affichée en gras (voir {@code .table-row-cell:selected}
+     * dans styles.css) : le texte s'élargit alors de quelques pour cent. Mesurer en
+     * police normale suffisait à l'affichage initial, mais le nom se retrouvait tronqué
+     * dès qu'on cliquait sur la ligne. On dimensionne donc pour le pire cas.</p>
+     */
     private static double mesurerTexte(String texte, Font police) {
         if (texte == null || texte.isEmpty()) {
             return 0;
         }
         Text mesure = new Text(texte);
         if (police != null) {
-            mesure.setFont(police);
+            mesure.setFont(Font.font(police.getFamily(), javafx.scene.text.FontWeight.BOLD, police.getSize()));
         }
         return mesure.getLayoutBounds().getWidth();
     }

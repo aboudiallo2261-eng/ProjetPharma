@@ -1021,16 +1021,18 @@ public class ReportController {
 
         tableClotures.setItems(FXCollections.observableArrayList(currentClotures));
         com.pharmacie.utils.TableUtils.ajusterAvecDefilement(tableClotures);
-        // Mise à jour du compteur de sessions — même pattern que les autres onglets
+        // Le compteur et les exports doivent refléter le RÉSULTAT DU FILTRE
+        // (currentClotures), pas l'historique complet (list) — sinon le nombre
+        // affiché reste figé quels que soient les critères choisis.
         if (lblTotalClotures != null) {
-            int count = list.size();
+            int count = currentClotures.size();
             lblTotalClotures.setText(count + (count > 1 ? " clôtures" : " clôture"));
         }
 
         if (btnExportPdfCloture != null)
-            btnExportPdfCloture.setDisable(list.isEmpty());
+            btnExportPdfCloture.setDisable(currentClotures.isEmpty());
         if (btnExportExcelCloture != null)
-            btnExportExcelCloture.setDisable(list.isEmpty());
+            btnExportExcelCloture.setDisable(currentClotures.isEmpty());
     }
 
     @FXML
