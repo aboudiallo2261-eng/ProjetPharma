@@ -288,12 +288,41 @@ public class AlerteStockController {
         }
     }
 
+    /**
+     * Génère la liste imprimable des alertes : produits à commander et lots à retirer.
+     *
+     * <p>On exporte ce qui est <b>affiché</b> (listes filtrées), pas l'intégralité des
+     * données : le pharmacien qui a filtré sur une catégorie obtient la liste de cette
+     * catégorie, conformément à ce qu'il voit à l'écran.</p>
+     */
     @FXML
     private void imprimerListe() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION,
-                "Impression : " + alertesMasterData.size() + " rupture(s) et " + perimesMasterData.size() + " lot(s) perime(s)/proches.");
-        alert.setTitle("Impression Alertes");
-        alert.showAndWait();
+        java.util.List<AlerteModel> ruptures = (filteredAlertes != null)
+                ? new java.util.ArrayList<>(filteredAlertes) : new java.util.ArrayList<>(alertesMasterData);
+        java.util.List<LotPerimeModel> perimes = (filteredPerimes != null)
+                ? new java.util.ArrayList<>(filteredPerimes) : new java.util.ArrayList<>(perimesMasterData);
+
+        if (ruptures.isEmpty() && perimes.isEmpty()) {
+            com.pharmacie.utils.AlertUtils.showPremiumAlert(Alert.AlertType.INFORMATION,
+                    "Aucune alerte",
+                    "Rien à imprimer",
+                    "Aucun produit sous son seuil ni lot périmé ne correspond aux filtres actuels.");
+            return;
+        }
+
+        // Rappel du filtre en sous-titre du document, pour éviter toute ambiguïté
+        // sur le périmètre de la liste imprimée.
+        StringBuilder filtre = new StringBuilder();
+        Categorie cat = cmbFiltreCategorie.getValue();
+        filtre.append(cat != null ? "Catégorie : " + cat.getNom() : "Toutes catégories");
+        String recherche = txtRecherche.getText();
+        if (recherche != null && !recherche.isBlank()) {
+            filtre.append("  |  Recherche : ").append(recherche.trim());
+        }
+
+        javafx.stage.Stage stage = (tableAlertes.getScene() != null)
+                ? (javafx.stage.Stage) tableAlertes.getScene().getWindow() : null;
+        com.pharmacie.utils.PdfService.genererListeAlertesPdf(ruptures, perimes, filtre.toString(), stage);
     }
 
     // =========================================================================

@@ -1476,4 +1476,226 @@ public class PdfService {
             logger.error("Erreur PDF lors de la génération du rapport de clôture", e);
         }
     }
+
+    // =====================================================================
+    // LISTE DES ALERTES (Centre d'Alertes)
+    // =====================================================================
+
+    /**
+     * Génère la liste imprimable des alertes de stock : produits en rupture ou sous
+     * leur seuil, et lots périmés ou proches de la péremption.
+     *
+     * <p>Ce document est conçu pour être emporté dans les rayons : la première partie
+     * sert à passer commande, la seconde à retirer physiquement les lots concernés.</p>
+     *
+     * <p>Les listes reçues sont celles AFFICHÉES à l'écran : les filtres actifs
+     * (catégorie, recherche) sont donc respectés. Contrairement aux autres exports,
+     * la pagination se poursuit sur autant de pages que nécessaire.</p>
+     *
+     * @param ruptures    Produits sous leur seuil d'alerte (peut être vide)
+     * @param perimes     Lots périmés ou proches de la péremption (peut être vide)
+     * @param filtreActif Libellé du filtre appliqué, affiché en sous-titre (peut être null)
+     * @param ownerStage  Fenêtre parente pour la boîte de dialogue d'enregistrement
+     */
+    public static void genererListeAlertesPdf(
+            java.util.List<com.pharmacie.controllers.AlerteStockController.AlerteModel> ruptures,
+            java.util.List<com.pharmacie.controllers.AlerteStockController.LotPerimeModel> perimes,
+            String filtreActif,
+            Stage ownerStage) {
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Enregistrer la liste des alertes");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichier PDF", "*.pdf"));
+        fileChooser.setInitialFileName("Liste_Alertes_"
+                + java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd")) + ".pdf");
+
+        File fichier = fileChooser.showSaveDialog(ownerStage);
+        if (fichier == null) return;
+
+        try (PDDocument document = new PDDocument()) {
+            org.apache.pdfbox.pdmodel.font.PDFont fontBold;
+            org.apache.pdfbox.pdmodel.font.PDFont fontNormal;
+            try {
+                File reg  = new File("src/main/resources/fonts/Inter-Regular.ttf");
+                File bold = new File("src/main/resources/fonts/Inter-Bold.ttf");
+                if (reg.exists() && bold.exists()) {
+                    fontNormal = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, reg);
+                    fontBold   = org.apache.pdfbox.pdmodel.font.PDType0Font.load(document, bold);
+                } else {
+                    fontBold   = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                    fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+                }
+            } catch (Exception e) {
+                fontBold   = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+                fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+            }
+
+            PDPage page = new PDPage(PDRectangle.A4);
+            document.addPage(page);
+            PDPageContentStream cs = new PDPageContentStream(document, page);
+            float y = PAGE_HEIGHT - MARGIN;
+
+            String sousTitre = (filtreActif != null && !filtreActif.isBlank())
+                    ? filtreActif : "Toutes categories";
+            y = drawProfessionalHeader(document, cs, "LISTE DES ALERTES DE STOCK", sousTitre, y);
+
+            // ---------- SECTION 1 : RUPTURES ET SEUILS ----------
+            cs.setFont(fontBold, 11);
+            cs.setNonStrokingColor(Color.decode("#B91C1C"));
+            drawText(cs, "A COMMANDER  -  " + ruptures.size() + " produit(s) sous le seuil", MARGIN, y);
+            y -= 18;
+
+            drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 20, Color.decode("#DC2626"));
+            cs.setFont(fontBold, 9);
+            cs.setNonStrokingColor(Color.WHITE);
+            drawText(cs, "PRODUIT", MARGIN + 8, y);
+            drawText(cs, "CATEGORIE", MARGIN + 220, y);
+            drawText(cs, "STOCK", MARGIN + 330, y);
+            drawText(cs, "SEUIL", MARGIN + 385, y);
+            drawText(cs, "A COMMANDER", MARGIN + 430, y);
+            y -= 22;
+
+            boolean pair = false;
+            for (com.pharmacie.controllers.AlerteStockController.AlerteModel a : ruptures) {
+                if (y < MARGIN + 50) { // page suivante plutot que de tronquer la liste
+                    cs.close();
+                    page = new PDPage(PDRectangle.A4);
+                    document.addPage(page);
+                    cs = new PDPageContentStream(document, page);
+                    y = PAGE_HEIGHT - MARGIN;
+                }
+                if (pair) {
+                    drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 16, Color.decode("#FEF2F2"));
+                }
+                cs.setFont(fontNormal, 8);
+                cs.setNonStrokingColor(Color.decode("#334155"));
+
+                String nom = a.getProduit().getNom();
+                if (nom.length() > 42) nom = nom.substring(0, 42) + ".";
+                drawText(cs, nom, MARGIN + 8, y);
+
+                String cat = (a.getProduit().getCategorie() != null)
+                        ? a.getProduit().getCategorie().getNom() : "-";
+                if (cat.length() > 20) cat = cat.substring(0, 20) + ".";
+                drawText(cs, cat, MARGIN + 220, y);
+
+                boolean rupture = a.getStockActuel() <= 0;
+                cs.setFont(fontBold, 8);
+                cs.setNonStrokingColor(rupture ? Color.decode("#DC2626") : Color.decode("#D97706"));
+                drawText(cs, rupture ? "RUPTURE" : String.valueOf(a.getStockActuel()), MARGIN + 330, y);
+
+                cs.setFont(fontNormal, 8);
+                cs.setNonStrokingColor(Color.decode("#334155"));
+                drawText(cs, String.valueOf(a.getSeuilAlerte()), MARGIN + 385, y);
+
+                cs.setFont(fontBold, 8);
+                cs.setNonStrokingColor(Color.decode("#0F172A"));
+                drawText(cs, String.valueOf(a.getQuantiteSuggerable()), MARGIN + 440, y);
+
+                y -= 16;
+                pair = !pair;
+            }
+            if (ruptures.isEmpty()) {
+                cs.setFont(fontNormal, 9);
+                cs.setNonStrokingColor(Color.decode("#64748B"));
+                drawText(cs, "Aucun produit sous son seuil d'alerte.", MARGIN + 8, y);
+                y -= 16;
+            }
+
+            // ---------- SECTION 2 : PERIMES ET PROCHES ----------
+            y -= 22;
+            if (y < MARGIN + 90) {
+                cs.close();
+                page = new PDPage(PDRectangle.A4);
+                document.addPage(page);
+                cs = new PDPageContentStream(document, page);
+                y = PAGE_HEIGHT - MARGIN;
+            }
+
+            cs.setFont(fontBold, 11);
+            cs.setNonStrokingColor(Color.decode("#92400E"));
+            drawText(cs, "A RETIRER DES RAYONS  -  " + perimes.size() + " lot(s) concerne(s)", MARGIN, y);
+            y -= 18;
+
+            drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 20, Color.decode("#D97706"));
+            cs.setFont(fontBold, 9);
+            cs.setNonStrokingColor(Color.WHITE);
+            drawText(cs, "PRODUIT", MARGIN + 8, y);
+            drawText(cs, "N. LOT", MARGIN + 220, y);
+            drawText(cs, "EXPIRATION", MARGIN + 310, y);
+            drawText(cs, "QTE", MARGIN + 390, y);
+            drawText(cs, "ETAT", MARGIN + 430, y);
+            y -= 22;
+
+            pair = false;
+            for (com.pharmacie.controllers.AlerteStockController.LotPerimeModel l : perimes) {
+                if (y < MARGIN + 50) {
+                    cs.close();
+                    page = new PDPage(PDRectangle.A4);
+                    document.addPage(page);
+                    cs = new PDPageContentStream(document, page);
+                    y = PAGE_HEIGHT - MARGIN;
+                }
+                if (pair) {
+                    drawFilledRect(cs, MARGIN, y - 5, PAGE_WIDTH - 2 * MARGIN, 16, Color.decode("#FFFBEB"));
+                }
+                cs.setFont(fontNormal, 8);
+                cs.setNonStrokingColor(Color.decode("#334155"));
+
+                String nom = l.getNomProduit();
+                if (nom.length() > 42) nom = nom.substring(0, 42) + ".";
+                drawText(cs, nom, MARGIN + 8, y);
+
+                String lot = l.getNumLot() != null ? l.getNumLot() : "-";
+                if (lot.length() > 18) lot = lot.substring(0, 18);
+                drawText(cs, lot, MARGIN + 220, y);
+
+                drawText(cs, l.getDateExpStr(), MARGIN + 310, y);
+                drawText(cs, String.valueOf(l.getQte()), MARGIN + 390, y);
+
+                boolean perime = l.getJoursRestants() < 0;
+                cs.setFont(fontBold, 8);
+                cs.setNonStrokingColor(perime ? Color.decode("#DC2626") : Color.decode("#D97706"));
+                drawText(cs, perime ? "PERIME" : l.getJoursRestants() + " j", MARGIN + 430, y);
+
+                y -= 16;
+                pair = !pair;
+            }
+            if (perimes.isEmpty()) {
+                cs.setFont(fontNormal, 9);
+                cs.setNonStrokingColor(Color.decode("#64748B"));
+                drawText(cs, "Aucun lot perime ou proche de la peremption.", MARGIN + 8, y);
+                y -= 16;
+            }
+
+            // ---------- PIED : CONTROLE ----------
+            y -= 30;
+            if (y > MARGIN + 40) {
+                cs.setLineWidth(0.5f);
+                cs.setStrokingColor(Color.decode("#CBD5E1"));
+                cs.moveTo(MARGIN, y + 12);
+                cs.lineTo(PAGE_WIDTH - MARGIN, y + 12);
+                cs.stroke();
+                cs.setFont(fontNormal, 8);
+                cs.setNonStrokingColor(Color.decode("#64748B"));
+                drawText(cs, "Verifie par : ____________________        Date : ____/____/________", MARGIN, y);
+            }
+
+            cs.close();
+            document.save(fichier);
+            logger.info("Liste des alertes sauvegardée : {}", fichier.getAbsolutePath());
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(fichier);
+            }
+
+        } catch (Exception e) {
+            logger.error("Erreur lors de la generation de la liste des alertes", e);
+            com.pharmacie.utils.AlertUtils.showPremiumAlert(
+                    javafx.scene.control.Alert.AlertType.ERROR,
+                    "Impression impossible",
+                    "La liste des alertes n'a pas pu etre generee",
+                    e.getMessage());
+        }
+    }
+
 }
