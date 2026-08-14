@@ -1536,6 +1536,7 @@ public class VenteController {
         });
         colPanVenteTotal.setCellValueFactory(new PropertyValueFactory<>("sousTotal"));
         tablePanierVente.setItems(panier);
+        com.pharmacie.utils.TableUtils.ajusterSansDefilement(tablePanierVente);
     }
 
     private void loadStockDispo() {

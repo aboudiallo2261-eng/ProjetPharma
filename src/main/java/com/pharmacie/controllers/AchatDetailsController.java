@@ -72,6 +72,7 @@ public class AchatDetailsController {
 
         if (achat.getLignesAchat() != null) {
             tableLignes.setItems(FXCollections.observableArrayList(achat.getLignesAchat()));
+        com.pharmacie.utils.TableUtils.ajusterAvecDefilement(tableLignes);
             double total = achat.getLignesAchat().stream()
                     .mapToDouble(la -> la.getQuantiteAchetee() * la.getPrixUnitaire()).sum();
             lblTotalCommande.setText(String.format("%.0f FCFA", total));

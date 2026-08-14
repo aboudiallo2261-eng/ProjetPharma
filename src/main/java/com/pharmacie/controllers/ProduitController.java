@@ -1165,6 +1165,7 @@ public class ProduitController {
 
         tableMvt.getColumns().addAll(colDate, colType, colQte, colRef, colAgent);
         tableMvt.setItems(FXCollections.observableArrayList(mouvements));
+        com.pharmacie.utils.TableUtils.ajusterAvecDefilement(tableMvt);
 
         tableMvt.setRowFactory(tv -> new TableRow<>() {
             {

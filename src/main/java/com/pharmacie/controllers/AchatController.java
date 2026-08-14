@@ -972,6 +972,7 @@ public class AchatController {
             return true;
         }).collect(Collectors.toList());
         tableHistorique.getItems().setAll(filtered);
+        com.pharmacie.utils.TableUtils.ajusterAvecDefilement(tableHistorique);
         mettreAJourTotalAchats(filtered, fournisseurFiltre != null || produitFiltre != null || !searchRef.isEmpty());
     }
 

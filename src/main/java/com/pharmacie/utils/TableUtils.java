@@ -43,11 +43,17 @@ public final class TableUtils {
 
     private TableUtils() { }
 
+    /** Marqueur posé sur un tableau déjà doté du réajustement automatique. */
+    private static final String CLE_AUTO = "vetpharma.ajustement.auto";
+    /** Marqueur d'un recalcul déjà planifié (évite les rafales en recherche dynamique). */
+    private static final String CLE_EN_ATTENTE = "vetpharma.ajustement.enAttente";
+
     /**
      * Mode consultation : chaque colonne prend la largeur de son contenu le plus long,
      * quitte à faire apparaître une barre de défilement horizontale.
      */
     public static void ajusterAvecDefilement(TableView<?> table) {
+        installerReajustementAuto(table, true);
         appliquer(table, true);
     }
 
@@ -57,15 +63,60 @@ public final class TableUtils {
      * abrégés et complétés par une infobulle au survol.
      */
     public static void ajusterSansDefilement(TableView<?> table) {
+        installerReajustementAuto(table, false);
         appliquer(table, false);
+    }
+
+    /**
+     * Rend le tableau auto-adaptatif : toute modification de ses données
+     * (filtre, recherche, rechargement) relance la mesure des colonnes.
+     *
+     * <p>Sans cela, il fallait rappeler l'ajustement à la main après chaque
+     * {@code setItems(...)} — un oubli suffisait pour que les textes
+     * redeviennent tronqués dès qu'un filtre était appliqué.</p>
+     *
+     * <p>L'installation n'a lieu qu'une fois par tableau (marqueur dans ses
+     * propriétés), afin de ne pas empiler les écouteurs.</p>
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static void installerReajustementAuto(TableView<?> table, boolean autoriserDefilement) {
+        if (table == null || Boolean.TRUE.equals(table.getProperties().get(CLE_AUTO))) {
+            return;
+        }
+        table.getProperties().put(CLE_AUTO, Boolean.TRUE);
+
+        // 1. Contenu modifié sur place : getItems().setAll(...), add(...), clear()...
+        javafx.collections.ListChangeListener surContenu = changement -> appliquer(table, autoriserDefilement);
+        if (table.getItems() != null) {
+            table.getItems().addListener(surContenu);
+        }
+
+        // 2. Liste entièrement remplacée : setItems(nouvelleListe)
+        table.itemsProperty().addListener((obs, ancienne, nouvelle) -> {
+            if (ancienne != null) {
+                ((javafx.collections.ObservableList) ancienne).removeListener(surContenu);
+            }
+            if (nouvelle != null) {
+                ((javafx.collections.ObservableList) nouvelle).addListener(surContenu);
+            }
+            appliquer(table, autoriserDefilement);
+        });
     }
 
     private static void appliquer(TableView<?> table, boolean autoriserDefilement) {
         if (table == null) {
             return;
         }
+        // Anti-rafale : lors d'une recherche dynamique, la liste change à chaque frappe.
+        // Un seul recalcul est planifié à la fois — le suivant repartira des données finales.
+        if (Boolean.TRUE.equals(table.getProperties().get(CLE_EN_ATTENTE))) {
+            return;
+        }
+        table.getProperties().put(CLE_EN_ATTENTE, Boolean.TRUE);
+
         // Différé : les cellules doivent être rendues pour que leur texte soit mesurable.
         Platform.runLater(() -> {
+            table.getProperties().remove(CLE_EN_ATTENTE);
             try {
                 // Au tout premier affichage, le tableau n'est pas encore dimensionné
                 // (getWidth() == 0) : impossible de savoir s'il y aura débordement.
