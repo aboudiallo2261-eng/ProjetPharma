@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Package, TrendingUp, TrendingDown, BarChart2, Award, DollarSign, Receipt, Filter, PackageX } from 'lucide-react';
-import { ResponsiveContainer, AreaChart, Area, Tooltip, XAxis } from 'recharts';
+import { ResponsiveContainer, AreaChart, Area, Tooltip, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { formatFCFA } from '../lib/formatters';
+
+/**
+ * Abrège un montant pour l'axe vertical : « 61 500 » devient « 61,5k ».
+ * Un axe en FCFA complets serait illisible sur un écran de téléphone.
+ */
+const montantCompact = (v) => {
+  const n = Number(v) || 0;
+  if (n >= 1000000) return (n / 1000000).toFixed(n >= 10000000 ? 0 : 1).replace('.', ',') + 'M';
+  if (n >= 1000) return (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace('.', ',') + 'k';
+  return String(n);
+};
 
 function PerfKpiCard({ label, value, icon: Icon, color, isTrend, trendVal }) {
   const isPos = trendVal >= 0;
@@ -150,20 +161,33 @@ export default function Performances({ data }) {
               </div>
             ) : hasChart ? (
               <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-                <AreaChart data={chartData} margin={{ top: 10, right: 15, left: 15, bottom: 0 }} isAnimationActive={false}>
+                <AreaChart data={chartData} margin={{ top: 10, right: 15, left: 0, bottom: 0 }} isAnimationActive={false}>
                   <defs>
                     <linearGradient id="colorCa" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
                       <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <XAxis 
-                    dataKey="name" 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{ fill: '#64748b', fontSize: 10 }} 
-                    dy={10} 
-                    interval="preserveStartEnd" 
+                  {/* Repères horizontaux discrets : sans eux, l'œil ne peut pas
+                      rattacher un point de la courbe à une valeur. */}
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
+                  <XAxis
+                    dataKey="name"
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: '#64748b', fontSize: 10 }}
+                    dy={10}
+                    interval="preserveStartEnd"
+                  />
+                  {/* Axe des montants : il manquait entièrement, obligeant à survoler
+                      chaque point pour connaître une valeur — impossible au doigt. */}
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: '#64748b', fontSize: 10 }}
+                    tickFormatter={montantCompact}
+                    width={48}
+                    tickCount={4}
                   />
                   <Tooltip
                     formatter={(v) => [formatFCFA(v), 'CA']}

@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -406,6 +405,13 @@ public class SyncService {
     /**
      * Sérialise le DTO en JSON (pretty-printed) et l'écrit dans sync/dashboard_snapshot.json.
      * L'écriture est atomique : on écrase le fichier complet à chaque synchro.
+     *
+     * <p><b>Encodage explicite en UTF-8</b> : {@code FileWriter} utilise le jeu de
+     * caractères par défaut de la machine (Windows-1252 sur un poste français), ce
+     * qui corrompait tout caractère non ASCII. « Sonde Œsophagienne » était stocké
+     * correctement en base mais écrit sur un octet erroné dans ce fichier. L'envoi
+     * vers le Cloud n'était pas concerné (il force déjà UTF-8), mais ce fichier sert
+     * de trace locale et de secours : il doit être relisible.</p>
      */
     private static void ecrireJson(DashboardSyncDTO dto) throws IOException {
         File dir = new File(SYNC_DIR);
@@ -413,7 +419,8 @@ public class SyncService {
             dir.mkdirs();
         }
         File fichier = new File(dir, SYNC_FILE);
-        try (FileWriter writer = new FileWriter(fichier, false)) {
+        try (java.io.Writer writer = new java.io.OutputStreamWriter(
+                new java.io.FileOutputStream(fichier, false), java.nio.charset.StandardCharsets.UTF_8)) {
             GSON.toJson(dto, writer);
         }
         logger.info("Fichier JSON écrit : {} ({} octets)", fichier.getAbsolutePath(), fichier.length());
