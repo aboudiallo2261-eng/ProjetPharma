@@ -1,144 +1,229 @@
 import React from 'react';
-import { TrendingUp, TrendingDown, DollarSign, Receipt, PackageX, AlertTriangle, Clock, Wallet, ShieldAlert, HeartCrack, BarChart2, Ban } from 'lucide-react';
+import { DollarSign, Receipt, PackageX, AlertTriangle, Clock, Wallet,
+         HeartCrack, BarChart2, Ban, CheckCircle2, ArrowRight, TrendingUp, TrendingDown } from 'lucide-react';
 import { formatFCFA } from '../lib/formatters';
 
-function PerfKpiCard({ label, value, icon: Icon, color, isTrend, trendVal }) {
-  const isPos = trendVal >= 0;
-  const finalColor = isTrend ? (isPos ? '#10b981' : '#ef4444') : color;
-  const TrendIcon = isTrend ? (isPos ? TrendingUp : TrendingDown) : Icon;
+/**
+ * Écran d'accueil — conçu pour répondre en quelques secondes à trois questions :
+ *   1. Est-ce que ma pharmacie va bien aujourd'hui ?
+ *   2. Qu'est-ce qui demande une action de ma part, et dans quel ordre ?
+ *   3. Combien d'argent est en jeu ?
+ *
+ * L'ancienne version présentait tous les indicateurs au même niveau visuel : le
+ * propriétaire devait lire dix chiffres, faire ses additions et deviner ses
+ * priorités. Ici, l'information est hiérarchisée par ce qu'elle implique.
+ */
+
+/** Bandeau de synthèse : le verdict global, visible dès l'ouverture. */
+function Verdict({ gravite, titre, sousTitre }) {
+  const styles = {
+    critique:  { fond: 'rgba(220,38,38,0.12)',  bord: 'rgba(220,38,38,0.35)',  couleur: '#f87171', Icone: Ban },
+    attention: { fond: 'rgba(245,158,11,0.10)', bord: 'rgba(245,158,11,0.30)', couleur: '#fbbf24', Icone: AlertTriangle },
+    ok:        { fond: 'rgba(16,185,129,0.10)', bord: 'rgba(16,185,129,0.30)', couleur: '#34d399', Icone: CheckCircle2 },
+  }[gravite];
+  const { Icone } = styles;
 
   return (
-    <div className="rounded-2xl p-4 flex flex-col relative overflow-hidden"
-      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-      <div className="flex justify-between items-start mb-2">
-        <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400">{label}</p>
-        <div className="w-6 h-6 rounded-md flex items-center justify-center shrink-0" style={{ background: `${finalColor}15` }}>
-          <TrendIcon className="w-3 h-3" style={{ color: finalColor }} />
-        </div>
+    <div className="mx-4 mt-2 mb-5 rounded-2xl p-4 flex items-start gap-3"
+      style={{ background: styles.fond, border: `1px solid ${styles.bord}` }}>
+      <Icone className="w-6 h-6 shrink-0 mt-0.5" style={{ color: styles.couleur }} />
+      <div className="min-w-0">
+        <p className="text-base font-bold leading-tight" style={{ color: styles.couleur }}>{titre}</p>
+        <p className="text-xs text-slate-300 mt-1 leading-relaxed">{sousTitre}</p>
       </div>
-      <p className="text-lg sm:text-xl font-bold text-white leading-tight" style={{ color: isTrend ? finalColor : 'white' }}>
-        {value}
-      </p>
     </div>
   );
 }
 
-function SummaryRow({ label, value, icon: Icon, color, valueColor = 'white' }) {
+/** Une action à mener, numérotée par ordre de priorité. */
+function Action({ rang, titre, detail, montant, couleur, icon: Icon }) {
+  return (
+    <div className="flex items-center gap-3 py-3 border-b border-white/5 last:border-0">
+      <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 text-xs font-black"
+        style={{ background: `${couleur}1f`, color: couleur }}>
+        {rang}
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-semibold text-white leading-tight">{titre}</p>
+        {detail && <p className="text-[11px] text-slate-400 mt-0.5">{detail}</p>}
+      </div>
+      {montant != null && (
+        <span className="text-sm font-bold shrink-0" style={{ color: couleur }}>{formatFCFA(montant)}</span>
+      )}
+      <Icon className="w-4 h-4 shrink-0" style={{ color: couleur }} />
+    </div>
+  );
+}
+
+function KpiCard({ label, value, sousTexte, icon: Icon, color }) {
+  return (
+    <div className="rounded-2xl p-4 flex flex-col"
+      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+      <div className="flex justify-between items-start mb-2">
+        <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400">{label}</p>
+        <div className="w-6 h-6 rounded-md flex items-center justify-center shrink-0" style={{ background: `${color}15` }}>
+          <Icon className="w-3 h-3" style={{ color }} />
+        </div>
+      </div>
+      <p className="text-lg sm:text-xl font-bold text-white leading-tight">{value}</p>
+      {sousTexte && <p className="text-[10px] text-slate-500 mt-1 leading-tight">{sousTexte}</p>}
+    </div>
+  );
+}
+
+function LigneMontant({ label, value, icon: Icon, color, valueColor = 'white', accent }) {
   return (
     <div className="flex items-center justify-between py-2.5 border-b border-white/5 last:border-0">
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${color}15` }}>
+      <div className="flex items-center gap-3 min-w-0">
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${color}15` }}>
           <Icon className="w-4 h-4" style={{ color }} />
         </div>
-        <span className="text-sm text-slate-300 font-medium">{label}</span>
+        <span className={`text-sm font-medium ${accent ? 'text-white' : 'text-slate-300'}`}>{label}</span>
       </div>
-      <span className="text-base font-bold" style={{ color: valueColor }}>{value}</span>
+      <span className={`${accent ? 'text-base' : 'text-base'} font-bold shrink-0`} style={{ color: valueColor }}>{value}</span>
     </div>
   );
 }
 
 export default function DashboardHome({ data }) {
   const kpis = data?.kpis || {};
-  const stockData = kpis.stock || {};
-  const currentKpi = kpis.jour || {};
+  const stock = kpis.stock || {};
+  const jour = kpis.jour || {};
+  const mois = kpis.mois || {};
 
-  const ca = currentKpi.chiffreAffaire || 0;
-  const marge = currentKpi.benefice || 0;
-  const ventes = currentKpi.ventesRealisees || 0;
-  const evolution = currentKpi.evolutionCA || 0;
+  const nbPerimes  = stock.nombrePerimes || 0;
+  const nbRuptures = stock.nombreRuptures || 0;
+  const nbAlertes  = stock.nombreAlerteStock || 0;
+  const nbProches  = stock.nombreProchePeremption || 0;
+
+  const valeurPerimes  = stock.valeurPerimes || 0;
+  const valeurARisque  = stock.valeurARisque || 0;
+  // Somme calculée POUR le propriétaire : il devait auparavant additionner
+  // mentalement une perte déjà subie et une exposition future.
+  const expositionTotale = valeurPerimes + valeurARisque;
+
+  const ventesJour = jour.ventesRealisees || 0;
+  const caJour     = jour.chiffreAffaire || 0;
+  const evolution  = jour.evolutionCA || 0;
+  const journeeVide = ventesJour === 0;
+
+  // ── Actions, classées par ce qu'elles coûtent si on les ignore ──────────
+  const actions = [];
+  if (nbPerimes > 0) {
+    actions.push({ titre: `Retirer ${nbPerimes} lot${nbPerimes > 1 ? 's' : ''} périmé${nbPerimes > 1 ? 's' : ''} des rayons`,
+      detail: 'Invendables — risque sanitaire et légal', montant: valeurPerimes, couleur: '#f87171', icon: Ban });
+  }
+  if (nbRuptures > 0) {
+    actions.push({ titre: `Commander ${nbRuptures} produit${nbRuptures > 1 ? 's' : ''} en rupture`,
+      detail: 'Ventes perdues tant que le stock est vide', couleur: '#f87171', icon: PackageX });
+  }
+  if (nbProches > 0) {
+    actions.push({ titre: `Écouler ${nbProches} lot${nbProches > 1 ? 's' : ''} expirant sous 60 jours`,
+      detail: 'Encore vendables — à prioriser', montant: valeurARisque, couleur: '#fbbf24', icon: Clock });
+  }
+  if (nbAlertes > 0) {
+    actions.push({ titre: `Réapprovisionner ${nbAlertes} produit${nbAlertes > 1 ? 's' : ''} sous le seuil`,
+      detail: 'Rupture imminente', couleur: '#fbbf24', icon: AlertTriangle });
+  }
+
+  // ── Verdict global ──────────────────────────────────────────────────────
+  let verdict;
+  if (nbPerimes > 0 || nbRuptures > 0) {
+    verdict = {
+      gravite: 'critique',
+      titre: `${actions.length} action${actions.length > 1 ? 's' : ''} à mener aujourd'hui`,
+      sousTitre: expositionTotale > 0
+        ? `${formatFCFA(expositionTotale)} sont en jeu sur votre stock, dont ${formatFCFA(valeurPerimes)} déjà perdus.`
+        : 'Des produits demandent une intervention immédiate.',
+    };
+  } else if (nbProches > 0 || nbAlertes > 0) {
+    verdict = {
+      gravite: 'attention',
+      titre: 'Situation sous contrôle, points à surveiller',
+      sousTitre: `Aucune perte constatée. ${formatFCFA(valeurARisque)} à écouler avant péremption.`,
+    };
+  } else {
+    verdict = {
+      gravite: 'ok',
+      titre: 'Tout est en ordre',
+      sousTitre: 'Aucune rupture, aucun lot périmé, aucune péremption proche.',
+    };
+  }
 
   return (
     <div className="pb-24 min-h-screen" style={{ background: 'linear-gradient(180deg, #0f172a 0%, #1e293b 100%)' }}>
-      
-      {/* Header avec Titre */}
-      <div className="px-4 pt-6 mb-4">
-        <h2 className="text-xl font-bold text-white tracking-tight">Vue d'ensemble d'aujourd'hui</h2>
-        {/* Les données proviennent d'une synchronisation périodique depuis la pharmacie :
-            annoncer du « temps réel » induisait le propriétaire en erreur. */}
+
+      <div className="px-4 pt-6 mb-3">
+        <h2 className="text-xl font-bold text-white tracking-tight">Ma pharmacie aujourd'hui</h2>
         <p className="text-xs text-slate-400 mt-0.5">Données synchronisées depuis la pharmacie</p>
       </div>
 
-      {/* Cartes KPI (Style Performances) */}
-      <div className="px-4 grid grid-cols-2 gap-3 mb-6">
-        <PerfKpiCard label="Chiffre d'Affaires" value={formatFCFA(ca)} icon={DollarSign} color="#34d399" />
-        <PerfKpiCard label="Bénéfices (Marge)" value={formatFCFA(marge)} icon={BarChart2} color="#60a5fa" />
-        <PerfKpiCard label="Nombre de Ventes" value={ventes} icon={Receipt} color="#a78bfa" />
-        <PerfKpiCard label="Croissance" value={`${evolution > 0 ? '+' : ''}${evolution.toFixed(1)}%`} isTrend trendVal={evolution} />
+      {/* 1. LE VERDICT — ce qu'il doit retenir en une phrase */}
+      <Verdict {...verdict} />
+
+      {/* 2. CE QU'IL DOIT FAIRE — par ordre de priorité */}
+      {actions.length > 0 && (
+        <div className="px-4 mb-6">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 ml-1">
+            Par où commencer
+          </h3>
+          <div className="rounded-2xl px-4 py-1"
+            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
+            {actions.map((a, i) => <Action key={i} rang={i + 1} {...a} />)}
+          </div>
+          <p className="text-[11px] text-slate-500 mt-2 ml-1 flex items-center gap-1">
+            Le détail produit par produit se trouve dans l'onglet Urgences
+            <ArrowRight className="w-3 h-3" />
+          </p>
+        </div>
+      )}
+
+      {/* 3. SON ACTIVITÉ — avec un repli sur le mois quand la journée est vide */}
+      <div className="px-4 mb-6">
+        <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 ml-1">Activité</h3>
+        {journeeVide ? (
+          <div className="rounded-2xl p-4 mb-3"
+            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+            <p className="text-sm text-slate-300 font-medium">Aucune vente enregistrée aujourd'hui</p>
+            <p className="text-[11px] text-slate-500 mt-1">
+              Ce mois-ci : <span className="text-slate-300 font-semibold">{formatFCFA(mois.chiffreAffaire || 0)}</span>
+              {' '}sur <span className="text-slate-300 font-semibold">{mois.ventesRealisees || 0} vente{(mois.ventesRealisees || 0) > 1 ? 's' : ''}</span>
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <KpiCard label="Chiffre d'affaires" value={formatFCFA(caJour)} sousTexte="Aujourd'hui"
+              icon={DollarSign} color="#34d399" />
+            <KpiCard label="Marge brute" value={formatFCFA(jour.benefice || 0)} sousTexte="Hors charges"
+              icon={BarChart2} color="#60a5fa" />
+            <KpiCard label="Ventes" value={ventesJour} sousTexte="Tickets du jour"
+              icon={Receipt} color="#a78bfa" />
+            <KpiCard label="Évolution" value={`${evolution > 0 ? '+' : ''}${evolution.toFixed(1).replace('.', ',')} %`}
+              sousTexte="Par rapport à hier"
+              icon={evolution >= 0 ? TrendingUp : TrendingDown} color={evolution >= 0 ? '#34d399' : '#f87171'} />
+          </div>
+        )}
       </div>
 
-      {/* 2. État du stock (résumé intelligent) */}
-      <div className="px-4 mt-6">
-        <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 ml-1">État du stock</h3>
-        {/* Ordre par criticité : un lot périmé encore en rayon est un risque légal et
-            sanitaire immédiat — il passe donc avant les ruptures. */}
-        <div className="rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <SummaryRow
-            label="Produits périmés"
-            value={stockData.nombrePerimes || 0}
-            icon={Ban}
-            color="#dc2626"
-            valueColor={(stockData.nombrePerimes || 0) > 0 ? '#dc2626' : '#10b981'}
-          />
-          <SummaryRow
-            label="Produits en rupture"
-            value={stockData.nombreRuptures}
-            icon={PackageX}
-            color="#ef4444"
-            valueColor={stockData.nombreRuptures > 0 ? '#ef4444' : '#10b981'}
-          />
-          <SummaryRow
-            label="En alerte de stock"
-            value={stockData.nombreAlerteStock}
-            icon={AlertTriangle}
-            color="#f59e0b"
-            valueColor={stockData.nombreAlerteStock > 0 ? '#f59e0b' : '#10b981'}
-          />
-          {/* Champ corrigé : nombreProchePeremption (à venir) et non nombrePerimes (déjà périmés) */}
-          <SummaryRow
-            label="Proches péremption (< 60 jours)"
-            value={stockData.nombreProchePeremption || 0}
-            icon={Clock}
-            color="#f97316"
-            valueColor={(stockData.nombreProchePeremption || 0) > 0 ? '#f97316' : '#10b981'}
-          />
+      {/* 4. L'ARGENT — du plus immobilisé au plus menacé */}
+      <div className="px-4">
+        <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 ml-1">Votre argent</h3>
+        <div className="rounded-2xl p-4"
+          style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <LigneMontant label="Valeur du stock" value={formatFCFA(stock.valeurTotale)} icon={Wallet} color="#60a5fa" />
+          <LigneMontant label="Déjà perdu (lots périmés)" value={formatFCFA(valeurPerimes)}
+            icon={Ban} color="#dc2626" valueColor={valeurPerimes > 0 ? '#f87171' : '#34d399'} />
+          <LigneMontant label="Menacé (expire sous 60 jours)" value={formatFCFA(valeurARisque)}
+            icon={Clock} color="#f59e0b" valueColor={valeurARisque > 0 ? '#fbbf24' : '#34d399'} />
+          <LigneMontant label="Pertes du jour (casse)" value={formatFCFA(jour.pertesValeur || 0)}
+            icon={HeartCrack} color="#f43f5e" valueColor={(jour.pertesValeur || 0) > 0 ? '#fb7185' : '#34d399'} />
         </div>
-      </div>
-
-      {/* 3. Risques financiers */}
-      <div className="px-4 mt-6">
-        <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 ml-1">Risques financiers</h3>
-        <div className="rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <SummaryRow 
-            label="Valeur totale du stock" 
-            value={formatFCFA(stockData.valeurTotale)} 
-            icon={Wallet} 
-            color="#60a5fa" 
-          />
-          {/* Perte DÉJÀ RÉALISÉE : elle était calculée et transmise, mais jamais affichée.
-              Le propriétaire ne voyait que la valeur « à risque » et sous-estimait
-              fortement son exposition réelle. */}
-          <SummaryRow
-            label="Valeur des produits périmés"
-            value={formatFCFA(stockData.valeurPerimes || 0)}
-            icon={Ban}
-            color="#dc2626"
-            valueColor={(stockData.valeurPerimes || 0) > 0 ? '#dc2626' : '#10b981'}
-          />
-          <SummaryRow
-            label="Valeur stock à risque (< 60 jours)"
-            value={formatFCFA(stockData.valeurARisque || 0)}
-            icon={ShieldAlert}
-            color="#f59e0b"
-            valueColor={(stockData.valeurARisque || 0) > 0 ? '#f59e0b' : '#10b981'}
-          />
-          <SummaryRow 
-            label="Pertes du jour (casse)" 
-            value={formatFCFA(currentKpi.pertesValeur)} 
-            icon={HeartCrack} 
-            color="#ef4444" 
-            valueColor={currentKpi.pertesValeur > 0 ? '#ef4444' : '#10b981'} 
-          />
-        </div>
+        {expositionTotale > 0 && (
+          <p className="text-[11px] text-slate-500 mt-2 ml-1">
+            Total en jeu : <span className="text-slate-300 font-semibold">{formatFCFA(expositionTotale)}</span>
+            {stock.valeurTotale > 0 && ` — ${((expositionTotale / stock.valeurTotale) * 100).toFixed(1).replace('.', ',')} % de votre stock`}
+          </p>
+        )}
       </div>
 
     </div>
