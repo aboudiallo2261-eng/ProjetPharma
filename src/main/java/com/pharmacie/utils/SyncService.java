@@ -183,6 +183,9 @@ public class SyncService {
         long[] alertesKpi = statsDAO.getDashboardWebAlertesKPI(today);
         kpiStock.setNombreRuptures((int) alertesKpi[0]);
         kpiStock.setNombreAlerteStock((int) alertesKpi[1]);
+        // [2] compte désormais les lots RÉELLEMENT périmés : auparavant cette case
+        // recevait le nombre de lots proches de la péremption, si bien que le KPI
+        // « produits périmés » contredisait la liste des périmés affichée juste à côté.
         kpiStock.setNombrePerimes((int) alertesKpi[2]);
         kpis.setStock(kpiStock);
 

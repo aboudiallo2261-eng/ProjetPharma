@@ -186,12 +186,17 @@ public class NotificationService {
             long[] kpi = statsDAO.getDashboardWebAlertesKPI(LocalDate.now());
             long ruptures = kpi[0];
             long alertesStock = kpi[1];
+            // [2] = lots réellement périmés. Cette case recevait auparavant le nombre
+            // de lots PROCHES de la péremption : la notification annonçait donc un
+            // nombre de « périmés » qui n'en étaient pas.
             long perimes = kpi[2];
+            long proches = kpi.length > 3 ? kpi[3] : 0;
 
             List<String> lignes = new ArrayList<>();
             if (perimes > 0)      lignes.add(perimes + " lot(s) PÉRIMÉ(S) en stock");
             if (ruptures > 0)     lignes.add(ruptures + " produit(s) en RUPTURE");
             if (alertesStock > 0) lignes.add(alertesStock + " produit(s) sous le seuil d'alerte");
+            if (proches > 0)      lignes.add(proches + " lot(s) expirent sous 60 jours");
 
             if (!lignes.isEmpty()) {
                 notifier(nomPharmacie() + " — Alertes Stock", String.join("\n", lignes),

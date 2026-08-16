@@ -205,18 +205,36 @@ public class StatistiquesDAO {
     }
 
     /**
-     * Calcule en base les trois métriques d'alerte pour le Dashboard WEB (PWA).
-     * 
-     * @return long[3] — [0] = nb ruptures (stock = 0),
-     *         [1] = nb alertes (0 < stock <= seuil),
-     *         [2] = nb lots expirés encore en stock
+     * Calcule en base les métriques d'alerte du tableau de bord.
+     *
+     * <p><b>Distinction essentielle</b> : les lots <i>déjà périmés</i> (invendables,
+     * perte constatée) et les lots <i>proches de la péremption</i> (encore vendables,
+     * à écouler) sont deux réalités différentes et sont comptés séparément.
+     * Les bornes de dates sont alignées sur {@link #getLotsPerimes(LocalDate)} et
+     * {@link #getLotsProchePeremption(LocalDate, int)} pour que les compteurs
+     * correspondent exactement aux listes affichées.</p>
+     *
+     * @return long[4] — [0] = nb ruptures (stock = 0),
+     *         [1] = nb alertes (0 &lt; stock &le; seuil),
+     *         [2] = nb lots <b>déjà périmés</b> encore en stock,
+     *         [3] = nb lots expirant dans les 60 prochains jours
      */
     public long[] getDashboardWebAlertesKPI(LocalDate today) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             LocalDate dateLimite = today.plusDays(60);
 
-            String hqlExpires = "SELECT COUNT(l.id) FROM Lot l WHERE l.quantiteStock > 0 AND l.dateExpiration IS NOT NULL AND l.dateExpiration >= :today AND l.dateExpiration <= :dateLimite";
-            Long nbExpires = session.createQuery(hqlExpires, Long.class)
+            // Déjà périmés : même borne que getLotsPerimes (<= today)
+            String hqlPerimes = "SELECT COUNT(l.id) FROM Lot l WHERE l.quantiteStock > 0 "
+                    + "AND l.dateExpiration IS NOT NULL AND l.dateExpiration <= :today";
+            Long nbPerimes = session.createQuery(hqlPerimes, Long.class)
+                    .setParameter("today", today)
+                    .uniqueResult();
+
+            // Proches de la péremption : même borne que getLotsProchePeremption (> today)
+            String hqlProches = "SELECT COUNT(l.id) FROM Lot l WHERE l.quantiteStock > 0 "
+                    + "AND l.dateExpiration IS NOT NULL AND l.dateExpiration > :today "
+                    + "AND l.dateExpiration <= :dateLimite";
+            Long nbProches = session.createQuery(hqlProches, Long.class)
                     .setParameter("today", today)
                     .setParameter("dateLimite", dateLimite)
                     .uniqueResult();
@@ -237,7 +255,8 @@ public class StatistiquesDAO {
             return new long[] {
                     nbRuptures,
                     nbAlertes,
-                    nbExpires != null ? nbExpires : 0L
+                    nbPerimes != null ? nbPerimes : 0L,
+                    nbProches != null ? nbProches : 0L
             };
         }
     }
