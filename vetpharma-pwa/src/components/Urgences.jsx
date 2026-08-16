@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PackageX, AlertTriangle, Clock, CheckCircle2, HeartCrack, ChevronDown, ChevronUp } from 'lucide-react';
+import { PackageX, Clock, CheckCircle2, HeartCrack, ChevronDown, ChevronUp, Ban } from 'lucide-react';
 import { formatFCFA } from '../lib/formatters';
 
 const daysUntil = (dateStr) => {
@@ -15,6 +15,31 @@ function getPeremptionColor(dateStr) {
   if (d <= 7) return { bg: 'rgba(239,68,68,0.15)', text: '#fca5a5', label: `${d} j` };
   if (d <= 60) return { bg: 'rgba(249,115,22,0.15)', text: '#fb923c', label: `${d} j` };
   return { bg: 'rgba(16,185,129,0.15)', text: '#34d399', label: `${d} j` };
+}
+
+/** Ligne d'un lot (périmé ou proche) — même rendu dans les deux sections. */
+function LigneLot({ lot }) {
+  const couleur = getPeremptionColor(lot.dateExpiration);
+  const dateLisible = lot.dateExpiration
+    ? lot.dateExpiration.split('-').reverse().join('/')
+    : '—';
+  return (
+    <div className="px-4 py-3 flex items-start justify-between hover:bg-white/5 transition-colors">
+      <div className="flex flex-col min-w-0 pr-4">
+        <p className="text-sm font-semibold text-white truncate">{lot.nom}</p>
+        <p className="text-[11px] text-slate-400 mt-0.5">
+          Lot {lot.numeroLot} — <span className="text-slate-300 font-medium">{lot.stockRestant} unités</span>
+        </p>
+      </div>
+      <div className="flex flex-col items-end shrink-0 gap-1.5">
+        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md"
+          style={{ background: couleur.bg, color: couleur.text }}>
+          {couleur.label}
+        </span>
+        <span className="text-[10px] text-slate-500 font-medium">{dateLisible}</span>
+      </div>
+    </div>
+  );
 }
 
 function SectionCard({ title, icon: Icon, color, children }) {
@@ -52,17 +77,23 @@ export default function Urgences({ data }) {
   const showAllReappro = expandedSection === 'reappro';
   const displayedReappro = showAllReappro ? allReappro : reapproTop5;
 
-  // 3.2 Péremption
-  const nbPerimesProches = stockData.nombreProchePeremption || 0; 
-  const valeurARisque = stockData.valeurARisque || 0;
-  const perimesList = alertes.perimes || [];
-  const prochePeremptionsList = alertes.prochePeremptions || [];
-  
-  const allPeremptions = [...perimesList, ...prochePeremptionsList]
+  // 3.2 Péremption — DEUX natures de risque, volontairement séparées.
+  // Auparavant les deux listes étaient fusionnées sous un compteur qui ne comptait
+  // que les lots proches : on lisait « 4 lots < 60 jours » au-dessus d'une liste de
+  // 9 lots dont les premiers étaient déjà périmés. Impossible à interpréter.
+  const perimesList = [...(alertes.perimes || [])]
     .sort((a, b) => new Date(a.dateExpiration) - new Date(b.dateExpiration));
-  const peremptionTop5 = allPeremptions.slice(0, 5);
-  const showAllPeremptions = expandedSection === 'peremption';
-  const displayedPeremptions = showAllPeremptions ? allPeremptions : peremptionTop5;
+  const prochePeremptionsList = [...(alertes.prochePeremptions || [])]
+    .sort((a, b) => new Date(a.dateExpiration) - new Date(b.dateExpiration));
+
+  // Perte déjà réalisée (lots expirés, invendables) vs exposition à venir
+  const valeurPerimes = stockData.valeurPerimes || 0;
+  const valeurARisque = stockData.valeurARisque || 0;
+
+  const showAllPerimes = expandedSection === 'perimes';
+  const displayedPerimes = showAllPerimes ? perimesList : perimesList.slice(0, 5);
+  const showAllProches = expandedSection === 'proches';
+  const displayedProches = showAllProches ? prochePeremptionsList : prochePeremptionsList.slice(0, 5);
 
   // 3.3 Pertes
   const pertesJourValeur = kpis.jour?.pertesValeur || 0;
@@ -135,62 +166,76 @@ export default function Urgences({ data }) {
         )}
       </SectionCard>
 
-      {/* 3.2 Péremption */}
-      <SectionCard title="Péremption — Surveillance" icon={Clock} color="#ef4444">
-        {nbPerimesProches === 0 ? (
-          <div className="p-5 flex flex-col gap-3 bg-emerald-400/5">
-            <div className="flex items-center gap-3 text-emerald-400">
-              <CheckCircle2 className="w-5 h-5 shrink-0"/>
-              <span className="text-sm font-bold">Aucun produit critique en péremption</span>
-            </div>
-            <div className="flex items-center gap-3 text-emerald-400/80">
-              <CheckCircle2 className="w-5 h-5 shrink-0"/>
-              <span className="text-sm font-medium">0 FCFA à risque</span>
-            </div>
+      {/* 3.2a DÉJÀ PÉRIMÉS — perte réalisée, action immédiate : retirer des rayons */}
+      <SectionCard title="Déjà périmés — à retirer" icon={Ban} color="#dc2626">
+        {perimesList.length === 0 ? (
+          <div className="p-4 flex items-center gap-2 text-emerald-400 bg-emerald-400/5">
+            <CheckCircle2 className="w-5 h-5 shrink-0"/>
+            <span className="text-sm font-medium">Aucun lot périmé en rayon.</span>
           </div>
         ) : (
           <>
             <div className="p-4 grid grid-cols-2 gap-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
               <div>
-                <p className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Lots &lt; 60 jours</p>
-                <p className="text-2xl font-black text-orange-400 mt-1">{nbPerimesProches}</p>
+                <p className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Lots périmés</p>
+                <p className="text-2xl font-black text-red-500 mt-1">{perimesList.length}</p>
+              </div>
+              <div>
+                <p className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Perte constatée</p>
+                <p className="text-lg font-black text-red-500 mt-1.5">{formatFCFA(valeurPerimes)}</p>
+              </div>
+            </div>
+            <div className="divide-y divide-white/5">
+              {displayedPerimes.map((lot, idx) => (
+                <LigneLot key={idx} lot={lot} />
+              ))}
+              {perimesList.length > 5 && (
+                <button
+                  onClick={() => toggleSection('perimes')}
+                  className="w-full py-3 flex items-center justify-center gap-2 text-xs font-semibold text-red-400 hover:bg-white/5 transition-colors">
+                  {showAllPerimes ? (
+                    <>Voir moins <ChevronUp className="w-4 h-4" /></>
+                  ) : (
+                    <>Voir les {perimesList.length} lots périmés <ChevronDown className="w-4 h-4" /></>
+                  )}
+                </button>
+              )}
+            </div>
+          </>
+        )}
+      </SectionCard>
+
+      {/* 3.2b À SURVEILLER — exposition future, action : écouler en priorité */}
+      <SectionCard title="À surveiller — moins de 60 jours" icon={Clock} color="#f97316">
+        {prochePeremptionsList.length === 0 ? (
+          <div className="p-4 flex items-center gap-2 text-emerald-400 bg-emerald-400/5">
+            <CheckCircle2 className="w-5 h-5 shrink-0"/>
+            <span className="text-sm font-medium">Aucun lot n'expire dans les 60 prochains jours.</span>
+          </div>
+        ) : (
+          <>
+            <div className="p-4 grid grid-cols-2 gap-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+              <div>
+                <p className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Lots concernés</p>
+                <p className="text-2xl font-black text-orange-400 mt-1">{prochePeremptionsList.length}</p>
               </div>
               <div>
                 <p className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Valeur à risque</p>
-                <p className="text-lg font-black text-red-400 mt-1.5">{formatFCFA(valeurARisque)}</p>
+                <p className="text-lg font-black text-orange-400 mt-1.5">{formatFCFA(valeurARisque)}</p>
               </div>
             </div>
-
             <div className="divide-y divide-white/5">
-              {displayedPeremptions.map((lot, idx) => {
-                const colorInfo = getPeremptionColor(lot.dateExpiration);
-                return (
-                  <div key={idx} className="px-4 py-3 flex items-start justify-between hover:bg-white/5 transition-colors">
-                    <div className="flex flex-col min-w-0 pr-4">
-                      <p className="text-sm font-semibold text-white truncate">{lot.nom}</p>
-                      <p className="text-[11px] text-slate-400 mt-0.5">
-                        Lot {lot.numeroLot} — <span className="text-slate-300 font-medium">{lot.stockRestant} unités</span>
-                      </p>
-                    </div>
-                    <div className="flex flex-col items-end shrink-0 gap-1.5">
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-md" 
-                        style={{ background: colorInfo.bg, color: colorInfo.text }}>
-                        {colorInfo.label}
-                      </span>
-                      <span className="text-[10px] text-slate-500 font-medium">{lot.dateExpiration.split('-').reverse().join('/')}</span>
-                    </div>
-                  </div>
-                );
-              })}
-              
-              {allPeremptions.length > 5 && (
-                <button 
-                  onClick={() => toggleSection('peremption')}
-                  className="w-full py-3 flex items-center justify-center gap-2 text-xs font-semibold text-red-400 hover:bg-white/5 transition-colors">
-                  {showAllPeremptions ? (
+              {displayedProches.map((lot, idx) => (
+                <LigneLot key={idx} lot={lot} />
+              ))}
+              {prochePeremptionsList.length > 5 && (
+                <button
+                  onClick={() => toggleSection('proches')}
+                  className="w-full py-3 flex items-center justify-center gap-2 text-xs font-semibold text-orange-400 hover:bg-white/5 transition-colors">
+                  {showAllProches ? (
                     <>Voir moins <ChevronUp className="w-4 h-4" /></>
                   ) : (
-                    <>Voir tous les {allPeremptions.length} lots concernés <ChevronDown className="w-4 h-4" /></>
+                    <>Voir les {prochePeremptionsList.length} lots concernés <ChevronDown className="w-4 h-4" /></>
                   )}
                 </button>
               )}

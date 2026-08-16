@@ -57,10 +57,12 @@ export default function BottomNav({ currentTab, setCurrentTab, alertCount = 0 })
                     strokeWidth: isActive ? 2.5 : 1.5
                   }}
                 />
+                {/* Le nombre réel est affiché : « 9+ » masquait l'ampleur (14 alertes
+                    s'affichaient « 9+ »). La pastille s'élargit pour deux chiffres. */}
                 {tab.badge > 0 && (
-                  <div className="absolute -top-1 -right-1.5 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-black text-white"
+                  <div className="absolute -top-1 -right-2 min-w-[16px] h-4 px-1 rounded-full flex items-center justify-center text-[9px] font-black text-white"
                     style={{ background: '#ef4444' }}>
-                    {tab.badge > 9 ? '9+' : tab.badge}
+                    {tab.badge > 99 ? '99+' : tab.badge}
                   </div>
                 )}
               </div>

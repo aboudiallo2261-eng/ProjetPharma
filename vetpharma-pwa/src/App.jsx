@@ -99,10 +99,12 @@ function App() {
   const stock = kpis.stock || {};
   const alertes = raw.alertes || {};
   
-  // Badge = actions urgentes réelles : ruptures + alertes stock + lots proches péremption (<60j)
-  // On exclut les lots déjà périmés (alertes.perimes) car moins actionnables en urgence immédiate
+  // Badge = toutes les situations demandant une action.
+  // Les lots DÉJÀ périmés y sont inclus : un médicament expiré encore en rayon est
+  // le cas le plus urgent (risque sanitaire et légal), pas le moins.
   const alertCount = (stock.nombreRuptures || 0)
     + (stock.nombreAlerteStock || 0)
+    + (alertes.perimes?.length || 0)
     + (alertes.prochePeremptions?.length || 0);
 
   return (

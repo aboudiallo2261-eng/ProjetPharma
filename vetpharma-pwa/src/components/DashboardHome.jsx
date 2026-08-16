@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp, TrendingDown, DollarSign, Receipt, PackageX, AlertTriangle, Clock, Wallet, ShieldAlert, HeartCrack, BarChart2 } from 'lucide-react';
+import { TrendingUp, TrendingDown, DollarSign, Receipt, PackageX, AlertTriangle, Clock, Wallet, ShieldAlert, HeartCrack, BarChart2, Ban } from 'lucide-react';
 import { formatFCFA } from '../lib/formatters';
 
 function PerfKpiCard({ label, value, icon: Icon, color, isTrend, trendVal }) {
@@ -38,7 +38,6 @@ function SummaryRow({ label, value, icon: Icon, color, valueColor = 'white' }) {
 }
 
 export default function DashboardHome({ data }) {
-  const alertes = data?.alertes || {};
   const kpis = data?.kpis || {};
   const stockData = kpis.stock || {};
   const currentKpi = kpis.jour || {};
@@ -48,15 +47,15 @@ export default function DashboardHome({ data }) {
   const ventes = currentKpi.ventesRealisees || 0;
   const evolution = currentKpi.evolutionCA || 0;
 
-  const margeRate = ca > 0 ? ((marge / ca) * 100).toFixed(1) : '0.0';
-
   return (
     <div className="pb-24 min-h-screen" style={{ background: 'linear-gradient(180deg, #0f172a 0%, #1e293b 100%)' }}>
       
       {/* Header avec Titre */}
       <div className="px-4 pt-6 mb-4">
         <h2 className="text-xl font-bold text-white tracking-tight">Vue d'ensemble d'aujourd'hui</h2>
-        <p className="text-xs text-slate-400 mt-0.5">Indicateurs opérationnels en temps réel</p>
+        {/* Les données proviennent d'une synchronisation périodique depuis la pharmacie :
+            annoncer du « temps réel » induisait le propriétaire en erreur. */}
+        <p className="text-xs text-slate-400 mt-0.5">Données synchronisées depuis la pharmacie</p>
       </div>
 
       {/* Cartes KPI (Style Performances) */}
@@ -70,27 +69,37 @@ export default function DashboardHome({ data }) {
       {/* 2. État du stock (résumé intelligent) */}
       <div className="px-4 mt-6">
         <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 ml-1">État du stock</h3>
+        {/* Ordre par criticité : un lot périmé encore en rayon est un risque légal et
+            sanitaire immédiat — il passe donc avant les ruptures. */}
         <div className="rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <SummaryRow 
-            label="Produits en rupture" 
-            value={stockData.nombreRuptures} 
-            icon={PackageX} 
-            color="#ef4444" 
-            valueColor={stockData.nombreRuptures > 0 ? '#ef4444' : '#10b981'} 
+          <SummaryRow
+            label="Produits périmés"
+            value={stockData.nombrePerimes || 0}
+            icon={Ban}
+            color="#dc2626"
+            valueColor={(stockData.nombrePerimes || 0) > 0 ? '#dc2626' : '#10b981'}
           />
-          <SummaryRow 
-            label="En alerte de stock" 
-            value={stockData.nombreAlerteStock} 
-            icon={AlertTriangle} 
-            color="#f59e0b" 
-            valueColor={stockData.nombreAlerteStock > 0 ? '#f59e0b' : '#10b981'} 
+          <SummaryRow
+            label="Produits en rupture"
+            value={stockData.nombreRuptures}
+            icon={PackageX}
+            color="#ef4444"
+            valueColor={stockData.nombreRuptures > 0 ? '#ef4444' : '#10b981'}
           />
-          <SummaryRow 
-            label="Proches péremption (<60j)" 
-            value={stockData.nombrePerimes} 
-            icon={Clock} 
-            color="#f97316" 
-            valueColor={stockData.nombrePerimes > 0 ? '#f97316' : '#10b981'} 
+          <SummaryRow
+            label="En alerte de stock"
+            value={stockData.nombreAlerteStock}
+            icon={AlertTriangle}
+            color="#f59e0b"
+            valueColor={stockData.nombreAlerteStock > 0 ? '#f59e0b' : '#10b981'}
+          />
+          {/* Champ corrigé : nombreProchePeremption (à venir) et non nombrePerimes (déjà périmés) */}
+          <SummaryRow
+            label="Proches péremption (< 60 jours)"
+            value={stockData.nombreProchePeremption || 0}
+            icon={Clock}
+            color="#f97316"
+            valueColor={(stockData.nombreProchePeremption || 0) > 0 ? '#f97316' : '#10b981'}
           />
         </div>
       </div>
@@ -105,12 +114,22 @@ export default function DashboardHome({ data }) {
             icon={Wallet} 
             color="#60a5fa" 
           />
-          <SummaryRow 
-            label="Valeur stock à risque (< 60 jrs)" 
-            value={formatFCFA(stockData.valeurARisque || 0)} 
-            icon={ShieldAlert} 
-            color="#f59e0b" 
-            valueColor={(stockData.valeurARisque || 0) > 0 ? '#f59e0b' : '#10b981'} 
+          {/* Perte DÉJÀ RÉALISÉE : elle était calculée et transmise, mais jamais affichée.
+              Le propriétaire ne voyait que la valeur « à risque » et sous-estimait
+              fortement son exposition réelle. */}
+          <SummaryRow
+            label="Valeur des produits périmés"
+            value={formatFCFA(stockData.valeurPerimes || 0)}
+            icon={Ban}
+            color="#dc2626"
+            valueColor={(stockData.valeurPerimes || 0) > 0 ? '#dc2626' : '#10b981'}
+          />
+          <SummaryRow
+            label="Valeur stock à risque (< 60 jours)"
+            value={formatFCFA(stockData.valeurARisque || 0)}
+            icon={ShieldAlert}
+            color="#f59e0b"
+            valueColor={(stockData.valeurARisque || 0) > 0 ? '#f59e0b' : '#10b981'}
           />
           <SummaryRow 
             label="Pertes du jour (casse)" 
