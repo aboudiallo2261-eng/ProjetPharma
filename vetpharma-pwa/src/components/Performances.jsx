@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Package, TrendingUp, TrendingDown, BarChart2, DollarSign, Receipt, PackageX } from 'lucide-react';
+import { Package, TrendingUp, TrendingDown, BarChart2, DollarSign, Receipt, Award } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, Tooltip, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { formatFCFA, formatNumber } from '../lib/formatters';
 
@@ -217,7 +217,7 @@ export default function Performances({ data }) {
                     dataKey="name"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#64748b', fontSize: 10 }}
+                    tick={{ fill: '#94a3b8', fontSize: 10 }}
                     dy={10}
                     interval="preserveStartEnd"
                   />
@@ -226,7 +226,7 @@ export default function Performances({ data }) {
                   <YAxis
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#64748b', fontSize: 10 }}
+                    tick={{ fill: '#94a3b8', fontSize: 10 }}
                     tickFormatter={montantCompact}
                     width={48}
                     tickCount={4}
@@ -243,7 +243,7 @@ export default function Performances({ data }) {
             ) : (
               <div className="h-full flex flex-col items-center justify-center gap-2">
                 <BarChart2 className="w-8 h-8 text-slate-600" />
-                <p className="text-xs text-slate-500">Données insuffisantes pour l'affichage</p>
+                <p className="text-xs text-slate-400">Données insuffisantes pour l'affichage</p>
               </div>
             )}
           </div>
@@ -255,7 +255,7 @@ export default function Performances({ data }) {
         <div className="rounded-3xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
           <div className="px-4 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
             <div className="flex items-center gap-2">
-              <PackageX className="w-4 h-4 text-orange-400 shrink-0" />
+              <Award className="w-4 h-4 text-amber-400 shrink-0" />
               <h3 className="text-sm font-bold text-white uppercase tracking-wider">Top 5 Produits ({view === 'jour' ? 'Jour' : view === 'mois' ? 'Mois' : 'Année'})</h3>
             </div>
             
@@ -301,7 +301,7 @@ export default function Performances({ data }) {
                       <div className="flex items-center gap-3">
                         <span className="text-lg w-6 text-center">{medals[idx]}</span>
                         <div>
-                          <p className="text-sm font-semibold text-slate-200 truncate max-w-[140px] sm:max-w-[200px]">{prod.nom}</p>
+                          <p className="text-sm font-semibold text-slate-200 line-clamp-2 max-w-[150px] sm:max-w-[220px] leading-snug">{prod.nom}</p>
                           {sortTop === 'marge' && (
                             <p className="text-[10px] text-slate-400 mt-0.5">{qteLabel}</p>
                           )}
@@ -322,7 +322,7 @@ export default function Performances({ data }) {
           ) : (
             <div className="py-12 flex flex-col items-center gap-3">
               <Package className="w-8 h-8 text-slate-600" />
-              <p className="text-xs text-slate-500">Aucun produit vendu pour le moment.</p>
+              <p className="text-xs text-slate-400">Aucun produit vendu pour le moment.</p>
             </div>
           )}
         </div>

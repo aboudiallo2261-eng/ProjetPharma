@@ -26,7 +26,7 @@ function LigneLot({ lot }) {
   return (
     <div className="px-4 py-3 flex items-start justify-between hover:bg-white/5 transition-colors">
       <div className="flex flex-col min-w-0 pr-4">
-        <p className="text-sm font-semibold text-white truncate">{lot.nom}</p>
+        <p className="text-sm font-semibold text-white line-clamp-2 leading-snug">{lot.nom}</p>
         <p className="text-[11px] text-slate-400 mt-0.5">
           Lot {lot.numeroLot} — <span className="text-slate-300 font-medium">{lot.stockRestant} unités</span>
         </p>
@@ -36,7 +36,7 @@ function LigneLot({ lot }) {
           style={{ background: couleur.bg, color: couleur.text }}>
           {couleur.label}
         </span>
-        <span className="text-[10px] text-slate-500 font-medium">{dateLisible}</span>
+        <span className="text-[10px] text-slate-400 font-medium">{dateLisible}</span>
       </div>
     </div>
   );
@@ -131,8 +131,8 @@ export default function Urgences({ data }) {
               return (
                 <div key={idx} className="px-4 py-3 flex items-center justify-between hover:bg-white/5 transition-colors">
                   <div className="flex flex-col min-w-0 pr-4">
-                    <p className="text-sm font-semibold text-white truncate">{prod.nom}</p>
-                    <p className="text-[11px] text-slate-500 mt-0.5">
+                    <p className="text-sm font-semibold text-white line-clamp-2 leading-snug">{prod.nom}</p>
+                    <p className="text-[11px] text-slate-400 mt-0.5">
                       Seuil: {prod.seuilAlerte || 5}
                     </p>
                   </div>
@@ -140,7 +140,7 @@ export default function Urgences({ data }) {
                     <span className={`text-lg font-bold ${isRupture ? 'text-red-400' : 'text-amber-400'}`}>
                       {prod.stockPhysique || 0}
                     </span>
-                    <span className="text-[10px] text-slate-500 uppercase">En stock</span>
+                    <span className="text-[10px] text-slate-400 uppercase">En stock</span>
                   </div>
                 </div>
               );
@@ -262,7 +262,7 @@ export default function Urgences({ data }) {
             {displayedPertes.map((perte, idx) => (
               <div key={idx} className="px-4 py-3 flex items-center justify-between hover:bg-white/5 transition-colors">
                 <div className="flex flex-col min-w-0 pr-4">
-                  <p className="text-sm font-semibold text-white truncate">{perte.produit}</p>
+                  <p className="text-sm font-semibold text-white line-clamp-2 leading-snug">{perte.produit}</p>
                   <div className="flex items-center gap-2 mt-0.5">
                     <span className="text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-slate-300 font-mono">Lot: {perte.numeroLot || 'N/A'}</span>
                     <span className="text-[11px] text-rose-400/80 font-medium">{perte.motif}</span>
