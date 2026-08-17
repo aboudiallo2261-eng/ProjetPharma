@@ -9,6 +9,8 @@ import { useFraicheur } from '../hooks/useFraicheur';
  */
 const ETATS_FRAICHEUR = {
   frais:     { pastille: 'bg-emerald-400', texte: 'text-slate-400' },
+  // Une pharmacie fermée n'est pas une anomalie : l'état est neutre, pas alarmant.
+  fermee:    { pastille: 'bg-slate-400',   texte: 'text-slate-400' },
   attention: { pastille: 'bg-amber-400',   texte: 'text-amber-400' },
   // Teintes retenues au contraste mesuré sur le dégradé de la barre, dont le
   // côté teal est le fond le moins favorable : red-300 y tient 4,99:1 quand
@@ -17,9 +19,13 @@ const ETATS_FRAICHEUR = {
   inconnu:   { pastille: 'bg-slate-500',   texte: 'text-slate-400' },
 };
 
-export default function TopBar({ lastSync, loading, onLogout }) {
-  const fraicheur = useFraicheur(lastSync);
+export default function TopBar({ lastSync, loading, onLogout, caisse }) {
+  const fraicheur = useFraicheur(lastSync, caisse);
   const etat = ETATS_FRAICHEUR[fraicheur.niveau];
+
+  // Certains états décrivent déjà la situation en toutes lettres — les préfixer
+  // d'une date de mise à jour produirait une redite.
+  const texteSeul = fraicheur.niveau === 'inconnu' || fraicheur.niveau === 'fermee';
 
   const formatTime = (isoString) => {
     if (!isoString) return 'En attente de synchro...';
@@ -97,7 +103,7 @@ export default function TopBar({ lastSync, loading, onLogout }) {
         <p className={`text-[11px] ${loading ? 'text-slate-400' : etat.texte}`}>
           {loading
             ? 'Synchronisation en cours...'
-            : fraicheur.niveau === 'inconnu'
+            : texteSeul
               ? fraicheur.texte
               : `Dernière mise à jour : ${formatTime(lastSync)} · ${fraicheur.texte}`}
         </p>

@@ -19,7 +19,18 @@ export default function BandeauFraicheur({ fraicheur, lastSync }) {
 
   const titre = jamaisRecu
     ? 'Aucune donnée reçue de la pharmacie'
-    : `Données figées ${fraicheur.resume}`;
+    : fraicheur.caisseOuverte
+      ? `Caisse restée ouverte, aucune donnée ${fraicheur.resume}`
+      : `Données figées ${fraicheur.resume}`;
+
+  // Une caisse laissée ouverte n'est pas qu'une procédure oubliée : la clôture
+  // déclenche la sauvegarde de la base et la synchronisation, si bien que la
+  // journée concernée n'est ni enregistrée ailleurs ni remontée ici.
+  const explication = fraicheur.caisseOuverte
+    ? `La caisse n'a pas été clôturée${fraicheur.agent ? ` par ${fraicheur.agent}` : ''}. `
+      + "Tant qu'elle reste ouverte, la journée n'est ni sauvegardée ni remontée ici."
+    : "Ces chiffres ne reflètent plus l'état actuel de votre pharmacie. "
+      + 'Vérifiez que le poste est allumé, connecté à Internet, et que VetPharma y est ouvert.';
 
   const dateExacte = lastSync
     ? new Date(lastSync).toLocaleString('fr-FR', {
@@ -38,10 +49,7 @@ export default function BandeauFraicheur({ fraicheur, lastSync }) {
         <p className="text-sm font-bold leading-tight" style={{ color: '#f87171' }}>
           {titre}
         </p>
-        <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-          Ces chiffres ne reflètent plus l'état actuel de votre pharmacie.
-          Vérifiez que le poste est allumé, connecté à Internet, et que VetPharma y est ouvert.
-        </p>
+        <p className="text-xs text-slate-300 mt-1 leading-relaxed">{explication}</p>
         {dateExacte && (
           <p className="text-[11px] text-slate-400 mt-1.5">
             Dernière donnée reçue le {dateExacte}

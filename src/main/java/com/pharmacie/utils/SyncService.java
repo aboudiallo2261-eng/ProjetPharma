@@ -39,6 +39,7 @@ public class SyncService {
     private static final String SYNC_FILE = "dashboard_snapshot.json";
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final StatistiquesDAO statsDAO = new StatistiquesDAO();
+    private static final com.pharmacie.dao.SessionCaisseDAO sessionDAO = new com.pharmacie.dao.SessionCaisseDAO();
 
     // Conserve la date de la dernière synchro réussie en mémoire pour persister l'affichage au changement d'onglet
     public static LocalDateTime lastSuccessfulSync = null;
@@ -337,7 +338,82 @@ public class SyncService {
 
         dto.setAlertes(alertes);
 
+        // --- 4. État de la caisse ---
+        dto.setCaisse(construireCaisse(maintenant));
+
         return dto;
+    }
+
+    /** Profondeur d'observation de la caisse : assez pour dégager une tendance,
+     *  assez court pour que le payload reste léger. */
+    private static final int JOURS_OBSERVES_CAISSE = 30;
+
+    /**
+     * Construit l'état de la caisse transmis au tableau de bord distant.
+     *
+     * La dernière session est envoyée même très ancienne : c'est elle qui permet
+     * de distinguer une pharmacie fermée d'une pharmacie muette. Une session
+     * close signe une fin de journée normale ; une session restée ouverte pendant
+     * un silence prolongé signe une clôture qui n'a pas eu lieu — donc une
+     * journée dont la base n'a été ni sauvegardée ni remontée.
+     */
+    private static DashboardSyncDTO.CaisseDTO construireCaisse(LocalDateTime maintenant) {
+        DashboardSyncDTO.CaisseDTO caisse = new DashboardSyncDTO.CaisseDTO();
+        caisse.setJoursObserves(JOURS_OBSERVES_CAISSE);
+
+        sessionDAO.findDerniereSession().ifPresent(s -> caisse.setDerniere(versDTO(s)));
+
+        List<com.pharmacie.models.SessionCaisse> recentes =
+                sessionDAO.findSessionsDepuis(maintenant.minusDays(JOURS_OBSERVES_CAISSE));
+
+        List<DashboardSyncDTO.SessionDTO> historique = new ArrayList<>();
+        int cloturees = 0;
+        long cumulEspeces = 0L;
+        long cumulMobile = 0L;
+
+        for (com.pharmacie.models.SessionCaisse s : recentes) {
+            boolean estClose = s.getStatut() == com.pharmacie.models.SessionCaisse.StatutSession.FERMEE;
+            if (estClose) {
+                cloturees++;
+                // Les écarts d'une session encore ouverte n'ont pas de sens : le
+                // comptage n'a pas eu lieu, les champs valent zéro par défaut et
+                // les inclure diluerait le cumul.
+                cumulEspeces += Math.round(valeurOuZero(s.getEcartEspeces()));
+                cumulMobile += Math.round(valeurOuZero(s.getEcartMobile()));
+            }
+            historique.add(versDTO(s));
+        }
+
+        caisse.setSessionsTotal(recentes.size());
+        caisse.setSessionsCloturees(cloturees);
+        caisse.setSessionsNonCloturees(recentes.size() - cloturees);
+        caisse.setEcartEspecesCumule(cumulEspeces);
+        caisse.setEcartMobileCumule(cumulMobile);
+        caisse.setHistorique(historique);
+
+        return caisse;
+    }
+
+    private static DashboardSyncDTO.SessionDTO versDTO(com.pharmacie.models.SessionCaisse s) {
+        DashboardSyncDTO.SessionDTO dto = new DashboardSyncDTO.SessionDTO();
+        dto.setAgent(s.getUser() != null ? s.getUser().getNom() : null);
+        dto.setDateOuverture(s.getDateOuverture() != null
+                ? s.getDateOuverture().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null);
+        dto.setDateCloture(s.getDateCloture() != null
+                ? s.getDateCloture().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null);
+        dto.setStatut(s.getStatut() != null ? s.getStatut().name() : null);
+        dto.setEspecesAttendu(Math.round(valeurOuZero(s.getTotalEspecesAttendu())));
+        dto.setEspecesDeclare(Math.round(valeurOuZero(s.getEspecesDeclare())));
+        dto.setEcartEspeces(Math.round(valeurOuZero(s.getEcartEspeces())));
+        dto.setMobileAttendu(Math.round(valeurOuZero(s.getTotalMobileAttendu())));
+        dto.setMobileDeclare(Math.round(valeurOuZero(s.getMobileDeclare())));
+        dto.setEcartMobile(Math.round(valeurOuZero(s.getEcartMobile())));
+        return dto;
+    }
+
+    /** Les colonnes de montants sont nullables en base, y compris sur d'anciennes lignes. */
+    private static double valeurOuZero(Double valeur) {
+        return valeur != null ? valeur : 0.0;
     }
 
     /**

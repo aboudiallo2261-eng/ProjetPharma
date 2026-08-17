@@ -4,6 +4,7 @@ import { WifiOff } from 'lucide-react';
 import { useDashboardData } from './hooks/useDashboardData';
 import TopBar from './components/TopBar';
 import BandeauFraicheur from './components/BandeauFraicheur';
+import Caisse from './components/Caisse';
 import { useFraicheur } from './hooks/useFraicheur';
 import BottomNav from './components/BottomNav';
 import DashboardHome from './components/DashboardHome';
@@ -86,7 +87,7 @@ function App() {
 
   // Déclaré avant les sorties anticipées ci-dessous : un hook appelé après un
   // return conditionnel ne s'exécuterait pas à tous les rendus.
-  const fraicheur = useFraicheur(lastSync);
+  const fraicheur = useFraicheur(lastSync, dashboardData?.caisse);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -122,7 +123,7 @@ function App() {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 md:ml-64">
-        <TopBar lastSync={lastSync} loading={loading} onLogout={handleLogout} />
+        <TopBar lastSync={lastSync} loading={loading} onLogout={handleLogout} caisse={raw.caisse} />
         
         <main className="max-w-7xl w-full mx-auto relative pb-24 md:pb-8">
           <BandeauFraicheur fraicheur={fraicheur} lastSync={lastSync} />
@@ -138,6 +139,7 @@ function App() {
           )}
 
           {currentTab === 'home' && <DashboardHome data={raw} lastSync={lastSync} />}
+          {currentTab === 'caisse' && <Caisse data={raw} lastSync={lastSync} />}
           {currentTab === 'perf' && <Performances data={raw} />}
           {currentTab === 'alerts' && <Urgences data={raw} />}
         </main>

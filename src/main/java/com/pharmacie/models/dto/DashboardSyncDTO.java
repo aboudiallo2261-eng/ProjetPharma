@@ -10,6 +10,7 @@ public class DashboardSyncDTO {
     private String dateSynchro; // Format ISO 8601
     private KpisDTO kpis;
     private AlertesDTO alertes;
+    private CaisseDTO caisse;
     
     // Nouvelles listes d'analyse
     private List<TopProduitDTO> topProduitsJour;
@@ -30,6 +31,9 @@ public class DashboardSyncDTO {
     
     public AlertesDTO getAlertes() { return alertes; }
     public void setAlertes(AlertesDTO alertes) { this.alertes = alertes; }
+
+    public CaisseDTO getCaisse() { return caisse; }
+    public void setCaisse(CaisseDTO caisse) { this.caisse = caisse; }
 
     public List<TopProduitDTO> getTopProduitsJour() { return topProduitsJour; }
     public void setTopProduitsJour(List<TopProduitDTO> topProduitsJour) { this.topProduitsJour = topProduitsJour; }
@@ -122,6 +126,99 @@ public class DashboardSyncDTO {
 
         public long getValeurARisque() { return valeurARisque; }
         public void setValeurARisque(long valeurARisque) { this.valeurARisque = valeurARisque; }
+    }
+
+    /**
+     * État de la caisse, tel qu'il est lisible à distance.
+     *
+     * Ces chiffres existaient déjà dans sessions_caisse et n'étaient consultables
+     * que sur le poste, dans le Registre des clôtures. Or c'est précisément quand
+     * le propriétaire est absent qu'il a besoin de savoir si la caisse a été
+     * tenue et clôturée : la clôture déclenche à la fois la sauvegarde de la base
+     * et la synchronisation, si bien qu'une journée non clôturée est une journée
+     * ni sauvegardée ni remontée.
+     *
+     * La ventilation des ventes par agent est délibérément absente : elle est
+     * comparative, donc sensible, et rien ne prouve encore qu'elle soit utile.
+     * Le nom porté ici est celui de la personne à appeler, pas un classement.
+     */
+    public static class CaisseDTO {
+        private SessionDTO derniere;
+        private int sessionsTotal;
+        private int sessionsCloturees;
+        private int sessionsNonCloturees;
+        private long ecartEspecesCumule;
+        private long ecartMobileCumule;
+        private int joursObserves;
+        private java.util.List<SessionDTO> historique;
+
+        public SessionDTO getDerniere() { return derniere; }
+        public void setDerniere(SessionDTO derniere) { this.derniere = derniere; }
+
+        public int getSessionsTotal() { return sessionsTotal; }
+        public void setSessionsTotal(int sessionsTotal) { this.sessionsTotal = sessionsTotal; }
+
+        public int getSessionsCloturees() { return sessionsCloturees; }
+        public void setSessionsCloturees(int sessionsCloturees) { this.sessionsCloturees = sessionsCloturees; }
+
+        public int getSessionsNonCloturees() { return sessionsNonCloturees; }
+        public void setSessionsNonCloturees(int sessionsNonCloturees) { this.sessionsNonCloturees = sessionsNonCloturees; }
+
+        public long getEcartEspecesCumule() { return ecartEspecesCumule; }
+        public void setEcartEspecesCumule(long ecartEspecesCumule) { this.ecartEspecesCumule = ecartEspecesCumule; }
+
+        public long getEcartMobileCumule() { return ecartMobileCumule; }
+        public void setEcartMobileCumule(long ecartMobileCumule) { this.ecartMobileCumule = ecartMobileCumule; }
+
+        public int getJoursObserves() { return joursObserves; }
+        public void setJoursObserves(int joursObserves) { this.joursObserves = joursObserves; }
+
+        public java.util.List<SessionDTO> getHistorique() { return historique; }
+        public void setHistorique(java.util.List<SessionDTO> historique) { this.historique = historique; }
+    }
+
+    /** Une session de caisse : qui l'a tenue, quand, et ce qu'elle a laissé comme écart. */
+    public static class SessionDTO {
+        private String agent;
+        private String dateOuverture; // ISO 8601
+        private String dateCloture;   // ISO 8601, null si la session est restée ouverte
+        private String statut;        // OUVERTE | FERMEE
+        private long especesAttendu;
+        private long especesDeclare;
+        private long ecartEspeces;
+        private long mobileAttendu;
+        private long mobileDeclare;
+        private long ecartMobile;
+
+        public String getAgent() { return agent; }
+        public void setAgent(String agent) { this.agent = agent; }
+
+        public String getDateOuverture() { return dateOuverture; }
+        public void setDateOuverture(String dateOuverture) { this.dateOuverture = dateOuverture; }
+
+        public String getDateCloture() { return dateCloture; }
+        public void setDateCloture(String dateCloture) { this.dateCloture = dateCloture; }
+
+        public String getStatut() { return statut; }
+        public void setStatut(String statut) { this.statut = statut; }
+
+        public long getEspecesAttendu() { return especesAttendu; }
+        public void setEspecesAttendu(long especesAttendu) { this.especesAttendu = especesAttendu; }
+
+        public long getEspecesDeclare() { return especesDeclare; }
+        public void setEspecesDeclare(long especesDeclare) { this.especesDeclare = especesDeclare; }
+
+        public long getEcartEspeces() { return ecartEspeces; }
+        public void setEcartEspeces(long ecartEspeces) { this.ecartEspeces = ecartEspeces; }
+
+        public long getMobileAttendu() { return mobileAttendu; }
+        public void setMobileAttendu(long mobileAttendu) { this.mobileAttendu = mobileAttendu; }
+
+        public long getMobileDeclare() { return mobileDeclare; }
+        public void setMobileDeclare(long mobileDeclare) { this.mobileDeclare = mobileDeclare; }
+
+        public long getEcartMobile() { return ecartMobile; }
+        public void setEcartMobile(long ecartMobile) { this.ecartMobile = ecartMobile; }
     }
 
     public static class AlertesDTO {

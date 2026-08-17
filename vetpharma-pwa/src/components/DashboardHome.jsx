@@ -1,6 +1,6 @@
 import React from 'react';
 import { DollarSign, Receipt, PackageX, AlertTriangle, Clock, Wallet,
-         HeartCrack, BarChart2, Ban, CheckCircle2, ArrowRight, TrendingUp, TrendingDown } from 'lucide-react';
+         HeartCrack, BarChart2, Ban, CheckCircle2, ArrowRight, TrendingUp, TrendingDown, Unlock } from 'lucide-react';
 import { formatFCFA } from '../lib/formatters';
 import { useFraicheur } from '../hooks/useFraicheur';
 
@@ -87,7 +87,8 @@ function LigneMontant({ label, value, icon: Icon, color, valueColor = 'white', a
 }
 
 export default function DashboardHome({ data, lastSync }) {
-  const fraicheur = useFraicheur(lastSync);
+  const caisse = data?.caisse;
+  const fraicheur = useFraicheur(lastSync, caisse);
   const kpis = data?.kpis || {};
   const stock = kpis.stock || {};
   const jour = kpis.jour || {};
@@ -109,8 +110,26 @@ export default function DashboardHome({ data, lastSync }) {
   const evolution  = jour.evolutionCA || 0;
   const journeeVide = ventesJour === 0;
 
+  // Une caisse ouverte dans la journée est le fonctionnement normal ; c'est une
+  // caisse restée ouverte d'un jour antérieur qui signale une clôture oubliée.
+  const debutAujourdhui = new Date(); debutAujourdhui.setHours(0, 0, 0, 0);
+  const ouvertureDerniere = caisse?.derniere?.dateOuverture
+    ? new Date(caisse.derniere.dateOuverture) : null;
+  const clotureOubliee = caisse?.derniere?.statut === 'OUVERTE'
+    && ouvertureDerniere && !Number.isNaN(ouvertureDerniere.getTime())
+    && ouvertureDerniere < debutAujourdhui;
+
   // ── Actions, classées par ce qu'elles coûtent si on les ignore ──────────
   const actions = [];
+  // En tête, car c'est la seule dont le coût est irréversible : la clôture
+  // déclenche la sauvegarde de la base et la synchronisation. Un lot périmé
+  // pourra encore être retiré demain, une journée perdue ne reviendra pas.
+  if (clotureOubliee) {
+    actions.push({ titre: 'Faire clôturer la caisse restée ouverte',
+      detail: caisse.derniere.agent
+        ? `Ouverte par ${caisse.derniere.agent} — journée ni sauvegardée ni remontée`
+        : 'Journée ni sauvegardée ni remontée', couleur: '#f87171', icon: Unlock });
+  }
   if (nbPerimes > 0) {
     actions.push({ titre: `Retirer ${nbPerimes} lot${nbPerimes > 1 ? 's' : ''} périmé${nbPerimes > 1 ? 's' : ''} des rayons`,
       detail: 'Invendables — risque sanitaire et légal', montant: valeurPerimes, couleur: '#f87171', icon: Ban });
@@ -130,13 +149,15 @@ export default function DashboardHome({ data, lastSync }) {
 
   // ── Verdict global ──────────────────────────────────────────────────────
   let verdict;
-  if (nbPerimes > 0 || nbRuptures > 0) {
+  if (clotureOubliee || nbPerimes > 0 || nbRuptures > 0) {
     verdict = {
       gravite: 'critique',
       titre: `${actions.length} action${actions.length > 1 ? 's' : ''} à mener aujourd'hui`,
       sousTitre: expositionTotale > 0
         ? `${formatFCFA(expositionTotale)} sont en jeu sur votre stock, dont ${formatFCFA(valeurPerimes)} déjà perdus.`
-        : 'Des produits demandent une intervention immédiate.',
+        : clotureOubliee
+          ? "La caisse n'a pas été clôturée : cette journée n'est ni sauvegardée ni remontée."
+          : 'Des produits demandent une intervention immédiate.',
     };
   } else if (nbProches > 0 || nbAlertes > 0) {
     verdict = {
@@ -164,14 +185,14 @@ export default function DashboardHome({ data, lastSync }) {
         titre: 'Rien à signaler, mais rien de confirmé',
         sousTitre: fraicheur.niveau === 'inconnu'
           ? "Aucune donnée n'a encore été reçue de la pharmacie : cet écran ne décrit pas son état réel."
-          : `Ces chiffres ont été constatés ${fraicheur.texte} et n'ont pas été confirmés depuis. L'absence d'alerte ne prouve pas que tout va bien.`,
+          : `Ces chiffres ont été constatés ${fraicheur.ageTexte} et n'ont pas été confirmés depuis. L'absence d'alerte ne prouve pas que tout va bien.`,
       };
     } else {
       // Les alertes constatées restent valables — un lot périmé le reste — mais
       // la liste peut s'être allongée depuis sans que rien ne le laisse voir.
       verdict = {
         ...verdict,
-        sousTitre: `${verdict.sousTitre} Constaté ${fraicheur.texte} ; la situation a pu évoluer depuis.`,
+        sousTitre: `${verdict.sousTitre} Constaté ${fraicheur.ageTexte} ; la situation a pu évoluer depuis.`,
       };
     }
   }
@@ -184,7 +205,9 @@ export default function DashboardHome({ data, lastSync }) {
         <p className="text-xs text-slate-400 mt-0.5">
           {fraicheur.niveau === 'inconnu'
             ? 'En attente des données de la pharmacie'
-            : `Données de la pharmacie, mises à jour ${fraicheur.texte}`}
+            : fraicheur.niveau === 'fermee'
+              ? fraicheur.texte
+              : `Données de la pharmacie, mises à jour ${fraicheur.ageTexte}`}
         </p>
       </div>
 

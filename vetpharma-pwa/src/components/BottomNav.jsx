@@ -1,11 +1,12 @@
 import React from 'react';
-import { Home, TrendingUp, Siren } from 'lucide-react';
+import { Home, TrendingUp, Siren, Wallet } from 'lucide-react';
 
 export default function BottomNav({ currentTab, setCurrentTab, alertCount = 0 }) {
   const tabs = [
     { id: 'home', label: 'Accueil', icon: Home },
     { id: 'perf', label: 'Performances', icon: TrendingUp },
     { id: 'alerts', label: 'Urgences', icon: Siren, badge: alertCount },
+    { id: 'caisse', label: 'Caisse', icon: Wallet },
   ];
 
   return (
