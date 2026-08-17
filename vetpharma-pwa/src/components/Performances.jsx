@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Package, TrendingUp, TrendingDown, BarChart2, Award, DollarSign, Receipt, Filter, PackageX } from 'lucide-react';
+import { Package, TrendingUp, TrendingDown, BarChart2, DollarSign, Receipt, PackageX } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, Tooltip, XAxis, YAxis, CartesianGrid } from 'recharts';
-import { formatFCFA } from '../lib/formatters';
+import { formatFCFA, formatNumber } from '../lib/formatters';
 
 /**
  * Abrège un montant pour l'axe vertical : « 61 500 » devient « 61,5k ».
@@ -14,7 +14,8 @@ const montantCompact = (v) => {
   return String(n);
 };
 
-function PerfKpiCard({ label, value, icon: Icon, color, isTrend, trendVal }) {
+/** Carte d'indicateur — alignée sur celles de l'accueil (libellé, valeur, période). */
+function PerfKpiCard({ label, value, sousTexte, icon: Icon, color, isTrend, trendVal }) {
   const isPos = trendVal >= 0;
   const finalColor = isTrend ? (isPos ? '#10b981' : '#ef4444') : color;
   const TrendIcon = isTrend ? (isPos ? TrendingUp : TrendingDown) : Icon;
@@ -31,6 +32,9 @@ function PerfKpiCard({ label, value, icon: Icon, color, isTrend, trendVal }) {
       <p className="text-lg sm:text-xl font-bold text-white leading-tight" style={{ color: isTrend ? finalColor : 'white' }}>
         {value}
       </p>
+      {/* La période était absente : « 0 FCFA » ne disait pas de quel intervalle il
+          s'agissait, le sélecteur étant hors du champ visuel une fois la page défilée. */}
+      {sousTexte && <p className="text-[10px] text-slate-500 mt-1 leading-tight">{sousTexte}</p>}
     </div>
   );
 }
@@ -55,6 +59,24 @@ export default function Performances({ data }) {
   const marge = currentKpi.benefice || 0;
   const ventes = currentKpi.ventesRealisees || 0;
   const evolution = currentKpi.evolutionCA || 0;
+
+  // Chaque période a ses propres formulations : sans elles, « 0 FCFA » ne disait
+  // ni de quand il parlait, ni à quoi l'évolution se comparait.
+  const libelles = {
+    jour:  { periode: "Aujourd'hui", tickets: 'Tickets du jour',   comparaison: 'Par rapport à hier',          pendant: "aujourd'hui" },
+    mois:  { periode: 'Ce mois-ci',  tickets: 'Tickets du mois',   comparaison: 'Par rapport au mois dernier', pendant: 'ce mois-ci' },
+    annee: { periode: 'Cette année', tickets: "Tickets de l'année", comparaison: "Par rapport à l'an dernier", pendant: 'cette année' },
+  }[view];
+
+  // Quand la période sélectionnée est vide, on donne la période supérieure en
+  // contexte : le propriétaire sait que son commerce tourne, même sans vente du jour.
+  const repliPeriode = ventes === 0
+    ? (view === 'jour' && (kpis.mois?.ventesRealisees || 0) > 0
+        ? { intitule: 'Ce mois-ci', ca: kpis.mois.chiffreAffaire || 0, ventes: kpis.mois.ventesRealisees }
+        : (view !== 'annee' && (kpis.annee?.ventesRealisees || 0) > 0
+            ? { intitule: 'Cette année', ca: kpis.annee.chiffreAffaire || 0, ventes: kpis.annee.ventesRealisees }
+            : null))
+    : null;
 
   // Préparation des données pour le graphique
   const raw7 = data?.historique7Jours || [];
@@ -137,13 +159,33 @@ export default function Performances({ data }) {
         </div>
       </div>
 
-      {/* KPIs Évolution */}
-      <div className="px-4 grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-        <PerfKpiCard label="Chiffre d'Affaires" value={formatFCFA(ca)} icon={DollarSign} color="#34d399" />
-        <PerfKpiCard label="Bénéfices (Marge)" value={formatFCFA(marge)} icon={BarChart2} color="#60a5fa" />
-        <PerfKpiCard label="Nombre de Ventes" value={ventes} icon={Receipt} color="#a78bfa" />
-        <PerfKpiCard label="Croissance" value={`${evolution > 0 ? '+' : ''}${evolution.toFixed(1)}%`} isTrend trendVal={evolution} />
-      </div>
+      {/* KPIs de la période — libellés et sous-textes alignés sur l'écran d'accueil */}
+      {ventes === 0 ? (
+        <div className="px-4 mb-6">
+          <div className="rounded-2xl p-4"
+            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+            <p className="text-sm text-slate-300 font-medium">Aucune vente enregistrée {libelles.pendant}</p>
+            {repliPeriode && (
+              <p className="text-[11px] text-slate-500 mt-1">
+                {repliPeriode.intitule} : <span className="text-slate-300 font-semibold">{formatFCFA(repliPeriode.ca)}</span>
+                {' '}sur <span className="text-slate-300 font-semibold">{repliPeriode.ventes} vente{repliPeriode.ventes > 1 ? 's' : ''}</span>
+              </p>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="px-4 grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+          <PerfKpiCard label="Chiffre d'affaires" value={formatFCFA(ca)} sousTexte={libelles.periode}
+            icon={DollarSign} color="#34d399" />
+          <PerfKpiCard label="Marge brute" value={formatFCFA(marge)} sousTexte="Hors charges"
+            icon={BarChart2} color="#60a5fa" />
+          <PerfKpiCard label="Ventes" value={formatNumber(ventes)} sousTexte={libelles.tickets}
+            icon={Receipt} color="#a78bfa" />
+          <PerfKpiCard label="Évolution"
+            value={`${evolution > 0 ? '+' : ''}${evolution.toFixed(1).replace('.', ',')} %`}
+            sousTexte={libelles.comparaison} isTrend trendVal={evolution} />
+        </div>
+      )}
 
       {/* Graphique */}
       <div className="px-4 mb-6">
