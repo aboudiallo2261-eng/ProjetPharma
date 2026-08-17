@@ -107,8 +107,8 @@ export default function Urgences({ data }) {
       
       {/* Header */}
       <div className="px-4 pt-6 mb-6">
-        <h2 className="text-xl font-bold text-white tracking-tight">Décision Opérationnelle</h2>
-        <p className="text-xs text-slate-400 mt-0.5">Urgences & Actions immédiates</p>
+        <h2 className="text-xl font-bold text-white tracking-tight">À traiter aujourd'hui</h2>
+        <p className="text-xs text-slate-400 mt-0.5">Urgences et actions immédiates</p>
       </div>
 
       {/* 3.1 Réapprovisionnement */}
@@ -133,7 +133,7 @@ export default function Urgences({ data }) {
                   <div className="flex flex-col min-w-0 pr-4">
                     <p className="text-sm font-semibold text-white line-clamp-2 leading-snug">{prod.nom}</p>
                     <p className="text-[11px] text-slate-400 mt-0.5">
-                      Seuil: {prod.seuilAlerte || 5}
+                      Seuil : {prod.seuilAlerte || 5}
                     </p>
                   </div>
                   <div className="flex flex-col items-end shrink-0">
