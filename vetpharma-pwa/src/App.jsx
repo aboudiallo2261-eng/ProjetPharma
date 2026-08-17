@@ -3,6 +3,8 @@ import { supabase } from './lib/supabaseClient';
 import { WifiOff } from 'lucide-react';
 import { useDashboardData } from './hooks/useDashboardData';
 import TopBar from './components/TopBar';
+import BandeauFraicheur from './components/BandeauFraicheur';
+import { useFraicheur } from './hooks/useFraicheur';
 import BottomNav from './components/BottomNav';
 import DashboardHome from './components/DashboardHome';
 import Performances from './components/Performances';
@@ -82,6 +84,10 @@ function App() {
   // Hook qui va récupérer les données (seulement s'il y a une session grâce aux modifications du hook)
   const { dashboardData, loading, error, lastSync } = useDashboardData(session ? 'MAIN_PHARMACY' : null);
 
+  // Déclaré avant les sorties anticipées ci-dessous : un hook appelé après un
+  // return conditionnel ne s'exécuterait pas à tous les rendus.
+  const fraicheur = useFraicheur(lastSync);
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
   };
@@ -98,7 +104,7 @@ function App() {
   const kpis = raw.kpis || {};
   const stock = kpis.stock || {};
   const alertes = raw.alertes || {};
-  
+
   // Badge = toutes les situations demandant une action.
   // Les lots DÉJÀ périmés y sont inclus : un médicament expiré encore en rayon est
   // le cas le plus urgent (risque sanitaire et légal), pas le moins.
@@ -119,6 +125,8 @@ function App() {
         <TopBar lastSync={lastSync} loading={loading} onLogout={handleLogout} />
         
         <main className="max-w-7xl w-full mx-auto relative pb-24 md:pb-8">
+          <BandeauFraicheur fraicheur={fraicheur} lastSync={lastSync} />
+
           {error && (
             <div className="m-4 md:mx-8 p-3 bg-orange-500/10 text-orange-400 rounded-2xl text-sm font-medium border border-orange-500/20 flex items-start gap-3">
               <WifiOff className="w-5 h-5 shrink-0 mt-0.5" />
@@ -129,7 +137,7 @@ function App() {
             </div>
           )}
 
-          {currentTab === 'home' && <DashboardHome data={raw} />}
+          {currentTab === 'home' && <DashboardHome data={raw} lastSync={lastSync} />}
           {currentTab === 'perf' && <Performances data={raw} />}
           {currentTab === 'alerts' && <Urgences data={raw} />}
         </main>

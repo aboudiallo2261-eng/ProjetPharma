@@ -2,6 +2,7 @@ import React from 'react';
 import { DollarSign, Receipt, PackageX, AlertTriangle, Clock, Wallet,
          HeartCrack, BarChart2, Ban, CheckCircle2, ArrowRight, TrendingUp, TrendingDown } from 'lucide-react';
 import { formatFCFA } from '../lib/formatters';
+import { useFraicheur } from '../hooks/useFraicheur';
 
 /**
  * Écran d'accueil — conçu pour répondre en quelques secondes à trois questions :
@@ -85,7 +86,8 @@ function LigneMontant({ label, value, icon: Icon, color, valueColor = 'white', a
   );
 }
 
-export default function DashboardHome({ data }) {
+export default function DashboardHome({ data, lastSync }) {
+  const fraicheur = useFraicheur(lastSync);
   const kpis = data?.kpis || {};
   const stock = kpis.stock || {};
   const jour = kpis.jour || {};
@@ -150,12 +152,40 @@ export default function DashboardHome({ data }) {
     };
   }
 
+  // ── Ce que le verdict peut honnêtement affirmer ─────────────────────────
+  // Une pharmacie sans alerte et une pharmacie dont on n'a plus de nouvelles
+  // produisent le même écran. La première mérite « tout est en ordre » ; la
+  // seconde n'en sait rien, et l'affirmer quand même est le seul mensonge que
+  // ce tableau de bord soit capable de commettre.
+  if (fraicheur.niveau === 'perime' || fraicheur.niveau === 'inconnu') {
+    if (verdict.gravite === 'ok') {
+      verdict = {
+        gravite: 'attention',
+        titre: 'Rien à signaler, mais rien de confirmé',
+        sousTitre: fraicheur.niveau === 'inconnu'
+          ? "Aucune donnée n'a encore été reçue de la pharmacie : cet écran ne décrit pas son état réel."
+          : `Ces chiffres ont été constatés ${fraicheur.texte} et n'ont pas été confirmés depuis. L'absence d'alerte ne prouve pas que tout va bien.`,
+      };
+    } else {
+      // Les alertes constatées restent valables — un lot périmé le reste — mais
+      // la liste peut s'être allongée depuis sans que rien ne le laisse voir.
+      verdict = {
+        ...verdict,
+        sousTitre: `${verdict.sousTitre} Constaté ${fraicheur.texte} ; la situation a pu évoluer depuis.`,
+      };
+    }
+  }
+
   return (
     <div className="pb-24 min-h-screen" style={{ background: 'linear-gradient(180deg, #0f172a 0%, #1e293b 100%)' }}>
 
       <div className="px-4 pt-6 mb-3">
         <h2 className="text-xl font-bold text-white tracking-tight">Ma pharmacie aujourd'hui</h2>
-        <p className="text-xs text-slate-400 mt-0.5">Données synchronisées depuis la pharmacie</p>
+        <p className="text-xs text-slate-400 mt-0.5">
+          {fraicheur.niveau === 'inconnu'
+            ? 'En attente des données de la pharmacie'
+            : `Données de la pharmacie, mises à jour ${fraicheur.texte}`}
+        </p>
       </div>
 
       {/* 1. LE VERDICT — ce qu'il doit retenir en une phrase */}

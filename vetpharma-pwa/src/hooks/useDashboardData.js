@@ -1,13 +1,32 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 
+const CLE_CACHE = 'vetpharma_dashboard_cache'
+const CLE_CACHE_DATE = 'vetpharma_dashboard_cache_date'
+
+/**
+ * Mémorise les données et leur date ensemble.
+ * Les dissocier laisserait ressurgir au rechargement des chiffres orphelins,
+ * privés de l'horodatage qui permet d'en juger la validité.
+ */
+function memoriser(payload, date) {
+  try {
+    localStorage.setItem(CLE_CACHE, JSON.stringify(payload))
+    if (date) localStorage.setItem(CLE_CACHE_DATE, date)
+  } catch {
+    // Quota saturé ou stockage refusé : le cache est un confort, pas une nécessité.
+  }
+}
+
 export function useDashboardData(pharmacyId) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [lastSync, setLastSync] = useState(null)
-  
+  // Restaurée avec les données qu'elle date : hors ligne, l'écran doit pouvoir
+  // dire de quand datent les chiffres qu'il continue d'afficher.
+  const [lastSync, setLastSync] = useState(() => localStorage.getItem(CLE_CACHE_DATE))
+
   const [dashboardData, setDashboardData] = useState(() => {
-    const saved = localStorage.getItem('vetpharma_dashboard_cache');
+    const saved = localStorage.getItem(CLE_CACHE);
     if (saved) {
       try { return JSON.parse(saved); } catch (e) {}
     }
@@ -49,7 +68,7 @@ export function useDashboardData(pharmacyId) {
         if (data && data.payload && isMounted) {
           setDashboardData(data.payload)
           setLastSync(data.updated_at)
-          localStorage.setItem('vetpharma_dashboard_cache', JSON.stringify(data.payload));
+          memoriser(data.payload, data.updated_at)
         }
       } catch (err) {
         if (isMounted) setError(err.message)
@@ -75,6 +94,10 @@ export function useDashboardData(pharmacyId) {
           if (payload.new && payload.new.payload && isMounted) {
             setDashboardData(payload.new.payload)
             setLastSync(payload.new.updated_at)
+            // Les mises à jour temps réel alimentent le cache au même titre que
+            // le chargement initial, sans quoi une session longue rechargerait
+            // sur un instantané plus ancien que ce qu'elle affichait déjà.
+            memoriser(payload.new.payload, payload.new.updated_at)
           }
         }
       )

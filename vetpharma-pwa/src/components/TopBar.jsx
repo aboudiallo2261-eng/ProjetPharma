@@ -1,7 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { RefreshCcw, LogOut } from 'lucide-react';
+import { useFraicheur } from '../hooks/useFraicheur';
+
+/**
+ * Apparence de l'indicateur de synchronisation selon l'âge des données.
+ * La pastille n'a longtemps connu que deux états — « en cours » et vert — ce qui
+ * revenait à certifier des chiffres dont elle ne savait rien.
+ */
+const ETATS_FRAICHEUR = {
+  frais:     { pastille: 'bg-emerald-400', texte: 'text-slate-400' },
+  attention: { pastille: 'bg-amber-400',   texte: 'text-amber-400' },
+  // Teintes retenues au contraste mesuré sur le dégradé de la barre, dont le
+  // côté teal est le fond le moins favorable : red-300 y tient 4,99:1 quand
+  // red-400 tombait à 3,43:1, sous le seuil AA pour ce corps de texte.
+  perime:    { pastille: 'bg-red-400 animate-pulse', texte: 'text-red-300 font-semibold' },
+  inconnu:   { pastille: 'bg-slate-500',   texte: 'text-slate-400' },
+};
 
 export default function TopBar({ lastSync, loading, onLogout }) {
+  const fraicheur = useFraicheur(lastSync);
+  const etat = ETATS_FRAICHEUR[fraicheur.niveau];
+
   const formatTime = (isoString) => {
     if (!isoString) return 'En attente de synchro...';
     const d = new Date(isoString);
@@ -72,11 +91,15 @@ export default function TopBar({ lastSync, loading, onLogout }) {
         </div>
       </div>
 
-      {/* Barre de sync */}
+      {/* Barre de sync — la couleur reflète l'âge réel des données, pas l'activité réseau */}
       <div className="mt-2 flex items-center gap-2">
-        <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${loading ? 'bg-amber-400 animate-pulse' : 'bg-emerald-400'}`} />
-        <p className="text-[11px] text-slate-400">
-          {loading ? 'Synchronisation en cours...' : `Dernière mise à jour : ${formatTime(lastSync)}`}
+        <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${loading ? 'bg-amber-400 animate-pulse' : etat.pastille}`} />
+        <p className={`text-[11px] ${loading ? 'text-slate-400' : etat.texte}`}>
+          {loading
+            ? 'Synchronisation en cours...'
+            : fraicheur.niveau === 'inconnu'
+              ? fraicheur.texte
+              : `Dernière mise à jour : ${formatTime(lastSync)} · ${fraicheur.texte}`}
         </p>
       </div>
     </div>
