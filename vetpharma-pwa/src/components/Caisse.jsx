@@ -171,8 +171,19 @@ export default function Caisse({ data, lastSync }) {
               </span>
             </div>
           )}
+          {/* Sans ce compteur, le solde ci-dessous se lit à contresens : un manque
+              et un excédent équivalents s'y annulent, et deux comptages faux
+              prennent l'apparence d'une caisse irréprochable. */}
+          {caisse.sessionsAvecEcart > 0 && (
+            <div className="flex items-center justify-between py-2 border-b border-white/5">
+              <span className="text-sm text-slate-300">Sessions avec écart</span>
+              <span className="text-sm font-bold" style={{ color: '#fbbf24' }}>
+                {caisse.sessionsAvecEcart} / {caisse.sessionsCloturees}
+              </span>
+            </div>
+          )}
           <div className="flex items-center justify-between py-2">
-            <span className="text-sm text-slate-300">Écart cumulé</span>
+            <span className="text-sm text-slate-300">Solde des écarts</span>
             <span className="text-sm font-bold shrink-0" style={{ color: couleurEcart(ecartTotal) }}>
               {formatFCFA(ecartTotal)}
             </span>

@@ -349,6 +349,17 @@ public class SyncService {
     private static final int JOURS_OBSERVES_CAISSE = 30;
 
     /**
+     * Nombre de clôtures détaillées dans le payload — environ deux semaines
+     * d'activité. Au-delà, la liste ne se lit plus sur un téléphone et alourdit
+     * un snapshot déjà conséquent, retéléchargé à chaque ouverture.
+     *
+     * La troncature ne porte que sur cette liste : les compteurs et le solde
+     * restent calculés sur la totalité des trente jours, sans quoi une anomalie
+     * survenue trois semaines plus tôt disparaîtrait des totaux.
+     */
+    private static final int MAX_SESSIONS_DETAILLEES = 15;
+
+    /**
      * Construit l'état de la caisse transmis au tableau de bord distant.
      *
      * La dernière session est envoyée même très ancienne : c'est elle qui permet
@@ -368,6 +379,7 @@ public class SyncService {
 
         List<DashboardSyncDTO.SessionDTO> historique = new ArrayList<>();
         int cloturees = 0;
+        int avecEcart = 0;
         long cumulEspeces = 0L;
         long cumulMobile = 0L;
 
@@ -378,15 +390,23 @@ public class SyncService {
                 // Les écarts d'une session encore ouverte n'ont pas de sens : le
                 // comptage n'a pas eu lieu, les champs valent zéro par défaut et
                 // les inclure diluerait le cumul.
-                cumulEspeces += Math.round(valeurOuZero(s.getEcartEspeces()));
-                cumulMobile += Math.round(valeurOuZero(s.getEcartMobile()));
+                long ecartEsp = Math.round(valeurOuZero(s.getEcartEspeces()));
+                long ecartMob = Math.round(valeurOuZero(s.getEcartMobile()));
+                cumulEspeces += ecartEsp;
+                cumulMobile += ecartMob;
+                // Compté une fois par session, quel que soit le moyen de paiement
+                // en cause : c'est le comptage de la journée qui est faux.
+                if (ecartEsp != 0L || ecartMob != 0L) avecEcart++;
             }
-            historique.add(versDTO(s));
+            // Les sessions arrivent de la plus récente à la plus ancienne : les
+            // premières retenues sont donc bien les dernières en date.
+            if (historique.size() < MAX_SESSIONS_DETAILLEES) historique.add(versDTO(s));
         }
 
         caisse.setSessionsTotal(recentes.size());
         caisse.setSessionsCloturees(cloturees);
         caisse.setSessionsNonCloturees(recentes.size() - cloturees);
+        caisse.setSessionsAvecEcart(avecEcart);
         caisse.setEcartEspecesCumule(cumulEspeces);
         caisse.setEcartMobileCumule(cumulMobile);
         caisse.setHistorique(historique);

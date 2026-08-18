@@ -147,6 +147,16 @@ public class DashboardSyncDTO {
         private int sessionsTotal;
         private int sessionsCloturees;
         private int sessionsNonCloturees;
+        /**
+         * Nombre de sessions closes dont le comptage ne tombait pas juste.
+         *
+         * Le solde ci-dessous est une somme signée : un manque de 5 000 un jour
+         * et un excédent de 5 000 un autre s'y annulent, et deux comptages faux
+         * y prennent l'apparence d'une caisse irréprochable. Ce compteur est ce
+         * qui distingue une caisse juste d'une caisse dont les erreurs se
+         * compensent.
+         */
+        private int sessionsAvecEcart;
         private long ecartEspecesCumule;
         private long ecartMobileCumule;
         private int joursObserves;
@@ -163,6 +173,9 @@ public class DashboardSyncDTO {
 
         public int getSessionsNonCloturees() { return sessionsNonCloturees; }
         public void setSessionsNonCloturees(int sessionsNonCloturees) { this.sessionsNonCloturees = sessionsNonCloturees; }
+
+        public int getSessionsAvecEcart() { return sessionsAvecEcart; }
+        public void setSessionsAvecEcart(int sessionsAvecEcart) { this.sessionsAvecEcart = sessionsAvecEcart; }
 
         public long getEcartEspecesCumule() { return ecartEspecesCumule; }
         public void setEcartEspecesCumule(long ecartEspecesCumule) { this.ecartEspecesCumule = ecartEspecesCumule; }
